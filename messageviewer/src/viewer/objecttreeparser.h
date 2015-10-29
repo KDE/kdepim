@@ -288,13 +288,13 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser
 public:
     explicit ObjectTreeParser(ObjectTreeSourceIf *source,
                               NodeHelper *nodeHelper = 0,
-                              const Kleo::CryptoBackend::Protocol *protocol = 0,
-                              bool showOneMimePart = false, bool keepEncryptions = false,
-                              const AttachmentStrategy *attachmentStrategy = 0);
+                              const Kleo::CryptoBackend::Protocol *protocol = Q_NULLPTR,
+                              bool showOneMimePart = false,
+                              const AttachmentStrategy *attachmentStrategy = Q_NULLPTR);
 
     explicit ObjectTreeParser(const ObjectTreeParser *topLevelParser,
-                              bool showOneMimePart = false, bool keepEncryptions = false,
-                              const AttachmentStrategy *attachmentStrategy = 0);
+                              bool showOneMimePart = false,
+                              const AttachmentStrategy *attachmentStrategy = Q_NULLPTR);
     virtual ~ObjectTreeParser();
 
     void setAllowAsync(bool allow);
@@ -342,9 +342,6 @@ public:
 
     bool showOnlyOneMimePart() const;
     void setShowOnlyOneMimePart(bool show);
-
-    bool keepEncryptions() const;
-    void setKeepEncryptions(bool keep);
 
     const AttachmentStrategy *attachmentStrategy() const;
 
@@ -504,7 +501,6 @@ private:
     /// the children can be completely displayed again.
     bool mShowOnlyOneMimePart;
 
-    bool mKeepEncryptions;
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
     const AttachmentStrategy *mAttachmentStrategy;

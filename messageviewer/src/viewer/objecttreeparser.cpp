@@ -145,7 +145,7 @@ public:
 };
 
 ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
-                                   bool showOnlyOneMimePart, bool keepEncryptions,
+                                   bool showOnlyOneMimePart,
                                    const AttachmentStrategy *strategy)
     : mSource(topLevelParser->mSource),
       mNodeHelper(topLevelParser->mNodeHelper),
@@ -153,7 +153,6 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
       mTopLevelContent(topLevelParser->mTopLevelContent),
       mCryptoProtocol(topLevelParser->mCryptoProtocol),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
-      mKeepEncryptions(keepEncryptions),
       mHasPendingAsyncJobs(false),
       mAllowAsync(topLevelParser->mAllowAsync),
       mAttachmentStrategy(strategy),
@@ -165,7 +164,7 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
 ObjectTreeParser::ObjectTreeParser(ObjectTreeSourceIf *source,
                                    MessageViewer::NodeHelper *nodeHelper,
                                    const Kleo::CryptoBackend::Protocol *protocol,
-                                   bool showOnlyOneMimePart, bool keepEncryptions,
+                                   bool showOnlyOneMimePart,
                                    const AttachmentStrategy *strategy)
     : mSource(source),
       mNodeHelper(nodeHelper),
@@ -173,7 +172,6 @@ ObjectTreeParser::ObjectTreeParser(ObjectTreeSourceIf *source,
       mTopLevelContent(0),
       mCryptoProtocol(protocol),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
-      mKeepEncryptions(keepEncryptions),
       mHasPendingAsyncJobs(false),
       mAllowAsync(false),
       mAttachmentStrategy(strategy),
@@ -204,7 +202,6 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser &other)
       mTopLevelContent(other.mTopLevelContent),
       mCryptoProtocol(other.cryptoProtocol()),
       mShowOnlyOneMimePart(other.showOnlyOneMimePart()),
-      mKeepEncryptions(other.keepEncryptions()),
       mHasPendingAsyncJobs(other.hasPendingAsyncJobs()),
       mAllowAsync(other.allowAsync()),
       mAttachmentStrategy(other.attachmentStrategy()),
@@ -1226,16 +1223,6 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
     KMime::Content *child = MessageCore::NodeHelper::firstChild(node);
     if (!child) {
         return false;
-    }
-
-    if (keepEncryptions()) {
-        mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
-        const QByteArray cstr = node->decodedContent();
-        if (htmlWriter()) {
-            writeBodyString(cstr, NodeHelper::fromAsString(node),
-                            codecFor(node), result, false);
-        }
-        return true;
     }
 
     const Kleo::CryptoBackend::Protocol *useThisCryptProto = 0;
@@ -3007,16 +2994,6 @@ bool ObjectTreeParser::showOnlyOneMimePart() const
 void ObjectTreeParser::setShowOnlyOneMimePart(bool show)
 {
     mShowOnlyOneMimePart = show;
-}
-
-bool ObjectTreeParser::keepEncryptions() const
-{
-    return mKeepEncryptions;
-}
-
-void ObjectTreeParser::setKeepEncryptions(bool keep)
-{
-    mKeepEncryptions = keep;
 }
 
 const AttachmentStrategy *ObjectTreeParser::attachmentStrategy() const
