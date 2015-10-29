@@ -400,7 +400,6 @@ public:
     void setUseFixedFont(bool useFixedFont);
 
     void attachmentView(KMime::Content *atmNode);
-    void attachmentEncryptWithChiasmus(KMime::Content *content);
 
     /** Return weather to show or hide the full list of "To" addresses */
     bool showFullToAddressList() const;

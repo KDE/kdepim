@@ -75,7 +75,6 @@ set(libmessageviewer_viewer_SRCS
   viewer/attachmentstrategy.cpp
   viewer/bodypartformatter.cpp
   viewer/bodypartformatterfactory.cpp
-  viewer/chiasmuskeyselector.cpp
   viewer/cryptohelper.cpp
   viewer/csshelper.cpp
   viewer/csshelperbase.cpp
@@ -170,7 +169,6 @@ set(libmessageviewer_job_SRCS
   job/createtodojob.cpp
   job/createeventjob.cpp
   job/createnotejob.cpp
-  job/attachmentencryptwithchiasmusjob.cpp
   job/attachmenteditjob.cpp
   job/modifymessagedisplayformatjob.cpp
   job/kleojobexecutor.cpp

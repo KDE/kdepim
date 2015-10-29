@@ -77,8 +77,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Reduce font size for quoted text</label>
       <whatsthis>Enable this option to show quoted text with a smaller font.</whatsthis>
     </entry>
-    <entry name="ChiasmusDecryptionKey" type="String"></entry>
-    <entry name="ChiasmusDecryptionOptions" type="String"></entry>
     <entry name="ShowUserAgent" type="Bool">
       <default>false</default>
       <label>Show user agent in fancy headers</label>

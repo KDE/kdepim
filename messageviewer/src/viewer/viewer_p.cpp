@@ -37,7 +37,6 @@
 #include "kpimtextedit/slidecontainer.h"
 #include "Gravatar/GravatarCache"
 #include "gravatarsettings.h"
-#include "job/attachmentencryptwithchiasmusjob.h"
 #include "job/attachmenteditjob.h"
 #include "job/modifymessagedisplayformatjob.h"
 #include "viewerplugins/viewerplugintoolmanager.h"
@@ -621,12 +620,6 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
     connect(action, SIGNAL(triggered()), attachmentMapper, SLOT(map()));
     attachmentMapper->setMapping(action, Viewer::Delete);
     action->setEnabled(canChange && !deletedAttachment);
-    if (name.endsWith(QLatin1String(".xia"), Qt::CaseInsensitive)
-            && Kleo::CryptoBackendFactory::instance()->protocol("Chiasmus")) {
-        action = menu->addAction(i18n("Decrypt With Chiasmus..."));
-        connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
-        attachmentMapper->setMapping(action, Viewer::ChiasmusEncrypt);
-    }
     action = menu->addAction(i18n("Properties"));
     connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
     attachmentMapper->setMapping(action, Viewer::Properties);
@@ -2544,9 +2537,6 @@ void ViewerPrivate::slotHandleAttachment(int choice)
     case Viewer::View:
         attachmentView(mCurrentContent);
         break;
-    case Viewer::ChiasmusEncrypt:
-        attachmentEncryptWithChiasmus(mCurrentContent);
-        break;
     case Viewer::Copy:
         attachmentCopy(KMime::Content::List() << mCurrentContent);
         break;
@@ -2729,15 +2719,6 @@ void ViewerPrivate::setUseFixedFont(bool useFixedFont)
     if (mToggleFixFontAction) {
         mToggleFixFontAction->setChecked(mUseFixedFont);
     }
-}
-
-void ViewerPrivate::attachmentEncryptWithChiasmus(KMime::Content *content)
-{
-    MessageViewer::AttachmentEncryptWithChiasmusJob *job = new MessageViewer::AttachmentEncryptWithChiasmusJob(this);
-    job->setContent(content);
-    job->setCurrentFileName(mCurrentFileName);
-    job->setMainWindow(mMainWindow);
-    job->start();
 }
 
 bool ViewerPrivate::showFullToAddressList() const

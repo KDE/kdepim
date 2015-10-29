@@ -58,7 +58,6 @@
 #include "messageviewer/nodehelper.h"
 #include "utils/iconnamecache.h"
 #include "viewer/htmlquotecolorer.h"
-#include "chiasmuskeyselector.h"
 #include "messageviewer_debug.h"
 #include "converthtmltoplaintext.h"
 
@@ -1436,122 +1435,6 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
     }
 
     return isSigned || isEncrypted;
-}
-
-bool ObjectTreeParser::decryptChiasmus(const QByteArray &data, QByteArray &bodyDecoded, QString &errorText)
-{
-    const Kleo::CryptoBackend::Protocol *chiasmus =
-        Kleo::CryptoBackendFactory::instance()->protocol("Chiasmus");
-    if (!chiasmus) {
-        return false;
-    }
-
-    const std::unique_ptr<Kleo::SpecialJob> listjob(chiasmus->specialJob("x-obtain-keys", QMap<QString, QVariant>()));
-    if (!listjob.get()) {
-        errorText = i18n("Chiasmus backend does not offer the "
-                         "\"x-obtain-keys\" function. Please report this bug.");
-        return false;
-    }
-
-    if (listjob->exec()) {
-        errorText = i18n("Chiasmus Backend Error");
-        return false;
-    }
-
-    const QVariant result = listjob->property("result");
-    if (result.type() != QVariant::StringList) {
-        errorText = i18n("Unexpected return value from Chiasmus backend: "
-                         "The \"x-obtain-keys\" function did not return a "
-                         "string list. Please report this bug.");
-        return false;
-    }
-
-    const QStringList keys = result.toStringList();
-    if (keys.empty()) {
-        errorText = i18n("No keys have been found. Please check that a "
-                         "valid key path has been set in the Chiasmus "
-                         "configuration.");
-        return false;
-    }
-
-    QScopedPointer<ChiasmusKeySelector> selectorDlg(new ChiasmusKeySelector(/*mReader*/0, i18n("Chiasmus Decryption Key Selection"),
-            keys, MessageViewer::MessageViewerSettings::chiasmusDecryptionKey(),
-            MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()));
-
-    if (selectorDlg->exec() != QDialog::Accepted || !selectorDlg) {
-        return false;
-    }
-    MessageViewer::MessageViewerSettings::setChiasmusDecryptionOptions(selectorDlg->options());
-    MessageViewer::MessageViewerSettings::setChiasmusDecryptionKey(selectorDlg->key());
-    assert(!MessageViewer::MessageViewerSettings::chiasmusDecryptionKey().isEmpty());
-
-    Kleo::SpecialJob *job = chiasmus->specialJob("x-decrypt", QMap<QString, QVariant>());
-    if (!job) {
-        errorText = i18n("Chiasmus backend does not offer the "
-                         "\"x-decrypt\" function. Please report this bug.");
-        return false;
-    }
-
-    if (!job->setProperty("key", MessageViewer::MessageViewerSettings::chiasmusDecryptionKey()) ||
-            !job->setProperty("options", MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()) ||
-            !job->setProperty("input", data)) {
-        errorText = i18n("The \"x-decrypt\" function does not accept "
-                         "the expected parameters. Please report this bug.");
-        return false;
-    }
-
-    if (job->exec()) {
-        errorText = i18n("Chiasmus Decryption Error");
-        return false;
-    }
-
-    const QVariant resultData = job->property("result");
-    if (resultData.type() != QVariant::ByteArray) {
-        errorText = i18n("Unexpected return value from Chiasmus backend: "
-                         "The \"x-decrypt\" function did not return a "
-                         "byte array. Please report this bug.");
-        return false;
-    }
-    bodyDecoded = resultData.toByteArray();
-    return true;
-}
-
-bool ObjectTreeParser::processApplicationChiasmusTextSubtype(KMime::Content *curNode, ProcessResult &result)
-{
-    if (!htmlWriter()) {
-
-        // ### Surely this is totally wrong? The decoded text of this node is just garbage, since it is
-        //     encrypted. This whole if statement should be removed, and the decrypted body
-        //     should be added to mPlainTextContent. Needs testing with Chiasmus though, which I don't have.
-        mPlainTextContent += curNode->decodedText();
-        mPlainTextContentCharset = NodeHelper::charset(curNode);
-        return true;
-    }
-
-    QByteArray decryptedBody;
-    QString errorText;
-    const QByteArray data = curNode->decodedContent();
-    bool bOkDecrypt = decryptChiasmus(data, decryptedBody, errorText);
-    PartMetaData messagePart;
-    messagePart.isDecryptable = bOkDecrypt;
-    messagePart.isEncrypted = true;
-    messagePart.isSigned = false;
-    messagePart.errorText = errorText;
-    if (htmlWriter())
-        htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                               0, //cryptPlugWrapper(),
-                                               NodeHelper::fromAsString(curNode)));
-    const QByteArray body = bOkDecrypt ? decryptedBody : data;
-    const QString chiasmusCharset = curNode->contentType()->parameter(QStringLiteral("chiasmus-charset"));
-    const QTextCodec *aCodec = chiasmusCharset.isEmpty() ? codecFor(curNode)
-                               : NodeHelper::codecForName(chiasmusCharset.toLatin1());
-    htmlWriter()->queue(quotedHTML(aCodec->toUnicode(body), false /*decorate*/));
-    result.setInlineEncryptionState(KMMsgFullyEncrypted);
-    if (htmlWriter()) {
-        htmlWriter()->queue(writeSigstatFooter(messagePart));
-    }
-    mNodeHelper->setPartMetaData(curNode, messagePart);
-    return true;
 }
 
 void ObjectTreeParser::writeBodyString(const QByteArray &bodyString,

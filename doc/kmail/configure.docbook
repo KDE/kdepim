@@ -1843,7 +1843,6 @@ of key words can be modified.</para>
 	</varlistentry>
 	<!-- 
 	GnuPG Settings
-	Chiasmus Settings
 	-->
 	<varlistentry id="configure-security-warnings-reenable-all-warnings">
 	  <term>

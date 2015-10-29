@@ -417,9 +417,7 @@ public:// (during refactoring)
     MessagePart::Ptr processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result);
 
     bool processApplicationPkcs7MimeSubtype(KMime::Content *node, ProcessResult &result);
-    bool processApplicationChiasmusTextSubtype(KMime::Content *node, ProcessResult &result);
 
-    bool decryptChiasmus(const QByteArray &data, QByteArray &bodyDecoded, QString &errorText);
     void writeBodyString(const QByteArray &bodyString,
                          const QString &fromAddress,
                          const QTextCodec *codec,

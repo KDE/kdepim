@@ -255,7 +255,6 @@ CREATE_BODY_PART_FORMATTER(TextPlain)
 CREATE_BODY_PART_FORMATTER(TextHtml)
 
 CREATE_BODY_PART_FORMATTER(ApplicationPkcs7Mime)
-CREATE_BODY_PART_FORMATTER(ApplicationChiasmusText)
 
 CREATE_BODY_PART_FORMATTER(MultiPartMixed)
 CREATE_BODY_PART_FORMATTER(MultiPartAlternative)
@@ -275,7 +274,6 @@ void BodyPartFormatterFactoryPrivate::messageviewer_create_builtin_bodypart_form
     (*reg)["application"]["pgp"] = ApplicationPgpBodyPartFormatter::create();
     (*reg)["application"]["pkcs7-mime"] = ApplicationPkcs7MimeBodyPartFormatter::create();
     (*reg)["application"]["x-pkcs7-mime"] = ApplicationPkcs7MimeBodyPartFormatter::create();
-    (*reg)["application"]["vnd.de.bund.bsi.chiasmus-text"] = ApplicationChiasmusTextBodyPartFormatter::create();
     (*reg)["application"]["*"] = AnyTypeBodyPartFormatter::create();
 
     (*reg)["text"]["plain"] = TextPlainBodyPartFormatter::create();

@@ -134,9 +134,8 @@ StringUtil or into NodeHelper.
 The last utilitly thing are the functions in stl_util.h, which are supposed to be used in
 combination with STL algorithms.
 
-There are a bunch of smaller classes like AutoQPointer, ChiasmusKeySelector, EditorWatcher,
-IconNameCache, KCursorSaver, KleoJobExecutor, KabcBridge and many more. See the full class list if
-you're curious.
+There are a bunch of smaller classes like AutoQPointer, EditorWatcher, IconNameCache, KCursorSaver,
+KleoJobExecutor, KabcBridge and many more. See the full class list if you're curious.
 
 You should also read the documentation of the following classes, which are extensivly documented:
 \sa MessageViewer::ViewerPrivate
