@@ -334,10 +334,12 @@ void ImportMailJob::restoreResources()
                     if (leaveOnserver.hasKey(QStringLiteral("seenUidList"))) {
                         settings.insert(QStringLiteral("SeenUidList"), leaveOnserver.readEntry("seenUidList", QStringList()));
                     }
+#if 0
                     if (leaveOnserver.hasKey(QStringLiteral("seenUidTimeList"))) {
                         //FIXME
                         //settings.insert(QLatin1String("SeenUidTimeList"),QVariant::fromValue<QList<int> >(leaveOnserver.readEntry("seenUidTimeList",QList<int>())));
                     }
+#endif
                     if (leaveOnserver.hasKey(QStringLiteral("downloadLater"))) {
                         settings.insert(QStringLiteral("DownloadLater"), leaveOnserver.readEntry("downloadLater", QStringList()));
                     }
@@ -426,8 +428,17 @@ void ImportMailJob::restoreResources()
                     if (siever.hasKey(QStringLiteral("SieveAlternateUrl"))) {
                         settings.insert(QStringLiteral("SieveAlternateUrl"), siever.readEntry("SieveAlternateUrl"));
                     }
+                    if (siever.hasKey(QStringLiteral("AlternateAuthentication"))) {
+                        settings.insert(QStringLiteral("AlternateAuthentication"), siever.readEntry("AlternateAuthentication"));
+                    }
                     if (siever.hasKey(QStringLiteral("SieveVacationFilename"))) {
                         settings.insert(QStringLiteral("SieveVacationFilename"), siever.readEntry("SieveVacationFilename"));
+                    }
+                    if (siever.hasKey(QStringLiteral("SieveCustomUsername"))) {
+                        settings.insert(QStringLiteral("SieveCustomUsername"), siever.readEntry("SieveCustomUsername"));
+                    }
+                    if (siever.hasKey(QStringLiteral("SieveCustomAuthentification"))) {
+                        settings.insert(QStringLiteral("SieveCustomAuthentification"), siever.readEntry("SieveCustomAuthentification"));
                     }
 
                     QString newResource;
