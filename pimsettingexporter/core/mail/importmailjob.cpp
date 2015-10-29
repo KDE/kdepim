@@ -249,7 +249,7 @@ void ImportMailJob::restoreTransports()
             Q_EMIT error(i18n("Failed to restore transports file."));
         }
     }
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
 }
 
 void ImportMailJob::restoreResources()
@@ -451,7 +451,7 @@ void ImportMailJob::restoreResources()
     //TODO synctree ?
 
     Q_EMIT info(i18n("Resources restored."));
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
 }
 
 void ImportMailJob::restoreMails()
@@ -843,7 +843,7 @@ void ImportMailJob::restoreConfig()
     }
 
     Q_EMIT info(i18n("Config restored."));
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
 }
 
 void ImportMailJob::restoreIdentity()
@@ -925,7 +925,7 @@ void ImportMailJob::restoreIdentity()
             Q_EMIT error(i18n("Failed to restore identity file."));
         }
     }
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
 }
 
 QString ImportMailJob::uniqueIdentityName(const QString &name)
