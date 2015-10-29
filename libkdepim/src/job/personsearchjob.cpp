@@ -112,7 +112,7 @@ void PersonSearchJob::start()
 
 void PersonSearchJob::onLDAPSearchData(const KLDAP::LdapResultObject::List &list)
 {
-    QList<Person> persons;
+    QVector<Person> persons;
     Q_FOREACH (const KLDAP::LdapResultObject &item, list) {
         Person person;
         person.name = QString::fromUtf8(item.object.value(QStringLiteral("cn")));
@@ -151,7 +151,7 @@ void PersonSearchJob::onLDAPSearchData(const KLDAP::LdapResultObject::List &list
         }
     }
     if (!persons.isEmpty()) {
-        emit personsFound(persons);
+        Q_EMIT personsFound(persons);
     }
 }
 
@@ -165,7 +165,7 @@ void PersonSearchJob::onLDAPSearchDone()
 
 void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &list)
 {
-    QList<Person> persons;
+    QVector<Person> persons;
     Q_FOREACH (const Akonadi::Collection &col, list) {
         Person person;
         const QString &uid = col.name();
@@ -197,7 +197,7 @@ void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &lis
                 updatePersonCollection(p);
             } else {
                 d->mMatches.insert(uid, person);
-                emit personUpdate(person);
+                Q_EMIT personUpdate(person);
             }
         } else {
             d->mMatches.insert(uid, person);
@@ -206,7 +206,7 @@ void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &lis
     }
 
     if (!persons.isEmpty()) {
-        emit personsFound(persons);
+        Q_EMIT personsFound(persons);
     }
 }
 

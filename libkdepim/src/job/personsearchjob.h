@@ -45,7 +45,7 @@ public:
     QList<Person> matches() const;
 
 Q_SIGNALS:
-    void personsFound(const QList<Person> &persons);
+    void personsFound(const QVector<Person> &persons);
     void personUpdate(const Person &person);
 
 public Q_SLOTS:
