@@ -278,6 +278,7 @@ ecm_generate_headers(MessageViewer_Camelcaseviewer_HEADERS
   Stl_Util
   CSSHelperBase
   MailWebView
+  MessagePart
   REQUIRED_HEADERS MessageViewer_viewer_HEADERS
   PREFIX MessageViewer
   RELATIVE viewer
