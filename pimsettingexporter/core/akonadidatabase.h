@@ -24,7 +24,7 @@
 class AkonadiDataBase
 {
 public:
-    explicit AkonadiDataBase();
+    AkonadiDataBase();
     ~AkonadiDataBase();
 
     QStringList options() const;
