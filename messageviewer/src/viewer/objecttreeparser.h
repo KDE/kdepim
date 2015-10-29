@@ -443,6 +443,11 @@ public:// (during refactoring)
                       KMMsgEncryptionState &inlineEncryptionState,
                       bool decorate);
 
+    QVector<MessagePart::Ptr> writeBodyStr2(const QByteArray &aStr, const QTextCodec *aCodec,
+                                            const QString &fromAddress,
+                                            KMMsgSignatureState  &inlineSignatureState,
+                                            KMMsgEncryptionState &inlineEncryptionState);
+
     bool isMailmanMessage(KMime::Content *curNode);
 
 public:
@@ -511,6 +516,7 @@ private:
     friend class MessagePart;
     friend class CryptoMessagePart;
     friend class EncapsulatedRfc822MessagePart;
+    friend class TextMessagePart;
 };
 
 }

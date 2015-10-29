@@ -182,6 +182,51 @@ QString MessagePart::renderInternalText() const
     return mSubOtp->plainTextContent();
 }
 
+//-----TextMessageBlock----------------------
+
+TextMessagePart::TextMessagePart(ObjectTreeParser* otp, KMime::Content* node, bool drawFrame, bool showLink)
+    : MessagePart(otp, QString())
+    , mNode(node)
+    , mDrawFrame(drawFrame)
+    , mShowLink(showLink)
+{
+    if (!mNode) {
+        qCWarning(MESSAGEVIEWER_LOG) << "not a valid node";
+        return;
+    }
+
+    KMMsgSignatureState inlineSignatureState;
+    KMMsgEncryptionState inlineEncryptionState;
+    mBlocks = mOtp->writeBodyStr2(mNode->decodedContent(), mOtp->codecFor(mNode), NodeHelper::fromAsString(mNode), inlineSignatureState, inlineEncryptionState);
+}
+
+TextMessagePart::~TextMessagePart()
+{
+
+}
+
+void TextMessagePart::html(bool decorate)
+{
+    HTMLBlock::Ptr block;
+    MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
+    if (mDrawFrame) {
+        block = HTMLBlock::Ptr(new TextBlock(writer, mOtp->nodeHelper(), mNode, mShowLink));
+    }
+
+    foreach (const MessagePart::Ptr &mp, mBlocks) {
+        mp->html(decorate);
+    }
+}
+
+QString TextMessagePart::text() const
+{
+    QString text;
+    foreach (const MessagePart::Ptr &mp, mBlocks) {
+        text += mp->text();
+    }
+    return text;
+}
+
 //-----MimeMessageBlock----------------------
 
 MimeMessagePart::MimeMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool onlyOneMimePart)

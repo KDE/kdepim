@@ -25,6 +25,7 @@
 
 #include <Libkleo/CryptoBackend>
 #include <gpgme++/verificationresult.h>
+#include <importresult.h>
 
 #include <QString>
 #include <QSharedPointer>
@@ -40,6 +41,7 @@ namespace MessageViewer
 {
 class ObjectTreeParser;
 class HtmlWriter;
+class NodeHelper;
 
 class HTMLBlock
 {
@@ -116,6 +118,23 @@ protected:
     ObjectTreeParser *mOtp;
     ObjectTreeParser *mSubOtp;
     PartMetaData mMetaData;
+};
+
+class TextMessagePart : public MessagePart
+{
+public:
+    typedef QSharedPointer<TextMessagePart> Ptr;
+    TextMessagePart(MessageViewer::ObjectTreeParser* otp, KMime::Content* node, bool drawFrame, bool showLink);
+    virtual ~TextMessagePart();
+
+    QString text() const Q_DECL_OVERRIDE;
+    void html(bool decorate) Q_DECL_OVERRIDE;
+
+private:
+    KMime::Content* mNode;
+    bool mDrawFrame;
+    bool mShowLink;
+    QVector<MessagePart::Ptr> mBlocks;
 };
 
 class MimeMessagePart : public MessagePart

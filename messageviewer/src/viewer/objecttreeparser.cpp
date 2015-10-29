@@ -2379,21 +2379,14 @@ void ObjectTreeParser::sigStatusToMetaData(const std::vector <GpgME::Signature> 
 }
 
 //-----------------------------------------------------------------------------
-void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aCodec,
+QVector<MessagePart::Ptr> ObjectTreeParser::writeBodyStr2(const QByteArray &aStr, const QTextCodec *aCodec,
                                     const QString &fromAddress,
                                     KMMsgSignatureState  &inlineSignatureState,
-                                    KMMsgEncryptionState &inlineEncryptionState,
-                                    bool decorate)
+                                    KMMsgEncryptionState &inlineEncryptionState)
 {
-    const QString dir = (QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr"));
-    //QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
-
     inlineSignatureState  = KMMsgNotSigned;
     inlineEncryptionState = KMMsgNotEncrypted;
     QList<Block> blocks = prepareMessageForDecryption(aStr);
-
-    bool updatePlainText = false;   // If there are encrypted or signed parts inside the node
-    // we need to update mPlainTextContent
 
     QVector<MessagePart::Ptr> mpl;
 
@@ -2427,7 +2420,6 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
                 fullySignedOrEncryptedTmp = false;
                 mpl.append(MessagePart::Ptr(new MessagePart(this, aCodec->toUnicode(block.text()))));
             } else if (block.type() == PgpMessageBlock) {
-                updatePlainText = true;
                 CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, QString(), cryptoProtocol(), fromAddress, 0));
                 mpl.append(mp);
                 if (!mSource->decryptMessage()) {
@@ -2440,7 +2432,6 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
             } else if (block.type() == ClearsignedBlock) {
                 CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, QString(), cryptoProtocol(), fromAddress, 0));
                 mpl.append(mp);
-                updatePlainText = true;
                 mp->startVerification(block.text(), aCodec);
             } else {
                 continue;
@@ -2470,13 +2461,27 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
                 inlineEncryptionState = KMMsgFullyEncrypted;
             }
         }
+    }
+    return mpl;
+}
 
+void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aCodec,
+                                    const QString &fromAddress,
+                                    KMMsgSignatureState  &inlineSignatureState,
+                                    KMMsgEncryptionState &inlineEncryptionState,
+                                    bool decorate)
+{
+    const auto mpl = writeBodyStr2(aStr, aCodec, fromAddress, inlineSignatureState, inlineEncryptionState);
+
+    if (!mpl.isEmpty()) {
         if (htmlWriter()) {
             foreach (const MessagePart::Ptr &mp, mpl) {
                 mp->html(decorate);
             }
         }
 
+        const bool updatePlainText = (inlineSignatureState != KMMsgNotSigned
+                                      || inlineEncryptionState != KMMsgNotEncrypted);
         if (updatePlainText || mPlainTextContent.isEmpty()) {
             mPlainTextContent.clear();
             foreach (const MessagePart::Ptr &mp, mpl) {
