@@ -377,33 +377,40 @@ void AbstractImportExportJob::addSpecificResourceSettings(KSharedConfig::Ptr /*r
     //Redefine it in subclass
 }
 
-void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination)
+void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination, bool isStoredAsZippedArchive)
 {
     file->copyTo(source);
     QDir dest(destination);
     if (!dest.exists()) {
         dest.mkpath(destination);
     }
-    QString errorMsg;
-    KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
-    if (zip) {
-        const KArchiveDirectory *zipDir = zip->directory();
-        Q_FOREACH (const QString &entryName, zipDir->entries()) {
-            const KArchiveEntry *entry = zipDir->entry(entryName);
-            if (entry) {
-                if (entry->isDirectory()) {
-                    const KArchiveDirectory *dir = static_cast<const KArchiveDirectory *>(entry);
-                    dir->copyTo(destination + QDir::separator() + dir->name(), true);
-                } else if (entry->isFile()) {
-                    const KArchiveFile *dir = static_cast<const KArchiveFile *>(entry);
-                    dir->copyTo(destination);
+    if (isStoredAsZippedArchive) {
+        QString errorMsg;
+        KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
+        if (zip) {
+            const KArchiveDirectory *zipDir = zip->directory();
+            Q_FOREACH (const QString &entryName, zipDir->entries()) {
+                const KArchiveEntry *entry = zipDir->entry(entryName);
+                if (entry) {
+                    if (entry->isDirectory()) {
+                        const KArchiveDirectory *dir = static_cast<const KArchiveDirectory *>(entry);
+                        dir->copyTo(destination + QDir::separator() + dir->name(), true);
+                    } else if (entry->isFile()) {
+                        const KArchiveFile *dir = static_cast<const KArchiveFile *>(entry);
+                        dir->copyTo(destination);
+                    }
                 }
+                qApp->processEvents();
             }
-            qApp->processEvents();
+            delete zip;
+        } else {
+            Q_EMIT error(errorMsg);
         }
-        delete zip;
     } else {
-        Q_EMIT error(errorMsg);
+        QFile achiveFile(source + QLatin1Char('/') + file->name());
+        if (!achiveFile.copy(destination + QLatin1Char('/') + file->name())) {
+            Q_EMIT error(i18n("Unable to copy file", file->name()));
+        }
     }
 }
 
