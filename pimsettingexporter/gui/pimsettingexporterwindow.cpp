@@ -273,6 +273,7 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
     dialog->loadTemplate(templateFile);
     if (dialog->exec()) {
         mLogWidget->clear();
+        initializeBackupRestoreUi();
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
         if (!mPimSettingsBackupRestoreUI->restoreStart(filename)) {
