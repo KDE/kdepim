@@ -45,14 +45,14 @@ void QuickSearchWarning::setSearchText(const QString &text)
 {
     if (!MessageList::MessageListSettings::quickSearchWarningDoNotShowAgain()) {
         const QStringList lstText = text.split(QLatin1Char(' '), QString::SkipEmptyParts);
-        bool foundLessAsThreeCharacters = false;
+        bool foundLessThanThreeCharacters = false;
         Q_FOREACH (const QString &text, lstText) {
             if (text.trimmed().size() < 3) {
-                foundLessAsThreeCharacters = true;
+                foundLessThanThreeCharacters = true;
                 break;
             }
         }
-        if (foundLessAsThreeCharacters) {
+        if (foundLessThanThreeCharacters) {
             animatedShow();
         } else {
             animatedHide();
