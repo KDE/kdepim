@@ -19,6 +19,7 @@
 #include <kpluginfactory.h>
 #include <KLocalizedString>
 #include <QUrl>
+#include <QIcon>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonDropBoxPluginFactory, "pimcommon_dropboxplugin.json", registerPlugin<DropBoxPlugin>();)
@@ -101,6 +102,11 @@ QString DropBoxPlugin::disallowedSymbolsStr() const
 qlonglong DropBoxPlugin::maximumUploadFileSize() const
 {
     return 150000000;
+}
+
+QIcon DropBoxPlugin::icon() const
+{
+    return QIcon::fromTheme(QStringLiteral("kdepim-dropbox"));
 }
 
 #include "dropboxplugin.moc"

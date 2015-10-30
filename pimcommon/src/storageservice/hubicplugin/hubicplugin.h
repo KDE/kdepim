@@ -35,6 +35,9 @@ public:
     StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
     QString description() const Q_DECL_OVERRIDE;
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
+    QString hubicClientId() const;
+    QString hubicClientSecret() const;
+
 };
 }
 #endif // HUBICPLUGIN_H

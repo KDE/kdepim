@@ -34,6 +34,18 @@ HubicPlugin::~HubicPlugin()
 
 }
 
+QString HubicPlugin::hubicClientId() const
+{
+    //TODO
+    return QString();
+}
+
+QString HubicPlugin::hubicClientSecret() const
+{
+    //TODO
+    return QString();
+}
+
 QString HubicPlugin::storageServiceName() const
 {
     return QStringLiteral("hubic");

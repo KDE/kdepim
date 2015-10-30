@@ -37,6 +37,10 @@ public:
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
     QRegExp disallowedSymbols() const Q_DECL_OVERRIDE;
     QString disallowedSymbolsStr() const Q_DECL_OVERRIDE;
+
+    QString boxClientId() const;
+    QString boxClientSecret() const;
+
 };
 }
 #endif // BOXPLUGIN_H

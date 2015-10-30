@@ -34,6 +34,18 @@ BoxPlugin::~BoxPlugin()
 
 }
 
+QString BoxPlugin::boxClientId() const
+{
+    //TODO
+    return QString();
+}
+
+QString BoxPlugin::boxClientSecret() const
+{
+    //TODO
+    return QString();
+}
+
 QString BoxPlugin::storageServiceName() const
 {
     return QStringLiteral("box");
