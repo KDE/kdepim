@@ -24,7 +24,6 @@
 #include "kdepim_export.h"
 
 #include <QDialog>
-class QTabWidget;
 class KConfig;
 namespace KLDAP
 {
@@ -32,9 +31,7 @@ class LdapClientSearch;
 }
 namespace KPIM
 {
-class CompletionOrderWidget;
-class BlackListBalooEmailCompletionWidget;
-class RecentAddressWidget;
+class CompletionConfigureDialogPrivate;
 class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
     Q_OBJECT
@@ -54,10 +51,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    QTabWidget *mTabWidget;
-    KPIM::CompletionOrderWidget *mCompletionOrderWidget;
-    KPIM::BlackListBalooEmailCompletionWidget *mBlackListBalooWidget;
-    KPIM::RecentAddressWidget *mRecentaddressWidget;
+    CompletionConfigureDialogPrivate *const d;
 };
 }
 

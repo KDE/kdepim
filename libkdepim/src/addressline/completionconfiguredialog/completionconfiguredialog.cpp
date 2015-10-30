@@ -31,28 +31,48 @@
 #include <addressline/recentaddress/recentaddresswidget.h>
 
 using namespace KPIM;
+
+class KPIM::CompletionConfigureDialogPrivate
+{
+public:
+    CompletionConfigureDialogPrivate()
+        : mTabWidget(Q_NULLPTR),
+          mCompletionOrderWidget(Q_NULLPTR),
+          mBlackListBalooWidget(Q_NULLPTR),
+          mRecentaddressWidget(Q_NULLPTR)
+    {
+
+    }
+
+    QTabWidget *mTabWidget;
+    KPIM::CompletionOrderWidget *mCompletionOrderWidget;
+    KPIM::BlackListBalooEmailCompletionWidget *mBlackListBalooWidget;
+    KPIM::RecentAddressWidget *mRecentaddressWidget;
+};
+
 CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new KPIM::CompletionConfigureDialogPrivate)
 {
     setWindowTitle(i18n("Configure completion"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
-    mTabWidget = new QTabWidget;
-    mTabWidget->setObjectName(QStringLiteral("tabwidget"));
-    mainLayout->addWidget(mTabWidget);
+    d->mTabWidget = new QTabWidget;
+    d->mTabWidget->setObjectName(QStringLiteral("tabwidget"));
+    mainLayout->addWidget(d->mTabWidget);
 
-    mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
-    mCompletionOrderWidget->setObjectName(QStringLiteral("completionorder_widget"));
-    mTabWidget->addTab(mCompletionOrderWidget, i18n("Completion Order"));
+    d->mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
+    d->mCompletionOrderWidget->setObjectName(QStringLiteral("completionorder_widget"));
+    d->mTabWidget->addTab(d->mCompletionOrderWidget, i18n("Completion Order"));
 
-    mRecentaddressWidget = new KPIM::RecentAddressWidget;
-    mRecentaddressWidget->setObjectName(QStringLiteral("recentaddress_widget"));
-    mTabWidget->addTab(mRecentaddressWidget, i18n("Recent Address"));
+    d->mRecentaddressWidget = new KPIM::RecentAddressWidget;
+    d->mRecentaddressWidget->setObjectName(QStringLiteral("recentaddress_widget"));
+    d->mTabWidget->addTab(d->mRecentaddressWidget, i18n("Recent Address"));
 
-    mBlackListBalooWidget = new KPIM::BlackListBalooEmailCompletionWidget;
-    mBlackListBalooWidget->setObjectName(QStringLiteral("blacklistbaloo_widget"));
-    mTabWidget->addTab(mBlackListBalooWidget, i18n("Blacklist Email Address"));
+    d->mBlackListBalooWidget = new KPIM::BlackListBalooEmailCompletionWidget;
+    d->mBlackListBalooWidget->setObjectName(QStringLiteral("blacklistbaloo_widget"));
+    d->mTabWidget->addTab(d->mBlackListBalooWidget, i18n("Blacklist Email Address"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
@@ -65,6 +85,7 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
 CompletionConfigureDialog::~CompletionConfigureDialog()
 {
     writeConfig();
+    delete d;
 }
 
 void CompletionConfigureDialog::readConfig()
@@ -85,38 +106,38 @@ void CompletionConfigureDialog::writeConfig()
 
 void CompletionConfigureDialog::setRecentAddresses(const QStringList &lst)
 {
-    mRecentaddressWidget->setAddresses(lst);
+    d->mRecentaddressWidget->setAddresses(lst);
 }
 
 void CompletionConfigureDialog::setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch)
 {
-    mCompletionOrderWidget->setLdapClientSearch(ldapSearch);
+    d->mCompletionOrderWidget->setLdapClientSearch(ldapSearch);
 }
 
 void CompletionConfigureDialog::load()
 {
-    mCompletionOrderWidget->loadCompletionItems();
-    mBlackListBalooWidget->load();
+    d->mCompletionOrderWidget->loadCompletionItems();
+    d->mBlackListBalooWidget->load();
 }
 
 bool CompletionConfigureDialog::recentAddressWasChanged() const
 {
-    return mRecentaddressWidget->wasChanged();
+    return d->mRecentaddressWidget->wasChanged();
 }
 
 void CompletionConfigureDialog::storeAddresses(KConfig *config)
 {
-    mRecentaddressWidget->storeAddresses(config);
+    d->mRecentaddressWidget->storeAddresses(config);
 }
 
 void CompletionConfigureDialog::slotSave()
 {
-    mBlackListBalooWidget->save();
-    mCompletionOrderWidget->save();
+    d->mBlackListBalooWidget->save();
+    d->mCompletionOrderWidget->save();
     accept();
 }
 
 void CompletionConfigureDialog::setEmailBlackList(const QStringList &lst)
 {
-    mBlackListBalooWidget->setEmailBlackList(lst);
+    d->mBlackListBalooWidget->setEmailBlackList(lst);
 }
