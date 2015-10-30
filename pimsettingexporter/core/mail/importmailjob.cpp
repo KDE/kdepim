@@ -161,6 +161,7 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory *dir, const
 
 void ImportMailJob::restoreTransports()
 {
+    setProgressDialogLabel(i18n("Restore transports..."));
     increaseProgressDialog();
     const QString path = Utils::transportsPath() + QLatin1String("mailtransports");
     if (!mFileList.contains(path)) {
@@ -255,6 +256,7 @@ void ImportMailJob::restoreTransports()
 void ImportMailJob::restoreResources()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore resources..."));
     Q_EMIT info(i18n("Restore resources..."));
     
     QDir dir(mTempDirName);
@@ -468,6 +470,7 @@ void ImportMailJob::restoreResources()
 void ImportMailJob::restoreMails()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore mails..."));
     QStringList listResourceToSync;
     Q_EMIT info(i18n("Restore mails..."));
     
@@ -590,7 +593,9 @@ void ImportMailJob::restoreMails()
 
 void ImportMailJob::restoreConfig()
 {
+
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore config..."));
     const QString filtersPath(Utils::configsPath() + QLatin1String("filters"));
     if (!mFileList.contains(filtersPath)) {
         Q_EMIT error(i18n("filters file could not be found in the archive."));
@@ -860,6 +865,7 @@ void ImportMailJob::restoreConfig()
 void ImportMailJob::restoreIdentity()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore identities..."));
     const QString path(Utils::identitiesPath() + QLatin1String("emailidentities"));
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("emailidentities file could not be found in the archive."));

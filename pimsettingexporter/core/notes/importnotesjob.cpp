@@ -131,7 +131,7 @@ void ImportNotesJob::restoreData()
 void ImportNotesJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    setProgressDialogLabel(i18n("Restore resouces..."));
+    setProgressDialogLabel(i18n("Restore resources..."));
     QStringList listResource;
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
