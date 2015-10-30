@@ -33,6 +33,10 @@ namespace Gravatar
 class GravatarResolvUrlJob;
 }
 
+namespace Akonadi
+{
+class ContactSearchJob;
+}
 namespace MessageViewer
 {
 
@@ -72,6 +76,7 @@ private:
     QString mEmailAddress;
     bool mFinished;
     bool mMailAllowToRemoteContent;
+    Akonadi::ContactSearchJob *mSearchJob;
 };
 
 }

@@ -32,12 +32,13 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailA
       mForceDisplayTo(Viewer::UseGlobalSetting),
       mEmailAddress(emailAddress),
       mFinished(false),
-      mMailAllowToRemoteContent(false)
+      mMailAllowToRemoteContent(false),
+      mSearchJob(Q_NULLPTR)
 {
     if (!emailAddress.isEmpty()) {
-        Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
-        searchJob->setQuery(Akonadi::ContactSearchJob::Email, emailAddress.toLower(), Akonadi::ContactSearchJob::ExactMatch);
-        connect(searchJob, &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
+        mSearchJob = new Akonadi::ContactSearchJob();
+        mSearchJob->setQuery(Akonadi::ContactSearchJob::Email, emailAddress.toLower(), Akonadi::ContactSearchJob::ExactMatch);
+        connect(mSearchJob, &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
     } else {
         mFinished = true;
     }
@@ -45,6 +46,9 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailA
 
 ContactDisplayMessageMemento::~ContactDisplayMessageMemento()
 {
+    if (mSearchJob) {
+        disconnect(mSearchJob, &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
+    }
 }
 
 void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
