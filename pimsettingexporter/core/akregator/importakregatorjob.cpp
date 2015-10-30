@@ -68,6 +68,7 @@ void ImportAkregatorJob::restoreConfig()
 {
     const QString akregatorStr(QStringLiteral("akregatorrc"));
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
     restoreConfigFile(akregatorStr);
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
@@ -76,6 +77,7 @@ void ImportAkregatorJob::restoreConfig()
 void ImportAkregatorJob::restoreData()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore data..."));
     const KArchiveEntry *akregatorEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("akregator/"));
     if (akregatorEntry && akregatorEntry->isDirectory()) {
         const QString akregatorPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("akregator/");

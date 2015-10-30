@@ -81,6 +81,7 @@ void ImportAlarmJob::slotNextStep()
 void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    setProgressDialogLabel(i18n("Restore resources..."));
     increaseProgressDialog();
     QStringList listResource;
     listResource << restoreResourceFile(QStringLiteral("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm(), false);
@@ -187,6 +188,7 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
 void ImportAlarmJob::restoreConfig()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
     const QString kalarmStr(QStringLiteral("kalarmrc"));
     const KArchiveEntry *kalarmrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kalarmStr);
     if (kalarmrcentry && kalarmrcentry->isFile()) {

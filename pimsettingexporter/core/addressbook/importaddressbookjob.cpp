@@ -76,6 +76,7 @@ void ImportAddressbookJob::slotNextStep()
 void ImportAddressbookJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    setProgressDialogLabel(i18n("Restore resources..."));
     increaseProgressDialog();
     QStringList listResource;
     listResource << restoreResourceFile(QStringLiteral("akonadi_vcard_resource"), Utils::addressbookPath(), QDir::homePath() + QLatin1String("/.local/share/kaddressbook/"));
@@ -210,6 +211,7 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
 void ImportAddressbookJob::restoreConfig()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
     const QString kaddressbookStr(QStringLiteral("kaddressbookrc"));
     const KArchiveEntry *kaddressbookrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kaddressbookStr);
     if (kaddressbookrcentry && kaddressbookrcentry->isFile()) {

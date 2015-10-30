@@ -83,6 +83,7 @@ void ImportNotesJob::start()
 void ImportNotesJob::restoreConfig()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
     const QString knotesStr(QStringLiteral("knotesrc"));
     restoreConfigFile(knotesStr);
     if (archiveVersion() <= 1) {
@@ -112,6 +113,7 @@ void ImportNotesJob::restoreConfig()
 void ImportNotesJob::restoreData()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore data..."));
     if (archiveVersion() <= 1) {
         //Knote < knote-akonadi
         const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("knotes/"));
@@ -129,6 +131,7 @@ void ImportNotesJob::restoreData()
 void ImportNotesJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    setProgressDialogLabel(i18n("Restore resouces..."));
     QStringList listResource;
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);

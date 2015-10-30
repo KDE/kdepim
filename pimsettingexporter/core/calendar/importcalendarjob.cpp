@@ -83,6 +83,7 @@ void ImportCalendarJob::slotNextStep()
 void ImportCalendarJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    setProgressDialogLabel(i18n("Restore resources..."));
     increaseProgressDialog();
     QStringList listResource;
     listResource << restoreResourceFile(QStringLiteral("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar());
@@ -209,6 +210,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
 void ImportCalendarJob::restoreConfig()
 {
     increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
     const QString korganizerPrinterrcStr(QStringLiteral("calendar_printing.rc"));
     const QString oldKorganizerPrintrrcStr(QStringLiteral("korganizer_printing.rc"));
     const KArchiveEntry *oldKorganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + oldKorganizerPrintrrcStr);
