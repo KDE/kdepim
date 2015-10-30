@@ -566,7 +566,7 @@ QString MailFilter::purify(bool removeAction)
 bool MailFilter::isEmpty() const
 {
     return ( mPattern.isEmpty() && mActions.isEmpty() ) ||
-            ( ( applicability() == Checked ) && mAccounts.isEmpty() );
+            ( ( applicability() == Checked ) && bApplyOnInbound && mAccounts.isEmpty() );
 }
 
 QString MailFilter::toolbarName() const
