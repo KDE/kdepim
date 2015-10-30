@@ -485,6 +485,7 @@ void KMFilterListBox::slotCopy()
 
     // inserts a copy of the current filter.
     MailFilter *copyFilter = new MailFilter(*filter);
+    copyFilter->generateRandomIdentifier();
     copyFilter->setShortcut(QKeySequence());
 
     insertFilter(copyFilter);
