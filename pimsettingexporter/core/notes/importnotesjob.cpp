@@ -155,13 +155,13 @@ void ImportNotesJob::restoreResources()
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     const QString newUrl = Utils::adaptResourcePath(resourceConfig, backupnote());
-
+                    QFileInfo newUrlInfo(newUrl);
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
-                        extractZipFile(file, copyToDirName, newUrl);
+                        extractZipFile(file, copyToDirName, newUrlInfo.path());
                     }
                     settings.insert(QStringLiteral("Path"), newUrl);
 

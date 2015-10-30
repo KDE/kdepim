@@ -104,12 +104,13 @@ void ImportAddressbookJob::restoreResources()
 
                     //TODO fix default path
                     const QString newUrl = Utils::adaptResourcePath(resourceConfig, QDir::homePath() + QLatin1String("/.local/share/contacts/"));
+                    QFileInfo newUrlInfo(newUrl);
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
-                        extractZipFile(file, copyToDirName, newUrl);
+                        extractZipFile(file, copyToDirName, newUrlInfo.path(), value.akonadiConfigFile.contains(QStringLiteral("akonadi_contacts_resource_")));
                     }
                     settings.insert(QStringLiteral("Path"), newUrl);
 
