@@ -26,6 +26,7 @@
 #include <KContacts/Addressee>
 
 #include <QObject>
+#include <QPointer>
 
 class KJob;
 namespace Gravatar
@@ -76,7 +77,7 @@ private:
     QString mEmailAddress;
     bool mFinished;
     bool mMailAllowToRemoteContent;
-    Akonadi::ContactSearchJob *mSearchJob;
+    QPointer<Akonadi::ContactSearchJob> mSearchJob;
 };
 
 }
