@@ -171,11 +171,15 @@ void PimSettingsBackupRestore::backupNextStep()
 
 void PimSettingsBackupRestore::closeArchive()
 {
-    mArchiveStorage->closeArchive();
-    delete mArchiveStorage;
-    mArchiveStorage = Q_NULLPTR;
-    delete mImportExportData;
-    mImportExportData = Q_NULLPTR;
+    if (mArchiveStorage) {
+        mArchiveStorage->closeArchive();
+        delete mArchiveStorage;
+        mArchiveStorage = Q_NULLPTR;
+    }
+    if (mImportExportData) {
+        delete mImportExportData;
+        mImportExportData = Q_NULLPTR;
+    }
     Q_EMIT updateActions(false);
 }
 
