@@ -45,7 +45,6 @@ set(libmailcommon_filter_SRCS
   filter/filteractions/filteractionwithtest.cpp
   filter/filteractions/filteractionwithuoid.cpp
   filter/filteractions/filteractionwithurl.cpp
-  filter/filtereditdialog.cpp
   filter/filterimporterexporter.cpp
   filter/filterimporter/filterimporterabstract.cpp
   filter/filterimporter/filterimporterevolution.cpp
