@@ -254,7 +254,6 @@ void JobTrackerModel::jobsAdded(const QList< QPair< int, int > > &jobs)
         }
         beginInsertRows(parentIdx, pos, pos);
         endInsertRows();
-        const QModelIndex idx = index(pos, 0, parentIdx);
     }
 #undef PAIR
 }
