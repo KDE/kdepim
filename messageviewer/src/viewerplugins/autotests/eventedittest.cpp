@@ -398,7 +398,7 @@ void EventEditTest::shouldUpdateStartEndDateWhenReopenIt()
     QCOMPARE(startDateTime->dateTime().time().minute(), newDateTime.time().minute());
     QCOMPARE(startDateTime->dateTime().date(), newDateTime.date());
 
-    newDateTime = newDateTime.addMSecs(3600);
+    newDateTime = newDateTime.addSecs(3600);
     QCOMPARE(endDateTime->dateTime().time().hour(), newDateTime.time().hour());
     QCOMPARE(endDateTime->dateTime().time().minute(), newDateTime.time().minute());
     QCOMPARE(endDateTime->dateTime().date(), newDateTime.date());
