@@ -37,11 +37,17 @@ QuickSearchWarning::~QuickSearchWarning()
 void QuickSearchWarning::setSearchText(const QString &text)
 {
     const QStringList lstText = text.split(QLatin1Char(' '), QString::SkipEmptyParts);
+    bool foundLessThanThreeCharacters = false;
     Q_FOREACH(const QString &text, lstText) {
         if (text.trimmed().size() < 3) {
-            animatedShow();
+            foundLessThanThreeCharacters = true;
             break;
         }
+    }
+    if (foundLessThanThreeCharacters) {
+        animatedShow();
+    } else {
+        animatedHide();
     }
 }
 
