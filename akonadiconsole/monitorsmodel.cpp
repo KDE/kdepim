@@ -136,6 +136,7 @@ QVariant MonitorsModel::data(const QModelIndex &index, int role) const
 
 int MonitorsModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return ColumnsCount;
 }
 
@@ -157,6 +158,7 @@ QModelIndex MonitorsModel::parent(const QModelIndex &child) const
 
 QModelIndex MonitorsModel::index(int row, int column, const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     if (row >= mData.uniqueKeys().count()) {
         return QModelIndex();
     }
