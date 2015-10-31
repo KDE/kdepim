@@ -38,7 +38,7 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailA
     if (!emailAddress.isEmpty()) {
         mSearchJob = new Akonadi::ContactSearchJob();
         mSearchJob->setQuery(Akonadi::ContactSearchJob::Email, emailAddress.toLower(), Akonadi::ContactSearchJob::ExactMatch);
-        connect(mSearchJob, &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
+        connect(mSearchJob.data(), &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
     } else {
         mFinished = true;
     }
@@ -47,7 +47,7 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailA
 ContactDisplayMessageMemento::~ContactDisplayMessageMemento()
 {
     if (mSearchJob) {
-        disconnect(mSearchJob, &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
+        disconnect(mSearchJob.data(), &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
     }
 }
 
