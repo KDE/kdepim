@@ -83,6 +83,8 @@ public:
     /** Cleanup. */
     ~MailFilter();
 
+    void generateRandomIdentifier();
+
     /**
    * Returns the unique identifier of this filter.
    */

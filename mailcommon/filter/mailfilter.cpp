@@ -53,7 +53,7 @@ using namespace MailCommon;
 
 MailFilter::MailFilter()
 {
-    mIdentifier = KRandom::randomString( 16 );
+    generateRandomIdentifier();
     bApplyOnInbound = true;
     bApplyBeforeOutbound = false;
     bApplyOnOutbound = false;
@@ -115,6 +115,11 @@ MailFilter::MailFilter( const MailFilter & aFilter )
 MailFilter::~MailFilter()
 {
     qDeleteAll( mActions );
+}
+
+void MailFilter::generateRandomIdentifier()
+{
+    mIdentifier = KRandom::randomString(16);
 }
 
 QString MailFilter::identifier() const
