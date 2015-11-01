@@ -49,8 +49,8 @@ bool DecryptVerifyBodyPartMemento::start()
         m_dr = DecryptionResult(err);
         return false;
     }
-    connect(m_job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)),
-            this, SLOT(slotResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)));
+    connect(m_job.data(), &DecryptVerifyJob::result,
+            this, &DecryptVerifyBodyPartMemento::slotResult);
     setRunning(true);
     return true;
 }

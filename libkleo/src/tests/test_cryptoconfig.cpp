@@ -55,7 +55,7 @@ int main(int argc, char **argv)
         argc = 1;    // hide from KDE
     }
 
-    QCoreApplication::setApplicationName("test_cryptoconfig");
+    QCoreApplication::setApplicationName(QStringLiteral("test_cryptoconfig"));
     QCoreApplication app(argc, argv);
 
     Kleo::CryptoConfig *config = 0;
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
         // Static querying of a single boolean option
         static const char s_groupName[] = "Monitor";
         static const char s_entryName[] = "quiet";
-        Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+        Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_None);
             bool val = entry->boolValue();
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
             config->clear();
 
             // Check new value
-            Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+            Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
             assert(entry);
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_None);
             cout << "quiet option now: " << (val ? "is set" : "is not set") << endl;
@@ -199,7 +199,7 @@ int main(int argc, char **argv)
             config->clear();
 
             // Check value
-            entry = config->entry("dirmngr", s_groupName, s_entryName);
+            entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
             assert(!entry->isDirty());
             assert(!entry->isSet());
             cout << "quiet option reset to default: " << (entry->boolValue() ? "is set" : "is not set") << endl;
@@ -220,7 +220,7 @@ int main(int argc, char **argv)
         // Static querying and setting of a single int option
         static const char s_groupName[] = "LDAP";
         static const char s_entryName[] = "ldaptimeout";
-        Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+        Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt);
             uint val = entry->uintValue();
@@ -237,7 +237,7 @@ int main(int argc, char **argv)
             config->clear();
 
             // Check new value
-            Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+            Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
             assert(entry);
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt);
             cout << "LDAP timeout now: " << entry->uintValue() << " seconds." << endl;
@@ -252,7 +252,7 @@ int main(int argc, char **argv)
             config->clear();
 
             // Check value
-            entry = config->entry("dirmngr", s_groupName, s_entryName);
+            entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
             assert(!entry->isDirty());
             assert(!entry->isSet());
             cout << "LDAP timeout reset to default, " << entry->uintValue() << " seconds." << endl;
@@ -273,7 +273,7 @@ int main(int argc, char **argv)
         // Static querying and setting of a single string option
         static const char s_groupName[] = "Debug";
         static const char s_entryName[] = "log-file";
-        Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+        Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path);
             QString val = entry->stringValue();
@@ -291,7 +291,7 @@ int main(int argc, char **argv)
             config->clear();
 
             // Check new value
-            Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+            Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
             assert(entry);
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path);
             cout << "Log-file now: " << entry->stringValue().toLocal8Bit().constData() << endl;
@@ -321,7 +321,7 @@ int main(int argc, char **argv)
         // Static querying and setting of the LDAP URL list option
         static const char s_groupName[] = "LDAP";
         static const char s_entryName[] = "LDAP Server";
-        Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+        Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
             assert(entry->isList());
@@ -334,9 +334,9 @@ int main(int argc, char **argv)
 
             // Test setting the option, sync'ing, then querying again
             QList<QUrl> lst;
-            lst << QUrl("ldap://a:389?b");
-            lst << QUrl("ldap://foo:389?a:b c");
-            lst << QUrl("ldap://server:389?a=b,c=DE");   // the query contains a literal ','
+            lst << QUrl(QStringLiteral("ldap://a:389?b"));
+            lst << QUrl(QStringLiteral("ldap://foo:389?a:b c"));
+            lst << QUrl(QStringLiteral("ldap://server:389?a=b,c=DE"));   // the query contains a literal ','
             //cout << " trying to set: " << lst.toStringList().join(", ").local8Bit() << endl;
             assert(lst[0].query() == "b");
             assert(lst[1].query() == "a:b c");   // see, the space got _not_escaped
@@ -351,7 +351,7 @@ int main(int argc, char **argv)
             config->clear();
 
             // Check new value
-            Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
+            Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), s_groupName, s_entryName);
             assert(entry);
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
             assert(entry->isList());

@@ -109,32 +109,32 @@ void ServiceTestWidget::connectStorageService()
 
 void ServiceTestWidget::slotDeleteFolderDone(const QString &serviceName, const QString &foldername)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Delete Folder: %1\n").arg(foldername));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" Delete Folder: %1\n").arg(foldername));
 }
 
 void ServiceTestWidget::slotDeleteFileDone(const QString &serviceName, const QString &filename)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Delete File: %1\n").arg(filename));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" Delete File: %1\n").arg(filename));
 }
 
 void ServiceTestWidget::slotActionFailed(const QString &serviceName, const QString &error)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" return an error: %1\n").arg(error));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" return an error: %1\n").arg(error));
 }
 
 void ServiceTestWidget::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" upload in progress: send:%1 total:%2\n").arg(done).arg(total));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" upload in progress: send:%1 total:%2\n").arg(done).arg(total));
 }
 
 void ServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QString &shareLink)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" return a share link: %1\n").arg(shareLink));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" return a share link: %1\n").arg(shareLink));
 }
 
 void ServiceTestWidget::slotAuthenticationFailed(const QString &serviceName, const QString &errorMessage)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Authentication failed: %1\n").arg(errorMessage));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" Authentication failed: %1\n").arg(errorMessage));
 }
 
 void ServiceTestWidget::slotAuthenticationDone(const QString &serviceName)
@@ -144,28 +144,28 @@ void ServiceTestWidget::slotAuthenticationDone(const QString &serviceName)
 
 void ServiceTestWidget::slotCreateFolderDone(const QString &serviceName, const QString &folderName)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Create new folder \"%1\" done\n").arg(folderName));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" Create new folder \"%1\" done\n").arg(folderName));
 }
 
 void ServiceTestWidget::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Upload file done %1\n").arg(fileName));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" Upload file done %1\n").arg(fileName));
 }
 
 void ServiceTestWidget::slotListFolderDone(const QString &serviceName, const QVariant &listFolder)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" list folder done \n")/*.arg(listFolder)*/);
+    mEdit->insertPlainText(serviceName + QLatin1String(" list folder done \n")/*.arg(listFolder)*/);
 }
 
 void ServiceTestWidget::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" account Info: size: %1, quota: %2, shared: %3, displayName: %4\n")
+    mEdit->insertPlainText(serviceName + QStringLiteral(" account Info: size: %1, quota: %2, shared: %3, displayName: %4\n")
                            .arg(info.accountSize).arg(info.quota).arg(info.shared).arg(info.displayName));
 }
 
 void ServiceTestWidget::slotDownloadFileDone(const QString &serviceName, const QString &filename)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" download file done %1\n").arg(filename));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" download file done %1\n").arg(filename));
 }
 
 void ServiceTestWidget::slotAccountInfo()

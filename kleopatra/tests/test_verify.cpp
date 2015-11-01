@@ -90,8 +90,8 @@ public Q_SLOTS:
         // Start a key list job
         Kleo::KeyListJob *job = mBackend->keyListJob();
         mParallelKeyListJobs.append(job);
-        connect(job, SIGNAL(done()),
-                this, SLOT(slotParallelKeyListJobFinished()));
+        connect(job, &Kleo::Job::done,
+                this, &VerifyTest::slotParallelKeyListJobFinished);
         QVERIFY(!job->start(QStringList()));
     }
 
@@ -123,14 +123,14 @@ public Q_SLOTS:
             job = klj;
         }
         mRunningJobs.append(job);
-        connect(job, SIGNAL(done()), this, SLOT(someJobDone()));
+        connect(job, &Kleo::Job::done, this, &VerifyTest::someJobDone);
 
         // Quit after 2500 jobs, that should be enough
         mJobsStarted++;
         if (mJobsStarted >= 2500) {
-            QTimer::singleShot(1000, &mEventLoop, SLOT(quit()));
+            QTimer::singleShot(1000, &mEventLoop, &QEventLoop::quit);
         } else {
-            QTimer::singleShot(0, this, SLOT(startAnotherJob()));
+            QTimer::singleShot(0, this, &VerifyTest::startAnotherJob);
         }
     }
 

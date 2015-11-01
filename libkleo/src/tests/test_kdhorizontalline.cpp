@@ -43,10 +43,10 @@ int main(int argc, char *argv[])
     QWidget w;
     QGridLayout glay(&w);
 
-    KDHorizontalLine hl1("Foo", &w);
+    KDHorizontalLine hl1(QStringLiteral("Foo"), &w);
     glay.addWidget(&hl1, 0, 0, 1, 2);
 
-    QLabel lb1("Foo 1:", &w);
+    QLabel lb1(QStringLiteral("Foo 1:"), &w);
     glay.addWidget(&lb1, 1, 0);
     QLineEdit le1(&w);
     glay.addWidget(&le1, 1, 1);

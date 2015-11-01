@@ -66,12 +66,12 @@ void GnuPGViewer::setProcess(Kleo::GnuPGProcessBase *process)
     mProcess = process;
     connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
             SLOT(slotProcessExited(int,QProcess::ExitStatus)));
-    connect(mProcess, SIGNAL(readyReadStandardOutput()),
-            SLOT(slotStdout()));
-    connect(mProcess, SIGNAL(readyReadStandardError()),
-            SLOT(slotStderr()));
-    connect(mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-            SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)));
+    connect(mProcess, &QProcess::readyReadStandardOutput,
+            this, &GnuPGViewer::slotStdout);
+    connect(mProcess, &QProcess::readyReadStandardError,
+            this, &GnuPGViewer::slotStderr);
+    connect(mProcess, &Kleo::GnuPGProcessBase::status,
+            this, &GnuPGViewer::slotStatus);
 }
 
 static QStringList split(const QString &newLine, QString &old)
@@ -93,7 +93,7 @@ static QStringList split(const QString &newLine, QString &old)
 
 static QString escape(QString str)
 {
-    return str.replace('&', "&amp").replace('<', "&lt;").replace('>', "&gt;");
+    return str.replace('&', QLatin1String("&amp")).replace('<', QLatin1String("&lt;")).replace('>', QLatin1String("&gt;"));
 }
 
 void GnuPGViewer::slotStdout()
@@ -115,14 +115,14 @@ void GnuPGViewer::slotStderr()
 }
 void GnuPGViewer::slotStatus(Kleo::GnuPGProcessBase *, const QString &type, const QStringList &args)
 {
-    append("<b><font color=\"red\">status: " + escape(type + ' ' + args.join(" ")) + "</font></b>");
+    append("<b><font color=\"red\">status: " + escape(type + ' ' + args.join(QStringLiteral(" "))) + "</font></b>");
 }
 void GnuPGViewer::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if (exitStatus == QProcess::NormalExit) {
-        append(QString("<b>Process exit: return code %1</b>").arg(exitCode));
+        append(QStringLiteral("<b>Process exit: return code %1</b>").arg(exitCode));
     } else {
-        append("<b>Process exit: killed</b>");
+        append(QStringLiteral("<b>Process exit: killed</b>"));
     }
 }
 

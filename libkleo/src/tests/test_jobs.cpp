@@ -60,7 +60,7 @@ static void testSign()
     std::unique_ptr<Kleo::KeyListJob> listJob(proto->keyListJob(false, false, true));     // use validating keylisting
     if (listJob.get()) {
         // ##### Adjust this to your own identity
-        listJob->exec(QStringList("kloecker@kde.org"), true /*secret*/, signingKeys);
+        listJob->exec(QStringList(QStringLiteral("kloecker@kde.org")), true /*secret*/, signingKeys);
         assert(!signingKeys.empty());
     } else {
         assert(0);   // job failed
