@@ -60,8 +60,8 @@ void KTimeZoneComboBox::Private::fillComboBox()
         }
     }
     // Prepend Local, UTC and Floating, for convenience
-    mZones.prepend("UTC");        // do not use i18n here  index=2
-    mZones.prepend("Floating");   // do not use i18n here  index=1
+    mZones.prepend(QStringLiteral("UTC"));        // do not use i18n here  index=2
+    mZones.prepend(QStringLiteral("Floating"));   // do not use i18n here  index=1
     mZones.prepend(KSystemTimeZones::local().name());    // index=0
 
     // Put translated zones into the combobox

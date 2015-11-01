@@ -220,11 +220,11 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
         foreach (const QByteArray &value, values) {
             list << QString::fromUtf8(value);
         }
-        mUi->formDetails->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join("\n")));
+        mUi->formDetails->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join(QStringLiteral("\n"))));
     }
 
-    QString name = QString::fromUtf8(obj.attributes().value("cn")[0]);
-    QString email = QString::fromUtf8(obj.attributes().value("mail")[0]);
+    QString name = QString::fromUtf8(obj.attributes().value(QStringLiteral("cn"))[0]);
+    QString email = QString::fromUtf8(obj.attributes().value(QStringLiteral("mail"))[0]);
     KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name,  email));
     KPIM::FreeBusyItem::Ptr freebusy(new KPIM::FreeBusyItem(attendee, this));
     mModel->clear();

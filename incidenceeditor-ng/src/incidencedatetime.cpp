@@ -73,7 +73,7 @@ IncidenceDateTime::IncidenceDateTime(Ui::EventOrTodoDesktop *ui)
       mTimezoneCombosWereVisibile(false)
 {
     setTimeZonesVisibility(false);
-    setObjectName("IncidenceDateTime");
+    setObjectName(QStringLiteral("IncidenceDateTime"));
 
     mUi->mTimeZoneLabel->setVisible(!mUi->mWholeDayCheck->isChecked());
     connect(mUi->mTimeZoneLabel, &QLabel::linkActivated, this, &IncidenceDateTime::toggleTimeZoneVisibility);
@@ -137,7 +137,7 @@ void IncidenceDateTime::load(const KCalCore::Incidence::Ptr &incidence)
         return;
     }
 
-    const bool isTemplate             = incidence->customProperty("kdepim", "isTemplate") == "true";
+    const bool isTemplate             = incidence->customProperty("kdepim", "isTemplate") == QLatin1String("true");
     const bool templateOverridesTimes = incidenceHasDefaultTimes(mLoadedIncidence);
 
     mLoadedIncidence = incidence;
@@ -235,11 +235,11 @@ QTime IncidenceDateTime::endTime() const
 void IncidenceDateTime::setTimeZonesVisibility(bool visible)
 {
     static const QString tz(i18nc("@action show or hide the time zone widgets", "Time zones"));
-    QString placeholder("<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>");
+    QString placeholder(QStringLiteral("<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>"));
     if (visible) {
         placeholder = placeholder.arg(tz);
     } else {
-        placeholder = QString("<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>");
+        placeholder = QStringLiteral("<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>");
         placeholder = placeholder.arg(tz);
     }
     mUi->mTimeZoneLabel->setText(placeholder);
@@ -418,7 +418,7 @@ void IncidenceDateTime::enableTimeEdits()
         mUi->mEndTimeEdit->setTime(QTime(1, 0));
     }
 
-    const bool currentlyVisible = mUi->mTimeZoneLabel->text().contains("&lt;&lt;");
+    const bool currentlyVisible = mUi->mTimeZoneLabel->text().contains(QStringLiteral("&lt;&lt;"));
     setTimeZonesVisibility(!wholeDayChecked && mTimezoneCombosWereVisibile);
     mTimezoneCombosWereVisibile = currentlyVisible;
     if (!wholeDayChecked && !timeZonesAreLocal(currentStartDateTime(), currentEndDateTime())) {

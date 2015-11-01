@@ -239,7 +239,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget(KPIM::FreeBusyItemModel *model, int s
     mLeftView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     mGanttGraphicsView = new KDGantt::GraphicsView(this);
-    mGanttGraphicsView->setObjectName("mGanttGraphicsView");
+    mGanttGraphicsView->setObjectName(QStringLiteral("mGanttGraphicsView"));
     mGanttGraphicsView->setToolTip(
         i18nc("@info:tooltip",
               "Shows the Free/Busy status of all attendees"));

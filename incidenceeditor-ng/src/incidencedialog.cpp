@@ -279,13 +279,13 @@ QString IncidenceDialogPrivate::typeToString(const int type) const
     // Do not translate.
     switch (type) {
     case KCalCore::Incidence::TypeEvent:
-        return "Event";
+        return QStringLiteral("Event");
     case KCalCore::Incidence::TypeTodo:
-        return "Todo";
+        return QStringLiteral("Todo");
     case KCalCore::Incidence::TypeJournal:
-        return "Journal";
+        return QStringLiteral("Journal");
     default:
-        return "Unknown";
+        return QStringLiteral("Unknown");
     }
 }
 
@@ -329,7 +329,7 @@ void IncidenceDialogPrivate::loadTemplate(const QString &templateName)
     newInc->setUid(KCalCore::CalFormat::createUniqueId());
 
     // We add a custom property so that some fields aren't loaded, dates for example
-    newInc->setCustomProperty(QByteArray("kdepim"), "isTemplate", "true");
+    newInc->setCustomProperty(QByteArray("kdepim"), "isTemplate", QStringLiteral("true"));
     mEditor->load(newInc);
     newInc->removeCustomProperty(QByteArray(), "isTemplate");
 }
@@ -595,17 +595,17 @@ void IncidenceDialogPrivate::load(const Akonadi::Item &item)
         mCalSelector->setDefaultCollection(Akonadi::Collection(item.storageCollectionId()));
     }
 
-    if (!mCalSelector->mimeTypeFilter().contains("text/calendar") ||
+    if (!mCalSelector->mimeTypeFilter().contains(QStringLiteral("text/calendar")) ||
             !mCalSelector->mimeTypeFilter().contains(incidence->mimeType())) {
-        mCalSelector->setMimeTypeFilter(QStringList() << incidence->mimeType() << "text/calendar");
+        mCalSelector->setMimeTypeFilter(QStringList() << incidence->mimeType() << QStringLiteral("text/calendar"));
     }
 
     if (mEditor->type() == KCalCore::Incidence::TypeTodo) {
-        q->setWindowIcon(QIcon::fromTheme("view-calendar-tasks"));
+        q->setWindowIcon(QIcon::fromTheme(QStringLiteral("view-calendar-tasks")));
     } else if (mEditor->type() == KCalCore::Incidence::TypeEvent) {
-        q->setWindowIcon(QIcon::fromTheme("view-calendar-day"));
+        q->setWindowIcon(QIcon::fromTheme(QStringLiteral("view-calendar-day")));
     } else if (mEditor->type() == KCalCore::Incidence::TypeJournal) {
-        q->setWindowIcon(QIcon::fromTheme("view-pim-journal"));
+        q->setWindowIcon(QIcon::fromTheme(QStringLiteral("view-pim-journal")));
     }
 
     // Initialize tab's titles
@@ -692,7 +692,7 @@ IncidenceDialog::IncidenceDialog(Akonadi::IncidenceChanger *changer,
     enableButton(Apply, false);
 
     setButtonText(Default, i18nc("@action:button", "&Templates..."));
-    setButtonIcon(Default, QIcon::fromTheme("project-development-new-template"));
+    setButtonIcon(Default, QIcon::fromTheme(QStringLiteral("project-development-new-template")));
     setButtonToolTip(Default,
                      i18nc("@info:tooltip",
                            "Manage templates for this item"));

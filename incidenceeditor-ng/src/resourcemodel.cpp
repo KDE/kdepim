@@ -48,7 +48,7 @@ ResourceModel::ResourceModel(const QStringList &headers,
     connect(&ldapSearchCollections, static_cast<void (KLDAP::LdapClientSearch::*)(const KLDAP::LdapResultObject::List &)>(&KLDAP::LdapClientSearch::searchData), this, &ResourceModel::slotLDAPCollectionData);
     connect(&ldapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const KLDAP::LdapResultObject::List &)>(&KLDAP::LdapClientSearch::searchData), this, &ResourceModel::slotLDAPSearchData);
 
-    ldapSearchCollections.startSearch("*");
+    ldapSearchCollections.startSearch(QStringLiteral("*"));
 }
 
 ResourceModel::~ResourceModel()
@@ -73,7 +73,7 @@ QVariant ResourceModel::data(const QModelIndex &index, int role) const
         return QVariant::fromValue(p->child(index.row()));
     } else if (role == FullName) {
         ResourceItem *item = getItem(index);
-        return KEmailAddress::normalizedAddress(item->data("cn").toString(), item->data("mail").toString());
+        return KEmailAddress::normalizedAddress(item->data(QStringLiteral("cn")).toString(), item->data(QStringLiteral("mail")).toString());
 
     }
 
@@ -182,7 +182,7 @@ void ResourceModel::startSearch()
     }
 
     if (searchString.isEmpty()) {
-        ldapSearch.startSearch("*");
+        ldapSearch.startSearch(QStringLiteral("*"));
     } else {
         ldapSearch.startSearch("*" + searchString + "*");
     }

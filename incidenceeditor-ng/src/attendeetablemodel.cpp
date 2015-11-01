@@ -192,7 +192,7 @@ bool AttendeeTableModel::insertRows(int position, int rows, const QModelIndex &p
     beginInsertRows(parent, position, position + rows - 1);
 
     for (int row = 0; row < rows; ++row) {
-        KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee("", ""));
+        KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(QLatin1String(""), QLatin1String("")));
         mAttendeeList.insert(position, attendee);
     }
 

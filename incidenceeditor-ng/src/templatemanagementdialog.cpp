@@ -65,13 +65,13 @@ TemplateManagementDialog::TemplateManagementDialog(
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateManagementDialog::reject);
-    setObjectName("template_management_dialog");
+    setObjectName(QStringLiteral("template_management_dialog"));
     connect(buttonBox->button(QDialogButtonBox::Help), &QPushButton::clicked, this, &TemplateManagementDialog::slotHelp);
     QWidget *widget = new QWidget(this);
     mainLayout->addWidget(widget);
     mainLayout->addWidget(buttonBox);
 
-    widget->setObjectName("template_management_dialog_base");
+    widget->setObjectName(QStringLiteral("template_management_dialog_base"));
     m_base.setupUi(widget);
 
     m_base.m_listBox->addItems(m_templates);

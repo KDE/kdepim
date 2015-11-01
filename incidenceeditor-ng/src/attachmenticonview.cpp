@@ -242,7 +242,7 @@ QMimeData *AttachmentIconView::mimeData(const QList< QListWidgetItem *> items) c
     }
 
     QMap<QString, QString> metadata;
-    metadata["labels"] = labels.join(":");
+    metadata[QStringLiteral("labels")] = labels.join(QStringLiteral(":"));
 
     QMimeData *mimeData = new QMimeData;
     mimeData->setUrls(urls);
@@ -261,7 +261,7 @@ void AttachmentIconView::startDrag(Qt::DropActions supportedActions)
 #ifndef QT_NO_DRAGANDDROP
     QPixmap pixmap;
     if (selectedItems().size() > 1) {
-        pixmap = KIconLoader::global()->loadIcon("mail-attachment", KIconLoader::Desktop);
+        pixmap = KIconLoader::global()->loadIcon(QStringLiteral("mail-attachment"), KIconLoader::Desktop);
     }
     if (pixmap.isNull()) {
         pixmap = static_cast<AttachmentIconItem *>(currentItem())->icon();

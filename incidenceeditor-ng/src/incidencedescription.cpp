@@ -47,7 +47,7 @@ public:
 IncidenceDescription::IncidenceDescription(Ui::EventOrTodoDesktop *ui)
     : IncidenceEditor(0), mUi(ui), d(new IncidenceDescriptionPrivate())
 {
-    setObjectName("IncidenceDescription");
+    setObjectName(QStringLiteral("IncidenceDescription"));
     mUi->mDescriptionEdit->setRichTextSupport(KRichTextWidget::SupportBold |
             KRichTextWidget::SupportBold |
             KRichTextWidget::SupportItalic |
@@ -126,11 +126,11 @@ void IncidenceDescription::enableRichTextDescription(bool enable)
     d->mRichTextEnabled = enable;
 
     QString rt(i18nc("@action Enable or disable rich text editting", "Enable rich text"));
-    QString placeholder("<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>");
+    QString placeholder(QStringLiteral("<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>"));
 
     if (enable) {
         rt = i18nc("@action Enable or disable rich text editting", "Disable rich text");
-        placeholder = QString("<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>");
+        placeholder = QStringLiteral("<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>");
         mUi->mDescriptionEdit->enableRichTextMode();
         d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
     } else {
@@ -158,22 +158,22 @@ void IncidenceDescription::setupToolBar()
 
     KToolBar *mEditToolBar = new KToolBar(mUi->mEditToolBarPlaceHolder);
     mEditToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    mEditToolBar->addAction(collection->action("format_text_bold"));
-    mEditToolBar->addAction(collection->action("format_text_italic"));
-    mEditToolBar->addAction(collection->action("format_text_underline"));
-    mEditToolBar->addAction(collection->action("format_text_strikeout"));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_text_bold")));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_text_italic")));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_text_underline")));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_text_strikeout")));
     mEditToolBar->addSeparator();
 
-    mEditToolBar->addAction(collection->action("format_list_style"));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_list_style")));
     mEditToolBar->addSeparator();
 
-    mEditToolBar->addAction(collection->action("format_align_left"));
-    mEditToolBar->addAction(collection->action("format_align_center"));
-    mEditToolBar->addAction(collection->action("format_align_right"));
-    mEditToolBar->addAction(collection->action("format_align_justify"));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_align_left")));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_align_center")));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_align_right")));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_align_justify")));
     mEditToolBar->addSeparator();
 
-    mEditToolBar->addAction(collection->action("format_painter"));
+    mEditToolBar->addAction(collection->action(QStringLiteral("format_painter")));
     mUi->mDescriptionEdit->setActionsEnabled(false);
 
     QGridLayout *layout = new QGridLayout(mUi->mEditToolBarPlaceHolder);

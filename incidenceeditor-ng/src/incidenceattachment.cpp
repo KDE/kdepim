@@ -57,7 +57,7 @@ IncidenceAttachment::IncidenceAttachment(Ui::EventOrTodoDesktop *ui)
 {
     setupActions();
     setupAttachmentIconView();
-    setObjectName("IncidenceAttachment");
+    setObjectName(QStringLiteral("IncidenceAttachment"));
 
     connect(mUi->mAddButton, &QPushButton::clicked, this, &IncidenceAttachment::addAttachment);
     connect(mUi->mRemoveButton, &QPushButton::clicked, this, &IncidenceAttachment::removeSelectedAttachments);
@@ -198,7 +198,7 @@ void IncidenceAttachment::removeSelectedAttachments()
         return;
     }
 
-    QString labelsStr = labels.join("<nl/>");
+    QString labelsStr = labels.join(QStringLiteral("<nl/>"));
 
     if (KMessageBox::questionYesNo(
                 0,
@@ -206,7 +206,7 @@ void IncidenceAttachment::removeSelectedAttachments()
                        "Do you really want to remove these attachments?<nl/>%1", labelsStr),
                 i18nc("@title:window", "Remove Attachments?"),
                 KStandardGuiItem::yes(), KStandardGuiItem::no(),
-                "calendarRemoveAttachments") != KMessageBox::Yes) {
+                QStringLiteral("calendarRemoveAttachments")) != KMessageBox::Yes) {
         return;
     }
 
@@ -404,7 +404,7 @@ void IncidenceAttachment::handlePasteOrDrop(const QMimeData *mimeData)
         //QT5
         //urls = QList<QUrl>::fromMimeData( mimeData, &metadata );
         probablyWeHaveUris = true;
-        labels = metadata["labels"].split(':', QString::SkipEmptyParts);
+        labels = metadata[QStringLiteral("labels")].split(':', QString::SkipEmptyParts);
         for (QStringList::Iterator it = labels.begin(); it != labels.end(); ++it) {
             *it = QUrl::fromPercentEncoding((*it).toLatin1());
         }
@@ -420,7 +420,7 @@ void IncidenceAttachment::handlePasteOrDrop(const QMimeData *mimeData)
     QMenu menu;
     QAction *linkAction = 0, *cancelAction;
     if (probablyWeHaveUris) {
-        linkAction = menu.addAction(QIcon::fromTheme("insert-link"), i18nc("@action:inmenu", "&Link here"));
+        linkAction = menu.addAction(QIcon::fromTheme(QStringLiteral("insert-link")), i18nc("@action:inmenu", "&Link here"));
         // we need to check if we can reasonably expect to copy the objects
         bool weCanCopy = true;
         for (QList<QUrl>::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it) {
@@ -429,14 +429,14 @@ void IncidenceAttachment::handlePasteOrDrop(const QMimeData *mimeData)
             }
         }
         if (weCanCopy) {
-            menu.addAction(QIcon::fromTheme("edit-copy"), i18nc("@action:inmenu", "&Copy here"));
+            menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18nc("@action:inmenu", "&Copy here"));
         }
     } else {
-        menu.addAction(QIcon::fromTheme("edit-copy"), i18nc("@action:inmenu", "&Copy here"));
+        menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18nc("@action:inmenu", "&Copy here"));
     }
 
     menu.addSeparator();
-    cancelAction = menu.addAction(QIcon::fromTheme("process-stop"), i18nc("@action:inmenu", "C&ancel"));
+    cancelAction = menu.addAction(QIcon::fromTheme(QStringLiteral("process-stop")), i18nc("@action:inmenu", "C&ancel"));
 
     QByteArray data;
     QString mimeType;
@@ -487,7 +487,7 @@ void IncidenceAttachment::setupActions()
     mOpenAction = new QAction(i18nc("@action:inmenu open the attachment in a viewer",
                                     "&Open"), this);
     connect(mOpenAction, &QAction::triggered, this, &IncidenceAttachment::showSelectedAttachments);
-    ac->addAction("view", mOpenAction);
+    ac->addAction(QStringLiteral("view"), mOpenAction);
     mPopupMenu->addAction(mOpenAction);
 
     mSaveAsAction = new QAction(i18nc("@action:inmenu save the attachment to a file",
@@ -511,7 +511,7 @@ void IncidenceAttachment::setupActions()
     mDeleteAction = new QAction(i18nc("@action:inmenu remove the attachment",
                                       "&Remove"), this);
     connect(mDeleteAction, &QAction::triggered, this, &IncidenceAttachment::removeSelectedAttachments);
-    ac->addAction("remove", mDeleteAction);
+    ac->addAction(QStringLiteral("remove"), mDeleteAction);
     mDeleteAction->setShortcut(Qt::Key_Delete);
     mPopupMenu->addAction(mDeleteAction);
     mPopupMenu->addSeparator();
@@ -519,7 +519,7 @@ void IncidenceAttachment::setupActions()
     mEditAction = new QAction(i18nc("@action:inmenu show a dialog used to edit the attachment",
                                     "&Properties..."), this);
     connect(mEditAction, &QAction::triggered, this, &IncidenceAttachment::editSelectedAttachments);
-    ac->addAction("edit", mEditAction);
+    ac->addAction(QStringLiteral("edit"), mEditAction);
     mPopupMenu->addAction(mEditAction);
 }
 
@@ -551,7 +551,7 @@ void IncidenceAttachment::addDataAttachment(const QByteArray &data,
     AttachmentIconItem *item = new AttachmentIconItem(KCalCore::Attachment::Ptr(), mAttachmentView);
 
     QString nlabel = label;
-    if (mimeType == "message/rfc822") {
+    if (mimeType == QLatin1String("message/rfc822")) {
         // mail message. try to set the label from the mail Subject:
         KMime::Message msg;
         msg.setContent(data);
@@ -583,13 +583,13 @@ void IncidenceAttachment::addUriAttachment(const QString &uri,
         item->setLabel(label);
         if (mimeType.isEmpty()) {
             if (uri.startsWith(QStringLiteral("uid:"))) {
-                item->setMimeType("text/directory");
+                item->setMimeType(QStringLiteral("text/directory"));
             } else if (uri.startsWith(QStringLiteral("kmail:"))) {
-                item->setMimeType("message/rfc822");
+                item->setMimeType(QStringLiteral("message/rfc822"));
             } else if (uri.startsWith(QStringLiteral("urn:x-ical"))) {
-                item->setMimeType("text/calendar");
+                item->setMimeType(QStringLiteral("text/calendar"));
             } else if (uri.startsWith(QStringLiteral("news:"))) {
-                item->setMimeType("message/news");
+                item->setMimeType(QStringLiteral("message/news"));
             } else {
                 QMimeDatabase db;
                 item->setMimeType(db.mimeTypeForUrl(uri).name());

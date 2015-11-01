@@ -54,8 +54,8 @@ CategoryWidget::CategoryWidget(CategoryConfig *cc, QWidget *parent)
     mWidgets = new CategoryWidgetBase(this);
     topL->addWidget(mWidgets);
 
-    mWidgets->mButtonAdd->setIcon(QIcon::fromTheme("list-add"));
-    mWidgets->mButtonRemove->setIcon(QIcon::fromTheme("list-remove"));
+    mWidgets->mButtonAdd->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
+    mWidgets->mButtonRemove->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
     mWidgets->mLineEdit->setPlaceholderText(i18n("Click to add a new category"));
 
     connect(mWidgets->mLineEdit, &QLineEdit::textChanged,
@@ -133,7 +133,7 @@ static QStringList getSelectedCategories(AutoCheckTreeWidget *categoriesView)
     while (*it) {
         QStringList path = categoriesView->pathByItem(*it++);
         if (path.count()) {
-            path.replaceInStrings(CategoryConfig::categorySeparator, QString("\\") +
+            path.replaceInStrings(CategoryConfig::categorySeparator, QStringLiteral("\\") +
                                   CategoryConfig::categorySeparator);
             categories.append(path.join(CategoryConfig::categorySeparator));
         }
@@ -168,7 +168,7 @@ void CategoryWidget::hideHeader()
 QStringList CategoryWidget::selectedCategories(QString &categoriesStr)
 {
     mCategoryList = getSelectedCategories(listView());
-    categoriesStr = mCategoryList.join(", ");
+    categoriesStr = mCategoryList.join(QStringLiteral(", "));
     return mCategoryList;
 }
 
@@ -254,7 +254,7 @@ CategoryDialog::CategoryDialog(CategoryConfig *cc, QWidget *parent)
 
     mWidgets = new CategoryWidget(cc, this);
     mCategoryConfig = cc;
-    mWidgets->setObjectName("CategorySelection");
+    mWidgets->setObjectName(QStringLiteral("CategorySelection"));
     mWidgets->hideHeader();
     lay->addWidget(mWidgets);
 
@@ -285,7 +285,7 @@ void CategoryDialog::slotApply()
         path = mWidgets->listView()->pathByItem(*it++);
         path.replaceInStrings(
             CategoryConfig::categorySeparator,
-            QString("\\") + CategoryConfig::categorySeparator);
+            QStringLiteral("\\") + CategoryConfig::categorySeparator);
         l.append(path.join(CategoryConfig::categorySeparator));
     }
     mCategoryConfig->setCustomCategories(l);

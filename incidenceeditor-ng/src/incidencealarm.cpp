@@ -35,7 +35,7 @@ IncidenceAlarm::IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoDeskt
       mEnabledAlarmCount(0),
       mIsTodo(false)
 {
-    setObjectName("IncidenceAlarm");
+    setObjectName(QStringLiteral("IncidenceAlarm"));
 
     mUi->mAlarmPresetCombo->insertItems(0, AlarmPresets::availablePresets());
     mUi->mAlarmPresetCombo->setCurrentIndex(AlarmPresets::defaultPresetIndex());

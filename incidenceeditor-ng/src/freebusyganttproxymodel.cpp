@@ -83,26 +83,26 @@ QVariant FreeBusyGanttProxyModel::data(const QModelIndex &index, int role) const
 QString FreeBusyGanttProxyModel::tooltipify(const KCalCore::FreeBusyPeriod &period,
         const KDateTime::Spec &timeSpec) const
 {
-    QString toolTip = "<qt>";
+    QString toolTip = QStringLiteral("<qt>");
     toolTip += "<b>" + i18nc("@info:tooltip", "Free/Busy Period") + "</b>";
-    toolTip += "<hr>";
+    toolTip += QLatin1String("<hr>");
     if (!period.summary().isEmpty()) {
         toolTip += "<i>" + i18nc("@info:tooltip", "Summary:") + "</i>" + "&nbsp;";
         toolTip += period.summary();
-        toolTip += "<br>";
+        toolTip += QLatin1String("<br>");
     }
     if (!period.location().isEmpty()) {
         toolTip += "<i>" + i18nc("@info:tooltip", "Location:") + "</i>" + "&nbsp;";
         toolTip += period.location();
-        toolTip += "<br>";
+        toolTip += QLatin1String("<br>");
     }
     toolTip += "<i>" + i18nc("@info:tooltip period start time", "Start:") + "</i>" + "&nbsp;";
     toolTip += QLocale::system().toString(period.start().toTimeSpec(timeSpec).dateTime(), QLocale::ShortFormat);
-    toolTip += "<br>";
+    toolTip += QLatin1String("<br>");
     toolTip += "<i>" + i18nc("@info:tooltip period end time", "End:") + "</i>" + "&nbsp;";
     toolTip += QLocale::system().toString(period.end().toTimeSpec(timeSpec).dateTime(), QLocale::ShortFormat);
-    toolTip += "<br>";
-    toolTip += "</qt>";
+    toolTip += QLatin1String("<br>");
+    toolTip += QLatin1String("</qt>");
     return toolTip;
 }
 

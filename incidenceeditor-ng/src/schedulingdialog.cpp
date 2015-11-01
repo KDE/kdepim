@@ -105,13 +105,13 @@ void SchedulingDialog::slotUpdateIncidenceStartEnd(const KDateTime &startDateTim
 void SchedulingDialog::fillCombos()
 {
 // Note: we depend on the following order
-    mRolesCombo->addItem(QIcon::fromTheme("meeting-participant"),
+    mRolesCombo->addItem(QIcon::fromTheme(QStringLiteral("meeting-participant")),
                          KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
-    mRolesCombo->addItem(QIcon::fromTheme("meeting-participant-optional"),
+    mRolesCombo->addItem(QIcon::fromTheme(QStringLiteral("meeting-participant-optional")),
                          KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::OptParticipant));
-    mRolesCombo->addItem(QIcon::fromTheme("meeting-observer"),
+    mRolesCombo->addItem(QIcon::fromTheme(QStringLiteral("meeting-observer")),
                          KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::NonParticipant));
-    mRolesCombo->addItem(QIcon::fromTheme("meeting-chair"),
+    mRolesCombo->addItem(QIcon::fromTheme(QStringLiteral("meeting-chair")),
                          KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
 
     mRolesCombo->setWhatsThis(i18nc("@info:whatsthis",

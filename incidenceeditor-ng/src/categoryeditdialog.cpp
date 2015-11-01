@@ -56,17 +56,17 @@ CategoryEditDialog::CategoryEditDialog(CategoryConfig *categoryConfig,
     connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryEditDialog::reject);
     mWidgets = new Ui::CategoryEditDialog_base();
     QWidget *widget = new QWidget(this);
-    widget->setObjectName("CategoryEdit");
+    widget->setObjectName(QStringLiteral("CategoryEdit"));
     mWidgets->setupUi(widget);
 
     mWidgets->mCategories->header()->hide();
-    mWidgets->mButtonAdd->setIcon(QIcon::fromTheme("list-add"));
+    mWidgets->mButtonAdd->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
 
     mWidgets->mButtonAddSubcategory->setEnabled(false);
-    mWidgets->mButtonAddSubcategory->setIcon(QIcon::fromTheme("list-add"));
+    mWidgets->mButtonAddSubcategory->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
 
     mWidgets->mButtonRemove->setEnabled(false);
-    mWidgets->mButtonRemove->setIcon(QIcon::fromTheme("list-remove"));
+    mWidgets->mButtonRemove->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
 
     mWidgets->mCategories->setDragDropMode(QAbstractItemView::InternalMove);
 
@@ -203,7 +203,7 @@ void CategoryEditDialog::slotApply()
         path = mWidgets->mCategories->pathByItem(*it++);
         path.replaceInStrings(
             CategoryConfig::categorySeparator,
-            QString("\\") + CategoryConfig::categorySeparator);
+            QStringLiteral("\\") + CategoryConfig::categorySeparator);
         l.append(path.join(CategoryConfig::categorySeparator));
     }
     mCategoryConfig->setCustomCategories(l);

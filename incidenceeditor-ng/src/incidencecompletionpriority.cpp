@@ -48,7 +48,7 @@ void IncidenceCompletionPriority::Private::sliderValueChanged(int value)
         mOrigPercentCompleted = -1;
     }
 
-    mUi->mCompletedLabel->setText(QString("%1%").arg(value));
+    mUi->mCompletedLabel->setText(QStringLiteral("%1%").arg(value));
     q->checkDirtyStatus();
 }
 
@@ -56,7 +56,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority(Ui::EventOrTodoDesktop 
     : IncidenceEditor(), d(new Private(this))
 {
     Q_ASSERT(ui != 0);
-    setObjectName("IncidenceCompletionPriority");
+    setObjectName(QStringLiteral("IncidenceCompletionPriority"));
 
     d->mUi = ui;
 

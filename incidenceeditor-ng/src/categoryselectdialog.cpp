@@ -41,8 +41,8 @@ public:
     {
         setupUi(this);
 
-        mButtonClear->setIcon(QIcon::fromTheme("edit-clear-locationbar-rtl"));
-        mButtonEdit->setIcon(QIcon::fromTheme("document-properties"));
+        mButtonClear->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-locationbar-rtl")));
+        mButtonEdit->setIcon(QIcon::fromTheme(QStringLiteral("document-properties")));
     }
 };
 
@@ -115,7 +115,7 @@ static QStringList getSelectedCategoriesFromCategoriesView(AutoCheckTreeWidget *
     while (*it) {
         QStringList path = categoriesView->pathByItem(*it++);
         if (path.count()) {
-            path.replaceInStrings(CategoryConfig::categorySeparator, QString("\\") +
+            path.replaceInStrings(CategoryConfig::categorySeparator, QStringLiteral("\\") +
                                   CategoryConfig::categorySeparator);
             categories.append(path.join(CategoryConfig::categorySeparator));
         }
@@ -150,7 +150,7 @@ void CategorySelectWidget::hideHeader()
 QStringList CategorySelectWidget::selectedCategories(QString &categoriesStr)
 {
     mCategoryList = getSelectedCategoriesFromCategoriesView(listView());
-    categoriesStr = mCategoryList.join(", ");
+    categoriesStr = mCategoryList.join(QStringLiteral(", "));
     return mCategoryList;
 }
 
@@ -184,7 +184,7 @@ CategorySelectDialog::CategorySelectDialog(CategoryConfig *cc, QWidget *parent)
     mWidgets = new CategorySelectWidget(cc, this);
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
-    mWidgets->setObjectName("CategorySelection");
+    mWidgets->setObjectName(QStringLiteral("CategorySelection"));
     mWidgets->hideHeader();
     lay->addWidget(mWidgets);
 

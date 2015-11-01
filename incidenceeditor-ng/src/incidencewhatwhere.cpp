@@ -29,7 +29,7 @@ using namespace IncidenceEditorNG;
 IncidenceWhatWhere::IncidenceWhatWhere(Ui::EventOrTodoDesktop *ui)
     : IncidenceEditor(0), mUi(ui)
 {
-    setObjectName("IncidenceWhatWhere");
+    setObjectName(QStringLiteral("IncidenceWhatWhere"));
     connect(mUi->mSummaryEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
     connect(mUi->mLocationEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
 }

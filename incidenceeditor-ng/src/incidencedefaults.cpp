@@ -127,7 +127,7 @@ KCalCore::Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
 KCalCore::Attendee::Ptr IncidenceDefaultsPrivate::organizerAsAttendee(
     const KCalCore::Person::Ptr &organizer) const
 {
-    KCalCore::Attendee::Ptr organizerAsAttendee(new KCalCore::Attendee("", ""));
+    KCalCore::Attendee::Ptr organizerAsAttendee(new KCalCore::Attendee(QLatin1String(""), QLatin1String("")));
     // Really, the appropriate values (even the fall back values) should come from
     // organizer. (See organizerAsPerson for more details).
     organizerAsAttendee->setName(organizer->name());

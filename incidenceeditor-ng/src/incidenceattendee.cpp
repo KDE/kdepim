@@ -63,7 +63,7 @@ IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTim
 
 {
     KCalCore::Attendee::List attendees;
-    KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee("", ""));
+    KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(QLatin1String(""), QLatin1String("")));
     attendees.append(attendee);
     mDataModel = new AttendeeTableModel(attendees, this);
     mDataModel->setKeepEmpty(true);
@@ -95,7 +95,7 @@ IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTim
                                           "attendee to request a response concerning "
                                           "attendance."));
 
-    setObjectName("IncidenceAttendee");
+    setObjectName(QStringLiteral("IncidenceAttendee"));
 
     AttendeeFilterProxyModel *filterProxyModel = new AttendeeFilterProxyModel(this);
     filterProxyModel->setDynamicSortFilter(true);

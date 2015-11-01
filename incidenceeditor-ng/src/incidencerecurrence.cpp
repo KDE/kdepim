@@ -71,7 +71,7 @@ enum {
 IncidenceRecurrence::IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui)
     : mUi(ui), mDateTime(dateTime), mMonthlyInitialType(0), mYearlyInitialType(0)
 {
-    setObjectName("IncidenceRecurrence");
+    setObjectName(QStringLiteral("IncidenceRecurrence"));
     // Set some sane defaults
     mUi->mRecurrenceTypeCombo->setCurrentIndex(RecurrenceTypeNone);
     mUi->mRecurrenceEndCombo->setCurrentIndex(RecurrenceEndNever);
@@ -125,7 +125,7 @@ KLocalizedString IncidenceRecurrence::subsOrdinal(const KLocalizedString &text, 
                       "translate this as \"1\" if just the number itself "
                       "should be substituted (1, 22, 123).",
                       "0");
-    if (q == "0") {
+    if (q == QLatin1String("0")) {
         QString ordinal;
         ordinal = numberToString(number);
         return text.subs(ordinal);
@@ -607,7 +607,7 @@ void IncidenceRecurrence::handleRecurrenceTypeChange(int currentIndex)
                          "dynamic context 'type': 'd' days, 'w' weeks, "
                          "'m' months, 'y' years",
                          "every", "every").
-                 subs(frequency).inContext("type", freqKey).toString();
+                 subs(frequency).inContext(QStringLiteral("type"), freqKey).toString();
     mUi->mFrequencyLabel->setText(labelEvery);
     mUi->mRecurrenceRuleLabel->setText(labelFreq);
 
@@ -725,7 +725,7 @@ QString IncidenceRecurrence::numberToString(int number) const
     // The code in here was adapted from an article by Johnathan Wood, see:
     // http://www.blackbeltcoder.com/Articles/strings/converting-numbers-to-ordinal-strings
 
-    static QString _numSuffixes[] = { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+    static QString _numSuffixes[] = { QStringLiteral("th"), QStringLiteral("st"), QStringLiteral("nd"), QStringLiteral("rd"), QStringLiteral("th"), QStringLiteral("th"), QStringLiteral("th"), QStringLiteral("th"), QStringLiteral("th"), QStringLiteral("th") };
 
     int i = (number % 100);
     int j = (i > 10 && i < 20) ? 0 : (number % 10);

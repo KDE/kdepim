@@ -34,7 +34,7 @@ IncidenceCategories::IncidenceCategories(Ui::EventOrTodoDesktop *ui)
     : mUi(ui),
       mDirty(false)
 {
-    setObjectName("IncidenceCategories");
+    setObjectName(QStringLiteral("IncidenceCategories"));
 
     connect(mUi->mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &IncidenceCategories::onSelectionChanged);
 }
