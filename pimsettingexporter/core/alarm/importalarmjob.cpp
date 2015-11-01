@@ -94,7 +94,8 @@ void ImportAlarmJob::restoreResources()
         for (int i = 0; i < numberOfResourceFile; ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))) {
+            if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))
+                    || value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_resource_"))) {
                 const KArchiveEntry *fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
@@ -111,10 +112,11 @@ void ImportAlarmJob::restoreResources()
                     QFileInfo newUrlInfo(newUrl);
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    bool isDirResource = value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_dir_resource_"));
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
-                        extractZipFile(file, copyToDirName, newUrlInfo.path());
+                        extractZipFile(file, copyToDirName, newUrlInfo.path(), isDirResource);
                     }
                     settings.insert(QStringLiteral("Path"), newUrl);
 
@@ -128,7 +130,7 @@ void ImportAlarmJob::restoreResources()
                             filename = Utils::akonadiAgentName(copyToDirName + QLatin1Char('/') + resourceName);
                         }
                     }
-
+                    const QString archiveNameType = isDirResource ? QStringLiteral("akonadi_kalarm_dir_resource") : QStringLiteral("akonadi_kalarm_resource");
                     const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_kalarm_dir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
