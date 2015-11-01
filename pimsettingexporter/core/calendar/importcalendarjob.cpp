@@ -118,6 +118,7 @@ void ImportCalendarJob::restoreResources()
 
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    bool isDirResource = value.akonadiConfigFile.contains(QStringLiteral("akonadi_icaldir_resource_"));
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
@@ -135,8 +136,8 @@ void ImportCalendarJob::restoreResources()
                             filename = Utils::akonadiAgentName(copyToDirName + QLatin1Char('/') + resourceName);
                         }
                     }
-
-                    const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_icaldir_resource"), filename, settings, true);
+                    const QString resourceTypeName = isDirResource ? QStringLiteral("akonadi_icaldir_resource") : QStringLiteral("akonadi_ical_resource");
+                    const QString newResource = mCreateResource->createResource(resourceTypeName, filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
                     qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " newResource" << newResource;
