@@ -54,6 +54,7 @@ void ExportAkregatorJob::start()
 
 void ExportAkregatorJob::slotCheckBackupConfig()
 {
+    increaseProgressDialog();
     setProgressDialogLabel(i18n("Backing up config..."));
 
     const QString akregatorStr(QStringLiteral("akregatorrc"));
@@ -66,6 +67,7 @@ void ExportAkregatorJob::slotCheckBackupConfig()
 void ExportAkregatorJob::slotCheckBackupData()
 {
     if (mTypeSelected & Utils::Data) {
+        increaseProgressDialog();
         setProgressDialogLabel(i18n("Backing up data..."));
 
         const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator");

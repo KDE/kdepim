@@ -52,6 +52,7 @@ void ExportBlogiloJob::start()
 void ExportBlogiloJob::slotCheckBackupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
+    increaseProgressDialog();
 
     const QString blogiloStr(QStringLiteral("blogilorc"));
     const QString blogilorc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + blogiloStr;
@@ -65,6 +66,7 @@ void ExportBlogiloJob::slotCheckBackupData()
 {
     if (mTypeSelected & Utils::Data) {
         setProgressDialogLabel(i18n("Backing up data..."));
+        increaseProgressDialog();
 
         const QString dbfileStr = QStringLiteral("blogilo.db");
         const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr;
