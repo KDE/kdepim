@@ -273,7 +273,7 @@ void SessionThread::doStartAuthentication()
     }
 
     do {
-        result = sasl_client_start(m_sasl_conn, m_session->requestedSaslMethod().join(" ").toLatin1(), &m_sasl_client_interact, &out, &outlen, &mechusing);
+        result = sasl_client_start(m_sasl_conn, m_session->requestedSaslMethod().join(QStringLiteral(" ")).toLatin1(), &m_sasl_client_interact, &out, &outlen, &mechusing);
         if (result == SASL_INTERACT) {
             if (!saslInteract(m_sasl_client_interact)) {
                 Q_EMIT error(KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8(sasl_errdetail(m_sasl_conn))));

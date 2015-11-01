@@ -632,7 +632,7 @@ MultiLineStart:
             }
             const QString line = removeCRLF(QString::fromUtf8(oldBeginOfLine, lineLength));
             lines.push_back(removeDotStuff(line));
-            if (line == ".") {
+            if (line == QLatin1String(".")) {
                 break;
             }
         } else {
@@ -640,14 +640,14 @@ MultiLineStart:
         }
     }
 
-    if (lines.back() != ".") {
+    if (lines.back() != QLatin1String(".")) {
         makeError(Error::PrematureEndOfMultiLine, mlBeginLine, mlBeginCol);
         return false;
     }
 
     assert(!lines.empty());
     lines.erase(--lines.end());   // don't include the lone dot.
-    result = lines.join("\n");
+    result = lines.join(QStringLiteral("\n"));
     return true;
 }
 

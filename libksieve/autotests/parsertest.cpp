@@ -459,7 +459,7 @@ public:
         write(multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string);
     }
     void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE {
-        const QString txt = "number" + (quantifier ? QString(" quantifier=\"%1\"").arg(quantifier) : QString());
+        const QString txt = "number" + (quantifier ? QStringLiteral(" quantifier=\"%1\"").arg(quantifier) : QString());
         write(txt.toLatin1(), QString::number(number));
     }
     void commandStart(const QString &identifier) Q_DECL_OVERRIDE {

@@ -140,7 +140,7 @@ bool Parser::Impl::isArgumentToken() const
     return isStringToken() ||
            token() == Lexer::Number ||
            token() == Lexer::Tag ||
-           (token() == Lexer::Special && mTokenValue == "[");
+           (token() == Lexer::Special && mTokenValue == QLatin1String("["));
 }
 
 bool Parser::Impl::obtainToken()
@@ -279,7 +279,7 @@ bool Parser::Impl::parseCommand()
         return false;
     }
 
-    if (token() == Lexer::Special && tokenValue() == "(") {   // test-list
+    if (token() == Lexer::Special && tokenValue() == QLatin1String("(")) {   // test-list
         if (!parseTestList()) {
             assert(error());
             return false;
@@ -309,9 +309,9 @@ bool Parser::Impl::parseCommand()
         return false;
     }
 
-    if (tokenValue() == ";") {
+    if (tokenValue() == QLatin1String(";")) {
         consumeToken();
-    } else if (tokenValue() == "{") { // block
+    } else if (tokenValue() == QLatin1String("{")) { // block
         if (!parseBlock()) {
             return false;    // it's an error since we saw '{'
         }
@@ -371,7 +371,7 @@ bool Parser::Impl::parseArgument()
         }
         consumeToken();
         return true;
-    } else if (token() == Lexer::Special && tokenValue() == "[") {
+    } else if (token() == Lexer::Special && tokenValue() == QLatin1String("[")) {
         if (!parseStringList()) {
             assert(error());
             return false;
@@ -390,7 +390,7 @@ bool Parser::Impl::parseTestList()
         return false;
     }
 
-    if (token() != Lexer::Special || tokenValue() != "(") {
+    if (token() != Lexer::Special || tokenValue() != QLatin1String("(")) {
         return false;
     }
     if (scriptBuilder()) {
@@ -511,7 +511,7 @@ bool Parser::Impl::parseTest()
         goto TestEnd;
     }
 
-    if (token() == Lexer::Special && tokenValue() == "(") {   // test-list
+    if (token() == Lexer::Special && tokenValue() == QLatin1String("(")) {   // test-list
         if (!parseTestList()) {
             assert(error());
             return false;
@@ -539,7 +539,7 @@ bool Parser::Impl::parseBlock()
         return false;
     }
 
-    if (token() != Lexer::Special || tokenValue() != "{") {
+    if (token() != Lexer::Special || tokenValue() != QLatin1String("{")) {
         return false;
     }
     if (scriptBuilder()) {
@@ -572,7 +572,7 @@ bool Parser::Impl::parseBlock()
         return false;
     }
 
-    if (token() != Lexer::Special || tokenValue() != "}") {
+    if (token() != Lexer::Special || tokenValue() != QLatin1String("}")) {
         makeError(Error::NonCommandInCommandList);
         return false;
     }
@@ -596,7 +596,7 @@ bool Parser::Impl::parseStringList()
         return false;
     }
 
-    if (token() != Lexer::Special || tokenValue() != "[") {
+    if (token() != Lexer::Special || tokenValue() != QLatin1String("[")) {
         return false;
     }
 
