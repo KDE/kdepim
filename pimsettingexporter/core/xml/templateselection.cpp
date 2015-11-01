@@ -89,7 +89,7 @@ QHash<Utils::AppsType, Utils::importExportParameters> TemplateSelection::loadTem
         QDomElement e = n.toElement();
         if (!e.isNull())  {
             const QString tagName(e.tagName());
-            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "tag :" << tagName;
+            //qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "tag :" << tagName;
             Utils::AppsType type = Utils::Unknown;
             if (tagName == QLatin1String("kmail")) {
                 type = Utils::KMail;
