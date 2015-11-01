@@ -67,6 +67,7 @@ private:
     void backupFinished();
     void restoreFinished();
     void executeJob();
+    void addDate();
 
     QHash<Utils::AppsType, Utils::importExportParameters> mStored;
     QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;

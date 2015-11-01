@@ -80,11 +80,14 @@ bool PimSettingsBackupRestore::openArchive(const QString &filename, bool readWri
 bool PimSettingsBackupRestore::backupStart(const QString &filename)
 {
     if (mStored.isEmpty()) {
+        addDate();
+        Q_EMIT addInfo(i18n("No data selected."));
         Q_EMIT jobFailed();
         deleteLater();
         return false;
     }
     if (!openArchive(filename, true)) {
+        Q_EMIT addError(i18n("Unable to open file \"%1\".", filename));
         Q_EMIT jobFailed();
         deleteLater();
         return false;
@@ -92,8 +95,7 @@ bool PimSettingsBackupRestore::backupStart(const QString &filename)
     Q_EMIT updateActions(true);
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
-    const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + QLocale().toString((now), QLocale::ShortFormat) + QLatin1Char(']'));
+    addDate();
     Q_EMIT addInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
     //Add version
@@ -251,14 +253,23 @@ bool PimSettingsBackupRestore::continueToRestore()
     return true;
 }
 
+void PimSettingsBackupRestore::addDate()
+{
+    const QDateTime now = QDateTime::currentDateTime();
+    Q_EMIT addInfo(QLatin1Char('[') + QLocale().toString((now), QLocale::ShortFormat) + QLatin1Char(']'));
+}
+
 bool PimSettingsBackupRestore::restoreStart(const QString &filename)
 {
     if (mStored.isEmpty()) {
+        addDate();
+        Q_EMIT addInfo(i18n("No data selected."));
         Q_EMIT jobFailed();
         deleteLater();
         return false;
     }
     if (!openArchive(filename, false)) {
+        Q_EMIT addError(i18n("Unable to open file \"%1\".", filename));
         Q_EMIT jobFailed();
         deleteLater();
         return false;
@@ -275,8 +286,7 @@ bool PimSettingsBackupRestore::restoreStart(const QString &filename)
     qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " version " << version;
     AbstractImportExportJob::setArchiveVersion(version);
 
-    const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + QLocale().toString((now), QLocale::ShortFormat) + QLatin1Char(']'));
+    addDate();
 
     Q_EMIT addInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
