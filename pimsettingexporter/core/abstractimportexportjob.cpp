@@ -423,6 +423,22 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     }
 }
 
+void AbstractImportExportJob::restoreUiRcFile(const QString &configNameStr)
+{
+    const KArchiveEntry *configNameentry  = mArchiveDirectory->entry(Utils::configsPath() + configNameStr);
+    if (configNameentry &&  configNameentry->isFile()) {
+        const KArchiveFile *configNameconfiguration = static_cast<const KArchiveFile *>(configNameentry);
+        const QString configNamerc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + configNameStr;
+        if (QFile(configNamerc).exists()) {
+            if (overwriteConfigMessageBox(configNameStr)) {
+                copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());
+        }
+    }
+}
+
 void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
 {
     const KArchiveEntry *configNameentry  = mArchiveDirectory->entry(Utils::configsPath() + configNameStr);
