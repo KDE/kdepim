@@ -173,7 +173,8 @@ void ExportCalendarJob::backupConfig()
             Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", templateDir));
         }
     }
-
+    backupUiRcFile(QStringLiteral("korganizerui.rc"), QStringLiteral("korganizer"));
+    backupUiRcFile(QStringLiteral("korganizer_part.rc"), QStringLiteral("korganizer"));
     Q_EMIT info(i18n("Config backup done."));
 }
 

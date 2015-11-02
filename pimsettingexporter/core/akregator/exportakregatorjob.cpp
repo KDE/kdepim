@@ -58,6 +58,11 @@ void ExportAkregatorJob::slotCheckBackupConfig()
     setProgressDialogLabel(i18n("Backing up config..."));
 
     backupConfigFile(QStringLiteral("akregatorrc"));
+    backupUiRcFile(QStringLiteral("pageviewer.rc"), QStringLiteral("akregator"));
+    backupUiRcFile(QStringLiteral("akregator_part.rc"), QStringLiteral("akregator"));
+    backupUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
+    backupUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
+
     Q_EMIT info(i18n("Config backup done."));
     QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
 }

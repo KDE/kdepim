@@ -82,6 +82,13 @@ Root
 |       |---------sieveeditorrc
 |       |---------kaddressbookui.rc
 |       |---------blogiloui.rc
+|       |---------pageviewer.rc
+|       |---------akregator_part.rc
+|       |---------articleviewe.rc
+|       |---------articleviewe.rc
+|       |---------kalarmui.rc
+|       |---------korganizerui.rc
+|       |---------korganizer_part.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>

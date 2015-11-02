@@ -295,6 +295,8 @@ void ImportCalendarJob::restoreConfig()
             qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "template cannot copy to " << templatePath;
         }
     }
+    restoreUiRcFile(QStringLiteral("korganizerui.rc"), QStringLiteral("korganizer"));
+    restoreUiRcFile(QStringLiteral("korganizer_part.rc"), QStringLiteral("korganizer"));
 
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportCalendarJob::slotNextStep);

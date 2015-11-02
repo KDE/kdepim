@@ -155,6 +155,8 @@ void ExportAlarmJob::backupConfig()
         delete kalarmConfig;
     }
 
+    backupUiRcFile(QStringLiteral("kalarmui.rc"), QStringLiteral("kalarm"));
+
     Q_EMIT info(i18n("Config backup done."));
 }
 

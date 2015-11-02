@@ -205,6 +205,7 @@ void ImportAlarmJob::restoreConfig()
             importkalarmConfig(kalarmrcFile, kalarmrc, kalarmStr, Utils::configsPath());
         }
     }
+    restoreUiRcFile(QStringLiteral("kalarmui.rc"), QStringLiteral("kalarm"));
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportAlarmJob::slotNextStep);
 }
