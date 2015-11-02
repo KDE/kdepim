@@ -786,6 +786,15 @@ void ImportMailJob::restoreConfig()
 
     restoreUiRcFile(QStringLiteral("sieveeditorui.rc"), QStringLiteral("sieveeditor"));
     restoreUiRcFile(QStringLiteral("storageservicemanagerui.rc"), QStringLiteral("storageservicemanager"));
+
+    restoreUiRcFile(QStringLiteral("kmreadermainwin.rc"), QStringLiteral("kmail2"));
+    restoreUiRcFile(QStringLiteral("kmcomposerui.rc"), QStringLiteral("kmail2"));
+    restoreUiRcFile(QStringLiteral("kmmainwin.rc"), QStringLiteral("kmail2"));
+    restoreUiRcFile(QStringLiteral("kmail_part.rc"), QStringLiteral("kmail2"));
+    restoreUiRcFile(QStringLiteral("kontactui.rc"), QStringLiteral("kontact"));
+    restoreUiRcFile(QStringLiteral("kleopatra.rc"), QStringLiteral("kleopatra"));
+
+
     restoreConfigFile(QStringLiteral("kontactrc"));
 
     restoreConfigFile(QStringLiteral("kontact_summaryrc"));

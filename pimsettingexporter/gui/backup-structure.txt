@@ -91,6 +91,11 @@ Root
 |       |---------korganizer_part.rc
 |       |---------sieveeditorui.rc
 |       |---------storageservicemanagerui.rc
+|       |---------kmreadermainwin.rc
+|       |---------kmcomposerui.rc
+|       |---------kmmainwin.rc
+|       |---------kmail_part.rc
+|       |---------kontactui.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>

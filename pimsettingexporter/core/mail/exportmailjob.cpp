@@ -296,6 +296,12 @@ void ExportMailJob::backupConfig()
 
     backupUiRcFile(QStringLiteral("sieveeditorui.rc"), QStringLiteral("sieveeditor"));
     backupUiRcFile(QStringLiteral("storageservicemanagerui.rc"), QStringLiteral("storageservicemanager"));
+    backupUiRcFile(QStringLiteral("kmreadermainwin.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kmcomposerui.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kmmainwin.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kmail_part.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kontactui.rc"), QStringLiteral("kontact"));
+    backupUiRcFile(QStringLiteral("kleopatra.rc"), QStringLiteral("kleopatra"));
 
     backupConfigFile(QStringLiteral("kabldaprc"));
     backupConfigFile(QStringLiteral("kmailsnippetrc"));
@@ -307,6 +313,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("kpimbalooblacklist"));
     backupConfigFile(QStringLiteral("kleopatrarc"));
     backupConfigFile(QStringLiteral("sieveeditorrc"));
+
 
     //Notify file config
     backupConfigFile(QStringLiteral("akonadi_mailfilter_agent.notifyrc"));
