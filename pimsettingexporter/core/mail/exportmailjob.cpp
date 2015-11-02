@@ -303,6 +303,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("storageservicerc"));
     backupConfigFile(QStringLiteral("kpimbalooblacklist"));
     backupConfigFile(QStringLiteral("kleopatrarc"));
+    backupConfigFile(QStringLiteral("sieveeditorrc"));
 
     //Notify file config
     backupConfigFile(QStringLiteral("akonadi_mailfilter_agent.notifyrc"));
