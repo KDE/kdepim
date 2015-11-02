@@ -46,6 +46,12 @@ QString HubicPlugin::hubicClientSecret() const
     return QString();
 }
 
+QString HubicPlugin::oauth2RedirectUrl() const
+{
+    //TODO
+    return QString();
+}
+
 QString HubicPlugin::storageServiceName() const
 {
     return QStringLiteral("hubic");

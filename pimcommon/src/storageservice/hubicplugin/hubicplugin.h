@@ -37,6 +37,7 @@ public:
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
     QString hubicClientId() const;
     QString hubicClientSecret() const;
+    QString oauth2RedirectUrl() const;
 
 };
 }

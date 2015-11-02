@@ -34,6 +34,11 @@ YouSendItPlugin::~YouSendItPlugin()
 
 }
 
+QString YouSendItPlugin::youSendItApiKey() const
+{
+    return QString();
+}
+
 QString YouSendItPlugin::description() const
 {
     return i18n("YouSendIt is a file hosting that offers cloud storage, file synchronization, and client software.");

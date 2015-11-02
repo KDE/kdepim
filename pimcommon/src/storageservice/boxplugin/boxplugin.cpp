@@ -46,6 +46,12 @@ QString BoxPlugin::boxClientSecret() const
     return QString();
 }
 
+QString BoxPlugin::oauth2RedirectUrl() const
+{
+    //TODO
+    return QString();
+}
+
 QString BoxPlugin::storageServiceName() const
 {
     return QStringLiteral("box");

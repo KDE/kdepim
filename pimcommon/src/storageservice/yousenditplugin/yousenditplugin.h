@@ -35,6 +35,8 @@ public:
     StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
     QString description() const Q_DECL_OVERRIDE;
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
+
+    QString youSendItApiKey() const;
 };
 }
 #endif // YOUSENDITPLUGIN_H

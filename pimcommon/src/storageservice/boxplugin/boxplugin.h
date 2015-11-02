@@ -40,6 +40,7 @@ public:
 
     QString boxClientId() const;
     QString boxClientSecret() const;
+    QString oauth2RedirectUrl() const;
 
 };
 }
