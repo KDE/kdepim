@@ -784,6 +784,8 @@ void ImportMailJob::restoreConfig()
         }
     }
 
+    restoreUiRcFile(QStringLiteral("sieveeditorui.rc"), QStringLiteral("sieveeditor"));
+    restoreUiRcFile(QStringLiteral("storageservicemanagerui.rc"), QStringLiteral("storageservicemanager"));
     restoreConfigFile(QStringLiteral("kontactrc"));
 
     restoreConfigFile(QStringLiteral("kontact_summaryrc"));

@@ -294,6 +294,9 @@ void ExportMailJob::backupConfig()
         }
     }
 
+    backupUiRcFile(QStringLiteral("sieveeditorui.rc"), QStringLiteral("sieveeditor"));
+    backupUiRcFile(QStringLiteral("storageservicemanagerui.rc"), QStringLiteral("storageservicemanager"));
+
     backupConfigFile(QStringLiteral("kabldaprc"));
     backupConfigFile(QStringLiteral("kmailsnippetrc"));
     backupConfigFile(QStringLiteral("sievetemplaterc"));

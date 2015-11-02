@@ -89,6 +89,8 @@ Root
 |       |---------kalarmui.rc
 |       |---------korganizerui.rc
 |       |---------korganizer_part.rc
+|       |---------sieveeditorui.rc
+|       |---------storageservicemanagerui.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>
