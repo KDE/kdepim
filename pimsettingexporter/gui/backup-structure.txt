@@ -81,6 +81,7 @@ Root
 |       |---------kleopatrarc
 |       |---------sieveeditorrc
 |       |---------kaddressbookui.rc
+|       |---------blogiloui.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>

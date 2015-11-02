@@ -70,6 +70,7 @@ void ImportBlogiloJob::restoreConfig()
     setProgressDialogLabel(i18n("Restore configs..."));
     const QString blogiloStr(QStringLiteral("blogilorc"));
     restoreConfigFile(blogiloStr);
+    restoreUiRcFile(QStringLiteral("blogiloui.rc"), QStringLiteral("blogilo"));
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportBlogiloJob::slotNextStep);
 }

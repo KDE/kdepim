@@ -55,6 +55,7 @@ void ExportBlogiloJob::slotCheckBackupConfig()
     increaseProgressDialog();
 
     backupConfigFile(QStringLiteral("blogilorc"));
+    backupUiRcFile(QStringLiteral("blogiloui.rc"), QStringLiteral("blogilo"));
 
     Q_EMIT info(i18n("Config backup done."));
     QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
