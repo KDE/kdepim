@@ -276,6 +276,8 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     QDir().mkpath(destFileInfo.path());
     if (!file.copy(dest)) {
         mImportExportProgressIndicator->showErrorMessage(i18n("File \"%1\" cannot be copied to \"%2\".", filename, dest), i18n("Copy file"));
+    } else {
+        Q_EMIT info(i18n("\"%1\" was restored.", filename));
     }
 }
 
