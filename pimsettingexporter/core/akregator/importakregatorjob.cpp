@@ -74,8 +74,6 @@ void ImportAkregatorJob::restoreConfig()
     restoreUiRcFile(QStringLiteral("akregator_part.rc"), QStringLiteral("akregator"));
     restoreUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
     restoreUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
-
-    restoreUiRcFile(QStringLiteral("kaddressbookui.rc"), QStringLiteral("kaddressbook"));
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
 }
