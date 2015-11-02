@@ -57,9 +57,7 @@ void ExportAkregatorJob::slotCheckBackupConfig()
     increaseProgressDialog();
     setProgressDialogLabel(i18n("Backing up config..."));
 
-    const QString akregatorStr(QStringLiteral("akregatorrc"));
-    const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
-    backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
+    backupConfigFile(QStringLiteral("akregatorrc"));
     Q_EMIT info(i18n("Config backup done."));
     QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
 }

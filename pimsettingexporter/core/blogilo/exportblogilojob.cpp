@@ -54,9 +54,7 @@ void ExportBlogiloJob::slotCheckBackupConfig()
     setProgressDialogLabel(i18n("Backing up config..."));
     increaseProgressDialog();
 
-    const QString blogiloStr(QStringLiteral("blogilorc"));
-    const QString blogilorc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + blogiloStr;
-    backupFile(blogilorc, Utils::configsPath(), blogiloStr);
+    backupConfigFile(QStringLiteral("blogilorc"));
 
     Q_EMIT info(i18n("Config backup done."));
     QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
