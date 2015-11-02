@@ -19,7 +19,6 @@
 #include <QObject>
 
 class QString;
-template <typename T> class QList;
 
 namespace KManageSieve
 {
