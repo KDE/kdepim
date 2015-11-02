@@ -22,8 +22,6 @@
 #include <QUrl>
 #include "ksieveui_export.h"
 
-class QTabWidget;
-class QStackedWidget;
 namespace KSieveUi
 {
 class VacationCreateScriptJob;

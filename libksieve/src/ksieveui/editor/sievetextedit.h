@@ -26,10 +26,6 @@
 #include "PimCommon/SieveSyntaxHighlighterRules"
 
 class QMenu;
-namespace KPIMTextEdit
-{
-class TextEditorCompleter;
-}
 namespace PimCommon
 {
 class SieveSyntaxHighlighterRules;
@@ -38,7 +34,6 @@ class SieveSyntaxHighlighterRules;
 namespace KSieveUi
 {
 
-class SieveLineNumberArea;
 class SieveTextEditPrivate;
 class KSIEVEUI_EXPORT SieveTextEdit : public KPIMTextEdit::PlainTextEditor
 {
