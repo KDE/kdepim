@@ -80,6 +80,7 @@ Root
 |       |---------kpimbalooblacklist
 |       |---------kleopatrarc
 |       |---------sieveeditorrc
+|       |---------kaddressbookui.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>

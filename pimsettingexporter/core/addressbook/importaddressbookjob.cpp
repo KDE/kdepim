@@ -226,6 +226,7 @@ void ImportAddressbookJob::restoreConfig()
             importkaddressBookConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());
         }
     }
+    restoreUiRcFile(QStringLiteral("kaddressbookui.rc"), QStringLiteral("kaddressbook"));
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportAddressbookJob::slotNextStep);
 }

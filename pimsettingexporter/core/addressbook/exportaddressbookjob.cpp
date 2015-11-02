@@ -163,6 +163,7 @@ void ExportAddressbookJob::backupConfig()
         backupFile(tmp.fileName(), Utils::configsPath(), kaddressbookStr);
         delete kaddressBookConfig;
     }
+    backupUiRcFile(QStringLiteral("kaddressbookui.rc"), QStringLiteral("kaddressbook"));
     Q_EMIT info(i18n("Config backup done."));
 }
 

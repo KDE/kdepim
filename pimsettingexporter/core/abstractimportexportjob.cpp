@@ -106,10 +106,11 @@ KZip *AbstractImportExportJob::archive() const
     return mArchiveStorage->archive();
 }
 
-void AbstractImportExportJob::backupUiRcFile(const QString &configFileName)
+void AbstractImportExportJob::backupUiRcFile(const QString &configFileName, const QString &application)
 {
     const QString configrcStr(configFileName);
-    const QString configrc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + configrcStr;
+    const QString configrc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + application + QLatin1Char('/') + configrcStr;
+    qDebug()<<" configrc"<<configrc << " configFileName "<<configFileName;
     if (QFile(configrc).exists()) {
         backupFile(configrc, Utils::configsPath(), configrcStr);
     }
@@ -423,12 +424,12 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     }
 }
 
-void AbstractImportExportJob::restoreUiRcFile(const QString &configNameStr)
+void AbstractImportExportJob::restoreUiRcFile(const QString &configNameStr, const QString &applicationName)
 {
     const KArchiveEntry *configNameentry  = mArchiveDirectory->entry(Utils::configsPath() + configNameStr);
     if (configNameentry &&  configNameentry->isFile()) {
         const KArchiveFile *configNameconfiguration = static_cast<const KArchiveFile *>(configNameentry);
-        const QString configNamerc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + configNameStr;
+        const QString configNamerc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + applicationName + QLatin1Char('/') + configNameStr;
         if (QFile(configNamerc).exists()) {
             if (overwriteConfigMessageBox(configNameStr)) {
                 copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());

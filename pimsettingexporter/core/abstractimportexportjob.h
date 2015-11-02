@@ -91,8 +91,8 @@ protected:
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
     void backupConfigFile(const QString &configFileName);
-    void backupUiRcFile(const QString &configFileName);
-    void restoreUiRcFile(const QString &configNameStr);
+    void backupUiRcFile(const QString &configFileName, const QString &applicationName);
+    void restoreUiRcFile(const QString &configNameStr, const QString &applicationName);
 
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
