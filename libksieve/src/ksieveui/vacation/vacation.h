@@ -14,8 +14,6 @@
 #ifndef KSIEVE_KSIEVEUI_VACATION_H
 #define KSIEVE_KSIEVEUI_VACATION_H
 
-#include "ksieveui_export.h"
-
 #include <QUrl>
 
 #include <QObject>
@@ -33,7 +31,7 @@ namespace KSieveUi
 
 class VacationDialog;
 
-class KSIEVEUI_EXPORT Vacation : public QObject
+class Vacation : public QObject
 {
     Q_OBJECT
 
