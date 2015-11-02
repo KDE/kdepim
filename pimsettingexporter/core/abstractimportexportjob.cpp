@@ -106,6 +106,15 @@ KZip *AbstractImportExportJob::archive() const
     return mArchiveStorage->archive();
 }
 
+void AbstractImportExportJob::backupUiRcFile(const QString &configFileName)
+{
+    const QString configrcStr(configFileName);
+    const QString configrc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + configrcStr;
+    if (QFile(configrc).exists()) {
+        backupFile(configrc, Utils::configsPath(), configrcStr);
+    }
+}
+
 void AbstractImportExportJob::backupConfigFile(const QString &configFileName)
 {
     const QString configrcStr(configFileName);
