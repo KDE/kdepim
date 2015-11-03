@@ -40,9 +40,9 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/changeownertrustjob.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/ChangeOwnerTrustJob>
 
 #include <gpgme++/key.h>
 
@@ -234,8 +234,8 @@ void ChangeOwnerTrustCommand::Private::createJob()
         return;
     }
 
-    connect(j, SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(j, &Job::progress,
+            q, &Command::progress);
     connect(j, SIGNAL(result(GpgME::Error)),
             q, SLOT(slotResult(GpgME::Error)));
 

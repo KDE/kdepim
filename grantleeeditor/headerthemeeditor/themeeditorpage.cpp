@@ -61,7 +61,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
+    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::mainFileNameChanged, mEditorPage->preview(), &GrantleeThemeEditor::PreviewWidget::slotMainFileNameChanged);
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::mainFileNameChanged, mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::slotMainFileNameChanged);
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::extraDisplayHeaderChanged, this, &ThemeEditorPage::slotExtraHeaderDisplayChanged);
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::changed, this, &ThemeEditorPage::slotChanged);
@@ -208,7 +208,7 @@ void ThemeEditorPage::uploadTheme()
         zip->close();
         //qCDebug(HEADERTHEMEEDITOR_LOG)<< "zipFilename"<<zipFileName;
 
-        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QStringLiteral("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(QUrl::fromLocalFile(zipFileName));
         dialog->setUploadName(themename);
         dialog->setPreviewImageFile(0, QUrl::fromLocalFile(previewFileName));

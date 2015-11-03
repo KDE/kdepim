@@ -20,8 +20,6 @@
 #include "attachmentpropertiesdialogtest.h"
 #include "qtest_messagecore.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <QCheckBox>
 
 #include "messagecore_debug.h"
@@ -32,8 +30,8 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecore/attachment/attachmentpart.h>
-#include <messagecore/attachment/attachmentpropertiesdialog.h>
+#include <MessageCore/AttachmentPart>
+#include <MessageCore/AttachmentPropertiesDialog>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentPropertiesDialogTest)

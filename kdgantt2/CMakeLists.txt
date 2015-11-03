@@ -1,59 +1,77 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"kdgantt2\")
-# Those paths need to be absolute since this file is included from other CMakeLists.txt files
-set(libkdgantt2_SRCS
-kdgantt_debug.cpp
-kdganttabstractgrid.cpp
-kdganttabstractrowcontroller.cpp
-kdganttconstraint.cpp
-kdganttconstraintgraphicsitem.cpp
-kdganttconstraintmodel.cpp
-kdganttconstraintproxy.cpp
-kdganttdatetimegrid.cpp
-kdganttforwardingproxymodel.cpp
-kdganttglobal.cpp
-kdganttgraphicsitem.cpp
-kdganttgraphicsscene.cpp
-kdganttgraphicsview.cpp
-kdganttitemdelegate.cpp
-kdganttlegend.cpp
-kdganttlistviewrowcontroller.cpp
-kdganttproxymodel.cpp
-kdganttstyleoptionganttitem.cpp
-kdganttsummaryhandlingproxymodel.cpp
-kdgantttreeviewrowcontroller.cpp
-kdganttview.cpp
+
+cmake_minimum_required(VERSION 2.8.12)
+
+project(kdgantt2)
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${kdgantt2_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(LIBRARY_NAMELINK)
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
+
+
+set(KF5_VERSION "5.16.0")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test PrintSupport)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX KDGANTT2
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kdgantt2_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KDGantt2ConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-add_definitions(-DKDAB_NO_UNIT_TESTS -DKDGANTT_SHAREDLIB -DKDGANTT_BUILD_KDGANTT_LIB)
+########### Targets ###########
 
-# Generate moc_foo.cpp files since that's what the cpp files include (it works automatically with qmake, this way...)
-# List of source files generated with "grep -l moc_ *.cpp | sed -e 's/\.cpp$//'"
-# Plus kdganttgraphicsview_p
-set(libkdgantt_mocable_files
-  kdganttabstractgrid
-  kdganttconstraintmodel
-  kdganttconstraintproxy
-  kdganttdatetimegrid
-  kdganttforwardingproxymodel
-  kdganttgraphicsscene
-  kdganttgraphicsview
-  kdganttitemdelegate
-  kdganttproxymodel
-  kdganttsummaryhandlingproxymodel
-  kdganttview
-  kdganttlegend
-  kdgantttimescalezoomdialog
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5KDGantt2")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5KDGantt2Config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5KDGantt2Config.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
-foreach(it ${libkdgantt_mocable_files})
-  qt5_generate_moc(${it}.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_${it}.cpp)
-  macro_add_file_dependencies(${it}.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_${it}.cpp)
-endforeach(it)
 
-qt5_generate_moc(kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-macro_add_file_dependencies(kdganttgraphicsview.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-add_library(kdgantt2 ${libkdgantt2_SRCS})
-generate_export_header(kdgantt2 BASE_NAME kdgantt)
-target_link_libraries(kdgantt2  Qt5::Widgets Qt5::PrintSupport )
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5KDGantt2Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5KDGantt2ConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
 
-set_target_properties( kdgantt2 PROPERTIES VERSION 1.0.0 SOVERSION 1)
-install(TARGETS kdgantt2 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+install(EXPORT KF5KDGantt2Targets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5KDGantt2Targets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/kdgantt2_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX KDGANTT2
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kdgantt2_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KDGantt2ConfigVersion.cmake"
+                        SOVERSION 5
+)
+endif()
+
+# Laurent install it if you want to debug it
+#add_subdirectory(tests)
+add_subdirectory(src)

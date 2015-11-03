@@ -25,9 +25,9 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/singlepartjob.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/SinglepartJob>
 using namespace MessageComposer;
 
 QTEST_MAIN(SinglepartJobTest)
@@ -54,7 +54,7 @@ void SinglepartJobTest::testContentDisposition()
     SinglepartJob *cjob = new SinglepartJob(composer);
     QByteArray data("birds came flying from the underground");
     cjob->setData(data);
-    QString filename = QString::fromUtf8("test_ăîşţâ.txt");
+    QString filename = QStringLiteral("test_ăîşţâ.txt");
     cjob->contentDisposition()->setDisposition(Headers::CDattachment);
     cjob->contentDisposition()->setFilename(filename);
     QVERIFY(cjob->exec());

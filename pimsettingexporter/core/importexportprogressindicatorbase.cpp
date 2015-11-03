@@ -35,12 +35,13 @@ void ImportExportProgressIndicatorBase::increaseProgressDialog()
     //Nothing
 }
 
-void ImportExportProgressIndicatorBase::createProgressDialog()
+void ImportExportProgressIndicatorBase::createProgressDialog(const QString &title)
 {
     //Nothing
+    Q_UNUSED(title);
 }
 
-void ImportExportProgressIndicatorBase::showInfo(const QString &text)
+void ImportExportProgressIndicatorBase::setProgressDialogLabel(const QString &text)
 {
     Q_EMIT info(text);
 }
@@ -57,6 +58,7 @@ void ImportExportProgressIndicatorBase::setNumberOfStep(int numberOfStep)
 
 int ImportExportProgressIndicatorBase::mergeConfigMessageBox(const QString &configName) const
 {
+    Q_UNUSED(configName);
     return KMessageBox::Yes;
 }
 

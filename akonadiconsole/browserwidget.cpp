@@ -44,7 +44,7 @@
 #include <AkonadiWidgets/entitytreeview.h>
 #include <AkonadiWidgets/etmviewstatesaver.h>
 #include <AkonadiCore/favoritecollectionsmodel.h>
-#include "libkdepim/proxy/quotacolorproxymodel.h"
+#include <AkonadiCore/quotacolorproxymodel.h>
 #include <AkonadiCore/tagmodel.h>
 #include <AkonadiCore/statisticsproxymodel.h>
 #include <AkonadiCore/tagdeletejob.h>
@@ -154,7 +154,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     statisticsProxyModel->setToolTipEnabled(true);
     statisticsProxyModel->setSourceModel(collectionFilter);
 
-    KPIM::QuotaColorProxyModel *quotaProxyModel = new KPIM::QuotaColorProxyModel(this);
+    Akonadi::QuotaColorProxyModel *quotaProxyModel = new Akonadi::QuotaColorProxyModel(this);
     quotaProxyModel->setWarningThreshold(50.0);
     quotaProxyModel->setSourceModel(statisticsProxyModel);
 
@@ -332,7 +332,7 @@ void BrowserWidget::setItem(const Akonadi::Item &item)
 
     QStringList tags;
     foreach (const Tag &tag, item.tags()) {
-        tags << QString::fromLatin1(tag.gid());
+        tags << QLatin1String(tag.gid());
     }
     contentUi.tags->setItems(tags);
 
@@ -465,7 +465,7 @@ void BrowserWidget::dumpToXml()
     if (!root.isValid()) {
         return;
     }
-    const QString fileName = QFileDialog::getSaveFileName(this, QStringLiteral("Select XML file") , QString(), QStringLiteral("*.xml"));
+    const QString fileName = QFileDialog::getSaveFileName(this, QStringLiteral("Select XML file"), QString(), QStringLiteral("*.xml"));
     if (fileName.isEmpty()) {
         return;
     }

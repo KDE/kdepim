@@ -1,0 +1,10 @@
+File=kmail.kcfg
+ClassName=GlobalSettingsBase
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=qapplication.h,defaulttemplates.h,mailcommon/mailkernel.h,kdepim-version.h,kmail_debug.h
+CategoryLoggingName=KMAIL_LOG
+TranslationDomain=kmail
+TranslationSystem=kde

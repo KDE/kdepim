@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "followupreminderinfowidget.h"
-#include "followupreminderinfo.h"
-#include "followupreminderutil.h"
+#include "FollowupReminder/FollowUpReminderInfo"
+#include "FollowupReminder/FollowUpReminderUtil"
 #include "jobs/followupremindershowmessagejob.h"
 #include "followupreminderagent_debug.h"
 
@@ -111,7 +111,7 @@ void FollowUpReminderInfoWidget::load()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern()));
     const int numberOfItem = filterGroups.count();
-    for (int i = 0 ; i < numberOfItem; ++i) {
+    for (int i = 0; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
 
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo(group);

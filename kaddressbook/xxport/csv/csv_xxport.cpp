@@ -21,14 +21,16 @@
 #include "contactfields.h"
 #include "csvimportdialog.h"
 
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include <QFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
 #include <QUrl>
-#include <KIO/NetAccess>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 
 #include <QPointer>
 #include <QTextCodec>
@@ -39,9 +41,9 @@ CsvXXPort::CsvXXPort(QWidget *parent)
 {
 }
 
-bool CsvXXPort::exportContacts(const ContactList &contacts , VCardExportSelectionWidget::ExportFields) const
+bool CsvXXPort::exportContacts(const ContactList &contacts, VCardExportSelectionWidget::ExportFields) const
 {
-    QUrl url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromUserInput(QLatin1String("addressbook.csv")));
+    QUrl url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromUserInput(QStringLiteral("addressbook.csv")));
     if (url.isEmpty()) {
         return true;
     }
@@ -71,9 +73,9 @@ bool CsvXXPort::exportContacts(const ContactList &contacts , VCardExportSelectio
 
         exportToFile(&tmpFile, contacts.addressList());
         tmpFile.flush();
-
-        return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
-
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url);
+        KJobWidgets::setWindow(job, parentWidget());
+        return job->exec();
     } else {
         QFile file(url.toLocalFile());
         if (!file.open(QIODevice::WriteOnly)) {

@@ -18,11 +18,12 @@
 #include "importakregatorjob.h"
 #include "archivestorage.h"
 
-#include "pimcommon/util/createresource.h"
+#include "PimCommon/CreateResource"
 
 #include <KArchive>
 #include <KLocalizedString>
 #include <KZip>
+#include <QTimer>
 
 #include <QStandardPaths>
 
@@ -40,29 +41,53 @@ void ImportAkregatorJob::start()
 {
     Q_EMIT title(i18n("Start import Akregator settings..."));
     mArchiveDirectory = archive()->directory();
-    if (mTypeSelected & Utils::Config) {
-        restoreConfig();
+    initializeListStep();
+    createProgressDialog(i18n("Import Akregator settings"));
+    QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
+}
+
+void ImportAkregatorJob::slotNextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        const Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Config) {
+            restoreConfig();
+        } else if (type == Utils::Data) {
+            restoreData();
+        } else {
+            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << Q_FUNC_INFO << " not supported type "<< type;
+            slotNextStep();
+        }
+    } else {
+        Q_EMIT jobFinished();
     }
-    if (mTypeSelected & Utils::Data) {
-        restoreData();
-    }
-    Q_EMIT jobFinished();
 }
 
 void ImportAkregatorJob::restoreConfig()
 {
-    const QString akregatorStr(QLatin1String("akregatorrc"));
+    const QString akregatorStr(QStringLiteral("akregatorrc"));
+    increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
     restoreConfigFile(akregatorStr);
+    restoreUiRcFile(QStringLiteral("pageviewer.rc"), QStringLiteral("akregator"));
+    restoreUiRcFile(QStringLiteral("akregator_part.rc"), QStringLiteral("akregator"));
+    restoreUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
+    restoreUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
     Q_EMIT info(i18n("Config restored."));
+    QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
 }
 
 void ImportAkregatorJob::restoreData()
 {
+    increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore data..."));
     const KArchiveEntry *akregatorEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("akregator/"));
     if (akregatorEntry && akregatorEntry->isDirectory()) {
         const QString akregatorPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("akregator/");
         overwriteDirectory(akregatorPath, akregatorEntry);
     }
     Q_EMIT info(i18n("Data restored."));
+    QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
 }
 

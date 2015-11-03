@@ -50,31 +50,32 @@
 #include "views/todoview/kotodoview.h"
 #include "kocheckableproxymodel.h"
 #include "akonadicollectionview.h"
-#include <incidenceeditor-ng/globalsettings.h>
+#include "korganizer_debug.h"
+#include <IncidenceEditorsng/IncidenceEditorSettings>
 
-#include <KHolidays/kholidays/Holidays>
-#include <calendarsupport/collectiongeneralpage.h>
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
-#include <calendarsupport/next/incidenceviewer.h>
-#include <calendarsupport/printing/calprinter.h>
-#include <calendarsupport/calendarsingleton.h>
+#include <KHolidays/HolidayRegion>
+#include "collectiongeneralpage.h"
+#include <CalendarSupport/CollectionSelection>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
+#include <CalendarSupport/IncidenceViewer>
+#include <CalendarSupport/CalPrinter>
+#include <CalendarSupport/CalendarSingleton>
 
-#include <incidenceeditor-ng/incidencedefaults.h>
-#include <incidenceeditor-ng/incidencedialog.h>
-#include <incidenceeditor-ng/incidencedialogfactory.h>
-#include <incidenceeditor-ng/individualmailcomponentfactory.h>
+#include <IncidenceEditorsng/IncidenceDefaults>
+#include <IncidenceEditorsng/IncidenceDialog>
+#include <IncidenceEditorsng/IncidenceDialogFactory>
+#include <IncidenceEditorsng/IndividualMailComponentFactory>
 
-#include <libkdepim/widgets/pimmessagebox.h>
+#include <Libkdepim/PIMMessageBox>
 #include <Akonadi/Calendar/FreeBusyManager>
 #include <Akonadi/Calendar/History>
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <akonadi/calendar/calendarsettings.h>
 #include <Akonadi/Calendar/CalendarClipboard>
 
-#include <pimcommon/acl/collectionaclpage.h>
-#include <pimcommon/acl/imapaclattribute.h>
+#include <PimCommon/CollectionAclPage>
+#include <PimCommon/ImapAclAttribute>
 
 #include <AkonadiWidgets/CollectionPropertiesDialog>
 #include <AkonadiWidgets/ControlGui>
@@ -90,18 +91,17 @@
 #include <KCalUtils/Stringify>
 #include <KCalUtils/DndFactory>
 
-#include <QFileDialog>
 #include <KNotification>
 #include <KRun>
-#include <QVBoxLayout>
-#include "korganizer_debug.h"
-#include <QPushButton>
 
+#include <QFileDialog>
+#include <QVBoxLayout>
+#include <QPushButton>
 #include <QApplication>
 #include <QClipboard>
 #include <QSplitter>
 #include <QStackedWidget>
-#include <KLocale>
+#include <QLocale>
 
 CalendarView::CalendarView(QWidget *parent)
     : CalendarViewBase(parent)
@@ -203,8 +203,8 @@ CalendarView::CalendarView(QWidget *parent)
             this, &CalendarView::slotModifyFinished);
 
     // Signals emitted by mDateNavigator
-    connect(mDateNavigator, SIGNAL(datesSelected(KCalCore::DateList,QDate)),
-            SLOT(showDates(KCalCore::DateList,QDate)));
+    connect(mDateNavigator, &DateNavigator::datesSelected,
+            this, &CalendarView::showDates);
 
     connect(mDateNavigatorContainer, SIGNAL(newEventSignal(QDate)),
             SLOT(newEvent(QDate)));
@@ -228,8 +228,8 @@ CalendarView::CalendarView(QWidget *parent)
             mDateNavigator, &DateNavigator::selectYear);
 
     // Signals emitted by mDateNavigatorContainer
-    connect(mDateNavigatorContainer, SIGNAL(weekClicked(QDate,QDate)),
-            SLOT(selectWeek(QDate,QDate)));
+    connect(mDateNavigatorContainer, &DateNavigatorContainer::weekClicked,
+            this, &CalendarView::selectWeek);
 
     connect(mDateNavigatorContainer, &DateNavigatorContainer::prevMonthClicked,
             mDateNavigator, &DateNavigator::selectPreviousMonth);
@@ -254,23 +254,23 @@ CalendarView::CalendarView(QWidget *parent)
     connect(mViewManager, SIGNAL(datesSelected(KCalCore::DateList)),
             mDateNavigator, SLOT(selectDates(KCalCore::DateList)));
 
-    connect(mDateNavigatorContainer, SIGNAL(incidenceDropped(Akonadi::Item,QDate)),
-            SLOT(addIncidenceOn(Akonadi::Item,QDate)));
-    connect(mDateNavigatorContainer, SIGNAL(incidenceDroppedMove(Akonadi::Item,QDate)),
-            SLOT(moveIncidenceTo(Akonadi::Item,QDate)));
+    connect(mDateNavigatorContainer, &DateNavigatorContainer::incidenceDropped,
+            this, &CalendarView::addIncidenceOn);
+    connect(mDateNavigatorContainer, &DateNavigatorContainer::incidenceDroppedMove,
+            this, &CalendarView::moveIncidenceTo);
 
     connect(mDateChecker, &DateChecker::dayPassed,
             mTodoList, &BaseView::dayPassed);
-    connect(mDateChecker, SIGNAL(dayPassed(QDate)),
-            SIGNAL(dayPassed(QDate)));
-    connect(mDateChecker, SIGNAL(dayPassed(QDate)),
-            mDateNavigatorContainer, SLOT(updateToday()));
+    connect(mDateChecker, &DateChecker::dayPassed,
+            this, &CalendarView::dayPassed);
+    connect(mDateChecker, &DateChecker::dayPassed,
+            mDateNavigatorContainer, &DateNavigatorContainer::updateToday);
 
-    connect(this, SIGNAL(configChanged()),
-            mDateNavigatorContainer, SLOT(updateConfig()));
+    connect(this, &CalendarView::configChanged,
+            mDateNavigatorContainer, &DateNavigatorContainer::updateConfig);
 
-    connect(this, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-            mEventViewer, SLOT(setIncidence(Akonadi::Item,QDate)));
+    connect(this, &CalendarView::incidenceSelected,
+            mEventViewer, &CalendarSupport::IncidenceViewer::setIncidence);
 
     //TODO: do a pretty Summary,
     QString s;
@@ -289,12 +289,12 @@ CalendarView::CalendarView(QWidget *parent)
 
     KOGlobals::self()->setHolidays(new KHolidays::HolidayRegion(KOPrefs::instance()->mHolidays));
 
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()), SLOT(checkClipboard()));
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &CalendarView::checkClipboard);
 
-    connect(mTodoList, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-            this, SLOT(processTodoListSelection(Akonadi::Item,QDate)));
-    disconnect(mTodoList, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-               this, SLOT(processMainViewSelection(Akonadi::Item,QDate)));
+    connect(mTodoList, &BaseView::incidenceSelected,
+            this, &CalendarView::processTodoListSelection);
+    disconnect(mTodoList, &BaseView::incidenceSelected,
+               this, &CalendarView::processMainViewSelection);
 
     {
         static bool pageRegistered = false;
@@ -413,8 +413,7 @@ void CalendarView::readSettings()
     // read settings from the KConfig, supplying reasonable
     // defaults where none are to be found
 
-    KConfig *config = KOGlobals::self()->config();
-
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup geometryConfig(config, "KOrganizer Geometry");
 
     QList<int> sizes = geometryConfig.readEntry("Separator1", QList<int>());
@@ -429,10 +428,10 @@ void CalendarView::readSettings()
         mLeftSplitter->setSizes(sizes);
     }
 
-    mViewManager->readSettings(config);
-    mTodoList->restoreLayout(config, QStringLiteral("Sidebar Todo View"), true);
+    mViewManager->readSettings(config.data());
+    mTodoList->restoreLayout(config.data(), QStringLiteral("Sidebar Todo View"), true);
 
-    readFilterSettings(config);
+    readFilterSettings(config.data());
 
     KConfigGroup viewConfig(config, "Views");
     int dateCount = viewConfig.readEntry("ShownDatesCount", 7);
@@ -445,8 +444,7 @@ void CalendarView::readSettings()
 
 void CalendarView::writeSettings()
 {
-    KConfig *config = KOGlobals::self()->config();
-
+    auto config = KSharedConfig::openConfig();
     KConfigGroup geometryConfig(config, "KOrganizer Geometry");
 
     QList<int> list = mMainSplitterSizes.isEmpty() ? mPanner->sizes() : mMainSplitterSizes;
@@ -460,14 +458,14 @@ void CalendarView::writeSettings()
         geometryConfig.writeEntry("Separator2", list);
     }
 
-    mViewManager->writeSettings(config);
-    mTodoList->saveLayout(config, QStringLiteral("Sidebar Todo View"));
+    mViewManager->writeSettings(config.data());
+    mTodoList->saveLayout(config.data(), QStringLiteral("Sidebar Todo View"));
 
     Akonadi::CalendarSettings::self()->save();
     KOPrefs::instance()->save();
     CalendarSupport::KCalPrefs::instance()->save();
 
-    writeFilterSettings(config);
+    writeFilterSettings(config.data());
 
     KConfigGroup viewConfig(config, "Views");
     viewConfig.writeEntry("ShownDatesCount", mDateNavigator->selectedDates().count());
@@ -513,7 +511,7 @@ void CalendarView::writeFilterSettings(KConfig *config)
 {
     QStringList filterList;
 
-    const QStringList oldFilterList = config->groupList().filter(QRegExp(QLatin1String("^Filter_.*")));
+    const QStringList oldFilterList = config->groupList().filter(QRegExp(QStringLiteral("^Filter_.*")));
     //Delete Old Group
     Q_FOREACH (const QString &conf, oldFilterList) {
         KConfigGroup group = config->group(conf);
@@ -612,7 +610,7 @@ void CalendarView::updateConfig(const QByteArray &receiver)
                                             i18n("Keep Absolute Times?"),
                                             KGuiItem(i18n("Keep Times")),
                                             KGuiItem(i18n("Move Times")),
-                                            QLatin1String("calendarKeepAbsoluteTimes"));
+                                            QStringLiteral("calendarKeepAbsoluteTimes"));
         if (rc == KMessageBox::Yes) {
             // keep the absolute time - note the new viewing time zone in the calendar
             mCalendar->setViewTimeSpec(newTimeSpec);
@@ -681,7 +679,7 @@ void CalendarView::slotModifyFinished(int changeId,
             (dirtyFields.contains(KCalCore::Incidence::FieldCompleted))) {
         KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>();
         if (todo->isCompleted() || todo->recurs()) {
-            QString timeStr = KLocale::global()->formatTime(QTime::currentTime());
+            QString timeStr = QLocale::system().toString(QTime::currentTime(), QLocale::ShortFormat);
             QString description = i18n("Todo completed: %1 (%2)", incidence->summary(), timeStr);
 
             KCalCore::Journal::List journals = calendar()->journals(QDate::currentDate());
@@ -691,7 +689,7 @@ void CalendarView::slotModifyFinished(int changeId,
                 journal->setDtStart(
                     KDateTime::currentDateTime(CalendarSupport::KCalPrefs::instance()->timeSpec()));
 
-                QString dateStr = KLocale::global()->formatDate(QDate::currentDate());
+                QString dateStr = QLocale::system().toString(QDate::currentDate(), QLocale::LongFormat);
                 journal->setSummary(i18n("Journal of %1", dateStr));
                 journal->setDescription(description);
 
@@ -1076,7 +1074,7 @@ void CalendarView::newTodo(const QString &summary, const QString &description,
         summary, description, attachments,
         attendees, attachmentMimetypes,
         QStringList()/* attachment labels */,
-        inlineAttachment, defaultCol,
+        inlineAttachment, defaultCol, true/* cleanupAttachmentTempFiles */,
         this/* parent */);
 }
 
@@ -1609,7 +1607,7 @@ void CalendarView::dissociateOccurrences(const Akonadi::Item &item, const QDate 
                      i18n("Do you want to dissociate "
                           "the occurrence on %1 "
                           "from the recurrence?",
-                          KLocale::global()->formatDate(date)),
+                          QLocale::system().toString(date, QLocale::LongFormat)),
                      i18n("KOrganizer Confirmation"),
                      KGuiItem(i18n("&Dissociate")),
                      KStandardGuiItem::cancel());
@@ -1622,7 +1620,7 @@ void CalendarView::dissociateOccurrences(const Akonadi::Item &item, const QDate 
                           "the occurrence on %1 "
                           "from the recurrence or also "
                           "dissociate future ones?",
-                          KLocale::global()->formatDate(date)),
+                          QLocale::system().toString(date, QLocale::LongFormat)),
                      i18n("KOrganizer Confirmation"),
                      KGuiItem(i18n("&Only Dissociate This One")),
                      KGuiItem(i18n("&Also Dissociate Future Ones")));
@@ -1757,7 +1755,7 @@ void CalendarView::schedule(KCalCore::iTIPMethod method, const Akonadi::Item &it
 
 void CalendarView::openAddressbook()
 {
-    KRun::runCommand(QLatin1String("kaddressbook"), topLevelWidget());
+    KRun::runCommand(QStringLiteral("kaddressbook"), topLevelWidget());
 }
 
 bool CalendarView::isReadOnly() const
@@ -1822,21 +1820,21 @@ void CalendarView::printPreview()
 
 void CalendarView::exportWeb()
 {
-    KOrg::HTMLExportSettings *settings = new KOrg::HTMLExportSettings(QLatin1String("KOrganizer"));
+    KOrg::HTMLExportSettings *settings = new KOrg::HTMLExportSettings(QStringLiteral("KOrganizer"));
     Q_ASSERT(settings);
     // Manually read in the config, because parameterized kconfigxt objects don't
     // seem to load the config theirselves
     settings->load();
     ExportWebDialog *dlg = new ExportWebDialog(settings, this);
-    connect(dlg, SIGNAL(exportHTML(KOrg::HTMLExportSettings*)),
-            this, SIGNAL(exportHTML(KOrg::HTMLExportSettings*)));
+    connect(dlg, &ExportWebDialog::exportHTML,
+            this, &CalendarView::exportHTML);
     dlg->show();
 }
 
 void CalendarView::exportICalendar()
 {
     QString filename =
-        QFileDialog::getSaveFileName(this, QString(), QStringLiteral("icalout.ics"), i18n("*.ics|iCalendars"));
+        QFileDialog::getSaveFileName(this, QString(), QStringLiteral("icalout.ics"), i18n("iCalendars (*.ics)"));
     if (!filename.isEmpty()) {
         // Force correct extension
         if (filename.right(4) != QLatin1String(".ics")) {
@@ -1878,14 +1876,14 @@ void CalendarView::exportVCalendar()
                          i18n("Data Loss Warning"),
                          KGuiItem(i18n("Proceed")),
                          KStandardGuiItem::cancel(),
-                         QLatin1String("dontaskVCalExport"),
+                         QStringLiteral("dontaskVCalExport"),
                          KMessageBox::Notify);
         if (result != KMessageBox::Continue) {
             return;
         }
     }
 
-    QString filename = QFileDialog::getSaveFileName(this, QString(), QStringLiteral("vcalout.vcs"), i18n("*.vcs|vCalendars"));
+    QString filename = QFileDialog::getSaveFileName(this, QString(), QStringLiteral("vcalout.vcs"), i18n("vCalendars (*.vcs)"));
     if (!filename.isEmpty()) {
         // Force correct extension
         if (filename.right(4) != QLatin1String(".vcs")) {
@@ -2338,7 +2336,7 @@ void CalendarView::deleteTodoIncidence(const Akonadi::Item &todoItem, bool force
 {
     const KCalCore::Todo::Ptr todo = CalendarSupport::todo(todoItem);
     if (!todo) {
-        return ;
+        return;
     }
 
     // it a simple todo, ask and delete it.
@@ -2411,7 +2409,7 @@ bool CalendarView::deleteIncidence(const Akonadi::Item &item, bool force)
                      "belongs to a read-only calendar.",
                      incidence->summary()),
                 i18n("Removing not possible"),
-                QLatin1String("deleteReadOnlyIncidence"));
+                QStringLiteral("deleteReadOnlyIncidence"));
         }
         qCWarning(KORGANIZER_LOG) << "CalendarView::deleteIncidence(): No rights to delete item";
         return false;
@@ -2452,7 +2450,7 @@ bool CalendarView::deleteIncidence(const Akonadi::Item &item, bool force)
                                    "Do you want to delete only the current one on %2, also "
                                    "future occurrences, or all its occurrences?",
                                    incidence->summary(),
-                                   KLocale::global()->formatDate(itemDate));
+                                   QLocale::system().toString(itemDate, QLocale::LongFormat));
                 } else {
 #pragma message("port QT5")
                     //QT5 itemFuture.setEnabled( false );
@@ -2460,11 +2458,11 @@ bool CalendarView::deleteIncidence(const Akonadi::Item &item, bool force)
                                    "Do you want to delete only the current one on %2 "
                                    "or all its occurrences?",
                                    incidence->summary(),
-                                   KLocale::global()->formatDate(itemDate));
+                                   QLocale::system().toString(itemDate, QLocale::LongFormat));
                 }
 
                 if (!(isFirst && isLast)) {
-                    QDialogButtonBox::StandardButton returnValue = PIMMessageBox::fourBtnMsgBox(
+                    QDialogButtonBox::StandardButton returnValue = KPIM::PIMMessageBox::fourBtnMsgBox(
                                 this,
                                 QMessageBox::Warning,
                                 message,
@@ -2713,7 +2711,7 @@ Akonadi::Collection CalendarView::defaultCollection(const QLatin1String &mimeTyp
     }
 
     // 3. Try last selected folder
-    collection = mCalendar->collection(IncidenceEditorNG::GlobalSettings::self()->lastSelectedFolder());
+    collection = mCalendar->collection(IncidenceEditorNG::IncidenceEditorSettings::self()->lastSelectedFolder());
     supportsMimeType = collection.contentMimeTypes().contains(mimeType) || mimeType == QLatin1String("");
     hasRights = collection.rights() & Akonadi::Collection::CanCreateItem;
     if (collection.isValid() && supportsMimeType && hasRights) {
@@ -2775,8 +2773,8 @@ void CalendarView::setCheckableProxyModel(KOCheckableProxyModel *model)
     }
 
     mCheckableProxyModel = model;
-    connect(model, SIGNAL(aboutToToggle(bool)), SLOT(onCheckableProxyAboutToToggle(bool)));
-    connect(model, SIGNAL(toggled(bool)), SLOT(onCheckableProxyToggled(bool)));
+    connect(model, &KOCheckableProxyModel::aboutToToggle, this, &CalendarView::onCheckableProxyAboutToToggle);
+    connect(model, &KOCheckableProxyModel::toggled, this, &CalendarView::onCheckableProxyToggled);
 }
 
 void CalendarView::onCheckableProxyAboutToToggle(bool newState)

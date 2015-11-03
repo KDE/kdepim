@@ -23,7 +23,7 @@
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/item.h>
 
-#include "mailcommon/search/searchpattern.h"
+#include "MailCommon/SearchPattern"
 
 namespace MailCommon
 {

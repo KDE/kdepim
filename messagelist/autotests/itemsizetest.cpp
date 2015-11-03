@@ -17,8 +17,8 @@
   02110-1301, USA.
 */
 
-#include "../core/messageitem_p.h"
-#include "../messagelist_debug.h"
+#include "../src/core/messageitem_p.h"
+#include <QDebug>
 #include <qtest.h>
 #include <QObject>
 
@@ -31,13 +31,13 @@ private Q_SLOTS:
 
     void testItemSize()
     {
-        qCDebug(MESSAGELIST_LOG) << sizeof(Item);
+        qDebug() << sizeof(Item);
         QVERIFY(sizeof(Item) <= 16);
-        qCDebug(MESSAGELIST_LOG) << sizeof(ItemPrivate);
+        qDebug() << sizeof(ItemPrivate);
         QVERIFY(sizeof(ItemPrivate) <= 120);
-        qCDebug(MESSAGELIST_LOG) << sizeof(MessageItem);
+        qDebug() << sizeof(MessageItem);
         QVERIFY(sizeof(MessageItem) <= 32);
-        qCDebug(MESSAGELIST_LOG) << sizeof(MessageItemPrivate);
+        qDebug() << sizeof(MessageItemPrivate);
         QVERIFY(sizeof(MessageItemPrivate) <= 192);
     }
 };

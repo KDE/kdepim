@@ -22,50 +22,49 @@
 // filehtmlwriter.out in the current working directory
 #include "kmreaderwin.h"
 
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 #include "kmmainwidget.h"
 #include "kmreadermainwin.h"
-#include "kernel/mailkernel.h"
+#include "mailcommon/mailkernel.h"
 #include "dialog/addemailtoexistingcontactdialog.h"
 #include "job/addemailtoexistingcontactjob.h"
 
 #include "kdepim-version.h"
 #include <KEmailAddress>
-#include <libkdepim/job/addemailaddressjob.h>
-#include <libkdepim/job/openemailaddressjob.h>
-#include <libkdepim/job/addemaildisplayjob.h>
-#include <libkdepim/misc/broadcaststatus.h>
+#include <Libkdepim/AddEmailAddressJob>
+#include <Libkdepim/OpenEmailAddressJob>
+#include <Libkdepim/AddEmailDisplayJob>
+#include <Libkdepim/BroadcastStatus>
 #include "kmcommands.h"
-#include "mailcommon/mdn/sendmdnhandler.h"
+#include "MailCommon/SendMdnHandler"
 #include <QVBoxLayout>
-#include "messageviewer/header/headerstrategy.h"
-#include "messageviewer/header/headerstyle.h"
-#include "messageviewer/viewer/mailwebview.h"
-#include "messageviewer/utils/markmessagereadhandler.h"
-#include "messageviewer/settings/globalsettings.h"
-#include "messageviewer/viewer/csshelper.h"
+#include "messageviewer/headerstrategy.h"
+#include "messageviewer/mailwebview.h"
+#include "messageviewer/markmessagereadhandler.h"
+#include "messageviewer/messageviewersettings.h"
+#include "MessageViewer/CSSHelper"
 using MessageViewer::CSSHelper;
 #include "util.h"
-#include "utils/stringutil.h"
+#include "MessageCore/StringUtil"
 #include <QCryptographicHash>
 #include <kmime/kmime_mdn.h>
 #include <akonadi/kmime/messageflags.h>
 
-#include "messageviewer/viewer/viewer.h"
+#include "messageviewer/viewer.h"
 using namespace MessageViewer;
-#include <messagecore/settings/globalsettings.h>
+#include <MessageCore/MessageCoreSettings>
 
-#include "messageviewer/viewer/attachmentstrategy.h"
-#include "messagecomposer/sender/messagesender.h"
-#include "messagecomposer/helper/messagefactory.h"
-#include "messagecomposer/composer/composer.h"
-#include "messagecomposer/part/textpart.h"
-#include "messagecomposer/part/infopart.h"
+#include "messageviewer/attachmentstrategy.h"
+#include "MessageComposer/MessageSender"
+#include "MessageComposer/MessageFactory"
+#include "MessageComposer/Composer"
+#include "MessageComposer/TextPart"
+#include "MessageComposer/InfoPart"
 
 #include <KIO/JobUiDelegate>
 using MessageComposer::MessageFactory;
 
-#include "messagecore/helpers/messagehelpers.h"
+#include "messagecore/messagehelpers.h"
 
 #include <Akonadi/Contact/ContactEditorDialog>
 
@@ -91,7 +90,7 @@ using MessageComposer::MessageFactory;
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <util/mailutil.h>
+#include <mailcommon/mailutil.h>
 
 using namespace KMail;
 using namespace MailCommon;
@@ -117,10 +116,10 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     vlay->setMargin(0);
     mViewer = new Viewer(this, mainWindow, mActionCollection);
     mViewer->setExternalWindow(true);
-    mViewer->setAppName(QLatin1String("KMail"));
+    mViewer->setAppName(QStringLiteral("KMail"));
     connect(mViewer, SIGNAL(urlClicked(Akonadi::Item,QUrl)), this, SLOT(slotUrlClicked(Akonadi::Item,QUrl)));
-    connect(mViewer, SIGNAL(requestConfigSync()), kmkernel, SLOT(slotRequestConfigSync()), Qt::QueuedConnection);   // happens anyway on shutdown, so we can skip it there with using a queued connection
-    connect(mViewer, SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)), kmkernel, SLOT(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)));
+    connect(mViewer, &Viewer::requestConfigSync, kmkernel, &KMKernel::slotRequestConfigSync, Qt::QueuedConnection);   // happens anyway on shutdown, so we can skip it there with using a queued connection
+    connect(mViewer, &Viewer::makeResourceOnline, kmkernel, &KMKernel::makeResourceOnline);
     connect(mViewer, &MessageViewer::Viewer::showReader, this, &KMReaderWin::slotShowReader);
     connect(mViewer, &MessageViewer::Viewer::showMessage, this, &KMReaderWin::slotShowMessage);
     connect(mViewer, &MessageViewer::Viewer::showStatusBarMessage, this, &KMReaderWin::showStatusBarMessage);
@@ -258,11 +257,6 @@ void KMReaderWin::setAttachmentStrategy(const AttachmentStrategy *strategy)
     mViewer->setAttachmentStrategy(strategy);
 }
 
-void KMReaderWin::setHeaderStyleAndStrategy(HeaderStyle *style,
-        HeaderStrategy *strategy)
-{
-    mViewer->setHeaderStyleAndStrategy(style, strategy);
-}
 void KMReaderWin::setOverrideEncoding(const QString &encoding)
 {
     mViewer->setOverrideEncoding(encoding);
@@ -300,10 +294,10 @@ static const int numKMailNewFeatures =
 QString KMReaderWin::newFeaturesMD5()
 {
     QByteArray str;
-    for (int i = 0 ; i < numKMailChanges ; ++i) {
+    for (int i = 0; i < numKMailChanges; ++i) {
         str += kmailChanges[i];
     }
-    for (int i = 0 ; i < numKMailNewFeatures ; ++i) {
+    for (int i = 0; i < numKMailNewFeatures; ++i) {
         str += kmailNewFeatures[i];
     }
     QCryptographicHash md5(QCryptographicHash::Md5);
@@ -311,102 +305,73 @@ QString KMReaderWin::newFeaturesMD5()
     return QLatin1String(md5.result().toBase64());
 }
 
-void KMReaderWin::displaySplashPage(const QString &info)
+void KMReaderWin::displaySplashPage(const QString &templateName, const QVariantHash &_data)
 {
-    mViewer->displaySplashPage(info);
+    QVariantHash data = _data;
+    if (!data.contains(QStringLiteral("icon"))) {
+        data[QStringLiteral("icon")] = QStringLiteral("kmail");
+    }
+    if (!data.contains(QStringLiteral("name"))) {
+        data[QStringLiteral("name")] = i18n("KMail");
+    }
+    if (!data.contains(QStringLiteral("subtitle"))) {
+        data[QStringLiteral("subtitle")] = i18n("The KDE Mail Client");
+    }
+
+    mViewer->displaySplashPage(templateName, data);
 }
 
 void KMReaderWin::displayBusyPage()
 {
-    const QString info =
-        i18n("<h2 style='margin-top: 0px;'>Retrieving Folder Contents</h2><p>Please wait . . .</p>&nbsp;");
-
-    displaySplashPage(info);
+    displaySplashPage(QStringLiteral("status.html"), {
+        { QStringLiteral("title"), i18n("Retrieving Folder Contents") },
+        { QStringLiteral("subtext"), i18n("Please wait . . .") }
+    });
 }
 
 void KMReaderWin::displayOfflinePage()
 {
-    const QString info =
-        i18n("<h2 style='margin-top: 0px;'>Offline</h2><p>KMail is currently in offline mode. "
-             "Click <a href=\"kmail:goOnline\">here</a> to go online . . .</p>&nbsp;");
-
-    displaySplashPage(info);
+    displaySplashPage(QStringLiteral("status.html"), {
+        { QStringLiteral("title"), i18n("Offline") },
+        {
+            QStringLiteral("subtext"), i18n("KMail is currently in offline mode. "
+            "Click <a href=\"kmail:goOnline\">here</a> to go online . . .</p>")
+        }
+    });
 }
 
 void KMReaderWin::displayResourceOfflinePage()
 {
-    const QString info =
-        i18n("<h2 style='margin-top: 0px;'>Offline</h2><p>Account is currently in offline mode. "
-             "Click <a href=\"kmail:goResourceOnline\">here</a> to go online . . .</p>&nbsp;");
-
-    displaySplashPage(info);
+    displaySplashPage(QStringLiteral("status.html"), {
+        { QStringLiteral("title"), i18n("Offline") },
+        {
+            QStringLiteral("subtext"), i18n("Account is currently in offline mode. "
+            "Click <a href=\"kmail:goResourceOnline\">here</a> to go online . . .</p>")
+        }
+    });
 }
 
 void KMReaderWin::displayAboutPage()
 {
-    KLocalizedString info =
-        ki18nc("%1: KMail version; %2: help:// URL; "
-               "%3: generated list of new features; "
-               "%4: First-time user text (only shown on first start); "
-               "%5: generated list of important changes; "
-               "--- end of comment ---",
-               "<h2 style='margin-top: 0px;'>Welcome to KMail %1</h2><p>KMail is the email client by KDE. "
-               "It is designed to be fully compatible with "
-               "Internet mailing standards including MIME, SMTP, POP3, and IMAP."
-               "</p>\n"
-               "<ul><li>KMail has many powerful features which are described in the "
-               "<a href=\"%2\">documentation</a></li>\n"
-               "%5\n" // important changes
-               "%3\n" // new features
-               "%4\n" // first start info
-               "<p>We hope that you will enjoy KMail.</p>\n"
-               "<p>Thank you,</p>\n"
-               "<p style='margin-bottom: 0px'>&nbsp; &nbsp; The KMail Team</p>")
-        .subs(QLatin1String(KDEPIM_VERSION))
-        .subs(QLatin1String("help:/kmail/index.html"));
+    QVariantHash data;
+    data[QStringLiteral("version")] = QStringLiteral(KDEPIM_VERSION);
+    data[QStringLiteral("firstStart")] = kmkernel->firstStart();
 
-    if ((numKMailNewFeatures > 1) || (numKMailNewFeatures == 1 && strlen(kmailNewFeatures[0]) > 0)) {
-        QString featuresText =
-            i18n("<p>Some of the new features in this release of KMail include "
-                 "(compared to KMail %1, which is part of KDE Software Compilation %2):</p>\n",
-                 QLatin1String("1.13"), QLatin1String(KDEPIM_VERSION));  // prior KMail and KDE version
-        featuresText += QLatin1String("<ul>\n");
-        for (int i = 0 ; i < numKMailNewFeatures ; ++i) {
-            featuresText += QLatin1String("<li>") + i18n(kmailNewFeatures[i]) + QLatin1String("</li>\n");
-        }
-        featuresText += QLatin1String("</ul>\n");
-        info = info.subs(featuresText);
-    } else {
-        info = info.subs(QString());    // remove the place holder
+    QVariantList features;
+    features.reserve(numKMailNewFeatures);
+    for (int i = 0; i < numKMailNewFeatures; ++i) {
+        features.push_back(i18n(kmailNewFeatures[i]));
     }
+    data[QStringLiteral("newFeatures")] = features;
 
-    if (kmkernel->firstStart()) {
-        info = info.subs(i18n("<p>Please take a moment to fill in the KMail "
-                              "configuration panel at Settings-&gt;Configure "
-                              "KMail.\n"
-                              "You need to create at least a default identity and "
-                              "an incoming as well as outgoing mail account."
-                              "</p>\n"));
-    } else {
-        info = info.subs(QString());   // remove the place holder
+    QVariantList changes;
+    changes.reserve(numKMailChanges);
+    for (int i = 0; i < numKMailChanges; ++i) {
+        features.push_back(i18n(kmailChanges[i]));
     }
+    data[QStringLiteral("importantChanges")] = changes;
 
-    if ((numKMailChanges > 1) || (numKMailChanges == 1 && strlen(kmailChanges[0]) > 0)) {
-        QString changesText =
-            i18n("<p><span style='font-size:125%; font-weight:bold;'>"
-                 "Important changes</span> (compared to KMail %1):</p>\n",
-                 QLatin1String("1.13"));
-        changesText += QLatin1String("<ul>\n");
-        for (int i = 0 ; i < numKMailChanges ; ++i) {
-            changesText += i18n("<li>%1</li>\n", i18n(kmailChanges[i]));
-        }
-        changesText += QLatin1String("</ul>\n");
-        info = info.subs(changesText);
-    } else {
-        info = info.subs(QString());    // remove the place holder
-    }
-
-    displaySplashPage(info.toString());
+    displaySplashPage(QStringLiteral("introduction_kmail.html"), data);
 }
 
 void KMReaderWin::slotFind()
@@ -596,19 +561,14 @@ KActionMenu *KMReaderWin::shareServiceUrlMenu() const
     return mViewer->shareServiceUrlMenu();
 }
 
+QList<QAction *> KMReaderWin::viewerPluginActionList(ViewerPluginInterface::SpecificFeatureTypes features)
+{
+    return mViewer->viewerPluginActionList(features);
+}
+
 QAction *KMReaderWin::selectAllAction() const
 {
     return mViewer->selectAllAction();
-}
-
-const HeaderStrategy *KMReaderWin::headerStrategy() const
-{
-    return mViewer->headerStrategy();
-}
-
-HeaderStyle *KMReaderWin::headerStyle() const
-{
-    return mViewer->headerStyle();
 }
 
 QAction *KMReaderWin::copyURLAction() const
@@ -658,11 +618,6 @@ QAction *KMReaderWin::speakTextAction() const
 QAction *KMReaderWin::downloadImageToDiskAction() const
 {
     return mImageUrlSaveAsAction;
-}
-
-QAction *KMReaderWin::translateAction() const
-{
-    return mViewer->translateAction();
 }
 
 void KMReaderWin::clear(bool force)
@@ -763,11 +718,11 @@ void KMReaderWin::slotPrintComposeResult(KJob *job)
         Akonadi::Item printItem;
         printItem.setPayload<KMime::Message::Ptr>(composer->resultMessages().first());
         Akonadi::MessageFlags::copyMessageFlags(*(composer->resultMessages().first()), printItem);
-        const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
-        const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+        const bool useFixedFont = MessageViewer::MessageViewerSettings::self()->useFixedFont();
+        const QString overrideEncoding = MessageCore::MessageCoreSettings::self()->overrideCharacterEncoding();
 
-        KMPrintCommand *command = new KMPrintCommand(this, printItem, mViewer->headerStyle(), mViewer->headerStrategy()
-                , mViewer->displayFormatMessageOverwrite(), mViewer->htmlLoadExternal() , useFixedFont, overrideEncoding);
+        KMPrintCommand *command = new KMPrintCommand(this, printItem, mViewer->headerStylePlugin(),
+                mViewer->displayFormatMessageOverwrite(), mViewer->htmlLoadExternal(), useFixedFont, overrideEncoding);
         command->setPrintPreview(preview);
         command->start();
     } else {
@@ -777,7 +732,6 @@ void KMReaderWin::slotPrintComposeResult(KJob *job)
             qCWarning(KMAIL_LOG) << "Composer for printing failed:" << composer->errorString();
         }
     }
-
 }
 
 void KMReaderWin::clearContactItem()
@@ -804,10 +758,10 @@ void KMReaderWin::updateHtmlActions()
         const QStringList customs = mSearchedAddress.customs();
         Q_FOREACH (const QString &custom, customs) {
             if (custom.contains(QStringLiteral("MailPreferedFormatting"))) {
-                const QString value = mSearchedAddress.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"));
+                const QString value = mSearchedAddress.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"));
                 mViewAsHtml->setChecked(value == QLatin1String("HTML"));
             } else if (custom.contains(QStringLiteral("MailAllowToRemoteContent"))) {
-                const QString value = mSearchedAddress.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"));
+                const QString value = mSearchedAddress.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"));
                 mLoadExternalReference->setChecked((value == QLatin1String("TRUE")));
             }
         }
@@ -892,19 +846,4 @@ bool KMReaderWin::isAShortUrl(const QUrl &url) const
 QAction *KMReaderWin::expandShortUrlAction() const
 {
     return mViewer->expandShortUrlAction();
-}
-
-QAction *KMReaderWin::createTodoAction() const
-{
-    return mViewer->createTodoAction();
-}
-
-QAction *KMReaderWin::createEventAction() const
-{
-    return mViewer->createEventAction();
-}
-
-QAction *KMReaderWin::createNoteAction() const
-{
-    return mViewer->createNoteAction();
 }

@@ -183,7 +183,7 @@ void ThemeEditorPage::uploadTheme()
         zip->close();
         //qCDebug(CONTACTPRINTTHEMEEDITOR_LOG)<< "zipFilename"<<zipFileName;
 
-        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QStringLiteral("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(QUrl::fromLocalFile(zipFileName));
         dialog->setUploadName(themename);
         dialog->setPreviewImageFile(0, QUrl::fromLocalFile(previewFileName));

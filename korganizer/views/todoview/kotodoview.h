@@ -27,11 +27,11 @@
 #ifndef KORG_VIEWS_KOTODOVIEW_H
 #define KORG_VIEWS_KOTODOVIEW_H
 
-#include "korganizer/baseview.h"
+#include "baseview.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
-#include <calendarviews/todo/todoview.h>
+#include <EventViews/TodoView>
 
 using namespace KOrg;
 

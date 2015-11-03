@@ -28,7 +28,7 @@
 #include "actionmanager.h"
 #include "calendarview.h"
 #include "korganizer.h"
-#include "reminderclient.h"
+#include "KdepimDBusInterfaces/ReminderClient"
 #include "kdepim-version.h"
 #include <KCalCore/CalFormat>
 #include <KStartupInfo>
@@ -49,7 +49,7 @@ KOrganizerApp::~KOrganizerApp()
 {
 }
 
-int KOrganizerApp::activate(const QStringList &args)
+int KOrganizerApp::activate(const QStringList &args, const QString &workingDir)
 {
     qCDebug(KORGANIZER_LOG);
     static bool first = true;

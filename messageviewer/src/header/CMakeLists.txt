@@ -1,0 +1,8 @@
+add_subdirectory(briefheaderstyleplugin)
+add_subdirectory(fancyheaderstyleplugin)
+add_subdirectory(enterpriseheaderstyleplugin)
+add_subdirectory(customheaderstyleplugin)
+add_subdirectory(grantleeheaderstyleplugin)
+add_subdirectory(standardsheaderstyleplugin)
+add_subdirectory(longheaderstyleplugin)
+add_subdirectory(allheaderstyleplugin)

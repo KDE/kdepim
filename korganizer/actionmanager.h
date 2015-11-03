@@ -30,7 +30,7 @@
 #define KORG_ACTIONMANAGER_H
 
 #include "korganizerprivate_export.h"
-#include "korganizer/part.h"
+#include "part.h"
 
 #include <AkonadiCore/Item>
 #include <Akonadi/Calendar/ETMCalendar>
@@ -296,12 +296,6 @@ protected Q_SLOTS:
 
     /** Open kcontrol module for configuring date and time formats */
     void configureDateTime();
-
-    /** Show tip of the day */
-    void showTip();
-
-    /** Show tip of the day */
-    void showTipOnStart();
 
     void downloadNewStuff();
 

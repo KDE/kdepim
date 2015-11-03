@@ -18,7 +18,7 @@
 #ifndef BLOGILOMIGRATEAPPLICATION_H
 #define BLOGILOMIGRATEAPPLICATION_H
 
-#include <migration/migrateapplicationfiles.h>
+#include <pimcommon/migrateapplicationfiles.h>
 
 class BlogiloMigrateApplication
 {

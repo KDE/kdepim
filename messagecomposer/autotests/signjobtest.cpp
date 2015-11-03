@@ -27,17 +27,17 @@
 
 #include <kmime/kmime_content.h>
 
-#include <kleo/enum.h>
-#include <kleo/keylistjob.h>
-#include <kleo/cryptobackendfactory.h>
+#include <Libkleo/Enum>
+#include <Libkleo/KeyListJob>
+#include <Libkleo/CryptoBackendFactory>
 #include <kjob.h>
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/job/signjob.h>
-#include <messagecomposer/job/transparentjob.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/SignJob>
+#include <MessageComposer/TransparentJob>
 
-#include <messagecore/helpers/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <MessageCore/NodeHelper>
+#include <setupenv.h>
 
 #include <stdlib.h>
 
@@ -45,13 +45,13 @@ QTEST_MAIN(SignJobTest)
 
 void SignJobTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageComposer::Test::setupEnv();
 }
 
 void SignJobTest::testContentDirect()
 {
 
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
@@ -72,7 +72,7 @@ void SignJobTest::testContentDirect()
 
 void SignJobTest::testContentChained()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     QByteArray data(QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8());
     KMime::Content *content = new KMime::Content;
@@ -94,7 +94,7 @@ void SignJobTest::testContentChained()
 
 void SignJobTest::testHeaders()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
@@ -122,16 +122,16 @@ void SignJobTest::testHeaders()
     QVERIFY(result->contentType(false));
     QCOMPARE(result->contentType()->mimeType(), mimeType);
     QCOMPARE(result->contentType()->charset(), charset);
-    QCOMPARE(result->contentType()->parameter(QString::fromLocal8Bit("micalg")), QString::fromLocal8Bit("pgp-sha1"));
+    QVERIFY(result->contentType()->parameter(QString::fromLocal8Bit("micalg")).startsWith(QLatin1String("pgp-sha"))); // sha1 or sha256, depending on GnuPG version
     QCOMPARE(result->contentType()->parameter(QString::fromLocal8Bit("protocol")), QString::fromLocal8Bit("application/pgp-signature"));
     QCOMPARE(result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit);
 }
 
 void SignJobTest::testRecommentationRFC3156()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
-    QString data = QString::fromUtf8("=2D Magic foo\nFrom test\n\n-- quaak\nOhno");
+    QString data = QStringLiteral("=2D Magic foo\nFrom test\n\n-- quaak\nOhno");
     KMime::Headers::contentEncoding cte = KMime::Headers::CEquPr;
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
@@ -155,7 +155,7 @@ void SignJobTest::testRecommentationRFC3156()
 
     QByteArray body = MessageCore::NodeHelper::firstChild(result)->body();
     QCOMPARE(QString::fromUtf8(body),
-             QString::fromUtf8("=3D2D Magic foo\nFrom=20test\n\n=2D- quaak\nOhno"));
+             QStringLiteral("=3D2D Magic foo\n=46rom test\n\n=2D- quaak\nOhno"));
 
     ComposerTestUtil::verify(true, false, result, data.toUtf8(),
                              Kleo::OpenPGPMIMEFormat, cte);

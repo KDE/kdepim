@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ExportCalendarJob : public AbstractImportExportJob
+class ExportCalendarJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
@@ -31,9 +31,14 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
+private Q_SLOTS:
+    void slotCheckBackupResource();
+    void slotCheckBackupConfig();
+    void slotCalendarJobTerminated();
+    void slotWriteNextArchiveResource();
 private:
-    void backupResources();
     void backupConfig();
+    int mIndexIdentifier;
 };
 
 #endif // EXPORTCALENDARJOB_H

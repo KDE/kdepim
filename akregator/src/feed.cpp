@@ -47,8 +47,6 @@
 #include <QUrl>
 #include <KRandom>
 
-//#include <qtl.h>
-
 #include <QDateTime>
 #include <QDomDocument>
 #include <QDomElement>
@@ -74,7 +72,7 @@ QVector<Value> valuesToVector(const Container<Key, Value> &container)
     return values;
 }
 
-class Akregator::Feed::Private
+class Q_DECL_HIDDEN Akregator::Feed::Private
 {
     Akregator::Feed *const q;
 public:
@@ -222,11 +220,7 @@ QVector<Akregator::Feed *> Akregator::Feed::feeds()
 
 Article Akregator::Feed::findArticle(const QString &guid) const
 {
-    Article a;
-    if (!d->articles.isEmpty()) {
-        a = d->articles[guid];
-    }
-    return a;
+    return d->articles.value(guid);
 }
 
 QVector<Article> Akregator::Feed::articles()
@@ -437,7 +431,7 @@ void Akregator::Feed::setXmlUrl(const QString &s)
 {
     d->xmlUrl = s;
     if (! Settings::fetchOnStartup()) {
-        QTimer::singleShot(KRandom::random() % 4000, this, SLOT(slotAddFeedIconListener()));    // TODO: let's give a gui some time to show up before starting the fetch when no fetch on startup is used. replace this with something proper later...
+        QTimer::singleShot(KRandom::random() % 4000, this, &Feed::slotAddFeedIconListener);    // TODO: let's give a gui some time to show up before starting the fetch when no fetch on startup is used. replace this with something proper later...
     }
 }
 
@@ -478,14 +472,14 @@ bool Akregator::Feed::isArticlesLoaded() const
 
 QDomElement Akregator::Feed::toOPML(QDomElement parent, QDomDocument document) const
 {
-    QDomElement el = document.createElement(QLatin1String("outline"));
+    QDomElement el = document.createElement(QStringLiteral("outline"));
     el.setAttribute(QStringLiteral("text"), title());
     el.setAttribute(QStringLiteral("title"), title());
     el.setAttribute(QStringLiteral("xmlUrl"), d->xmlUrl);
     el.setAttribute(QStringLiteral("htmlUrl"), d->htmlUrl);
     el.setAttribute(QStringLiteral("id"), QString::number(id()));
     el.setAttribute(QStringLiteral("description"), d->description);
-    el.setAttribute(QStringLiteral("useCustomFetchInterval"), (useCustomFetchInterval() ? QLatin1String("true") : QLatin1String("false")));
+    el.setAttribute(QStringLiteral("useCustomFetchInterval"), (useCustomFetchInterval() ? QStringLiteral("true") : QStringLiteral("false")));
     el.setAttribute(QStringLiteral("fetchInterval"), QString::number(fetchInterval()));
     el.setAttribute(QStringLiteral("archiveMode"), archiveModeToString(d->archiveMode));
     el.setAttribute(QStringLiteral("maxArticleAge"), d->maxArticleAge);
@@ -799,7 +793,7 @@ void Akregator::Feed::setImage(const QPixmap &p)
     const QString filename = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + QString(QLatin1String("akregator/Media/") + Utils::fileNameForUrl(d->xmlUrl) + QLatin1String(".png"));
     QFileInfo fileInfo(filename);
     QDir().mkpath(fileInfo.absolutePath());
-    d->imagePixmap.save(filename , "PNG");
+    d->imagePixmap.save(filename, "PNG");
     nodeModified();
 }
 

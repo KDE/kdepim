@@ -20,7 +20,6 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
-//krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "bilbobrowser.h"
 
@@ -49,11 +48,11 @@ BilboBrowser::BilboBrowser(QWidget *parent)
 
     createUi(parent);
 
-    connect(mWebView, SIGNAL(loadProgress(int)),
-            browserProgress, SLOT(setValue(int)));
+    connect(mWebView, &QWebView::loadProgress,
+            browserProgress, &QProgressBar::setValue);
     connect(mWebView, &KWebView::loadFinished, this, &BilboBrowser::slotCompleted);
-    connect(mWebView, SIGNAL(statusBarMessage(QString)), this,
-            SLOT(slotSetStatusBarText(QString)));
+    connect(mWebView, &QWebView::statusBarMessage, this,
+            &BilboBrowser::slotSetStatusBarText);
 }
 
 BilboBrowser::~BilboBrowser()
@@ -69,8 +68,7 @@ void BilboBrowser::createUi(QWidget *parent)
 
     viewInBlogStyle = new QCheckBox(i18n("View post in the blog style"), this);
     viewInBlogStyle->setChecked(Settings::previewInBlogStyle());
-    connect(viewInBlogStyle, SIGNAL(toggled(bool)), this, SLOT(
-                slotViewModeChanged()));
+    connect(viewInBlogStyle, &QAbstractButton::toggled, this, &BilboBrowser::slotViewModeChanged);
 
     QSpacerItem *horizontalSpacer = new QSpacerItem(40, 20,
             QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -136,8 +134,8 @@ void BilboBrowser::slotGetBlogStyle()
     browserProgress->reset();
 
     StyleGetter *styleGetter = new StyleGetter(__currentBlogId, this);
-    connect(styleGetter, SIGNAL(sigGetStyleProgress(int)), browserProgress,
-            SLOT(setValue(int)));
+    connect(styleGetter, &StyleGetter::sigGetStyleProgress, browserProgress,
+            &QProgressBar::setValue);
     connect(styleGetter, &StyleGetter::sigStyleFetched, this, &BilboBrowser::slotSetBlogStyle);
 }
 
@@ -153,7 +151,7 @@ void BilboBrowser::slotSetBlogStyle()
 
 void BilboBrowser::slotCompleted(bool ok)
 {
-    QTimer::singleShot(1500, browserProgress, SLOT(hide()));
+    QTimer::singleShot(1500, browserProgress, &QWidget::hide);
     if (!ok) {
         browserStatus->showMessage(i18n("An error occurred in the latest transaction."), 5000);
     }
@@ -162,7 +160,7 @@ void BilboBrowser::slotCompleted(bool ok)
 void BilboBrowser::slotSetStatusBarText(const QString &text)
 {
     QString statusText = text;
-    statusText.remove(QLatin1String("<qt>"));
+    statusText.remove(QStringLiteral("<qt>"));
     browserStatus->showMessage(statusText);
 }
 

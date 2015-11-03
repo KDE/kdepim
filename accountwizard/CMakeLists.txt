@@ -13,7 +13,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 # allow to disable GHNS support on resource-constrained systems
-option( ACCOUNTWIZARD_NO_GHNS "Disable GHNS support in the account wizard" ${KDEPIM_MOBILE_UI} )
+option( ACCOUNTWIZARD_NO_GHNS "Disable GHNS support in the account wizard" FALSE )
 
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 
@@ -26,7 +26,6 @@ endif ()
 
 
 set(accountwizard_srcs
-  accountwizard_debug.cpp
   dialog.cpp
   typepage.cpp
   loadpage.cpp
@@ -59,6 +58,7 @@ ki18n_wrap_ui(accountwizard_srcs
   ui/setuppage.ui
   ui/personaldatapage.ui
 )
+ecm_qt_declare_logging_category(accountwizard_srcs HEADER accountwizard_debug.h IDENTIFIER ACCOUNTWIZARD_LOG CATEGORY_NAME log_accountwizard)
 
 set(accountwizard_libs
   KF5::AkonadiCore
@@ -71,8 +71,11 @@ set(accountwizard_libs
   KF5::WidgetsAddons
   KF5::NewStuff
   Qt5::UiTools
-  KF5::DBusAddons
-  kdepim
+  KF5::Libkdepim
+  KF5::ItemViews
+  KF5::I18n
+  KF5::Ldap
+  KF5::AkonadiWidgets
 )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )
@@ -82,7 +85,7 @@ if ( NOT ACCOUNTWIZARD_NO_GHNS )
 endif ()
 
 add_executable(accountwizard ${accountwizard_srcs} main.cpp)
-target_link_libraries(accountwizard ${accountwizard_libs})
+target_link_libraries(accountwizard ${accountwizard_libs} KF5::DBusAddons)
 
 add_library(accountwizard_plugin MODULE ${accountwizard_srcs} inprocess-main.cpp)
 target_link_libraries(accountwizard_plugin ${accountwizard_libs})

@@ -34,7 +34,7 @@
 #include "kmkernel.h"
 
 // kdepim includes
-#include "messagecomposer/helper/messagehelper.h"
+#include "MessageComposer/MessageHelper"
 
 #include <qurl.h>
 #include "kmail_debug.h"
@@ -130,7 +130,7 @@ bool MailServiceImpl::sendMessage(const QString &from, const QString &to,
     }
 
     KMime::Content *part = new KMime::Content;
-    part->contentTransferEncoding()->from7BitString("base64");
+    part->contentTransferEncoding()->setEncoding(KMime::Headers::CEbase64);
     part->setBody(attachment);   //TODO: check it!
     msg->addContent(part);
 

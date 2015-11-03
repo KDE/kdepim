@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UTILS_KLEO_ASSERT_H__
 #define __KLEOPATRA_UTILS_KLEO_ASSERT_H__
 
-#include <kleo/exception.h>
+#include <libkleo/exception.h>
 
 #include <boost/preprocessor/stringize.hpp>
 

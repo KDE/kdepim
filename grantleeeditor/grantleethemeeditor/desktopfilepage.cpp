@@ -18,8 +18,7 @@
 #include "desktopfilepage.h"
 #include "globalsettings_base.h"
 
-#include "pimcommon/widgets/simplestringlisteditor.h"
-
+#include <KEditListWidget>
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KDesktopFile>
@@ -31,8 +30,8 @@
 #include <QLabel>
 #include <QDir>
 
-#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
-#include <texteditor/plaintexteditor/plaintexteditor.h>
+#include <kpimtextedit/plaintexteditorwidget.h>
+#include <kpimtextedit/plaintexteditor.h>
 
 using namespace GrantleeThemeEditor;
 
@@ -65,9 +64,9 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Description:"));
-    mDescription = new PimCommon::PlainTextEditorWidget;
+    mDescription = new KPIMTextEdit::PlainTextEditorWidget;
     mDescription->editor()->setSearchSupport(false);
-    lay->addWidget(lab, row , 0);
+    lay->addWidget(lab, row, 0);
     lay->addWidget(mDescription, row, 1);
 
     if (options & SpecifyFileName) {
@@ -96,12 +95,12 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
         ++row;
         lab = new QLabel(QStringLiteral("<qt><b>") + i18n("Be careful, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).") + QStringLiteral("</b></qt>"));
         lab->setWordWrap(true);
-        lay->addWidget(lab, row , 0, 1, 2);
+        lay->addWidget(lab, row, 0, 1, 2);
 
         ++row;
-        mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
+        mExtraDisplayHeaders = new KEditListWidget;
         lay->addWidget(mExtraDisplayHeaders, row, 0, 1, 2);
-        connect(mExtraDisplayHeaders, &PimCommon::SimpleStringListEditor::changed, this, &DesktopFilePage::slotExtraDisplayHeadersChanged);
+        connect(mExtraDisplayHeaders, &KEditListWidget::changed, this, &DesktopFilePage::slotExtraDisplayHeadersChanged);
     } else {
         lay->setRowStretch(row, 1);
     }
@@ -110,7 +109,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     mEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
     mAuthor->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
 
-    connect(mDescription->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
+    connect(mDescription->editor(), &QPlainTextEdit::textChanged, this, &DesktopFilePage::changed);
     connect(mEmail, &QLineEdit::textChanged, this, &DesktopFilePage::changed);
     connect(mAuthor, &QLineEdit::textChanged, this, &DesktopFilePage::changed);
     connect(mVersion, &QLineEdit::textChanged, this, &DesktopFilePage::changed);
@@ -122,7 +121,7 @@ DesktopFilePage::~DesktopFilePage()
 
 void DesktopFilePage::slotExtraDisplayHeadersChanged()
 {
-    Q_EMIT extraDisplayHeaderChanged(mExtraDisplayHeaders->stringList());
+    Q_EMIT extraDisplayHeaderChanged(mExtraDisplayHeaders->items());
     Q_EMIT changed();
 }
 
@@ -176,7 +175,7 @@ void DesktopFilePage::loadTheme(const QString &path)
     mVersion->setText(desktopFile.desktopGroup().readEntry(QStringLiteral("ThemeVersion")));
     if (mExtraDisplayHeaders) {
         const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QStringLiteral("DisplayExtraVariables"), QStringList());
-        mExtraDisplayHeaders->setStringList(displayExtraHeaders);
+        mExtraDisplayHeaders->setItems(displayExtraHeaders);
     }
 }
 
@@ -195,9 +194,9 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
         desktopFile.desktopGroup().writeEntry(QStringLiteral("FileName"), mFilename->text());
     }
     if (mExtraDisplayHeaders) {
-        const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
+        const QStringList displayExtraHeaders = mExtraDisplayHeaders->items();
         if (!displayExtraHeaders.isEmpty()) {
-            desktopFile.desktopGroup().writeEntry(QStringLiteral("DisplayExtraVariables"), mExtraDisplayHeaders->stringList());
+            desktopFile.desktopGroup().writeEntry(QStringLiteral("DisplayExtraVariables"), displayExtraHeaders);
         }
     }
 

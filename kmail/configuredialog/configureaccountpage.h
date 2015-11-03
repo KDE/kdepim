@@ -39,7 +39,6 @@ public:
 private:
     void doLoadFromGlobalSettings() Q_DECL_OVERRIDE;
     void doLoadOther() Q_DECL_OVERRIDE;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private:
     QCheckBox   *mConfirmSendCheck;
@@ -70,7 +69,6 @@ private Q_SLOTS:
 
 private:
     void doLoadFromGlobalSettings() Q_DECL_OVERRIDE;
-    void doLoadOther() Q_DECL_OVERRIDE;
 
     struct RetrievalOptions {
         RetrievalOptions(bool manualCheck, bool offline, bool checkOnStartup)
@@ -83,7 +81,6 @@ private:
     };
 
     QHash<QString, QSharedPointer<RetrievalOptions> > mRetrievalHash;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private:
     Ui_AccountsPageReceivingTab mAccountsReceiving;

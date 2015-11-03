@@ -1,270 +1,104 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}/mailcommon/search/
-  ${CMAKE_SOURCE_DIR}/pimcommon/util/
-  ${CMAKE_CURRENT_SOURCE_DIR}/filter
-  ${CMAKE_CURRENT_SOURCE_DIR}/tag/
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/snippets
-  ${CMAKE_CURRENT_SOURCE_DIR}/folder
-  ${CMAKE_CURRENT_SOURCE_DIR}/util
+cmake_minimum_required(VERSION 2.8.12)
+
+project(mailcommon)
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${mailcommon_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${mailcommon_SOURCE_DIR}/cmake/modules/ ${ECM_MODULE_PATH})
+set(LIBRARY_NAMELINK)
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
+
+
+set(KF5_VERSION "5.16.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.47")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+set(KMAILTRANSPORT_LIB_VERSION "4.78.0")
+set(KLDAP_LIB_VERSION "4.80.0")
+
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5TemplateParser ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageViewer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5TemplateParser ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageComposer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MailImporter ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Ldap ${KLDAP_LIB_VERSION} CONFIG REQUIRED)
+find_package(Phonon4Qt5 CONFIG REQUIRED)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MAILCOMMON
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/mailcommon_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MailCommonConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libmailcommon\")
+find_package(Xsltproc)
+set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
 
-#add_definitions( -DQT_NO_CAST_FROM_ASCII )
-#add_definitions( -DQT_NO_CAST_TO_ASCII )
+########### Targets ###########
 
+#add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
+remove_definitions( -DQT_NO_CAST_FROM_ASCII )
+remove_definitions( -DQT_NO_CAST_TO_ASCII )
+remove_definitions("-DQT_NO_URL_CAST_FROM_STRING")
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5MailCommon")
 
-
-
-set(libmailcommon_filter_SRCS
-  filter/kmfilteraccountlist.cpp
-  filter/kmfilterlistbox.cpp
-  filter/filterselectiondialog.cpp
-  filter/filterconverter/filterconverttosieve.cpp
-  filter/filterconverter/filterconverttosieveresultdialog.cpp
-  filter/filteractions/filteraction.cpp
-  filter/filteractions/filteractionaddheader.cpp
-  filter/filteractions/filteractionaddtag.cpp
-  filter/filteractions/filteractionaddtoaddressbook.cpp
-  filter/filteractions/filteractionbeep.cpp
-  filter/filteractions/filteractioncopy.cpp
-  filter/filteractions/filteractiondelete.cpp
-  filter/filteractions/filteractiondict.cpp
-  filter/filteractions/filteractionexec.cpp
-  filter/filteractions/filteractionforward.cpp
-  filter/dialog/filteractionmissingargumentdialog.cpp
-  filter/filteractions/filteractionmove.cpp
-  filter/filteractions/filteractionpipethrough.cpp
-  filter/filteractions/filteractionplaysound.cpp
-  filter/filteractions/filteractionredirect.cpp
-  filter/filteractions/filteractionremoveheader.cpp
-  filter/filteractions/filteractionreplyto.cpp
-  filter/filteractions/filteractionrewriteheader.cpp
-  filter/filteractions/filteractionsendfakedisposition.cpp
-  filter/filteractions/filteractionsendreceipt.cpp
-  filter/filteractions/filteractionsetidentity.cpp
-  filter/filteractions/filteractionsetstatus.cpp
-  filter/filteractions/filteractionstatus.cpp
-  filter/filteractions/filteractionunsetstatus.cpp
-  filter/filteractions/filteractionsettransport.cpp
-  filter/filteractions/filteractionwidget.cpp
-  filter/filteractions/filteractionwithaddress.cpp
-  filter/filteractions/filteractionwithcommand.cpp
-  filter/filteractions/filteractionwithfolder.cpp
-  filter/filteractions/filteractionwithnone.cpp
-  filter/filteractions/filteractionwithstring.cpp
-  filter/filteractions/filteractionwithstringlist.cpp
-  filter/filteractions/filteractionwithtest.cpp
-  filter/filteractions/filteractionwithuoid.cpp
-  filter/filteractions/filteractionwithurl.cpp
-  filter/filtereditdialog.cpp
-  filter/filterimporterexporter.cpp
-  filter/filterimporter/filterimporterabstract.cpp
-  filter/filterimporter/filterimporterevolution.cpp
-  filter/filterimporter/filterimportersylpheed.cpp
-  filter/filterimporter/filterimporterthunderbird.cpp
-  filter/filterimporter/filterimporterprocmail.cpp
-  filter/filterimporter/filterimporterbalsa.cpp
-  filter/filterimporter/filterimporterclawsmail.cpp
-  filter/filterimporter/filterimportergmail.cpp
-  filter/filterlog.cpp
-  filter/filtermanager.cpp
-  filter/itemcontext.cpp
-  filter/kmfilterdialog.cpp
-  filter/mailfilter.cpp
-  filter/dialog/selectthunderbirdfilterfilesdialog.cpp
-  filter/dialog/selectthunderbirdfilterfileswidget.cpp
-  filter/mdnadvicedialog.cpp
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5MailCommonConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MailCommonConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-set(libmailcommon_invalidfilters 
-  filter/invalidfilters/invalidfilterdialog.cpp
-  filter/invalidfilters/invalidfilterlistview.cpp
-  filter/invalidfilters/invalidfilterwidget.cpp
-  filter/invalidfilters/invalidfilterinfo.cpp
-  filter/invalidfilters/invalidfilterlistitemdelegate.cpp
-  filter/invalidfilters/invalidfilterlistmodel.cpp
-  filter/invalidfilters/invalidfilterinfowidget.cpp
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MailCommonConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MailCommonConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
 
-set(libmailcommon_collection_SRCS
-  collectionpage/collectiontypeutil.cpp
-  collectionpage/attributeregistrar.cpp
-  collectionpage/attributes/collectionannotationsattribute.cpp
-  collectionpage/collectiongeneralpage.cpp
-  collectionpage/collectionexpirypage.cpp
-  collectionpage/attributes/expirecollectionattribute.cpp
-  collectionpage/incidencesforwidget.cpp
-  collectionpage/contenttypewidget.cpp
+install(EXPORT KF5MailCommonTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MailCommonTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/mailcommon_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
-set(libmailcommon_folder_SRCS
-  folder/foldercollection.cpp
-  folder/foldercollectionmonitor.cpp
-  folder/folderrequester.cpp
-  folder/folderselectiondialog.cpp
-  folder/foldertreeview.cpp
-  folder/foldertreewidget.cpp
-  folder/foldertreewidgetproxymodel.cpp
-  folder/entitycollectionorderproxymodel.cpp
-  folder/accountconfigorderdialog.cpp
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MAILCOMMON
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/mailcommon_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MailCommonConfigVersion.cmake"
+                        SOVERSION 5
 )
-
-set(libmailcommon_job_SRCS
-  job/jobscheduler.cpp
-  job/folderjob.cpp
-  job/expirejob.cpp
-  job/backupjob.cpp
-)
-
-set(libmailcommon_search_SRCS
-  search/widgethandler/rulewidgethandlermanager.cpp
-  search/searchpattern.cpp
-  search/searchpatternedit.cpp
-  search/widgethandler/textrulerwidgethandler.cpp
-  search/widgethandler/statusrulewidgethandler.cpp
-  search/widgethandler/messagerulewidgethandler.cpp
-  search/widgethandler/tagrulewidgethandler.cpp
-  search/widgethandler/numericrulewidgethandler.cpp
-  search/widgethandler/daterulewidgethandler.cpp
-  search/widgethandler/numericdoublerulewidgethandler.cpp
-  search/widgethandler/headersrulerwidgethandler.cpp
-  search/searchrule/searchrulenumerical.cpp
-  search/searchrule/searchruledate.cpp
-  search/searchrule/searchrulestring.cpp 
-  search/searchrule/searchrulestatus.cpp
-  search/searchrule/searchrule.cpp
-)
-
-set(libmailcommon_snippets_SRCS
-  snippets/snippetdialog.cpp
-  snippets/snippetsmanager.cpp
-  snippets/snippetsmodel.cpp
-  snippets/snippetvariabledialog.cpp
-)
-
-set(libmailcommon_tag_SRCS
-  tag/tagwidget.cpp
-  tag/tag.cpp
-  tag/addtagdialog.cpp
-)
-
-set(libmailcommon_widget_SRCS
-  widgets/redirectdialog.cpp
-  widgets/redirectwidget.cpp
-  widgets/regexplineedit.cpp
-  widgets/favoritecollectionwidget.cpp
-)
-
-set(libmailcommon_mdn_SRCS
-  mdn/sendmdnhandler.cpp
-)
-
-set(libmailcommon_util_SRCS
-  util/mailutil.cpp
-)
-
-set(libmailcommon_SRCS
-  kernel/mailkernel.cpp
-  mailcommon_debug.cpp
-  ${libmailcommon_util_SRCS}
-  ${libmailcommon_mdn_SRCS}
-  ${libmailcommon_invalidfilters}
-  ${libmailcommon_widget_SRCS}
-  ${libmailcommon_tag_SRCS}
-  ${libmailcommon_snippets_SRCS}
-  ${libmailcommon_search_SRCS}
-  ${libmailcommon_job_SRCS}
-  ${libmailcommon_collection_SRCS}
-  ${libmailcommon_folder_SRCS}   
-  ${libmailcommon_filter_SRCS}
-)
-kconfig_add_kcfg_files(libmailcommon_SRCS
-    settings/mailcommonsettings_base.kcfgc
-)
-
-
-
-set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
-
-qt5_add_dbus_interfaces(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
-)
-
-ki18n_wrap_ui(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
-
-set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
-
-macro(add_resource_iface _kcfgFile _ifaceName _className)
-  kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
-  string(TOLOWER ${_className} _codeFile)
-  set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt5_add_dbus_interface(libmailcommon_SRCS
-    ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
-  )
-endmacro()
-
-add_resource_iface(settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings)
-
-qt5_add_dbus_interfaces(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.Korganizer.Calendar.xml
-)
-
-add_library(mailcommon ${libmailcommon_SRCS})
-generate_export_header(mailcommon BASE_NAME mailcommon)
-
-target_link_libraries(mailcommon 
-PUBLIC
-  messagecomposer 
-  kdepim
-  pimcommon
-  KF5::AkonadiCore
-  KF5::AkonadiMime
-PRIVATE
-  messageviewer
-  KF5::Mime
-  mailimporter
-  KF5::Codecs
-  messagecore
-  templateparser
-  KF5::MailTransport
-  Phonon::phonon4qt5 
-)
-
-set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-
-install(TARGETS mailcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-if (BUILD_TESTING)
-   add_subdirectory(filter/filterimporter/autotests)
-   add_subdirectory(collectionpage/autotests)
-   add_subdirectory(filter/autotests)
-   add_subdirectory(snippets/autotests)
-   add_subdirectory(filter/tests) 
-   add_subdirectory(search/autotests)
 endif()
 
-
-if (Qt5Designer_FOUND)
-    kf5designerplugin_add_plugin(mailcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
- 
-    target_link_libraries(mailcommonwidgets
-        mailcommon
-    )
-    if(NOT WIN32)
-        # Since there are no libraries provided by this module,
-        # there is no point including the build tree in RPath,
-        # and then having to edit it at install time.
-        set_target_properties(mailcommonwidgets PROPERTIES
-            SKIP_BUILD_RPATH TRUE
-            BUILD_WITH_INSTALL_RPATH TRUE
-        )
-    endif()
-
-    install(TARGETS
-        mailcommonwidgets
-        DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
-    )
-endif()
+add_subdirectory(src)
 

@@ -16,7 +16,7 @@
 */
 
 #include "knotedeleteselectednotesdialog.h"
-#include "noteshared/widget/notelistwidget.h"
+#include "NoteShared/NoteListWidget"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -37,7 +37,7 @@ KNoteDeleteSelectedNotesDialog::KNoteDeleteSelectedNotesDialog(QWidget *parent)
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &KNoteDeleteSelectedNotesDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &KNoteDeleteSelectedNotesDialog::reject);
-    connect(mNoteList, SIGNAL(itemSelectionChanged()), this, SLOT(slotDeleteNoteSelectionChanged()));
+    connect(mNoteList, &QListWidget::itemSelectionChanged, this, &KNoteDeleteSelectedNotesDialog::slotDeleteNoteSelectionChanged);
 
     mNoteList = new NoteShared::NoteListWidget;
     mainLayout->addWidget(mNoteList);

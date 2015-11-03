@@ -29,24 +29,24 @@
 
 #include "antispamwizard.h"
 #ifndef QT_NO_CURSOR
-#include "messageviewer/utils/kcursorsaver.h"
+#include "Libkdepim/KCursorSaver"
 #endif
 #include "kmkernel.h"
 #include "kmmainwin.h"
-#include "folderrequester.h"
-#include "foldertreewidget.h"
-#include "foldertreeview.h"
-#include "foldertreewidgetproxymodel.h"
-#include "mailcommon/pop3settings.h"
-#include "mailcommon/util/mailutil.h"
-#include "pimcommon/imapresourcesettings.h"
-#include "mailcommon/kernel/mailkernel.h"
-#include "mailcommon/filter/mailfilter.h"
-#include "mailcommon/filter/filteractions/filteraction.h"
-#include "mailcommon/filter/filteractions/filteractiondict.h"
-#include "mailcommon/filter/filtermanager.h"
+#include "MailCommon/FolderRequester"
+#include "MailCommon/FolderTreeWidget"
+#include "MailCommon/FolderTreeView"
+#include "MailCommon/FolderTreeWidgetProxyModel"
+#include "pop3settings.h"
+#include "MailCommon/MailUtil"
+#include "imapresourcesettings.h"
+#include "MailCommon/MailKernel"
+#include "MailCommon/MailFilter"
+#include "MailCommon/FilterAction"
+#include "MailCommon/FilterActionDict"
+#include "MailCommon/FilterManager"
 
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 
 #include <AkonadiCore/AgentInstance>
 
@@ -138,7 +138,7 @@ AntiSpamWizard::AntiSpamWizard(WizardMode mode,
 
     connect(button(QDialogButtonBox::Help), &QPushButton::clicked, this, &AntiSpamWizard::slotHelpClicked);
 
-    QTimer::singleShot(0, this, SLOT(checkToolAvailability()));
+    QTimer::singleShot(0, this, &AntiSpamWizard::checkToolAvailability);
 }
 
 void AntiSpamWizard::accept()
@@ -201,7 +201,7 @@ void AntiSpamWizard::accept()
             virusFilterActions->append(virusFilterAction1);
             if (mVirusRulesPage->markReadRulesSelected()) {
                 FilterAction *virusFilterAction2 = dict.value(QStringLiteral("set status"))->create();
-                virusFilterAction2->argsFromString(QLatin1String("R"));   // Read
+                virusFilterAction2->argsFromString(QStringLiteral("R"));   // Read
                 virusFilterActions->append(virusFilterAction2);
             }
             SearchPattern *virusFilterPattern = virusFilter->pattern();
@@ -282,11 +282,11 @@ void AntiSpamWizard::accept()
             spamFilterActions->append(spamFilterAction1);
         }
         FilterAction *spamFilterAction2 = dict.value(QStringLiteral("set status"))->create();
-        spamFilterAction2->argsFromString(QLatin1String("P"));   // Spam
+        spamFilterAction2->argsFromString(QStringLiteral("P"));   // Spam
         spamFilterActions->append(spamFilterAction2);
         if (mSpamRulesPage->markAsReadSelected()) {
             FilterAction *spamFilterAction3 = dict.value(QStringLiteral("set status"))->create();
-            spamFilterAction3->argsFromString(QLatin1String("R"));   // Read
+            spamFilterAction3->argsFromString(QStringLiteral("R"));   // Read
             spamFilterActions->append(spamFilterAction3);
         }
         SearchPattern *spamFilterPattern = spamFilter->pattern();
@@ -370,10 +370,10 @@ void AntiSpamWizard::accept()
 
         // Classify messages manually as Spam
         MailFilter *classSpamFilter = new MailFilter();
-        classSpamFilter->setIcon(QLatin1String("mail-mark-junk"));
+        classSpamFilter->setIcon(QStringLiteral("mail-mark-junk"));
         QList<FilterAction *> *classSpamFilterActions = classSpamFilter->actions();
         FilterAction *classSpamFilterActionFirst = dict.value(QStringLiteral("set status"))->create();
-        classSpamFilterActionFirst->argsFromString(QLatin1String("P"));
+        classSpamFilterActionFirst->argsFromString(QStringLiteral("P"));
         classSpamFilterActions->append(classSpamFilterActionFirst);
         QList<SpamToolConfig>::ConstIterator endToolList2(mToolList.constEnd());
         for (QList<SpamToolConfig>::ConstIterator it = mToolList.constBegin();
@@ -410,10 +410,10 @@ void AntiSpamWizard::accept()
 
         // Classify messages manually as not Spam / as Ham
         MailFilter *classHamFilter = new MailFilter();
-        classHamFilter->setIcon(QLatin1String("mail-mark-notjunk"));
+        classHamFilter->setIcon(QStringLiteral("mail-mark-notjunk"));
         QList<FilterAction *> *classHamFilterActions = classHamFilter->actions();
         FilterAction *classHamFilterActionFirst = dict.value(QStringLiteral("set status"))->create();
-        classHamFilterActionFirst->argsFromString(QLatin1String("H"));
+        classHamFilterActionFirst->argsFromString(QStringLiteral("H"));
         classHamFilterActions->append(classHamFilterActionFirst);
         end = mToolList.constEnd();
         for (QList<SpamToolConfig>::ConstIterator it = mToolList.constBegin();
@@ -513,7 +513,7 @@ void AntiSpamWizard::checkToolAvailability()
 {
     // this can take some time to find the tools
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     bool found = false;
     QList<SpamToolConfig>::ConstIterator end(mToolList.constEnd());
@@ -578,7 +578,7 @@ void AntiSpamWizard::checkToolAvailability()
 
 void AntiSpamWizard::slotHelpClicked()
 {
-    KHelpClient::invokeHelp((mMode == AntiSpam) ? QLatin1String("the-anti-spam-wizard") : QLatin1String("the-anti-virus-wizard") , QStringLiteral("kmail"));
+    KHelpClient::invokeHelp((mMode == AntiSpam) ? QStringLiteral("the-anti-spam-wizard") : QStringLiteral("the-anti-virus-wizard"), QStringLiteral("kmail"));
 }
 
 void AntiSpamWizard::slotBuildSummary()
@@ -800,14 +800,14 @@ AntiSpamWizard::ConfigReader::readToolConfig(KConfigGroup &configGroup)
 
 AntiSpamWizard::SpamToolConfig AntiSpamWizard::ConfigReader::createDummyConfig()
 {
-    return SpamToolConfig(QLatin1String("spamassassin"), 0, 1,
-                          QLatin1String("SpamAssassin"), QStringLiteral("spamassassin -V"),
-                          QLatin1String("http://spamassassin.org"), QStringLiteral("SpamAssassin Check"),
-                          QLatin1String("spamassassin -L"),
-                          QLatin1String("sa-learn -L --spam --no-sync --single"),
-                          QLatin1String("sa-learn -L --ham --no-sync --single"),
-                          QLatin1String("spamassassin -d"),
-                          QLatin1String("X-Spam-Flag"), QStringLiteral("yes"), QString(), QString(),
+    return SpamToolConfig(QStringLiteral("spamassassin"), 0, 1,
+                          QStringLiteral("SpamAssassin"), QStringLiteral("spamassassin -V"),
+                          QStringLiteral("http://spamassassin.org"), QStringLiteral("SpamAssassin Check"),
+                          QStringLiteral("spamassassin -L"),
+                          QStringLiteral("sa-learn -L --spam --no-sync --single"),
+                          QStringLiteral("sa-learn -L --ham --no-sync --single"),
+                          QStringLiteral("spamassassin -d"),
+                          QStringLiteral("X-Spam-Flag"), QStringLiteral("yes"), QString(), QString(),
                           false, false, true, false, AntiSpam);
 }
 
@@ -1018,16 +1018,16 @@ ASWizSpamRulesPage::ASWizSpamRulesPage(QWidget *parent, const QString &name)
 
     layout->addStretch();
 
-    connect(mMarkRules, SIGNAL(clicked()),
-            this, SLOT(processSelectionChange()));
-    connect(mMoveSpamRules, SIGNAL(clicked()),
-            this, SLOT(processSelectionChange()));
-    connect(mMoveUnsureRules, SIGNAL(clicked()),
-            this, SLOT(processSelectionChange()));
-    connect(mFolderReqForSpamFolder, SIGNAL(folderChanged(Akonadi::Collection)),
-            this, SLOT(processSelectionChange(Akonadi::Collection)));
-    connect(mFolderReqForUnsureFolder, SIGNAL(folderChanged(Akonadi::Collection)),
-            this, SLOT(processSelectionChange(Akonadi::Collection)));
+    connect(mMarkRules, &QAbstractButton::clicked,
+            this, &ASWizSpamRulesPage::processSelectionChange);
+    connect(mMoveSpamRules, &QAbstractButton::clicked,
+            this, &ASWizSpamRulesPage::processSelectionChange);
+    connect(mMoveUnsureRules, &QAbstractButton::clicked,
+            this, &ASWizSpamRulesPage::processSelectionChange);
+    connect(mFolderReqForSpamFolder, &FolderRequester::folderChanged,
+            this, &ASWizSpamRulesPage::processSelectionChange);
+    connect(mFolderReqForUnsureFolder, &FolderRequester::folderChanged,
+            this, &ASWizSpamRulesPage::processSelectionChange);
 
     mMarkRules->setChecked(true);
     mMoveSpamRules->setChecked(true);
@@ -1091,11 +1091,6 @@ void ASWizSpamRulesPage::processSelectionChange()
     mFolderReqForSpamFolder->setEnabled(mMoveSpamRules->isChecked());
     mFolderReqForUnsureFolder->setEnabled(mMoveUnsureRules->isChecked());
     Q_EMIT selectionChanged();
-}
-
-void ASWizSpamRulesPage::processSelectionChange(const Akonadi::Collection &)
-{
-    processSelectionChange();
 }
 
 void ASWizSpamRulesPage::allowUnsureFolderSelection(bool enabled)

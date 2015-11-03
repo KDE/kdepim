@@ -88,7 +88,7 @@ public:
         PluginName = Qt::UserRole
     };
 
-    Model(Navigator *parentNavigator = Q_NULLPTR)
+    explicit Model(Navigator *parentNavigator = Q_NULLPTR)
         : QStringListModel(parentNavigator), mNavigator(parentNavigator)
     {
     }
@@ -172,7 +172,7 @@ class SortFilterProxyModel
     : public QSortFilterProxyModel
 {
 public:
-    SortFilterProxyModel(QObject *parent = Q_NULLPTR): QSortFilterProxyModel(parent)
+    explicit SortFilterProxyModel(QObject *parent = Q_NULLPTR): QSortFilterProxyModel(parent)
     {
         setDynamicSortFilter(true);
         sort(0);
@@ -198,7 +198,7 @@ protected:
 class Delegate : public QStyledItemDelegate
 {
 public:
-    Delegate(Navigator *parentNavigator = Q_NULLPTR)
+    explicit Delegate(Navigator *parentNavigator = Q_NULLPTR)
         : QStyledItemDelegate(parentNavigator), mNavigator(parentNavigator)
     {
     }
@@ -293,7 +293,7 @@ Navigator::Navigator(SidePaneBase *parent)
     QActionGroup *iconSize = new QActionGroup(this);
 
     mBigIconsAction = new QAction(i18nc("@action:inmenu", "Big Icons"), this);
-    mBigIconsAction->setCheckable(iconSize);
+    mBigIconsAction->setCheckable(true);
     mBigIconsAction->setActionGroup(iconSize);
     mBigIconsAction->setChecked(mIconSize == KIconLoader::SizeLarge);
     setHelpText(mBigIconsAction,
@@ -519,7 +519,7 @@ void Navigator::slotActionTriggered(bool checked)
 
     mModel->emitReset();
 
-    QTimer::singleShot(0, this, SLOT(updateNavigatorSize()));
+    QTimer::singleShot(0, this, &Navigator::updateNavigatorSize);
 }
 
 void Navigator::updateNavigatorSize()

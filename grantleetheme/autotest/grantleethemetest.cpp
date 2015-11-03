@@ -16,14 +16,17 @@
 */
 
 #include "grantleethemetest.h"
-#include "../grantleetheme.h"
+#include "grantleetheme.h"
+
 #include <qtest.h>
 #include <QDir>
+#include <QProcess>
+#include <QStandardPaths>
 
 GrantleeThemeTest::GrantleeThemeTest(QObject *parent)
     : QObject(parent)
 {
-
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 GrantleeThemeTest::~GrantleeThemeTest()
@@ -88,5 +91,114 @@ void GrantleeThemeTest::shouldLoadTheme()
     QCOMPARE(theme.displayExtraVariables(), displayExtraVariables);
     QCOMPARE(theme.dirName(), dirname);
 }
+
+
+
+bool GrantleeThemeTest::validateHtml(const QString &themePath, const QString &name, const QString &html)
+{
+    const QString outFileName = themePath + QStringLiteral("/%1.out").arg(name);
+    const QString htmlFileName = themePath + QStringLiteral("/%1.out.html").arg(name);
+    QFile outFile(outFileName);
+    if (!outFile.open(QIODevice::WriteOnly)) {
+        return false;
+    }
+    outFile.write(html.toUtf8());
+    outFile.close();
+
+    // validate xml and pretty-print for comparisson
+    // TODO add proper cmake check for xmllint and diff
+    const QStringList args = {
+        QStringLiteral("--format"),
+        QStringLiteral("--encode"),
+        QStringLiteral("UTF8"),
+        QStringLiteral("--output"),
+        htmlFileName,
+        outFileName
+    };
+
+    const int result = QProcess::execute(QStringLiteral("xmllint"), args);
+    return result == 0;
+}
+
+bool GrantleeThemeTest::compareHtml(const QString &themePath, const QString &name)
+{
+    const QString htmlFileName = themePath + QStringLiteral("/%1.out.html").arg(name);
+    const QString referenceFileName = themePath + QStringLiteral("/%1_expected.html").arg(name);
+
+    // get rid of system dependent or random paths
+    {
+        QFile f(htmlFileName);
+        if (!f.open(QIODevice::ReadOnly)) {
+            return false;
+        }
+        QString content = QString::fromUtf8(f.readAll());
+        f.close();
+        content.replace(QRegExp(QStringLiteral("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            return false;
+        }
+        f.write(content.toUtf8());
+        f.close();
+    }
+
+    // compare to reference file
+    const QStringList args = {
+        QStringLiteral("-u"),
+        referenceFileName,
+        htmlFileName
+    };
+
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::ForwardedChannels);
+    proc.start(QStringLiteral("diff"), args);
+    if (!proc.waitForFinished()) {
+        return false;
+    }
+
+    return proc.exitCode() == 0;
+}
+
+
+void GrantleeThemeTest::testRenderTemplate_data()
+{
+    QTest::addColumn<QString>("dirname");
+    QTest::addColumn<bool>("isValid");
+    QTest::addColumn<QString>("filename");
+    QTest::addColumn<QString>("templateBasename");
+
+    QTest::newRow("valid theme") << QStringLiteral("valid") << true << QStringLiteral("filename.testdesktop") << QStringLiteral("header");
+    QTest::newRow("invalid theme") << QStringLiteral("invalid") << false << QStringLiteral("filename.testdesktop") << QString();
+}
+
+void GrantleeThemeTest::testRenderTemplate()
+{
+    QFETCH(QString, dirname);
+    QFETCH(bool, isValid);
+    QFETCH(QString, filename);
+    QFETCH(QString, templateBasename);
+
+    const QString themePath = QStringLiteral(GRANTLEETHEME_DATA_DIR) + QDir::separator() + dirname;
+
+    QVariantHash data;
+    data[QStringLiteral("icon")] = QStringLiteral("kmail");
+    data[QStringLiteral("name")] = QStringLiteral("KMail");
+    data[QStringLiteral("subtitle")] = QStringLiteral("...just rocks!");
+    data[QStringLiteral("title")] = QStringLiteral("Something's going on");
+    data[QStringLiteral("subtext")] = QStringLiteral("Please wait, it will be over soon.");
+
+    GrantleeTheme::Theme theme(themePath, dirname, filename);
+    QCOMPARE(theme.isValid(), isValid);
+
+    if (isValid) {
+        const QString result = theme.render(templateBasename + QStringLiteral(".html"), data);
+
+        QVERIFY(validateHtml(themePath, templateBasename, result));
+        QVERIFY(compareHtml(themePath, templateBasename));
+
+        QFile::remove(themePath + QDir::separator() + templateBasename + QStringLiteral(".out"));
+        QFile::remove(themePath + QDir::separator() + templateBasename + QStringLiteral(".out.html"));
+    }
+}
+
 
 QTEST_MAIN(GrantleeThemeTest)

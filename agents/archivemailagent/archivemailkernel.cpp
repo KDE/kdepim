@@ -18,8 +18,8 @@
 #include "archivemailkernel.h"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <mailcommon/folder/foldercollectionmonitor.h>
-#include <mailcommon/job/jobscheduler.h>
+#include <MailCommon/FolderCollectionMonitor>
+#include <MailCommon/JobScheduler>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
@@ -36,7 +36,7 @@ ArchiveMailKernel::ArchiveMailKernel(QObject *parent)
     mFolderCollectionMonitor->monitor()->setChangeRecordingEnabled(false);
 
     mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
-    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setListFilter(Akonadi::CollectionFetchScope::Enabled);
     mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
@@ -110,12 +110,12 @@ bool ArchiveMailKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id ArchiveMailKernel::lastSelectedFolder()
+Akonadi::Collection::Id ArchiveMailKernel::lastSelectedFolder()
 {
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void ArchiveMailKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void ArchiveMailKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

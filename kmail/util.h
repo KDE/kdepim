@@ -41,8 +41,7 @@
 #include <QWidget>
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/Collection>
-#include "mailcommon/folder/foldercollection.h"
-#include <KUrl>
+#include "MailCommon/FolderCollection"
 
 namespace KMail
 {
@@ -52,21 +51,6 @@ namespace KMail
      */
 namespace Util
 {
-
-/** Test if all required settings are set.
-      Reports problems to user via dialogs and returns false.
-      Returns true if everything is Ok. */
-bool checkTransport(QWidget *w);
-
-/**
-     * Convert all sequences of "\r\n" (carriage return followed by a line
-     * feed) to a single "\n" (line feed). The conversion happens in place.
-     * Returns the length of the resulting string.
-     * @param str The string to convert.
-     * @param strLen The length of the string to convert.
-     * @return The new length of the converted string.
-     */
-size_t crlf2lf(char *str, const size_t strLen);
 
 /**
      * Returns any mailing list post addresses set on the
@@ -84,7 +68,7 @@ Akonadi::Item::Id putRepliesInSameFolder(const Akonadi::Item &item);
      * Handles a clicked URL, but only in case the viewer didn't handle it.
      * Currently only support mailto.
      */
-bool handleClickedURL(const KUrl &url, const QSharedPointer<MailCommon::FolderCollection> &folder = QSharedPointer<MailCommon::FolderCollection>());
+bool handleClickedURL(const QUrl &url, const QSharedPointer<MailCommon::FolderCollection> &folder = QSharedPointer<MailCommon::FolderCollection>());
 
 bool mailingListsHandleURL(const QList<QUrl> &lst, const QSharedPointer<MailCommon::FolderCollection> &folder);
 
@@ -96,10 +80,6 @@ bool mailingListHelp(const QSharedPointer<MailCommon::FolderCollection> &fd);
 
 void lastEncryptAndSignState(bool &lastEncrypt, bool &lastSign, const KMime::Message::Ptr &msg);
 
-QColor misspelledColor();
-QColor quoteL1Color();
-QColor quoteL2Color();
-QColor quoteL3Color();
 void addQActionHelpText(QAction *action, const QString &text);
 }
 }

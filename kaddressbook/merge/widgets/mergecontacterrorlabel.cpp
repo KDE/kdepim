@@ -29,7 +29,7 @@ MergeContactErrorLabel::MergeContactErrorLabel(ErrorType type, QWidget *parent)
         setText(i18n("You must select at least two elements."));
         break;
     case NoContactDuplicatesFound:
-        setText(i18n("No contact duplicated found."));
+        setText(i18n("No duplicated contact found."));
         break;
     case NoContactSelected:
         setText(i18n("No contacts selected."));

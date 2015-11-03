@@ -29,7 +29,9 @@
 #include "addfeeddialog.h"
 #include "articlelistview.h"
 #include "articleviewer.h"
+#include "abstractselectioncontroller.h"
 #include "articlejobs.h"
+#include "articlematcher.h"
 #include "akregatorconfig.h"
 #include "akregator_part.h"
 #include "browserframe.h"
@@ -69,21 +71,21 @@
 #include <kshell.h>
 
 #include <ktoggleaction.h>
-#include <ktoolinvocation.h>
 #include <QUrl>
 
 #include <QClipboard>
+#include <QNetworkConfigurationManager>
 #include <QSplitter>
 #include <QTextDocument>
 #include <QDomDocument>
 #include <QTimer>
+#include <QDesktopServices>
 
 #include <algorithm>
 #include <memory>
 #include <cassert>
 
 using namespace Akregator;
-using namespace Solid;
 
 Akregator::MainWidget::~MainWidget()
 {
@@ -100,9 +102,10 @@ Akregator::MainWidget::MainWidget(Part *part, QWidget *parent, ActionManagerImpl
       m_feedList(),
       m_viewMode(NormalView),
       m_actionManager(actionManager),
-      m_feedListManagementInterface(new FeedListManagementImpl)
+      m_feedListManagementInterface(new FeedListManagementImpl),
+      m_networkConfigManager(new QNetworkConfigurationManager(this))
 {
-    setObjectName(name);
+    setObjectName(QLatin1String(name));
 
     FeedListManagementInterface::setInstance(m_feedListManagementInterface);
 
@@ -121,17 +124,17 @@ Akregator::MainWidget::MainWidget(Part *part, QWidget *parent, ActionManagerImpl
     m_horizontalSplitter->setOpaqueResize(true);
     lt->addWidget(m_horizontalSplitter);
 
-    connect(Kernel::self()->fetchQueue(), SIGNAL(signalStarted()),
-            this, SLOT(slotFetchingStarted()));
-    connect(Kernel::self()->fetchQueue(), SIGNAL(signalStopped()),
-            this, SLOT(slotFetchingStopped()));
+    connect(Kernel::self()->fetchQueue(), &FetchQueue::signalStarted,
+            this, &MainWidget::slotFetchingStarted);
+    connect(Kernel::self()->fetchQueue(), &FetchQueue::signalStopped,
+            this, &MainWidget::slotFetchingStopped);
 
     m_feedListView = new SubscriptionListView(m_horizontalSplitter);
-    m_feedListView->setObjectName("feedtree");
+    m_feedListView->setObjectName(QStringLiteral("feedtree"));
     m_actionManager->initSubscriptionListView(m_feedListView);
 
-    connect(m_feedListView, SIGNAL(userActionTakingPlace()),
-            this, SLOT(ensureArticleTabVisible()));
+    connect(m_feedListView, &SubscriptionListView::userActionTakingPlace,
+            this, &MainWidget::ensureArticleTabVisible);
 
     // FIXME:
     // connect(m_feedListView, SIGNAL(signalDropped (QList<QUrl> &, Akregator::TreeNode*,
@@ -142,41 +145,41 @@ Akregator::MainWidget::MainWidget(Part *part, QWidget *parent, ActionManagerImpl
     m_tabWidget = new TabWidget(m_horizontalSplitter);
     m_actionManager->initTabWidget(m_tabWidget);
 
-    connect(m_part, SIGNAL(signalSettingsChanged()),
-            m_tabWidget, SLOT(slotSettingsChanged()));
+    connect(m_part, &Part::signalSettingsChanged,
+            m_tabWidget, &TabWidget::slotSettingsChanged);
 
-    connect(m_tabWidget, SIGNAL(signalCurrentFrameChanged(int)),
-            Kernel::self()->frameManager(), SLOT(slotChangeFrame(int)));
+    connect(m_tabWidget, &TabWidget::signalCurrentFrameChanged,
+            Kernel::self()->frameManager(), &FrameManager::slotChangeFrame);
 
-    connect(m_tabWidget, SIGNAL(signalRemoveFrameRequest(int)),
-            Kernel::self()->frameManager(), SLOT(slotRemoveFrame(int)));
+    connect(m_tabWidget, &TabWidget::signalRemoveFrameRequest,
+            Kernel::self()->frameManager(), &FrameManager::slotRemoveFrame);
 
     connect(m_tabWidget, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest&)),
             Kernel::self()->frameManager(), SLOT(slotOpenUrlRequest(Akregator::OpenUrlRequest&)));
 
-    connect(Kernel::self()->frameManager(), SIGNAL(signalFrameAdded(Akregator::Frame*)),
-            m_tabWidget, SLOT(slotAddFrame(Akregator::Frame*)));
+    connect(Kernel::self()->frameManager(), &FrameManager::signalFrameAdded,
+            m_tabWidget, &TabWidget::slotAddFrame);
 
-    connect(Kernel::self()->frameManager(), SIGNAL(signalSelectFrame(int)),
-            m_tabWidget, SLOT(slotSelectFrame(int)));
+    connect(Kernel::self()->frameManager(), &FrameManager::signalSelectFrame,
+            m_tabWidget, &TabWidget::slotSelectFrame);
 
-    connect(Kernel::self()->frameManager(), SIGNAL(signalFrameRemoved(int)),
-            m_tabWidget, SLOT(slotRemoveFrame(int)));
+    connect(Kernel::self()->frameManager(), &FrameManager::signalFrameRemoved,
+            m_tabWidget, &TabWidget::slotRemoveFrame);
 
-    connect(Kernel::self()->frameManager(), SIGNAL(signalRequestNewFrame(int&)),
-            this, SLOT(slotRequestNewFrame(int&)));
+    connect(Kernel::self()->frameManager(), &FrameManager::signalRequestNewFrame,
+            this, &MainWidget::slotRequestNewFrame);
 
-    connect(Kernel::self()->frameManager(), SIGNAL(signalFrameAdded(Akregator::Frame*)),
-            this, SLOT(slotFramesChanged()));
-    connect(Kernel::self()->frameManager(), SIGNAL(signalFrameRemoved(int)),
-            this, SLOT(slotFramesChanged()));
-    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-            this, SLOT(slotNetworkStatusChanged(Solid::Networking::Status)));
+    connect(Kernel::self()->frameManager(), &FrameManager::signalFrameAdded,
+            this, &MainWidget::slotFramesChanged);
+    connect(Kernel::self()->frameManager(), &FrameManager::signalFrameRemoved,
+            this, &MainWidget::slotFramesChanged);
+    connect(m_networkConfigManager, &QNetworkConfigurationManager::onlineStateChanged,
+            this, &MainWidget::slotNetworkStatusChanged);
 
     m_tabWidget->setWhatsThis(i18n("You can view multiple articles in several open tabs."));
 
     m_mainTab = new QWidget(this);
-    m_mainTab->setObjectName("Article Tab");
+    m_mainTab->setObjectName(QStringLiteral("Article Tab"));
     m_mainTab->setWhatsThis(i18n("Articles list."));
 
     QVBoxLayout *mainTabLayout = new QVBoxLayout(m_mainTab);
@@ -190,33 +193,33 @@ Akregator::MainWidget::MainWidget(Part *part, QWidget *parent, ActionManagerImpl
     mainTabLayout->addWidget(m_searchBar);
 
     m_articleSplitter = new QSplitter(Qt::Vertical, m_mainTab);
-    m_articleSplitter->setObjectName("panner2");
+    m_articleSplitter->setObjectName(QStringLiteral("panner2"));
 
     m_articleListView = new ArticleListView(m_articleSplitter);
-    connect(m_articleListView, SIGNAL(userActionTakingPlace()),
-            this, SLOT(ensureArticleTabVisible()));
+    connect(m_articleListView, &ArticleListView::userActionTakingPlace,
+            this, &MainWidget::ensureArticleTabVisible);
 
     m_selectionController = new SelectionController(this);
     m_selectionController->setArticleLister(m_articleListView);
     m_selectionController->setFeedSelector(m_feedListView);
 
-    connect(m_searchBar, SIGNAL(signalSearch(std::vector<QSharedPointer<const Akregator::Filters::AbstractMatcher> >)),
-            m_selectionController, SLOT(setFilters(std::vector<QSharedPointer<const Akregator::Filters::AbstractMatcher> >)));
+    connect(m_searchBar, &SearchBar::signalSearch,
+            m_selectionController, &AbstractSelectionController::setFilters);
 
     FolderExpansionHandler *expansionHandler = new FolderExpansionHandler(this);
-    connect(m_feedListView, SIGNAL(expanded(QModelIndex)), expansionHandler, SLOT(itemExpanded(QModelIndex)));
-    connect(m_feedListView, SIGNAL(collapsed(QModelIndex)), expansionHandler, SLOT(itemCollapsed(QModelIndex)));
+    connect(m_feedListView, &QTreeView::expanded, expansionHandler, &FolderExpansionHandler::itemExpanded);
+    connect(m_feedListView, &QTreeView::collapsed, expansionHandler, &FolderExpansionHandler::itemCollapsed);
 
     m_selectionController->setFolderExpansionHandler(expansionHandler);
 
-    connect(m_selectionController, SIGNAL(currentSubscriptionChanged(Akregator::TreeNode*)),
-            this, SLOT(slotNodeSelected(Akregator::TreeNode*)));
+    connect(m_selectionController, &AbstractSelectionController::currentSubscriptionChanged,
+            this, &MainWidget::slotNodeSelected);
 
-    connect(m_selectionController, SIGNAL(currentArticleChanged(Akregator::Article)),
-            this, SLOT(slotArticleSelected(Akregator::Article)));
+    connect(m_selectionController, &AbstractSelectionController::currentArticleChanged,
+            this, &MainWidget::slotArticleSelected);
 
-    connect(m_selectionController, SIGNAL(articleDoubleClicked(Akregator::Article)),
-            this, SLOT(slotOpenArticleInBrowser(Akregator::Article)));
+    connect(m_selectionController, &AbstractSelectionController::articleDoubleClicked,
+            this, &MainWidget::slotOpenArticleInBrowser);
 
     m_actionManager->initArticleListView(m_articleListView);
 
@@ -235,12 +238,12 @@ Akregator::MainWidget::MainWidget(Part *part, QWidget *parent, ActionManagerImpl
 
     connect(m_articleViewer, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest&)),
             Kernel::self()->frameManager(), SLOT(slotOpenUrlRequest(Akregator::OpenUrlRequest&)));
-    connect(m_articleViewer->part()->browserExtension(), SIGNAL(mouseOverInfo(KFileItem)),
-            this, SLOT(slotMouseOverInfo(KFileItem)));
-    connect(m_part, SIGNAL(signalSettingsChanged()),
-            m_articleViewer, SLOT(slotPaletteOrFontChanged()));
-    connect(m_searchBar, SIGNAL(signalSearch(std::vector<QSharedPointer<const Akregator::Filters::AbstractMatcher> >)),
-            m_articleViewer, SLOT(setFilters(std::vector<QSharedPointer<const Akregator::Filters::AbstractMatcher> >)));
+    connect(m_articleViewer->part()->browserExtension(), &KParts::BrowserExtension::mouseOverInfo,
+            this, &MainWidget::slotMouseOverInfo);
+    connect(m_part, &Part::signalSettingsChanged,
+            m_articleViewer, &ArticleViewer::slotPaletteOrFontChanged);
+    connect(m_searchBar, &SearchBar::signalSearch,
+            m_articleViewer, &ArticleViewer::setFilters);
 
     m_articleViewer->part()->widget()->setWhatsThis(i18n("Browsing area."));
 
@@ -269,19 +272,19 @@ Akregator::MainWidget::MainWidget(Part *part, QWidget *parent, ActionManagerImpl
     }
 
     m_fetchTimer = new QTimer(this);
-    connect(m_fetchTimer, SIGNAL(timeout()),
-            this, SLOT(slotDoIntervalFetches()));
+    connect(m_fetchTimer, &QTimer::timeout,
+            this, &MainWidget::slotDoIntervalFetches);
     m_fetchTimer->start(1000 * 60);
 
     // delete expired articles once per hour
     m_expiryTimer = new QTimer(this);
-    connect(m_expiryTimer, SIGNAL(timeout()),
-            this, SLOT(slotDeleteExpiredArticles()));
+    connect(m_expiryTimer, &QTimer::timeout,
+            this, &MainWidget::slotDeleteExpiredArticles);
     m_expiryTimer->start(3600 * 1000);
 
     m_markReadTimer = new QTimer(this);
     m_markReadTimer->setSingleShot(true);
-    connect(m_markReadTimer, SIGNAL(timeout()), this, SLOT(slotSetCurrentArticleReadDelayed()));
+    connect(m_markReadTimer, &QTimer::timeout, this, &MainWidget::slotSetCurrentArticleReadDelayed);
 
     setFeedList(QSharedPointer<FeedList>(new FeedList(Kernel::self()->storage())));
 
@@ -299,13 +302,6 @@ Akregator::MainWidget::MainWidget(Part *part, QWidget *parent, ActionManagerImpl
     if (!Settings::resetQuickFilterOnNodeChange()) {
         m_searchBar->slotSetStatus(Settings::statusFilter());
         m_searchBar->slotSetText(Settings::textFilter());
-    }
-
-    //Check network status
-    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
-        this->m_networkAvailable = true;
-    } else if (Solid::Networking::status() == Solid::Networking::Unconnected) {
-        this->m_networkAvailable = false;
     }
 }
 
@@ -352,9 +348,9 @@ void Akregator::MainWidget::slotRequestNewFrame(int &frameId)
 {
     BrowserFrame *frame = new BrowserFrame(m_tabWidget);
 
-    connect(m_part, SIGNAL(signalSettingsChanged()), frame, SLOT(slotPaletteOrFontChanged()));
-    connect(m_tabWidget, SIGNAL(signalZoomInFrame(int)), frame, SLOT(slotZoomIn(int)));
-    connect(m_tabWidget, SIGNAL(signalZoomOutFrame(int)), frame, SLOT(slotZoomOut(int)));
+    connect(m_part, &Part::signalSettingsChanged, frame, &BrowserFrame::slotPaletteOrFontChanged);
+    connect(m_tabWidget, &TabWidget::signalZoomInFrame, frame, &BrowserFrame::slotZoomIn);
+    connect(m_tabWidget, &TabWidget::signalZoomOutFrame, frame, &BrowserFrame::slotZoomOut);
 
     Kernel::self()->frameManager()->slotAddFrame(frame);
 
@@ -383,25 +379,16 @@ void Akregator::MainWidget::sendArticle(bool attach)
         return;
     }
 
+    QUrlQuery query;
+    query.addQueryItem(QStringLiteral("subject"), title);
+    query.addQueryItem(QStringLiteral("body"), QString::fromUtf8(text));
     if (attach) {
-        KToolInvocation::invokeMailer(QString(),
-                                      QString(),
-                                      QString(),
-                                      title,
-                                      QString(),
-                                      QString(),
-                                      QStringList(text),
-                                      text);
-    } else {
-        KToolInvocation::invokeMailer(QString(),
-                                      QString(),
-                                      QString(),
-                                      title,
-                                      text,
-                                      QString(),
-                                      QStringList(),
-                                      text);
+        query.addQueryItem(QStringLiteral("attach"), QString::fromUtf8(text));
     }
+    QUrl url;
+    url.setScheme(QStringLiteral("mailto"));
+    url.setQuery(query);
+    QDesktopServices::openUrl(url);
 }
 
 void MainWidget::importFeedList(const QDomDocument &doc)
@@ -422,8 +409,8 @@ void Akregator::MainWidget::setFeedList(const QSharedPointer<FeedList> &list)
 
     m_feedList = list;
     if (m_feedList) {
-        connect(m_feedList.data(), SIGNAL(unreadCountChanged(int)),
-                this, SLOT(slotSetTotalUnread()));
+        connect(m_feedList.data(), &FeedList::unreadCountChanged,
+                this, &MainWidget::slotSetTotalUnread);
     }
 
     slotSetTotalUnread();
@@ -751,7 +738,7 @@ void Akregator::MainWidget::slotPrevUnreadArticle()
 void Akregator::MainWidget::slotMarkAllFeedsRead()
 {
     KJob *job = m_feedList->createMarkAsReadJob();
-    connect(job, SIGNAL(finished(KJob*)), m_selectionController, SLOT(forceFilterUpdate()));
+    connect(job, &KJob::finished, m_selectionController, &AbstractSelectionController::forceFilterUpdate);
     job->start();
 }
 
@@ -761,7 +748,7 @@ void Akregator::MainWidget::slotMarkAllRead()
         return;
     }
     KJob *job = m_selectionController->selectedSubscription()->createMarkAsReadJob();
-    connect(job, SIGNAL(finished(KJob*)), m_selectionController, SLOT(forceFilterUpdate()));
+    connect(job, &KJob::finished, m_selectionController, &AbstractSelectionController::forceFilterUpdate);
     job->start();
 }
 
@@ -1015,7 +1002,7 @@ void Akregator::MainWidget::slotArticleDelete()
     case 0:
         return;
     case 1:
-        msg = i18n("<qt>Are you sure you want to delete article <b>%1</b>?</qt>", articles.first().title().toHtmlEscaped());
+        msg = i18n("<qt>Are you sure you want to delete article <b>%1</b>?</qt>", articles.first().title());
         break;
     default:
         msg = i18np("<qt>Are you sure you want to delete the selected article?</qt>", "<qt>Are you sure you want to delete the %1 selected articles?</qt>", articles.count());
@@ -1025,7 +1012,7 @@ void Akregator::MainWidget::slotArticleDelete()
                                            msg, i18n("Delete Article"),
                                            KStandardGuiItem::del(),
                                            KStandardGuiItem::cancel(),
-                                           "Disable delete article confirmation") != KMessageBox::Continue) {
+                                           QStringLiteral("Disable delete article confirmation")) != KMessageBox::Continue) {
         return;
     }
 
@@ -1168,9 +1155,9 @@ void Akregator::MainWidget::readProperties(const KConfigGroup &config)
         BrowserFrame *const frame = new BrowserFrame(m_tabWidget);
         frame->loadConfig(config, framePrefix + QLatin1Char('_'));
 
-        connect(m_part, SIGNAL(signalSettingsChanged()), frame, SLOT(slotPaletteOrFontChanged()));
-        connect(m_tabWidget, SIGNAL(signalZoomInFrame(int)), frame, SLOT(slotZoomIn(int)));
-        connect(m_tabWidget, SIGNAL(signalZoomOutFrame(int)), frame, SLOT(slotZoomOut(int)));
+        connect(m_part, &Part::signalSettingsChanged, frame, &BrowserFrame::slotPaletteOrFontChanged);
+        connect(m_tabWidget, &TabWidget::signalZoomInFrame, frame, &BrowserFrame::slotZoomIn);
+        connect(m_tabWidget, &TabWidget::signalZoomOutFrame, frame, &BrowserFrame::slotZoomOut);
 
         Kernel::self()->frameManager()->slotAddFrame(frame);
 
@@ -1198,17 +1185,15 @@ void MainWidget::slotReloadAllTabs()
 
 bool MainWidget::isNetworkAvailable()
 {
-    return m_networkAvailable;
+    return m_networkConfigManager->isOnline();
 }
 
-void MainWidget::slotNetworkStatusChanged(Solid::Networking::Status status)
+void MainWidget::slotNetworkStatusChanged(bool status)
 {
-    if (status == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
-        m_networkAvailable = true;
+    if (status) {
         m_mainFrame->slotSetStatusText(i18n("Networking is available now."));
         this->slotFetchAllFeeds();
-    } else if (Solid::Networking::Unconnected) {
-        m_networkAvailable = false;
+    } else {
         m_mainFrame->slotSetStatusText(i18n("Networking is not available."));
     }
 }

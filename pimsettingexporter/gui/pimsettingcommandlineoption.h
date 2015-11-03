@@ -20,11 +20,10 @@
 
 #include <QObject>
 #include <QCommandLineParser>
-#include "pimsettingexporter_export.h"
 
 class QApplication;
 class PimSettingExporterWindow;
-class PIMSETTINGEXPORTER_EXPORT PimSettingCommandLineOption : public QObject
+class PimSettingCommandLineOption : public QObject
 {
     Q_OBJECT
 public:

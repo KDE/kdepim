@@ -17,8 +17,8 @@
 
 #include "validatesendmailshortcut.h"
 #include "kmail_debug.h"
-#include "libkdepim/widgets/pimmessagebox.h"
-#include "settings/globalsettings.h"
+#include "Libkdepim/PIMMessageBox"
+#include "settings/kmailsettings.h"
 
 #include <KMessageBox>
 #include <KActionCollection>
@@ -39,7 +39,7 @@ ValidateSendMailShortcut::~ValidateSendMailShortcut()
 bool ValidateSendMailShortcut::validate()
 {
     bool sendNow = false;
-    const int result = PIMMessageBox::fourBtnMsgBox(mParent,
+    const int result = KPIM::PIMMessageBox::fourBtnMsgBox(mParent,
                        QMessageBox::Question,
                        i18n("This shortcut allows to send mail directly. Mail can be send accidentally. What do you want to do?"),
                        i18n("Configure shortcut"),
@@ -56,15 +56,15 @@ bool ValidateSendMailShortcut::validate()
         }
         sendNow = false;
     } else if (result == KMessageBox::No) {
-        GlobalSettings::self()->setConfirmBeforeSendWhenUseShortcut(true);
+        KMailSettings::self()->setConfirmBeforeSendWhenUseShortcut(true);
         sendNow = true;
     } else if (result == KMessageBox::Ok) {
-        GlobalSettings::self()->setConfirmBeforeSendWhenUseShortcut(false);
+        KMailSettings::self()->setConfirmBeforeSendWhenUseShortcut(false);
         sendNow = true;
     } else if (result == KMessageBox::Cancel) {
         return false;
     }
-    GlobalSettings::self()->setCheckSendDefaultActionShortcut(true);
-    GlobalSettings::self()->save();
+    KMailSettings::self()->setCheckSendDefaultActionShortcut(true);
+    KMailSettings::self()->save();
     return sendNow;
 }

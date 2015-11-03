@@ -35,7 +35,6 @@
 #include <KLocalizedString>
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-#include <kio/netaccess.h>
 #include <phonon/mediaobject.h>
 #include <phonon/audiooutput.h>
 
@@ -47,6 +46,8 @@
 #include <QGridLayout>
 #include <QShowEvent>
 #include <QResizeEvent>
+#include <QDialogButtonBox>
+#include <QStyle>
 #include "kalarm_debug.h"
 
 
@@ -59,14 +60,21 @@ static const char SOUND_DIALOG_NAME[] = "SoundDialog";
 
 SoundDlg::SoundDlg(const QString& file, float volume, float fadeVolume, int fadeSeconds, int repeatPause,
                    const QString& caption, QWidget* parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mReadOnly(false)
 {
+    QVBoxLayout *layout = new QVBoxLayout(this);
     mSoundWidget = new SoundWidget(true, true, this);
-    setMainWidget(mSoundWidget);
-    setCaption(caption);
-    setButtons(Ok|Cancel);
-    setDefaultButton(Ok);
+    layout->addWidget(mSoundWidget);
+
+    mButtonBox = new QDialogButtonBox;
+    mButtonBox->addButton(QDialogButtonBox::Ok);
+    mButtonBox->addButton(QDialogButtonBox::Cancel);
+    connect(mButtonBox, &QDialogButtonBox::clicked,
+            this, &SoundDlg::slotButtonClicked);
+    layout->addWidget(mButtonBox);
+
+    setWindowTitle(caption);
 
     // Restore the dialog size from last time
     QSize s;
@@ -88,20 +96,21 @@ void SoundDlg::setReadOnly(bool readOnly)
         mReadOnly = readOnly;
         if (readOnly)
         {
-            setButtons(Cancel);
-            setDefaultButton(Cancel);
+            mButtonBox->clear();
+            mButtonBox->addButton(QDialogButtonBox::Cancel);
         }
         else
         {
-            setButtons(Ok|Cancel);
-            setDefaultButton(Ok);
+            mButtonBox->clear();
+            mButtonBox->addButton(QDialogButtonBox::Ok);
+            mButtonBox->addButton(QDialogButtonBox::Cancel);
         }
     }
 }
 
-KUrl SoundDlg::getFile() const
+QUrl SoundDlg::getFile() const
 {
-    KUrl url;
+    QUrl url;
     mSoundWidget->file(url);
     return url;
 }
@@ -114,15 +123,15 @@ void SoundDlg::resizeEvent(QResizeEvent* re)
 {
     if (isVisible())
         KAlarm::writeConfigWindowSize(SOUND_DIALOG_NAME, re->size());
-    KDialog::resizeEvent(re);
+    QDialog::resizeEvent(re);
 }
 
 /******************************************************************************
 * Called when the OK or Cancel button is clicked.
 */
-void SoundDlg::slotButtonClicked(int button)
+void SoundDlg::slotButtonClicked(QAbstractButton *button)
 {
-    if (button == Ok)
+    if (button == mButtonBox->button(QDialogButtonBox::Ok))
     {
         if (mReadOnly)
             reject();
@@ -130,7 +139,8 @@ void SoundDlg::slotButtonClicked(int button)
             accept();
     }
     else
-        KDialog::slotButtonClicked(button);
+        reject();
+
 }
 
 
@@ -150,8 +160,6 @@ SoundWidget::SoundWidget(bool showPlay, bool showRepeat, QWidget* parent)
       mEmptyFileAllowed(false)
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->setMargin(0);
-    layout->setSpacing(KDialog::spacingHint());
 
     QLabel* label = Q_NULLPTR;
     if (!showPlay)
@@ -171,7 +179,7 @@ SoundWidget::SoundWidget(bool showPlay, bool showRepeat, QWidget* parent)
         // File play button
         mFilePlay = new QPushButton(box);
         boxHLayout->addWidget(mFilePlay);
-        mFilePlay->setIcon(SmallIcon(QStringLiteral("media-playback-start")));
+        mFilePlay->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
         connect(mFilePlay, &QPushButton::clicked, this, &SoundWidget::playSound);
         mFilePlay->setToolTip(i18nc("@info:tooltip", "Test the sound"));
         mFilePlay->setWhatsThis(i18nc("@info:whatsthis", "Play the selected sound file."));
@@ -189,7 +197,7 @@ SoundWidget::SoundWidget(bool showPlay, bool showRepeat, QWidget* parent)
     // File browse button
     mFileBrowseButton = new PushButton(box);
     boxHLayout->addWidget(mFileBrowseButton);
-    mFileBrowseButton->setIcon(QIcon(SmallIcon(QStringLiteral("document-open"))));
+    mFileBrowseButton->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("document-open"))));
     int size = mFileBrowseButton->sizeHint().height();
     mFileBrowseButton->setFixedSize(size, size);
     connect(mFileBrowseButton, &PushButton::clicked, this, &SoundWidget::slotPickFile);
@@ -237,10 +245,10 @@ SoundWidget::SoundWidget(bool showPlay, bool showRepeat, QWidget* parent)
     QGroupBox* group = new QGroupBox(i18nc("@title:group Sound volume", "Volume"), this);
     layout->addWidget(group);
     QGridLayout* grid = new QGridLayout(group);
-    grid->setMargin(KDialog::marginHint());
-    grid->setSpacing(KDialog::spacingHint());
+    grid->setMargin(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
+    grid->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     grid->setColumnStretch(2, 1);
-    int indentWidth = 3 * KDialog::spacingHint();
+    int indentWidth = 3 * style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing);
     grid->setColumnMinimumWidth(0, indentWidth);
     grid->setColumnMinimumWidth(1, indentWidth);
 
@@ -368,7 +376,7 @@ QString SoundWidget::fileName() const
 /******************************************************************************
 * Validate the entered file and return it.
 */
-bool SoundWidget::file(KUrl& url, bool showErrorMessage) const
+bool SoundWidget::file(QUrl& url, bool showErrorMessage) const
 {
     bool result = validate(showErrorMessage);
     url = mUrl;
@@ -454,7 +462,7 @@ void SoundWidget::playSound()
     Phonon::createPath(mPlayer, output);
 #endif
     connect(mPlayer, &Phonon::MediaObject::finished, this, &SoundWidget::playFinished);
-    mFilePlay->setIcon(SmallIcon(QStringLiteral("media-playback-stop")));   // change the play button to a stop button
+    mFilePlay->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));   // change the play button to a stop button
     mFilePlay->setToolTip(i18nc("@info:tooltip", "Stop sound"));
     mFilePlay->setWhatsThis(i18nc("@info:whatsthis", "Stop playing the sound"));
     mPlayer->play();
@@ -467,7 +475,7 @@ void SoundWidget::playFinished()
 {
     delete mPlayer;   // this stops playing if not already stopped
     mPlayer = Q_NULLPTR;
-    mFilePlay->setIcon(SmallIcon(QStringLiteral("media-playback-start")));
+    mFilePlay->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
     mFilePlay->setToolTip(i18nc("@info:tooltip", "Test the sound"));
     mFilePlay->setWhatsThis(i18nc("@info:whatsthis", "Play the selected sound file."));
 }
@@ -491,7 +499,7 @@ bool SoundWidget::validate(bool showErrorMessage) const
         return true;
     if (err == KAlarm::FileErr_Nonexistent)
     {
-        mUrl = KUrl(file);
+        mUrl = QUrl::fromUserInput(file, QString(), QUrl::AssumeLocalFile);
         if (mUrl.isLocalFile()  &&  !file.startsWith(QStringLiteral("/")))
         {
             // It's a relative path.
@@ -506,8 +514,7 @@ bool SoundWidget::validate(bool showErrorMessage) const
                     dir = soundDirs[i];
                     if (dir.isReadable() && dir.count() > 2)
                     {
-                        mUrl.setPath(soundDirs[i]);
-                        mUrl.addPath(file);
+                        mUrl.setPath(soundDirs[i] + QDir::separator() + file);
                         QString f = mUrl.toLocalFile();
                         err = KAlarm::checkFileExists(f, mUrl);
                         if (err == KAlarm::FileErr_None)
@@ -522,8 +529,7 @@ bool SoundWidget::validate(bool showErrorMessage) const
             }
             if (err == KAlarm::FileErr_Nonexistent)
             {
-                mUrl.setPath(QDir::homePath());
-                mUrl.addPath(file);
+                mUrl.setPath(QDir::homePath() + QDir::separator() + file);
                 QString f = mUrl.toLocalFile();
                 err = KAlarm::checkFileExists(f, mUrl);
                 if (err == KAlarm::FileErr_None)

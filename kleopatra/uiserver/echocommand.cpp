@@ -37,7 +37,7 @@
 #include <utils/input.h>
 #include <utils/output.h>
 
-#include <kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include <gpg-error.h>
 
@@ -89,25 +89,13 @@ int EchoCommand::doStart()
 
     std::string keyword;
     if (hasOption("inquire")) {
-#ifdef QT_STL
         keyword = option("inquire").toString().toStdString();
-#else
-        const QString tmpStr = option("inquire").toString();
-        const QByteArray asc = tmpStr.toLatin1();
-        keyword = std::string(asc.constData(), asc.length());
-#endif
         if (keyword.empty()) {
             return makeError(GPG_ERR_INV_ARG);
         }
     }
 
-#ifdef QT_STL
     const std::string output = option("text").toString().toStdString();
-#else
-    const QString tmpStr = option("text").toString();
-    const QByteArray asc = tmpStr.toLatin1();
-    const std::string output = std::string(asc.constData(), asc.length());
-#endif
 
     // aaand ACTION:
 
@@ -130,8 +118,8 @@ int EchoCommand::doStart()
 
         ++d->operationsInFlight;
 
-        connect(i.get(), SIGNAL(readyRead()), this, SLOT(slotInputReadyRead()));
-        connect(o.get(), SIGNAL(bytesWritten(qint64)), this, SLOT(slotOutputBytesWritten()));
+        connect(i.get(), &QIODevice::readyRead, this, &EchoCommand::slotInputReadyRead);
+        connect(o.get(), &QIODevice::bytesWritten, this, &EchoCommand::slotOutputBytesWritten);
 
         if (i->bytesAvailable()) {
             slotInputReadyRead();

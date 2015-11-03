@@ -3,7 +3,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(
   ${CMAKE_SOURCE_DIR}/korganizer
   ${CMAKE_BINARY_DIR}/korganizer
-  ${CMAKE_SOURCE_DIR}/calendarviews
   ${CMAKE_SOURCE_DIR}/korganizer/interfaces
 )
 
@@ -18,7 +17,6 @@ target_link_libraries(korgplugins
   korganizer_core
   KF5::Holidays
   KF5::KIOCore
-  Qt5::Test
 )
 
 ########### next target ###############
@@ -31,5 +29,4 @@ target_link_libraries(testkcmdesignerfields
   Qt5::UiTools
   KF5::KCMUtils
   KF5::KIOWidgets
-  KF5::KDELibs4Support
 )

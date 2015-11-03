@@ -34,8 +34,7 @@ class QLabel;
 class QSpinBox;
 class KTimeZone;
 class QLineEdit;
-class KVBox;
-class KComboBox;
+class QComboBox;
 class FontColourChooser;
 class ColourButton;
 class ButtonGroup;
@@ -59,16 +58,14 @@ class PrefsTabBase : public StackedScrollWidget
         virtual void restore(bool defaults, bool allTabs) = 0;
         virtual void apply(bool syncToDisc) = 0;
         void         addAlignedLabel(QLabel*);
-        KVBox*       topWidget() const  { return mTopWidget; }
         QVBoxLayout* topLayout() const  { return mTopLayout; }
         static int   indentWidth()      { return mIndentWidth; }
 
     protected:
-        virtual void showEvent(QShowEvent*);
+        void showEvent(QShowEvent*) Q_DECL_OVERRIDE;
 
     private:
         static int   mIndentWidth;       // indent width for checkboxes etc.
-        KVBox*       mTopWidget;
         QVBoxLayout* mTopLayout;
         QList<QLabel*> mLabels;          // labels to right-align
         bool           mLabelsAligned;   // labels have been aligned
@@ -117,7 +114,7 @@ class TimePrefTab : public PrefsTabBase
         void         setWorkDays(const QBitArray& days);
 
         TimeZoneCombo* mTimeZone;
-        KComboBox*    mHolidays;
+        QComboBox*    mHolidays;
         QMap<QString, QString> mHolidayNames;
         TimeEdit*     mStartOfDay;
         QCheckBox*    mWorkDays[7];
@@ -134,8 +131,8 @@ class StorePrefTab : public PrefsTabBase
     public:
         explicit StorePrefTab(StackedScrollGroup*);
 
-        virtual void restore(bool defaults, bool allTabs);
-        virtual void apply(bool syncToDisc);
+        void restore(bool defaults, bool allTabs) Q_DECL_OVERRIDE;
+        void apply(bool syncToDisc) Q_DECL_OVERRIDE;
 
     private Q_SLOTS:
         void         slotArchivedToggled(bool);
@@ -215,19 +212,19 @@ class EditPrefTab : public PrefsTabBase
         QTabWidget*     mTabs;
         QCheckBox*      mAutoClose;
         QCheckBox*      mConfirmAck;
-        KComboBox*      mReminderUnits;
+        QComboBox*      mReminderUnits;
         SpecialActionsButton* mSpecialActionsButton;
         QCheckBox*      mCmdScript;
         QCheckBox*      mCmdXterm;
         QCheckBox*      mEmailBcc;
-        KComboBox*      mSound;
+        QComboBox*      mSound;
         QLabel*         mSoundFileLabel;
         QLineEdit*      mSoundFile;
         QPushButton*    mSoundFileBrowse;
         QCheckBox*      mSoundRepeat;
         QCheckBox*      mCopyToKOrganizer;
         QCheckBox*      mLateCancel;
-        KComboBox*      mRecurPeriod;
+        ComboBox*      mRecurPeriod;
         ButtonGroup*    mFeb29;
         FontColourChooser* mFontChooser;
         int             mTabGeneral;     // index of General tab
@@ -245,8 +242,8 @@ class ViewPrefTab : public PrefsTabBase
     public:
         explicit ViewPrefTab(StackedScrollGroup*);
 
-        virtual void restore(bool defaults, bool allTabs);
-        virtual void apply(bool syncToDisc);
+        void restore(bool defaults, bool allTabs) Q_DECL_OVERRIDE;
+        void apply(bool syncToDisc) Q_DECL_OVERRIDE;
 
     private Q_SLOTS:
         void         slotTooltipAlarmsToggled(bool);

@@ -185,7 +185,7 @@ void ImportCrlCommand::doCancel()
     d->canceled = true;
     if (d->process.state() != QProcess::NotRunning) {
         d->process.terminate();
-        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, SLOT(kill()));
+        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, &QProcess::kill);
     }
 }
 

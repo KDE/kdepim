@@ -1,0 +1,11 @@
+Version=5
+
+Id=messageviewer_move_gravatar
+File=kmail2rc
+Group=Reader,Gravatar
+Key=GravatarSupportEnabled,GravatarSupportEnabled
+Key=GravatarUseDefaultImage,GravatarUseDefaultImage
+Key=GravatarCacheSize,GravatarCacheSize
+Key=FallbackToGravatar,FallbackToGravatar
+Key=LibravatarSupportEnabled,LibravatarSupportEnabled
+Key=GravatarHttpsSupport,GravatarHttpsSupport

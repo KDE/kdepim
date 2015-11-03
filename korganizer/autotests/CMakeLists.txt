@@ -1,12 +1,5 @@
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/korganizer
-  ${CMAKE_BINARY_DIR}/korganizer
-  ${CMAKE_SOURCE_DIR}/calendarviews
-  ${CMAKE_SOURCE_DIR}/korganizer/interfaces
-)
-
 ########### next target ###############
 
 add_executable(testkodaymatrix testkodaymatrix.cpp ../kodaymatrix.cpp)
@@ -14,7 +7,7 @@ add_executable(testkodaymatrix testkodaymatrix.cpp ../kodaymatrix.cpp)
 target_link_libraries(testkodaymatrix
   KF5::AkonadiCore
   KF5::CalendarCore
-  calendarsupport
+  KF5::CalendarSupport
   korganizer_core
   korganizerprivate
   Qt5::Test
@@ -32,8 +25,8 @@ target_link_libraries(koeventpopmenutest
   KF5::AkonadiCalendar
   KF5::AkonadiNotes
   KF5::CalendarCore
-  incidenceeditorsng
-  calendarsupport
+  KF5::IncidenceEditorsng
+  KF5::CalendarSupport
   korganizer_core
   korganizerprivate
 )
@@ -50,8 +43,8 @@ target_link_libraries(noteeditdialogtest
   KF5::AkonadiCalendar
   KF5::AkonadiNotes
   KF5::CalendarCore
-  incidenceeditorsng
-  calendarsupport
+  KF5::IncidenceEditorsng
+  KF5::CalendarSupport
   korganizer_core
   korganizerprivate
   )

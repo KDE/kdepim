@@ -34,9 +34,9 @@
 
 #include "gnupgsystemconfigurationpage.h"
 
-#include <ui/cryptoconfigmodule.h>
-#include <kleo/cryptoconfig.h>
-#include <kleo/cryptobackendfactory.h>
+#include <libkleo/cryptoconfigmodule.h>
+#include <Libkleo/CryptoConfig>
+#include <Libkleo/CryptoBackendFactory>
 
 #include <QVBoxLayout>
 
@@ -51,11 +51,7 @@ GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage(QWidget *parent, cons
     CryptoConfig *const config = CryptoBackendFactory::instance()->config();
 
     mWidget = new CryptoConfigModule(config,
-#ifdef KDEPIM_MOBILE_UI
-                                     CryptoConfigModule::LinearizedLayout,
-#else
                                      CryptoConfigModule::TabbedLayout,
-#endif
                                      this);
     lay->addWidget(mWidget);
 

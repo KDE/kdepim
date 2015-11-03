@@ -38,8 +38,8 @@
 
 #include <utils/gnupg-helper.h>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptoconfig.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoConfig>
 
 #include <gpgme++/key.h>
 
@@ -56,7 +56,7 @@ static bool haveKeyserverConfigured()
     if (!config) {
         return false;
     }
-    const Kleo::CryptoConfigEntry *const entry = config->entry(QLatin1Literal("gpg"), QLatin1Literal("Keyserver"), QLatin1Literal("keyserver"));
+    const Kleo::CryptoConfigEntry *const entry = config->entry(QStringLiteral("gpg"), QStringLiteral("Keyserver"), QStringLiteral("keyserver"));
     return entry && !entry->stringValue().isEmpty();
 }
 
@@ -119,7 +119,7 @@ QStringList ExportOpenPGPCertsToServerCommand::arguments() const
         result << QStringLiteral("--keyserver") << QStringLiteral("keys.gnupg.net");
     }
     result << QStringLiteral("--send-keys");
-    Q_FOREACH (const Key &key, d->keys()) { //krazy:exclude=foreach
+    Q_FOREACH (const Key &key, d->keys()) {
         result << QLatin1String(key.primaryFingerprint());
     }
     return result;
@@ -140,7 +140,7 @@ QString ExportOpenPGPCertsToServerCommand::crashExitMessage(const QStringList &a
     return xi18nc("@info",
                   "<para>The GPG process that tried to export OpenPGP certificates "
                   "ended prematurely because of an unexpected error.</para>"
-                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QLatin1String(" "))) ;
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" ")));
 }
 
 QString ExportOpenPGPCertsToServerCommand::errorExitMessage(const QStringList &args) const

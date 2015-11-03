@@ -36,13 +36,12 @@
 #include "memorycalendarmemento.h"
 #include "syncitiphandler.h"
 
-#include <messageviewer/settings/globalsettings.h>
-#include <messageviewer/viewer/viewer.h>
-#include <messageviewer/interfaces/bodypart.h>
-#include <messageviewer/interfaces/bodypartformatter.h>
-#include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <mailcommon/util/mailutil.h>
-#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
+#include <messageviewer/messageviewersettings.h>
+#include <messageviewer/viewer.h>
+#include <messageviewer/bodypart.h>
+#include <messageviewer/bodypartformatter.h>
+#include <messageviewer/bodyparturlhandler.h>
+#include <messageviewer/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
 #include <KCalCore/ICalFormat>
@@ -60,23 +59,28 @@ using namespace KCalCore;
 #include <MailTransport/MessageQueueJob>
 #include <MailTransport/TransportManager>
 
-#include <KDBusServiceStarter>
-#include <QUrl>
 #include "text_calendar_debug.h"
-#include <QInputDialog>
-#include <QMenu>
-#include <KMessageBox>
 
+#include <KDBusServiceStarter>
+#include <KMessageBox>
 #include <KRun>
 #include <KSystemTimeZone>
-#include <QTemporaryFile>
-#include <KToolInvocation>
-#include <KIO/NetAccess>
-#include <QIcon>
+#include <KIO/FileCopyJob>
+#include <KIO/StatJob>
 #include <KLocalizedString>
+
+#include <QEventLoop>
+#include <QDBusServiceWatcher>
+#include <QProcess>
+#include <QUrl>
+#include <QTemporaryFile>
+#include <QIcon>
 #include <QFileDialog>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QDesktopServices>
+#include <QInputDialog>
+#include <QMenu>
 
 using namespace MailTransport;
 
@@ -87,7 +91,7 @@ static bool hasMyWritableEventsFolders(const QString &family)
 {
     QString myfamily = family;
     if (family.isEmpty()) {
-        myfamily = QLatin1String("calendar");
+        myfamily = QStringLiteral("calendar");
     }
 
 #if 0 // TODO port to Akonadi
@@ -159,7 +163,7 @@ public:
         return mBodyPart->makeLink(id);
     }
 
-    KCalCore::Calendar::Ptr calendar() const
+    KCalCore::Calendar::Ptr calendar() const Q_DECL_OVERRIDE
     {
         return mCalendar;
     }
@@ -171,12 +175,12 @@ private:
 class Formatter : public Interface::BodyPartFormatter
 {
 public:
-    Result format(Interface::BodyPart *part, HtmlWriter *writer) const
+    Result format(Interface::BodyPart *part, HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
         return format(part, writer, 0);
     }
 
-    Result format(Interface::BodyPart *bodyPart, HtmlWriter *writer, QObject *asyncResultObserver) const
+    Result format(Interface::BodyPart *bodyPart, HtmlWriter *writer, QObject *asyncResultObserver) const Q_DECL_OVERRIDE
     {
         if (!writer) {
             // Guard against crashes in createReply()
@@ -189,7 +193,7 @@ public:
 
             When the memento finishes, this is called a second time, and we can proceed.
 
-            BodyPartMementos are documented in viewer/objecttreeparser.h
+            BodyPartMementos are documented in MessageViewer/ObjectTreeParser
         */
         MemoryCalendarMemento *memento = dynamic_cast<MemoryCalendarMemento *>(bodyPart->memento());
 
@@ -216,7 +220,7 @@ public:
                 const QString html =
                     KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
                         source, cl, &helper, message->sender()->asUnicodeString(),
-                        GlobalSettings::self()->outlookCompatibleInvitationComparisons());
+                        MessageViewer::MessageViewerSettings::self()->outlookCompatibleInvitationComparisons());
 
                 if (html.isEmpty()) {
                     return AsIcon;
@@ -264,7 +268,7 @@ static QString directoryForStatus(Attendee::PartStat status)
 
 static Incidence::Ptr stringToIncidence(const QString &iCal)
 {
-    MemoryCalendar::Ptr calendar(new MemoryCalendar(KSystemTimeZones::local())) ;
+    MemoryCalendar::Ptr calendar(new MemoryCalendar(KSystemTimeZones::local()));
     ICalFormat format;
     ScheduleMessage::Ptr message = format.parseScheduleMessage(calendar, iCal);
     if (!message) {
@@ -371,7 +375,14 @@ public:
         }
 
         if (attachment->isUri()) {
-            if (!KIO::NetAccess::exists(attachment->uri(), KIO::NetAccess::SourceSide, 0)) {
+            bool fileExists = false;
+            if (QUrl(attachment->uri()).isLocalFile()) {
+                fileExists = QFile::exists(attachment->uri());
+            } else {
+                auto job = KIO::stat(attachment->uri(), KIO::StatJob::SourceSide, 0);
+                fileExists = job->exec();
+            }
+            if (fileExists) {
                 KMessageBox::information(
                     0,
                     i18n("The invitation attachment \"%1\" is a web link that "
@@ -507,7 +518,7 @@ public:
         qCDebug(TEXT_CALENDAR_LOG) << "Mailing message:" << iCal;
 
         KMime::Message::Ptr msg(new KMime::Message);
-        if (GlobalSettings::self()->exchangeCompatibleInvitations()) {
+        if (MessageViewer::MessageViewerSettings::self()->exchangeCompatibleInvitations()) {
             msg->subject()->fromUnicodeString(status, "utf-8");
             QString tsubject = subject;
             tsubject.remove(i18n("Answer: "));
@@ -530,7 +541,7 @@ public:
         msg->from()->fromUnicodeString(receiver, "utf-8");
         msg->date()->setDateTime(QDateTime::currentDateTime());
 
-        if (!GlobalSettings::self()->legacyBodyInvites()) {
+        if (!MessageViewer::MessageViewerSettings::self()->legacyBodyInvites()) {
             msg->contentType()->from7BitString("text/calendar; method=reply; charset=\"utf-8\"");
             msg->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
             msg->setBody(KMime::CRLFtoLF(iCal.toUtf8()));
@@ -552,14 +563,13 @@ public:
         // transport later
         const KIdentityManagement::Identity identity =
             KIdentityManagement::IdentityManager().identityForAddress(
-                findReceiver(viewerInstance->message().get()));
+                findReceiver(viewerInstance->message().data()));
 
         const bool nullIdentity = (identity == KIdentityManagement::Identity::null());
 
         if (!nullIdentity) {
-            KMime::Headers::Generic *x_header =
-                new KMime::Headers::Generic(
-                "X-KMail-Identity", msg.get(), QByteArray::number(identity.uoid()));
+            KMime::Headers::Generic *x_header = new KMime::Headers::Generic("X-KMail-Identity");
+            x_header->from7BitString(QByteArray::number(identity.uoid()));
             msg->setHeader(x_header);
         }
 
@@ -576,16 +586,18 @@ public:
             }
             transportId = TransportManager::self()->defaultTransportId();
         }
-        msg->setHeader(new KMime::Headers::Generic("X-KMail-Transport", msg.get(), QString::number(transportId), "utf-8"));
+        auto header = new KMime::Headers::Generic("X-KMail-Transport");
+        header->fromUnicodeString(QString::number(transportId), "utf-8");
+        msg->setHeader(header);
 
         // Outlook will only understand the reply if the From: header is the
         // same as the To: header of the invitation message.
-        if (!GlobalSettings::self()->legacyMangleFromToHeaders()) {
+        if (!MessageViewer::MessageViewerSettings::self()->legacyMangleFromToHeaders()) {
             if (identity != KIdentityManagement::Identity::null()) {
                 msg->from()->fromUnicodeString(identity.fullEmailAddr(), "utf-8");
             }
             // Remove BCC from identity on ical invitations (kolab/issue474)
-            msg->bcc()->clear();
+            msg->removeHeader<KMime::Headers::Bcc>();
         }
 
 #if 0 // For now assume automatic sending
@@ -595,7 +607,7 @@ public:
         // cWin->setCharset( "", true );
         cWin->disableWordWrap();
         cWin->setSigningAndEncryptionDisabled(true);
-        if (GlobalSettings::self()->exchangeCompatibleInvitations()) {
+        if (MessageViewer::MessageViewerSettings::self()->exchangeCompatibleInvitations()) {
             // For Exchange, send ical as attachment, with proper parameters
             msg->setSubject(status);
             msg->setCharset("utf-8");
@@ -612,7 +624,7 @@ public:
         cWin->forceDisableHtml();
         cWin->disableRecipientNumberCheck();
         cWin->disableForgottenAttachmentsCheck();
-        if (GlobalSettings::self()->automaticSending()) {
+        if (MessageViewer::MessageViewerSettings::self()->automaticSending()) {
             cWin->setAttribute(Qt::WA_DeleteOnClose);
             cWin->slotSendNow();
         } else {
@@ -646,7 +658,7 @@ public:
         }
         // We are not notified when mail was sent, so assume it was sent when queued.
         if (delMessage &&
-                GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+                MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
             viewerInstance->deleteMessage();
         }
 #endif
@@ -881,7 +893,7 @@ public:
                     i18n("You forgot to add proposal. Please add it. Thanks"));
                 return true;
             } else {
-                if (GlobalSettings::self()->outlookCompatibleInvitationReplyComments()) {
+                if (MessageViewer::MessageViewerSettings::self()->outlookCompatibleInvitationReplyComments()) {
                     incidence->setDescription(comment);
                 } else {
                     incidence->addComment(comment);
@@ -973,7 +985,7 @@ public:
                 ok = mail(viewerInstance, incidence, dir, iTIPReply, receiver);
             }
         } else {
-            if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+            if (MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                 viewerInstance->deleteMessage();
             }
         }
@@ -1014,7 +1026,7 @@ public:
         }
 
         if (attachment->isUri()) {
-            KToolInvocation::invokeBrowser(attachment->uri());
+            QDesktopServices::openUrl(attachment->uri());
         } else {
             // put the attachment in a temporary file and launch it
             QTemporaryFile *file;
@@ -1047,7 +1059,7 @@ public:
         }
 
         // get the saveas file name
-        const QString saveAsFile = QFileDialog::getSaveFileName(0, i18n("Save Invitation Attachment") , name, QString());
+        const QString saveAsFile = QFileDialog::getSaveFileName(0, i18n("Save Invitation Attachment"), name, QString());
 
         if (saveAsFile.isEmpty() ||
                 (QFile(saveAsFile).exists() &&
@@ -1062,7 +1074,8 @@ public:
         bool stat = false;
         if (a->isUri()) {
             // save the attachment url
-            stat = KIO::NetAccess::file_copy(a->uri(), QUrl::fromLocalFile(saveAsFile));
+            auto job = KIO::file_copy(a->uri(), QUrl::fromLocalFile(saveAsFile));
+            stat = job->exec();
         } else {
             // put the attachment in a temporary file and save it
             QTemporaryFile *file;
@@ -1080,26 +1093,94 @@ public:
             file->write(QByteArray::fromBase64(a->data()));
             file->close();
 
-            stat = KIO::NetAccess::file_copy(QUrl::fromLocalFile(file->fileName()), QUrl::fromLocalFile(saveAsFile));
+            auto job = KIO::file_copy(QUrl::fromLocalFile(file->fileName()), QUrl::fromLocalFile(saveAsFile));
+            stat = job->exec();
 
             delete file;
         }
         return stat;
     }
 
+    bool ensureKorganizerRunning(bool switchTo) const
+    {
+        // FIXME: this function should be inside a QObject, and async,
+        //         and Q_EMIT a signal when korg registered itself successfuly
+
+        QString error;
+        bool result = true;
+        QString dbusService;
+
+#if defined(Q_OS_WIN32)
+        //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
+        QDBusInterface *interface = new QDBusInterface(QLatin1String("org.kde.korganizer"), QStringLiteral("/MainApplication"));
+        if (!interface->isValid()) {
+            qCDebug(TEXT_CALENDAR_LOG) << "Starting korganizer...";
+
+            QDBusServiceWatcher *watcher =
+                new QDBusServiceWatcher(QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
+                                        QDBusServiceWatcher::WatchForRegistration);
+            QEventLoop loop;
+            watcher->connect(watcher, &QDBusServiceWatcher::serviceRegistered, &loop, &QEventLoop::quit);
+            result = QProcess::startDetached(QLatin1String("korganizer"));
+            if (result) {
+                qCDebug(TEXT_CALENDAR_LOG) << "Starting loop";
+                loop.exec();
+                qCDebug(TEXT_CALENDAR_LOG) << "Korganizer finished starting";
+            } else {
+                qCWarning(TEXT_CALENDAR_LOG) << "Failed to start korganizer with QProcess";
+            }
+
+            delete watcher;
+        }
+        delete interface;
+#else
+        QString constraint;
+
+        result = KDBusServiceStarter::self()->findServiceFor(QStringLiteral("DBUS/Organizer"),
+                 constraint,
+                 &error, &dbusService) == 0;
+#endif
+        if (result) {
+            // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
+            QDBusInterface iface(QStringLiteral("org.kde.korganizer"), QStringLiteral("/MainApplication"),
+                                 QStringLiteral("org.kde.PIMUniqueApplication"));
+            if (iface.isValid()) {
+                if (switchTo) {
+                    iface.call(QStringLiteral("newInstance"));   // activate korganizer window
+                }
+#if 0 //Not exist
+                QDBusInterface pimIface("org.kde.korganizer", "/korganizer_PimApplication",
+                                        "org.kde.PIMUniqueApplication");
+                QDBusReply<bool> r = pimIface.call("load");
+                if (!r.isValid() || !r.value()) {
+                    qCWarning(TEXT_CALENDAR_LOG) << "Loading korganizer failed: " << pimIface.lastError().message();
+                }
+#endif
+            } else {
+                qCWarning(TEXT_CALENDAR_LOG) << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
+            }
+
+            // We don't do anything with it, we just need it to be running so that it handles
+            // the incoming directory.
+        } else {
+            qCWarning(TEXT_CALENDAR_LOG) << "Couldn't start DBUS/Organizer:" << dbusService << error;
+        }
+        return result;
+    }
+
     void showCalendar(const QDate &date) const
     {
-        if (MailCommon::Util::ensureKorganizerRunning(true)) {
+        if (ensureKorganizerRunning(true)) {
             QDBusInterface *kontact =
-                new QDBusInterface(QLatin1String("org.kde.kontact"), QStringLiteral("/KontactInterface"),
-                                   QLatin1String("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus());
+                new QDBusInterface(QStringLiteral("org.kde.kontact"), QStringLiteral("/KontactInterface"),
+                                   QStringLiteral("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus());
             if (kontact->isValid()) {
-                kontact->call(QLatin1String("selectPlugin"), QStringLiteral("kontact_korganizerplugin"));
+                kontact->call(QStringLiteral("selectPlugin"), QStringLiteral("kontact_korganizerplugin"));
             }
             delete kontact;
 
             OrgKdeKorganizerCalendarInterface *iface =
-                new OrgKdeKorganizerCalendarInterface(QLatin1String("org.kde.korganizer"), QStringLiteral("/Calendar"),
+                new OrgKdeKorganizerCalendarInterface(QStringLiteral("org.kde.korganizer"), QStringLiteral("/Calendar"),
                         QDBusConnection::sessionBus(), 0);
             if (!iface->isValid()) {
                 qCDebug(TEXT_CALENDAR_LOG) << "Calendar interface is not valid! " << iface->lastError().message();
@@ -1142,7 +1223,7 @@ public:
                 return true;
 
             } else {
-                if (GlobalSettings::self()->outlookCompatibleInvitationReplyComments()) {
+                if (MessageViewer::MessageViewerSettings::self()->outlookCompatibleInvitationReplyComments()) {
                     incidence->setDescription(comment);
                 } else {
                     incidence->addComment(comment);
@@ -1167,7 +1248,7 @@ public:
 
     bool handleClick(Viewer *viewerInstance,
                      Interface::BodyPart *part,
-                     const QString &path) const
+                     const QString &path) const Q_DECL_OVERRIDE
     {
         // filter out known paths that don't belong to this type of urlmanager.
         // kolab/issue4054 msg27201
@@ -1243,9 +1324,9 @@ public:
             return true;
         } else if (path == QLatin1String("reply") || path == QLatin1String("cancel") || path == QLatin1String("accept_counter")) {
             // These should just be saved with their type as the dir
-            const QString p = (path == QLatin1String("accept_counter") ? QLatin1String("reply") : path);
-            if (saveFile(QLatin1String("Receiver Not Searched"), iCal, p)) {
-                if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+            const QString p = (path == QLatin1String("accept_counter") ? QStringLiteral("reply") : path);
+            if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, p)) {
+                if (MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                     viewerInstance->deleteMessage();
                 }
                 result = true;
@@ -1268,17 +1349,24 @@ public:
             switch (response) {
             case KMessageBox::Cancel:
                 break;
-            case KMessageBox::No: // means "send email"
+            case KMessageBox::No: { // means "send email"
                 summary = incidence->summary();
                 if (!summary.isEmpty()) {
                     summary = i18n("Re: %1", summary);
                 }
 
-                KToolInvocation::invokeMailer(incidence->organizer()->email(), summary);
+                QUrlQuery query;
+                query.addQueryItem(QStringLiteral("to"), incidence->organizer()->email());
+                query.addQueryItem(QStringLiteral("subject"), summary);
+                QUrl url;
+                url.setScheme(QStringLiteral("mailto"));
+                url.setQuery(query);
+                QDesktopServices::openUrl(url);
+            }
             //fall through
             case KMessageBox::Yes: // means "do not send"
-                if (saveFile(QLatin1String("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {
-                    if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+                if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {
+                    if (MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                         viewerInstance->deleteMessage();
                         result = true;
                     }
@@ -1311,7 +1399,7 @@ public:
 
     bool handleContextMenuRequest(Interface::BodyPart *part,
                                   const QString &path,
-                                  const QPoint &point) const
+                                  const QPoint &point) const Q_DECL_OVERRIDE
     {
         QString name = path;
         if (path.startsWith(QStringLiteral("ATTACH:"))) {
@@ -1345,7 +1433,7 @@ public:
     }
 
     QString statusBarMessage(Interface::BodyPart *,
-                             const QString &path) const
+                             const QString &path) const Q_DECL_OVERRIDE
     {
         if (!path.isEmpty()) {
             if (path == QLatin1String("accept")) {
@@ -1390,10 +1478,10 @@ public:
     bool askForComment(Attendee::PartStat status) const
     {
         if (status != Attendee::NeedsAction && ((status != Attendee::Accepted &&
-                                                GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
-                                                GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance) ||
-                                                (GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
-                                                        GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk))) {
+                                                MessageViewer::MessageViewerSettings::self()->askForCommentWhenReactingToInvitation() ==
+                                                MessageViewer::MessageViewerSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance) ||
+                                                (MessageViewer::MessageViewerSettings::self()->askForCommentWhenReactingToInvitation() ==
+                                                        MessageViewer::MessageViewerSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk))) {
             return true;
         }
         return false;
@@ -1404,7 +1492,7 @@ public:
 class Plugin : public Interface::BodyPartFormatterPlugin
 {
 public:
-    const Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    const Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0 || idx == 1) {
             return new Formatter();
@@ -1413,7 +1501,7 @@ public:
         }
     }
 
-    const char *type(int idx) const
+    const char *type(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0 || idx == 1) {
             return "text";
@@ -1422,7 +1510,7 @@ public:
         }
     }
 
-    const char *subtype(int idx) const
+    const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0) {
             return "calendar";
@@ -1433,7 +1521,7 @@ public:
         }
     }
 
-    const Interface::BodyPartURLHandler *urlHandler(int idx) const
+    const Interface::BodyPartURLHandler *urlHandler(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0) {
             return new UrlHandler();

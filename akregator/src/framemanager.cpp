@@ -31,17 +31,17 @@
 #include "openurlrequest.h"
 
 #include <QAction>
-#include <KCharMacroExpander>
+#include <KMacroExpander>
 #include <kprocess.h>
 #include <kshell.h>
 #include <kconfiggroup.h>
-#include <ktoolinvocation.h>
 #include <kparts/event.h>
 #include <kparts/guiactivateevent.h>
 #include "akregator_debug.h"
 
 #include <QStringList>
 #include <QApplication>
+#include <QDesktopServices>
 
 namespace Akregator
 {
@@ -79,23 +79,23 @@ void FrameManager::slotAddFrame(Frame *frame)
 {
     m_frames.insert(frame->id(), frame);
 
-    connect(frame, SIGNAL(signalCanceled(Akregator::Frame*,QString)), this, SLOT(slotSetCanceled(Akregator::Frame*,QString)));
-    connect(frame, SIGNAL(signalStarted(Akregator::Frame*)), this, SLOT(slotSetStarted(Akregator::Frame*)));
-    connect(frame, SIGNAL(signalCaptionChanged(Akregator::Frame*,QString)), this, SLOT(slotSetCaption(Akregator::Frame*,QString)));
-    connect(frame, SIGNAL(signalLoadingProgress(Akregator::Frame*,int)), this, SLOT(slotSetProgress(Akregator::Frame*,int)));
-    connect(frame, SIGNAL(signalCompleted(Akregator::Frame*)), this, SLOT(slotSetCompleted(Akregator::Frame*)));
-    connect(frame, SIGNAL(signalTitleChanged(Akregator::Frame*,QString)), this, SLOT(slotSetTitle(Akregator::Frame*,QString)));
-    connect(frame, SIGNAL(signalStatusText(Akregator::Frame*,QString)), this, SLOT(slotSetStatusText(Akregator::Frame*,QString))
+    connect(frame, &Frame::signalCanceled, this, &FrameManager::slotSetCanceled);
+    connect(frame, &Frame::signalStarted, this, &FrameManager::slotSetStarted);
+    connect(frame, &Frame::signalCaptionChanged, this, &FrameManager::slotSetCaption);
+    connect(frame, &Frame::signalLoadingProgress, this, &FrameManager::slotSetProgress);
+    connect(frame, &Frame::signalCompleted, this, &FrameManager::slotSetCompleted);
+    connect(frame, &Frame::signalTitleChanged, this, &FrameManager::slotSetTitle);
+    connect(frame, &Frame::signalStatusText, this, &FrameManager::slotSetStatusText
            );
 
     connect(frame, SIGNAL(signalOpenUrlRequest(Akregator::OpenUrlRequest&)), this, SLOT(slotOpenUrlRequest(Akregator::OpenUrlRequest&)));
 
-    connect(frame, SIGNAL(signalCanGoBackToggled(Akregator::Frame*,bool)), this, SLOT(slotCanGoBackToggled(Akregator::Frame*,bool)));
-    connect(frame, SIGNAL(signalCanGoForwardToggled(Akregator::Frame*,bool)), this, SLOT(slotCanGoForwardToggled(Akregator::Frame*,bool)));
-    connect(frame, SIGNAL(signalIsReloadableToggled(Akregator::Frame*,bool)), this, SLOT(slotIsReloadableToggled(Akregator::Frame*,bool))
+    connect(frame, &Frame::signalCanGoBackToggled, this, &FrameManager::slotCanGoBackToggled);
+    connect(frame, &Frame::signalCanGoForwardToggled, this, &FrameManager::slotCanGoForwardToggled);
+    connect(frame, &Frame::signalIsReloadableToggled, this, &FrameManager::slotIsReloadableToggled
            );
 
-    connect(frame, SIGNAL(signalIsLoadingToggled(Akregator::Frame*,bool)), this, SLOT(slotIsLoadingToggled(Akregator::Frame*,bool)));
+    connect(frame, &Frame::signalIsLoadingToggled, this, &FrameManager::slotIsLoadingToggled);
 
     setPartGuiActive(frame->part(), false);
 
@@ -310,7 +310,7 @@ void FrameManager::openInExternalBrowser(const OpenUrlRequest &request)
     }
 
     if (request.args().mimeType().isEmpty()) {
-        KToolInvocation::self()->invokeBrowser(url.url(), "0");
+        QDesktopServices::openUrl(url);
     } else {
         KRun::runUrl(url, request.args().mimeType(), 0 /*window*/, false, false);
     }

@@ -22,8 +22,8 @@
 
 #include "controller.h"
 
-#include <libkdepim/job/collectionsearchjob.h>
-#include <libkdepim/job/personsearchjob.h>
+#include <Libkdepim/CollectionSearchJob>
+#include <Libkdepim/PersonSearchJob>
 #include "korganizer_debug.h"
 
 #include <AkonadiCore/EntityTreeModel>
@@ -119,9 +119,9 @@ bool CollectionNode::isDuplicateOf(const QModelIndex &sourceIndex)
 
 PersonNode::PersonNode(ReparentingModel &personModel, const KPIM::Person &person)
     :   Node(personModel),
+        isSearchNode(false),
         mPerson(person),
-        mCheckState(Qt::Unchecked),
-        isSearchNode(false)
+        mCheckState(Qt::Unchecked)
 {
 
 }
@@ -234,7 +234,7 @@ KPIM::Person PersonNodeManager::person(const QModelIndex &sourceIndex)
     KPIM::Person person;
     const Akonadi::Collection col = sourceIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     if (col.isValid()) {
-        CollectionIdentificationAttribute *attr = col.attribute<CollectionIdentificationAttribute>();
+        Akonadi::CollectionIdentificationAttribute *attr = col.attribute<Akonadi::CollectionIdentificationAttribute>();
         if (attr && attr->collectionNamespace() == "usertoplevel") {
             person.name = col.displayName();
             person.mail = QString::fromUtf8(attr->mail());
@@ -277,7 +277,7 @@ Controller::Controller(ReparentingModel *personModel, ReparentingModel *searchMo
       mCollectionSearchJob(0),
       mPersonSearchJob(0)
 {
-    Akonadi::AttributeFactory::registerAttribute<CollectionIdentificationAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::CollectionIdentificationAttribute>();
 }
 
 void Controller::setSearchString(const QString &searchString)
@@ -306,7 +306,7 @@ void Controller::setSearchString(const QString &searchString)
 
         mPersonSearchJob = new KPIM::PersonSearchJob(searchString, this);
         connect(mPersonSearchJob, &KPIM::PersonSearchJob::personsFound,
-                this, static_cast<void (Controller::*)(const QList<KPIM::Person> &)>(&Controller::onPersonsFound));
+                this, static_cast<void (Controller::*)(const QVector<KPIM::Person> &)>(&Controller::onPersonsFound));
         connect(mPersonSearchJob, &KPIM::PersonSearchJob::personUpdate, this, &Controller::onPersonUpdate);
         connect(mPersonSearchJob, &KPIM::PersonSearchJob::result,
                 this, static_cast<void (Controller::*)(KJob *)>(&Controller::onPersonsFound));
@@ -337,7 +337,7 @@ void Controller::onCollectionsFound(KJob *job)
     }
 }
 
-void Controller::onPersonsFound(const QList<KPIM::Person> &persons)
+void Controller::onPersonsFound(const QVector<KPIM::Person> &persons)
 {
     Q_FOREACH (const KPIM::Person &p, persons) {
         PersonNode *personNode = new PersonNode(*mSearchModel, p);

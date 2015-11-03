@@ -9,14 +9,14 @@ MACRO(IE_UNIT_TESTS)
     add_executable( ${_testname} ${_testname}.cpp modeltest.cpp )
     add_test( ${_testname} ${_testname} )
     ecm_mark_as_test(${_testname})
-    target_link_libraries(${_testname} Qt5::Test   KF5::AkonadiCore  kdgantt2 KF5::CalendarUtils KF5::CalendarCore incidenceeditorsng kdepimdbusinterfaces)
+    target_link_libraries(${_testname} Qt5::Test   KF5::AkonadiCore  KF5::KDGantt2 KF5::CalendarUtils KF5::CalendarCore KF5::IncidenceEditorsng KF5::KdepimDBusInterfaces KF5::Libkdepim)
   ENDFOREACH(_testname)
 ENDMACRO(IE_UNIT_TESTS)
 
 MACRO(IE_EXECUTABLE_TESTS)
   FOREACH(_testname ${ARGN})
     add_executable(${_testname} NOGUI TEST ${_testname}.cpp modeltest.cpp)
-    target_link_libraries(${_testname} KF5::CalendarCore Qt5::Test   incidenceeditorsng)
+    target_link_libraries(${_testname} KF5::CalendarCore Qt5::Test   KF5::IncidenceEditorsng)
   ENDFOREACH(_testname)
 ENDMACRO(IE_EXECUTABLE_TESTS)
 
@@ -36,10 +36,10 @@ target_link_libraries(
   ktimezonecomboboxtest
   KF5::CalendarCore
   Qt5::Test
-  incidenceeditorsng
+  KF5::IncidenceEditorsng
 )
 
-add_executable(testindividualmaildialog testindividualmaildialog.cpp ../individualmaildialog.cpp)
+add_executable(testindividualmaildialog testindividualmaildialog.cpp ../src/individualmaildialog.cpp)
 ecm_mark_nongui_executable(testindividualmaildialog)
 ecm_mark_as_test(testindividualmaildialog)
 target_link_libraries(testindividualmaildialog

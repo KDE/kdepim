@@ -23,22 +23,21 @@
 #include "attachmentcontroller.h"
 
 #include "attachmentview.h"
-#include "messagecomposer/job/attachmentfrompublickeyjob.h"
-#include "foldercollection.h"
-#include "settings/globalsettings.h"
+#include "MailCommon/FolderCollection"
+#include "settings/kmailsettings.h"
 #include "kmcommands.h"
 #include "editor/kmcomposewin.h"
 #include "kmkernel.h"
 #include "kmreadermainwin.h"
-#include "util/mailutil.h"
+#include "mailcommon/mailutil.h"
 #include <KIdentityManagement/Identity>
 #include <AkonadiCore/itemfetchjob.h>
 #include <kcontacts/addressee.h>
 #include "kmail_debug.h"
-#include <libkleo/kleo/cryptobackendfactory.h>
+#include <Libkleo/CryptoBackendFactory>
 
-#include <messagecomposer/attachment/attachmentmodel.h>
-#include <messagecore/attachment/attachmentpart.h>
+#include <MessageComposer/AttachmentModel>
+#include <MessageCore/AttachmentPart>
 
 using namespace KMail;
 using namespace KPIM;

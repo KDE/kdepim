@@ -34,7 +34,7 @@
 #include <kblog/wordpressbuggy.h>
 #include <kblog/blogmedia.h>
 #include <kblog/blogcomment.h>
-#ifdef HAVE_GAPIBLOGGER_SUPPORT 
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
 #include "blogger.h"
 #endif
 #include "blogilo_debug.h"
@@ -45,7 +45,7 @@
 
 const QRegExp splitRX(QStringLiteral("((<hr/?>)?<!--split-->)"));
 
-class Backend::Private
+class Q_DECL_HIDDEN Backend::Private
 {
 public:
     Private()
@@ -53,7 +53,7 @@ public:
     {}
     KBlog::Blog *kBlog;
     BilboBlog *bBlog;
-    QList<Category> mCreatePostCategories;
+    QVector<Category> mCreatePostCategories;
     QMap<QString, KBlog::BlogPost *> mSetPostCategoriesMap;
     QMap<KBlog::BlogPost *, BilboPost::Status> mSubmitPostStatusMap;
     QMap<KBlog::BlogMedia *, BilboMedia *> mPublishMediaMap;
@@ -100,7 +100,7 @@ void Backend::getCategoryListFromServer()
     }
 }
 
-void Backend::categoriesListed(const QList< QMap < QString , QString > > &categories)
+void Backend::categoriesListed(const QList< QMap < QString, QString > > &categories)
 {
     qCDebug(BLOGILO_LOG) << "Blog Id: " << d->bBlog->id();
     DBMan::self()->clearCategories(d->bBlog->id());
@@ -196,14 +196,15 @@ void Backend::uploadMedia(BilboMedia *media)
     case BilboBlog::METAWEBLOG_API:
     case BilboBlog::MOVABLETYPE_API:
     case BilboBlog::WORDPRESSBUGGY_API:
-        KBlog::BlogMedia *m = new KBlog::BlogMedia() ;
+        KBlog::BlogMedia *m = new KBlog::BlogMedia();
         KBlog::MetaWeblog *MWBlog = qobject_cast<KBlog::MetaWeblog *>(d->kBlog);
 
         m->setMimetype(media->mimeType());
 
         QByteArray data;
-        KIO::TransferJob *job = KIO::get(media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
-        if (!KIO::NetAccess::synchronousRun(job, Q_NULLPTR, &data)) {
+        KIO::StoredTransferJob *job = KIO::storedGet(media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
+        if (!job->exec()) {
+            data = job->data();
             qCCritical(BLOGILO_LOG) << "Job error: " << job->errorString();
             tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().toDisplayString());
             qCDebug(BLOGILO_LOG) << "Emitting sigError...";
@@ -418,11 +419,11 @@ KBlog::BlogPost *Backend::preparePost(KBlog::BlogPost *post)
         i = found;
         found = content.indexOf(QStringLiteral("</pre>"), i, Qt::CaseInsensitive);
         if (found != -1) {
-            html1 += content.mid(i, found + 5 - i);
+            html1 += content.midRef(i, found + 5 - i);
             i = found + 5;
             found = content.indexOf(QStringLiteral("<pre>"), i, Qt::CaseInsensitive);
         } else {
-            html1 += content.mid(i, content.length() - i);
+            html1 += content.midRef(i, content.length() - i);
             i = -1;
         }
     }
@@ -440,11 +441,11 @@ KBlog::BlogPost *Backend::preparePost(KBlog::BlogPost *post)
         i = found;
         found = content.indexOf(QStringLiteral("</pre>"), i, Qt::CaseInsensitive);
         if (found != -1) {
-            html2 += content.mid(i, found + 5 - i);
+            html2 += content.midRef(i, found + 5 - i);
             i = found + 5;
             found = content.indexOf(QStringLiteral("<pre>"), i, Qt::CaseInsensitive);
         } else {
-            html2 += content.mid(i, content.length() - i);
+            html2 += content.midRef(i, content.length() - i);
             i = -1;
         }
     }

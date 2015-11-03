@@ -31,6 +31,7 @@
 #include "article.h"
 #include "fetchqueue.h"
 #include "feediconmanager.h"
+#include "feedlist.h"
 #include "framemanager.h"
 #include "kernel.h"
 #include "loadfeedlistcommand.h"
@@ -45,7 +46,7 @@
 #include "dummystorage/storagefactorydummyimpl.h"
 #include "utils.h"
 #include "akregator_options.h"
-#include <libkdepim/misc/broadcaststatus.h>
+#include <Libkdepim/BroadcastStatus>
 #include "kdepim-version.h"
 
 #include <knotifyconfigwidget.h>
@@ -59,7 +60,8 @@
 #include <QSaveFile>
 #include <kservice.h>
 #include <kxmlguifactory.h>
-#include <kio/netaccess.h>
+#include <KIO/StoredTransferJob>
+#include <KJobWidgets>
 #include <KPluginFactory>
 #include <KParts/Plugin>
 #include <KCMultiDialog>
@@ -86,25 +88,25 @@ namespace
 static QDomDocument createDefaultFeedList()
 {
     QDomDocument doc;
-    QDomProcessingInstruction z = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
+    QDomProcessingInstruction z = doc.createProcessingInstruction(QStringLiteral("xml"), QStringLiteral("version=\"1.0\" encoding=\"UTF-8\""));
     doc.appendChild(z);
 
-    QDomElement root = doc.createElement("opml");
-    root.setAttribute("version", "1.0");
+    QDomElement root = doc.createElement(QStringLiteral("opml"));
+    root.setAttribute(QStringLiteral("version"), QStringLiteral("1.0"));
     doc.appendChild(root);
 
-    QDomElement head = doc.createElement("head");
+    QDomElement head = doc.createElement(QStringLiteral("head"));
     root.appendChild(head);
 
-    QDomElement text = doc.createElement("text");
+    QDomElement text = doc.createElement(QStringLiteral("text"));
     text.appendChild(doc.createTextNode(i18n("Feeds")));
     head.appendChild(text);
 
-    QDomElement body = doc.createElement("body");
+    QDomElement body = doc.createElement(QStringLiteral("body"));
     root.appendChild(body);
 
-    QDomElement mainFolder = doc.createElement("outline");
-    mainFolder.setAttribute("text", "KDE");
+    QDomElement mainFolder = doc.createElement(QStringLiteral("outline"));
+    mainFolder.setAttribute(QStringLiteral("text"), QStringLiteral("KDE"));
     body.appendChild(mainFolder);
 
     /*
@@ -123,54 +125,54 @@ static QDomDocument createDefaultFeedList()
     mainFolder.appendChild(akb);
     */
 
-    QDomElement dot = doc.createElement("outline");
-    dot.setAttribute("text", i18n("KDE Dot News"));
-    dot.setAttribute("xmlUrl", "http://www.kde.org/dotkdeorg.rdf");
+    QDomElement dot = doc.createElement(QStringLiteral("outline"));
+    dot.setAttribute(QStringLiteral("text"), i18n("KDE Dot News"));
+    dot.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("http://www.kde.org/dotkdeorg.rdf"));
     mainFolder.appendChild(dot);
 
-    QDomElement linuxFeeds = doc.createElement("outline");
-    linuxFeeds.setAttribute("text", i18n("Linux.com"));
-    linuxFeeds.setAttribute("xmlUrl", "https://www.linux.com/rss/feeds.php");
+    QDomElement linuxFeeds = doc.createElement(QStringLiteral("outline"));
+    linuxFeeds.setAttribute(QStringLiteral("text"), i18n("Linux.com"));
+    linuxFeeds.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("https://www.linux.com/rss/feeds.php"));
     mainFolder.appendChild(linuxFeeds);
 
-    QDomElement planetkde = doc.createElement("outline");
-    planetkde.setAttribute("text", i18n("Planet KDE"));
-    planetkde.setAttribute("xmlUrl", "http://planetkde.org/rss20.xml");
+    QDomElement planetkde = doc.createElement(QStringLiteral("outline"));
+    planetkde.setAttribute(QStringLiteral("text"), i18n("Planet KDE"));
+    planetkde.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("http://planetkde.org/rss20.xml"));
     mainFolder.appendChild(planetkde);
 
-    QDomElement planetkdepim = doc.createElement("outline");
-    planetkdepim.setAttribute("text", i18n("Planet KDE PIM"));
-    planetkdepim.setAttribute("xmlUrl", "http://pim.planetkde.org/rss20.xml");
+    QDomElement planetkdepim = doc.createElement(QStringLiteral("outline"));
+    planetkdepim.setAttribute(QStringLiteral("text"), i18n("Planet KDE PIM"));
+    planetkdepim.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("http://pim.planetkde.org/rss20.xml"));
     mainFolder.appendChild(planetkdepim);
 
-    QDomElement apps = doc.createElement("outline");
-    apps.setAttribute("text", i18n("KDE Apps"));
-    apps.setAttribute("xmlUrl", "http://www.kde.org/dot/kde-apps-content.rdf");
+    QDomElement apps = doc.createElement(QStringLiteral("outline"));
+    apps.setAttribute(QStringLiteral("text"), i18n("KDE Apps"));
+    apps.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("http://www.kde.org/dot/kde-apps-content.rdf"));
     mainFolder.appendChild(apps);
 
-    QDomElement look = doc.createElement("outline");
-    look.setAttribute("text", i18n("KDE Look"));
-    look.setAttribute("xmlUrl", "http://www.kde.org/kde-look-content.rdf");
+    QDomElement look = doc.createElement(QStringLiteral("outline"));
+    look.setAttribute(QStringLiteral("text"), i18n("KDE Look"));
+    look.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("http://www.kde.org/kde-look-content.rdf"));
     mainFolder.appendChild(look);
 
     // hungarian feed(s)
-    QDomElement hungarianFolder = doc.createElement("outline");
-    hungarianFolder.setAttribute("text", i18n("Hungarian feeds"));
+    QDomElement hungarianFolder = doc.createElement(QStringLiteral("outline"));
+    hungarianFolder.setAttribute(QStringLiteral("text"), i18n("Hungarian feeds"));
     mainFolder.appendChild(hungarianFolder);
 
-    QDomElement hungarianKde = doc.createElement("outline");
-    hungarianKde.setAttribute("text", i18n("KDE.HU"));
-    hungarianKde.setAttribute("xmlUrl", "http://kde.hu/rss.xml");
+    QDomElement hungarianKde = doc.createElement(QStringLiteral("outline"));
+    hungarianKde.setAttribute(QStringLiteral("text"), i18n("KDE.HU"));
+    hungarianKde.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("http://kde.hu/rss.xml"));
     hungarianFolder.appendChild(hungarianKde);
 
     // spanish feed(s)
-    QDomElement spanishFolder = doc.createElement("outline");
-    spanishFolder.setAttribute("text", i18n("Spanish feeds"));
+    QDomElement spanishFolder = doc.createElement(QStringLiteral("outline"));
+    spanishFolder.setAttribute(QStringLiteral("text"), i18n("Spanish feeds"));
     mainFolder.appendChild(spanishFolder);
 
-    QDomElement spanishKde = doc.createElement("outline");
-    spanishKde.setAttribute("text", i18n("Planet KDE España"));
-    spanishKde.setAttribute("xmlUrl", "http://planet.kde-espana.es/");
+    QDomElement spanishKde = doc.createElement(QStringLiteral("outline"));
+    spanishKde.setAttribute(QStringLiteral("text"), i18n("Planet KDE España"));
+    spanishKde.setAttribute(QStringLiteral("xmlUrl"), QStringLiteral("http://planet.kde-espana.es/"));
     spanishFolder.appendChild(spanishKde);
 
     return doc;
@@ -187,7 +189,7 @@ BrowserExtension::BrowserExtension(Part *p, const char *name)
 {
     AkregratorMigrateApplication migrate;
     migrate.migrate();
-    setObjectName(name);
+    setObjectName(QLatin1String(name));
     m_part = p;
 }
 
@@ -213,10 +215,10 @@ Part::Part(QWidget *parentWidget, QObject *parent, const QVariantList &)
     setPluginInterfaceVersion(AKREGATOR_PLUGIN_INTERFACE_VERSION);
 
     setComponentName(QStringLiteral("akregator"), QStringLiteral("akregator"));
-    setXMLFile("akregator_part.rc", true);
+    setXMLFile(QStringLiteral("akregator_part.rc"), true);
 
     new PartAdaptor(this);
-    QDBusConnection::sessionBus().registerObject("/Akregator", this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Akregator"), this);
 
     FeedIconManager::self(); // FIXME: registering the icon manager dbus iface here,
     // because otherwise we get a deadlock later
@@ -239,7 +241,7 @@ Part::Part(QWidget *parentWidget, QObject *parent, const QVariantList &)
     }
 
     if (!m_storage) { // Houston, we have a problem
-        m_storage = Backend::StorageFactoryRegistry::self()->getFactory("dummy")->createStorage(QStringList());
+        m_storage = Backend::StorageFactoryRegistry::self()->getFactory(QStringLiteral("dummy"))->createStorage(QStringList());
 
         KMessageBox::error(parentWidget, i18n("Unable to load storage backend plugin \"%1\". No feeds are archived.", Settings::archiveBackend()), i18n("Plugin error"));
     }
@@ -275,18 +277,18 @@ Part::Part(QWidget *parentWidget, QObject *parent, const QVariantList &)
         QWidget *const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
         NotificationManager::self()->setWidget(notificationParent, componentData().componentName());
 
-        connect(m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)));
+        connect(m_mainWidget, &MainWidget::signalUnreadCountChanged, trayIcon, &TrayIcon::slotSetUnread);
         connect(m_mainWidget, &MainWidget::signalArticlesSelected,
                 this, &Part::signalArticlesSelected);
     }
 
-    connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(slotOnShutdown()));
+    connect(qApp, &QCoreApplication::aboutToQuit, this, &Part::slotOnShutdown);
 
     m_autosaveTimer = new QTimer(this);
     connect(m_autosaveTimer, &QTimer::timeout, this, &Part::slotSaveFeedList);
     m_autosaveTimer->start(5 * 60 * 1000); // 5 minutes
 
-    QString useragent = QString("Akregator/%1; syndication").arg(KDEPIM_VERSION);
+    QString useragent = QStringLiteral("Akregator/%1; syndication").arg(QStringLiteral(KDEPIM_VERSION));
 
     if (!Settings::customUserAgent().isEmpty()) {
         useragent = Settings::customUserAgent();
@@ -349,7 +351,7 @@ void Part::slotSettingsChanged()
             trayIcon->setStatus(KStatusNotifierItem::Active);
         }
 
-        connect(m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)));
+        connect(m_mainWidget, &MainWidget::signalUnreadCountChanged, trayIcon, &TrayIcon::slotSetUnread);
         connect(m_mainWidget, &MainWidget::signalArticlesSelected,
                 this, &Part::signalArticlesSelected);
 
@@ -371,7 +373,7 @@ void Part::slotSettingsChanged()
     fonts.append(Settings::serifFont());
     fonts.append(Settings::standardFont());
     fonts.append(Settings::standardFont());
-    fonts.append("0");
+    fonts.append(QStringLiteral("0"));
     Settings::setFonts(fonts);
 
     if (Settings::minimumFontSize() > Settings::mediumFontSize()) {
@@ -394,10 +396,12 @@ void Part::saveSettings()
 Part::~Part()
 {
     qCDebug(AKREGATOR_LOG) << "Part::~Part() enter";
-    if (!m_shuttingDown) {
+    // If the widget is destroyed for some reason, KParts::Part will set its
+    // widget property to 0 and then delete itself (and therefore this object).
+    // In this case, it's not safe to do our normal shutdown routine.
+    if (widget() && !m_shuttingDown) {
         slotOnShutdown();
     }
-    delete m_dialog;
     qCDebug(AKREGATOR_LOG) << "Part::~Part(): leaving";
 }
 
@@ -442,8 +446,8 @@ bool Part::openFile()
     cmd->setStorage(Kernel::self()->storage());
     cmd->setFileName(localFilePath());
     cmd->setDefaultFeedList(createDefaultFeedList());
-    connect(cmd.data(), SIGNAL(result(QSharedPointer<Akregator::FeedList>)),
-            this, SLOT(feedListLoaded(QSharedPointer<Akregator::FeedList>)));
+    connect(cmd.data(), &LoadFeedListCommand::result,
+            this, &Part::feedListLoaded);
     m_loadFeedListCommand = cmd.take();
     m_loadFeedListCommand->start();
     return true;
@@ -472,7 +476,7 @@ void Part::feedListLoaded(const QSharedPointer<FeedList> &list)
     }
 
     if (m_standardListLoaded) {
-        QTimer::singleShot(0, this, SLOT(flushAddFeedRequests()));
+        QTimer::singleShot(0, this, &Part::flushAddFeedRequests);
     }
 
     if (Settings::fetchOnStartup()) {
@@ -525,16 +529,20 @@ bool Part::isTrayIconEnabled() const
 void Part::importFile(const QUrl &url)
 {
     QString filename;
-
-    bool isRemote = false;
+    QTemporaryFile tempFile;
 
     if (url.isLocalFile()) {
         filename = url.toLocalFile();
     } else {
-        isRemote = true;
+        if (!tempFile.open()) {
+            return;
+        }
+        filename = tempFile.fileName();
 
-        if (!KIO::NetAccess::download(url, filename, m_mainWidget)) {
-            KMessageBox::error(m_mainWidget, KIO::NetAccess::lastErrorString());
+        auto job = KIO::file_copy(url, QUrl::fromLocalFile(filename), -1, KIO::Overwrite | KIO::HideProgressInfo);
+        KJobWidgets::setWindow(job, m_mainWidget);
+        if (!job->exec()) {
+            KMessageBox::error(m_mainWidget, job->errorString());
             return;
         }
     }
@@ -550,10 +558,6 @@ void Part::importFile(const QUrl &url)
         }
     } else {
         KMessageBox::error(m_mainWidget, i18n("The file %1 could not be read, check if it exists or if it is readable for the current user.", filename), i18n("Read Error"));
-    }
-
-    if (isRemote) {
-        KIO::NetAccess::removeTempFile(filename);
     }
 }
 
@@ -577,24 +581,17 @@ void Part::exportFile(const QUrl &url)
 
         return;
     } else {
-        QTemporaryFile tmpfile;
-        tmpfile.open();
-
-        QTextStream stream(&tmpfile);
-        stream.setCodec("UTF-8");
-
-        stream << m_mainWidget->feedListToOPML().toString() << "\n";
-        stream.flush();
-
-        if (!KIO::NetAccess::upload(tmpfile.fileName(), url, m_mainWidget)) {
-            KMessageBox::error(m_mainWidget, KIO::NetAccess::lastErrorString());
+        auto job = KIO::storedPut(m_mainWidget->feedListToOPML().toString().toUtf8(), url, -1);
+        KJobWidgets::setWindow(job, m_mainWidget);
+        if (!job->exec()) {
+            KMessageBox::error(m_mainWidget, job->errorString());
         }
     }
 }
 
 void Part::fileImport()
 {
-    const QString filters = i18n("OPML Outlines (*.opml, *.xml);;All Files (*)");
+    const QString filters = i18n("OPML Outlines (*.opml *.xml);;All Files (*)");
     const QUrl url = QFileDialog::getOpenFileUrl(m_mainWidget, QString(), QUrl(), filters);
     if (!url.isEmpty()) {
         importFile(url);
@@ -603,7 +600,7 @@ void Part::fileImport()
 
 void Part::fileExport()
 {
-    const QString filters = i18n("OPML Outlines (*.opml, *.xml);;All Files (*)");
+    const QString filters = i18n("OPML Outlines (*.opml *.xml);;All Files (*)");
     const QUrl url = QFileDialog::getSaveFileUrl(m_mainWidget, QString(), QUrl(), filters);
 
     if (!url.isEmpty()) {
@@ -655,8 +652,8 @@ void Part::showOptions()
                 TrayIcon::getInstance(), SLOT(settingsChanged()));
 
         // query for akregator's kcm modules
-        const QString constraint = "[X-KDE-ParentApp] == 'akregator'";
-        const KService::List offers = KServiceTypeTrader::self()->query("KCModule", constraint);
+        const QString constraint = QStringLiteral("[X-KDE-ParentApp] == 'akregator'");
+        const KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KCModule"), constraint);
         foreach (const KService::Ptr &service, offers) {
             m_dialog->addModule(service->storageId());
         }
@@ -701,7 +698,7 @@ void Part::initFonts()
         fonts.append(QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
         fonts.append(QFontDatabase::systemFont(QFontDatabase::GeneralFont).family());
         fonts.append(QFontDatabase::systemFont(QFontDatabase::GeneralFont).family());
-        fonts.append("0");
+        fonts.append(QStringLiteral("0"));
     }
     Settings::setFonts(fonts);
     if (Settings::standardFont().isEmpty()) {
@@ -719,7 +716,7 @@ void Part::initFonts()
 
     KConfigGroup conf(Settings::self()->config(), "HTML Settings");
 
-    KConfig _konq("konquerorrc", KConfig::NoGlobals);
+    KConfig _konq(QStringLiteral("konquerorrc"), KConfig::NoGlobals);
     KConfigGroup konq(&_konq, "HTML Settings");
 
     if (!conf.hasKey("MinimumFontSize")) {
@@ -780,8 +777,8 @@ void Part::clearCrashProperties()
     if (!m_doCrashSave) {
         return;
     }
-    KConfig config("crashed", KConfig::SimpleConfig,
-                   QStandardPaths::ApplicationsLocation);
+    KConfig config(QStringLiteral("crashed"), KConfig::SimpleConfig,
+                   QStandardPaths::AppDataLocation);
     KConfigGroup configGroup(&config, "Part");
     configGroup.writeEntry("crashed", false);
 }
@@ -791,8 +788,8 @@ void Part::saveCrashProperties()
     if (!m_doCrashSave) {
         return;
     }
-    KConfig config("crashed", KConfig::SimpleConfig,
-                   QStandardPaths::ApplicationsLocation);
+    KConfig config(QStringLiteral("crashed"), KConfig::SimpleConfig,
+                   QStandardPaths::AppDataLocation);
     KConfigGroup configGroup(&config, "Part");
     configGroup.deleteGroup();
 
@@ -803,8 +800,8 @@ void Part::saveCrashProperties()
 
 bool Part::readCrashProperties()
 {
-    KConfig config("crashed", KConfig::SimpleConfig,
-                   QStandardPaths::ApplicationsLocation);
+    KConfig config(QStringLiteral("crashed"), KConfig::SimpleConfig,
+                   QStandardPaths::AppDataLocation);
     KConfigGroup configGroup(&config, "Part");
 
     if (!configGroup.readEntry("crashed", false)) {
@@ -814,10 +811,10 @@ bool Part::readCrashProperties()
     const int choice = KMessageBox::questionYesNoCancel(m_mainWidget,
                        i18n("Akregator did not close correctly. Would you like to restore the previous session?"),
                        i18n("Restore Session?"),
-                       KGuiItem(i18n("Restore Session"), "window-new"),
-                       KGuiItem(i18n("Do Not Restore"), "dialog-close"),
-                       KGuiItem(i18n("Ask Me Later"), "chronometer"),
-                       "Restore session when akregator didn't close correctly");
+                       KGuiItem(i18n("Restore Session"), QStringLiteral("window-new")),
+                       KGuiItem(i18n("Do Not Restore"), QStringLiteral("dialog-close")),
+                       KGuiItem(i18n("Ask Me Later"), QStringLiteral("chronometer")),
+                       QStringLiteral("Restore session when akregator didn't close correctly"));
     switch (choice) {
     case KMessageBox::Yes:
         readProperties(configGroup);
@@ -840,7 +837,7 @@ void Part::slotAutoSave()
 
 void Part::autoSaveProperties()
 {
-    KConfig config("autosaved", KConfig::SimpleConfig, QStandardPaths::ApplicationsLocation);
+    KConfig config(QStringLiteral("autosaved"), KConfig::SimpleConfig, QStandardPaths::AppDataLocation);
     KConfigGroup configGroup(&config, "Part");
     configGroup.deleteGroup();
 
@@ -854,7 +851,7 @@ void Part::autoReadProperties()
     if (qGuiApp->isSessionRestored()) {
         return;
     }
-    KConfig config("autosaved", KConfig::SimpleConfig, QStandardPaths::ApplicationsLocation);
+    KConfig config(QStringLiteral("autosaved"), KConfig::SimpleConfig, QStandardPaths::AppDataLocation);
     KConfigGroup configGroup(&config, "Part");
 
     readProperties(configGroup);

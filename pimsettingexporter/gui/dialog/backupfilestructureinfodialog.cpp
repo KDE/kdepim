@@ -17,7 +17,7 @@
 
 #include "backupfilestructureinfodialog.h"
 
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -52,7 +52,7 @@ BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Backup Archive Structure:"));
     lay->addWidget(lab);
 
-    mEditor = new PimCommon::PlainTextEditorWidget;
+    mEditor = new KPIMTextEdit::PlainTextEditorWidget;
     mEditor->setReadOnly(true);
     lay->addWidget(mEditor);
     mainLayout->addWidget(w);
@@ -68,15 +68,12 @@ BackupFileStructureInfoDialog::~BackupFileStructureInfoDialog()
 
 void BackupFileStructureInfoDialog::loadStructure()
 {
-    const QString fileName(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("pimsettingexporter/backup-structure.txt")));
-    if (!fileName.isEmpty()) {
-        QFile f(fileName);
-        if (!f.open(QIODevice::ReadOnly)) {
-            KMessageBox::error(this, i18n("backup-structure.txt file was not found."));
-            return;
-        }
-        mEditor->setPlainText(QString::fromLatin1(f.readAll()));
+    QFile f(QStringLiteral(":/structure/backup-structure.txt"));
+    if (!f.open(QIODevice::ReadOnly)) {
+        KMessageBox::error(this, i18n("backup-structure.txt file was not found."));
+        return;
     }
+    mEditor->setPlainText(QString::fromLatin1(f.readAll()));
 }
 
 void BackupFileStructureInfoDialog::writeConfig()

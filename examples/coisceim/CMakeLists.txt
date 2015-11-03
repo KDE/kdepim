@@ -2,7 +2,7 @@ project(coisceim)
 
 
 
-include_directories( ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/messageviewer )
+include_directories( ${CMAKE_SOURCE_DIR}/messageviewer )
 
 set (coisceim_widget_SRCS
   coisceimwidget.cpp
@@ -49,7 +49,7 @@ target_link_libraries(coisceim_widget
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::CalendarCore
-  messageviewer calendarsupport
+  KF5::MessageViewer KF5::CalendarSupport
 )
 
 set_target_properties(coisceim_widget

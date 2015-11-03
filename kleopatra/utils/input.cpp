@@ -41,7 +41,7 @@
 #include "kleo_assert.h"
 #include "cached.h"
 
-#include <kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include "kleopatra_debug.h"
 #include <KLocalizedString>
@@ -69,8 +69,7 @@ class Process : public QProcess
 public:
     explicit Process(QObject *parent = Q_NULLPTR)
         : QProcess(parent) {}
-    void close() Q_DECL_OVERRIDE
-    {
+    void close() Q_DECL_OVERRIDE {
         closeReadChannel(StandardOutput);
     }
 };
@@ -92,8 +91,7 @@ public:
     {
         m_defaultLabel = l;
     }
-    void setLabel(const QString &l) Q_DECL_OVERRIDE
-    {
+    void setLabel(const QString &l) Q_DECL_OVERRIDE {
         m_customLabel = l;
     }
     QString errorString() const Q_DECL_OVERRIDE
@@ -344,7 +342,7 @@ ProcessStdOutInput::ProcessStdOutInput(const QString &cmd, const QStringList &ar
       m_proc(new Process)
 {
     const QIODevice::OpenMode openMode =
-        stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite ;
+        stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite;
     qCDebug(KLEOPATRA_LOG) << "cd" << wd.absolutePath() << endl << cmd << args << Outputter(stdin_);
     if (cmd.isEmpty())
         throw Exception(gpg_error(GPG_ERR_INV_ARG),
@@ -369,7 +367,7 @@ QString ProcessStdOutInput::label() const
         return InputImplBase::label();
     }
     // output max. 3 arguments
-    const QString cmdline = (QStringList(m_command) + m_arguments.mid(0, 3)).join(QLatin1String(" "));
+    const QString cmdline = (QStringList(m_command) + m_arguments.mid(0, 3)).join(QStringLiteral(" "));
     if (m_arguments.size() > 3) {
         return i18nc("e.g. \"Output of tar xf - file1 ...\"", "Output of %1 ...", cmdline);
     } else {

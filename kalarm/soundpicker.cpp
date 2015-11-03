@@ -28,6 +28,8 @@
 #include "sounddlg.h"
 #include "soundpicker.h"
 
+#include <kpimtextedit/texttospeech.h>
+
 #include <QIcon>
 #include <KLocalizedString>
 #include <kiconloader.h>
@@ -59,7 +61,7 @@ SoundPicker::SoundPicker(QWidget* parent)
 {
     QHBoxLayout* soundLayout = new QHBoxLayout(this);
     soundLayout->setMargin(0);
-    soundLayout->setSpacing(KDialog::spacingHint());
+    soundLayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     mTypeBox = new QWidget(this);    // this is to control the QWhatsThis text display area
     QHBoxLayout* typeBoxLayout = new QHBoxLayout(mTypeBox);
     typeBoxLayout->setMargin(0);
@@ -83,7 +85,7 @@ SoundPicker::SoundPicker(QWidget* parent)
     mTypeCombo->addItem(i18n_combo_None());     // index None
     mTypeCombo->addItem(i18n_combo_Beep());     // index Beep
     mTypeCombo->addItem(i18n_combo_File());     // index PlayFile
-    mSpeakShowing = !theApp()->speechEnabled();
+    mSpeakShowing = !KPIMTextEdit::TextToSpeech::self()->isReady();
     showSpeak(!mSpeakShowing);            // index Speak (only displayed if appropriate)
     connect(mTypeCombo, static_cast<void (ComboBox::*)(int)>(&ComboBox::activated), this, &SoundPicker::slotTypeSelected);
     connect(mTypeCombo, static_cast<void (ComboBox::*)(int)>(&ComboBox::currentIndexChanged), this, &SoundPicker::changed);
@@ -92,7 +94,7 @@ SoundPicker::SoundPicker(QWidget* parent)
 
     // Sound file picker button
     mFilePicker = new PushButton(this);
-    mFilePicker->setIcon(QIcon(SmallIcon(QStringLiteral("audio-x-generic"))));
+    mFilePicker->setIcon(QIcon::fromTheme(QStringLiteral("audio-x-generic")));
     int size = mFilePicker->sizeHint().height();
     mFilePicker->setFixedSize(size, size);
     connect(mFilePicker, &PushButton::clicked, this, &SoundPicker::slotPickFile);
@@ -121,7 +123,7 @@ void SoundPicker::setReadOnly(bool readOnly)
 */
 void SoundPicker::showSpeak(bool show)
 {
-    if (!theApp()->speechEnabled())
+    if (!KPIMTextEdit::TextToSpeech::self()->isReady())
         show = false;    // speech capability is not installed
     if (show == mSpeakShowing)
         return;    // no change
@@ -170,9 +172,9 @@ Preferences::SoundType SoundPicker::sound() const
 * Return the selected sound file, if the File option is selected.
 * Returns empty URL if File is not currently selected.
 */
-KUrl SoundPicker::file() const
+QUrl SoundPicker::file() const
 {
-    return (mTypeCombo->currentIndex() == indexes[Preferences::Sound_File]) ? mFile : KUrl();
+    return (mTypeCombo->currentIndex() == indexes[Preferences::Sound_File]) ? mFile : QUrl();
 }
 
 /******************************************************************************
@@ -211,14 +213,14 @@ void SoundPicker::set(Preferences::SoundType type, const QString& f, float volum
 {
     if (type == Preferences::Sound_File  &&  f.isEmpty())
         type = Preferences::Sound_Beep;
-    mFile        = KUrl(f);
+    mFile        = QUrl::fromUserInput(f, QString(), QUrl::AssumeLocalFile);
     mVolume      = volume;
     mFadeVolume  = fadeVolume;
     mFadeSeconds = fadeSeconds;
     mRepeatPause = repeatPause;
     mTypeCombo->setCurrentIndex(indexes[type]);  // this doesn't trigger slotTypeSelected()
     mFilePicker->setEnabled(type == Preferences::Sound_File);
-    mTypeCombo->setToolTip(type == Preferences::Sound_File ? mFile.prettyUrl() : QString());
+    mTypeCombo->setToolTip(type == Preferences::Sound_File ? mFile.toDisplayString() : QString());
     mLastType = type;
 }
 
@@ -252,7 +254,7 @@ void SoundPicker::slotTypeSelected(int id)
                 return;    // revert to previously selected type
         }
         mFilePicker->setEnabled(true);
-        mTypeCombo->setToolTip(mFile.prettyUrl());
+        mTypeCombo->setToolTip(mFile.toDisplayString());
     }
     mLastType = newType;
 }
@@ -262,11 +264,11 @@ void SoundPicker::slotTypeSelected(int id)
 */
 void SoundPicker::slotPickFile()
 {
-    KUrl oldfile = mFile;
+    QUrl oldfile = mFile;
     // Use AutoQPointer to guard against crash on application exit while
     // the dialogue is still open. It prevents double deletion (both on
     // deletion of EditAlarmDlg, and on return from this function).
-    AutoQPointer<SoundDlg> dlg = new SoundDlg(mFile.prettyUrl(), mVolume, mFadeVolume, mFadeSeconds, mRepeatPause, i18nc("@title:window", "Sound File"), this);
+    AutoQPointer<SoundDlg> dlg = new SoundDlg(mFile.toDisplayString(), mVolume, mFadeVolume, mFadeSeconds, mRepeatPause, i18nc("@title:window", "Sound File"), this);
     dlg->setReadOnly(mReadOnly);
     bool accepted = (dlg->exec() == QDialog::Accepted);
     if (mReadOnly)
@@ -276,7 +278,7 @@ void SoundPicker::slotPickFile()
         float volume, fadeVolume;
         int   fadeTime;
         dlg->getVolume(volume, fadeVolume, fadeTime);
-        KUrl file    = dlg->getFile();
+        QUrl file    = dlg->getFile();
         if (!file.isEmpty())
             mFile    = file;
         mRepeatPause = dlg->repeatPause();
@@ -298,7 +300,7 @@ void SoundPicker::slotPickFile()
         mTypeCombo->setToolTip(QString());
     }
     else
-        mTypeCombo->setToolTip(mFile.prettyUrl());
+        mTypeCombo->setToolTip(mFile.toDisplayString());
     if (accepted  ||  mFile != oldfile)
         Q_EMIT changed();
 }

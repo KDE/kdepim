@@ -18,10 +18,10 @@
 */
 
 #include "knotecollectionconfigwidget.h"
-#include "noteshared/attributes/showfoldernotesattribute.h"
+#include "NoteShared/ShowFolderNotesAttribute"
 #include <Akonadi/Notes/NoteUtils>
 #include "notesharedglobalconfig.h"
-#include "pimcommon/widgets/manageaccountwidget.h"
+#include "AkonadiWidgets/ManageAccountWidget"
 
 #include <AkonadiCore/CollectionModifyJob>
 #include <AkonadiCore/CollectionFilterProxyModel>
@@ -111,7 +111,7 @@ KNoteCollectionConfigWidget::KNoteCollectionConfigWidget(QWidget *parent)
     vbox->addWidget(mFolderView);
 
     mFolderView->setModel(mCollectionFilter);
-    connect(mFolderView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(slotUpdateButtons()));
+    connect(mFolderView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &KNoteCollectionConfigWidget::slotUpdateButtons);
 
     QHBoxLayout *hbox = new QHBoxLayout;
     vbox->addLayout(hbox);
@@ -147,14 +147,14 @@ KNoteCollectionConfigWidget::KNoteCollectionConfigWidget(QWidget *parent)
     QVBoxLayout *vboxAccountWidget = new QVBoxLayout;
     accountWidget->setLayout(vboxAccountWidget);
 
-    PimCommon::ManageAccountWidget *manageAccountWidget = new PimCommon::ManageAccountWidget(this);
+    Akonadi::ManageAccountWidget *manageAccountWidget = new Akonadi::ManageAccountWidget(this);
     vboxAccountWidget->addWidget(manageAccountWidget);
 
     manageAccountWidget->setMimeTypeFilter(QStringList() << Akonadi::NoteUtils::noteMimeType());
     manageAccountWidget->setCapabilityFilter(QStringList() << QStringLiteral("Resource"));  // show only resources, no agents
     tabWidget->addTab(accountWidget, i18n("Accounts"));
 
-    QTimer::singleShot(1000, this, SLOT(slotUpdateCollectionStatus()));
+    QTimer::singleShot(1000, this, &KNoteCollectionConfigWidget::slotUpdateCollectionStatus);
     slotUpdateButtons();
 }
 
@@ -299,7 +299,7 @@ void KNoteCollectionConfigWidget::updateCollectionsRecursive(const QModelIndex &
         Akonadi::CollectionModifyJob *modifyJob = 0;
         const bool selected = (mCheckProxy->data(child, Qt::CheckStateRole).toInt() != 0);
         if (selected && !attr) {
-            attr = collection.attribute<NoteShared::ShowFolderNotesAttribute>(Akonadi::Entity::AddIfMissing);
+            attr = collection.attribute<NoteShared::ShowFolderNotesAttribute>(Akonadi::Collection::AddIfMissing);
             modifyJob = new Akonadi::CollectionModifyJob(collection);
             modifyJob->setProperty("AttributeAdded", true);
         } else if (!selected && attr) {

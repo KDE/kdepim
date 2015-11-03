@@ -18,7 +18,7 @@
 #ifndef ARCHIVEJOB_H
 #define ARCHIVEJOB_H
 
-#include <mailcommon/job/jobscheduler.h>
+#include <MailCommon/JobScheduler>
 #include <Collection>
 #include <QPixmap>
 class ArchiveMailInfo;

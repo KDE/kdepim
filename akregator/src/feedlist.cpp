@@ -47,7 +47,7 @@
 namespace Akregator
 {
 
-class FeedList::Private
+class Q_DECL_HIDDEN FeedList::Private
 {
     FeedList *const q;
 
@@ -69,21 +69,20 @@ class FeedList::AddNodeVisitor : public TreeNodeVisitor
 public:
     AddNodeVisitor(FeedList *list) : m_list(list) {}
 
-    bool visitFeed(Feed *node)
-    {
+    bool visitFeed(Feed *node) Q_DECL_OVERRIDE {
         m_list->d->idMap.insert(node->id(), node);
         m_list->d->flatList.append(node);
         m_list->d->urlMap[node->xmlUrl()].append(node);
-        connect(node, SIGNAL(fetchStarted(Akregator::Feed*)),
-                m_list, SIGNAL(fetchStarted(Akregator::Feed*)));
-        connect(node, SIGNAL(fetched(Akregator::Feed*)),
-                m_list, SIGNAL(fetched(Akregator::Feed*)));
-        connect(node, SIGNAL(fetchAborted(Akregator::Feed*)),
-                m_list, SIGNAL(fetchAborted(Akregator::Feed*)));
-        connect(node, SIGNAL(fetchError(Akregator::Feed*)),
-                m_list, SIGNAL(fetchError(Akregator::Feed*)));
-        connect(node, SIGNAL(fetchDiscovery(Akregator::Feed*)),
-                m_list, SIGNAL(fetchDiscovery(Akregator::Feed*)));
+        connect(node, &Feed::fetchStarted,
+        m_list, &FeedList::fetchStarted);
+        connect(node, &Feed::fetched,
+        m_list, &FeedList::fetched);
+        connect(node, &Feed::fetchAborted,
+        m_list, &FeedList::fetchAborted);
+        connect(node, &Feed::fetchError,
+        m_list, &FeedList::fetchError);
+        connect(node, &Feed::fetchDiscovery,
+        m_list, &FeedList::fetchDiscovery);
 
         visitTreeNode(node);
         return true;
@@ -95,30 +94,30 @@ public:
         TreeNodeVisitor::visit(node);
     }
 
-    bool visitTreeNode(TreeNode *node)
-    {
-        if (!m_preserveID) {
+    bool visitTreeNode(TreeNode *node) Q_DECL_OVERRIDE {
+        if (!m_preserveID)
+        {
             node->setId(m_list->generateID());
         }
         m_list->d->idMap[node->id()] = node;
         m_list->d->flatList.append(node);
 
-        connect(node, SIGNAL(signalDestroyed(Akregator::TreeNode*)), m_list, SLOT(slotNodeDestroyed(Akregator::TreeNode*)));
-        connect(node, SIGNAL(signalChanged(Akregator::TreeNode*)), m_list, SIGNAL(signalNodeChanged(Akregator::TreeNode*)));
+        connect(node, &TreeNode::signalDestroyed, m_list, &FeedList::slotNodeDestroyed);
+        connect(node, &TreeNode::signalChanged, m_list, &FeedList::signalNodeChanged);
         Q_EMIT m_list->signalNodeAdded(node);
 
         return true;
     }
 
-    bool visitFolder(Folder *node)
-    {
-        connect(node, SIGNAL(signalChildAdded(Akregator::TreeNode*)), m_list, SLOT(slotNodeAdded(Akregator::TreeNode*)));
-        connect(node, SIGNAL(signalAboutToRemoveChild(Akregator::TreeNode*)), m_list, SIGNAL(signalAboutToRemoveNode(Akregator::TreeNode*)));
-        connect(node, SIGNAL(signalChildRemoved(Akregator::Folder*,Akregator::TreeNode*)), m_list, SLOT(slotNodeRemoved(Akregator::Folder*,Akregator::TreeNode*)));
+    bool visitFolder(Folder *node) Q_DECL_OVERRIDE {
+        connect(node, &Folder::signalChildAdded, m_list, &FeedList::slotNodeAdded);
+        connect(node, &Folder::signalAboutToRemoveChild, m_list, &FeedList::signalAboutToRemoveNode);
+        connect(node, &Folder::signalChildRemoved, m_list, &FeedList::slotNodeRemoved);
 
         visitTreeNode(node);
 
-        for (TreeNode *i = node->firstChild(); i && i != node; i = i->next()) {
+        for (TreeNode *i = node->firstChild(); i && i != node; i = i->next())
+        {
             m_list->slotNodeAdded(i);
         }
 
@@ -135,23 +134,20 @@ class FeedList::RemoveNodeVisitor : public TreeNodeVisitor
 public:
     RemoveNodeVisitor(FeedList *list) : m_list(list) {}
 
-    bool visitFeed(Feed *node)
-    {
+    bool visitFeed(Feed *node) Q_DECL_OVERRIDE {
         visitTreeNode(node);
         m_list->d->urlMap[node->xmlUrl()].removeAll(node);
         return true;
     }
 
-    bool visitTreeNode(TreeNode *node)
-    {
+    bool visitTreeNode(TreeNode *node) Q_DECL_OVERRIDE {
         m_list->d->idMap.remove(node->id());
         m_list->d->flatList.removeAll(node);
         m_list->disconnect(node);
         return true;
     }
 
-    bool visitFolder(Folder *node)
-    {
+    bool visitFolder(Folder *node) Q_DECL_OVERRIDE {
         visitTreeNode(node);
 
         return true;
@@ -359,7 +355,7 @@ void FeedList::append(FeedList *list, Folder *parent, TreeNode *after)
 QDomDocument FeedList::toOpml() const
 {
     QDomDocument doc;
-    doc.appendChild(doc.createProcessingInstruction(QLatin1String("xml"), QStringLiteral("version=\"1.0\" encoding=\"UTF-8\"")));
+    doc.appendChild(doc.createProcessingInstruction(QStringLiteral("xml"), QStringLiteral("version=\"1.0\" encoding=\"UTF-8\"")));
 
     QDomElement root = doc.createElement(QStringLiteral("opml"));
     root.setAttribute(QStringLiteral("version"), QStringLiteral("1.0"));

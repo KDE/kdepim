@@ -34,7 +34,7 @@ class MonitorsModel : public QAbstractItemModel
 public:
     enum Column {
         IdentifierColumn = 0,
-        IsAllMonitoredColumn ,
+        IsAllMonitoredColumn,
         MonitoredCollectionsColumn,
         MonitoredItemsColumn,
         MonitoredResourcesColumn,

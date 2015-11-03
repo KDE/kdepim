@@ -44,15 +44,13 @@
 #include <KCalCore/Event>
 using namespace KCalCore;
 
-#include <kglobal.h>
 #include <KLocalizedString>
 #include <kcalendarsystem.h>
 #include <kiconloader.h>
-#include <kdialog.h>
 #include <kmessagebox.h>
 #include <kdatecombobox.h>
-#include <KHBox>
 
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
 #include <QStackedWidget>
@@ -97,7 +95,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     qCDebug(KALARM_LOG);
     QVBoxLayout* topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
-    topLayout->setSpacing(KDialog::spacingHint());
+    topLayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
 
     /* Create the recurrence rule Group box which holds the recurrence period
      * selection buttons, and the weekly, monthly and yearly recurrence rule
@@ -109,8 +107,8 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     QGroupBox* recurGroup = new QGroupBox(i18nc("@title:group", "Recurrence Rule"), this);
     topLayout->addWidget(recurGroup);
     QHBoxLayout* hlayout = new QHBoxLayout(recurGroup);
-    hlayout->setMargin(KDialog::marginHint());
-    hlayout->setSpacing(KDialog::marginHint());   // use margin spacing due to vertical divider line
+    hlayout->setMargin(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
+    hlayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultChildMargin));   // use margin spacing due to vertical divider line
 
     // Recurrence period radio buttons
     QVBoxLayout* vlayout = new QVBoxLayout();
@@ -182,7 +180,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     connect(mSubRepetition, &RepetitionButton::needsInitialisation, this, &RecurrenceEdit::repeatNeedsInitialisation);
     connect(mSubRepetition, &RepetitionButton::changed, this, &RecurrenceEdit::frequencyChanged);
     connect(mSubRepetition, &RepetitionButton::changed, this, &RecurrenceEdit::contentsChanged);
-    vlayout->addSpacing(KDialog::spacingHint());
+    vlayout->addSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     vlayout->addWidget(mSubRepetition);
 
     // Vertical divider line
@@ -221,7 +219,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     mRuleStack->addWidget(mWeeklyRule);
     mRuleStack->addWidget(mMonthlyRule);
     mRuleStack->addWidget(mYearlyRule);
-    hlayout->addSpacing(KDialog::marginHint());
+    hlayout->addSpacing(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
 
     // Create the recurrence range group which contains the controls
     // which specify how long the recurrence is to last.
@@ -233,8 +231,8 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     connect(mRangeButtonGroup, &ButtonGroup::buttonSet, this, &RecurrenceEdit::contentsChanged);
 
     vlayout = new QVBoxLayout(mRangeButtonBox);
-    vlayout->setMargin(KDialog::marginHint());
-    vlayout->setSpacing(KDialog::spacingHint());
+    vlayout->setMargin(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
+    vlayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     mNoEndDateButton = new RadioButton(i18nc("@option:radio", "No end"), mRangeButtonBox);
     mNoEndDateButton->setFixedSize(mNoEndDateButton->sizeHint());
     mNoEndDateButton->setReadOnly(mReadOnly);
@@ -262,7 +260,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     mRepeatCountLabel = new QLabel(i18nc("@label", "occurrence(s)"), mRangeButtonBox);
     mRepeatCountLabel->setFixedSize(mRepeatCountLabel->sizeHint());
     hlayout->addWidget(mRepeatCountButton);
-    hlayout->addSpacing(KDialog::spacingHint());
+    hlayout->addSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     hlayout->addWidget(mRepeatCountEntry);
     hlayout->addWidget(mRepeatCountLabel);
     hlayout->addStretch();
@@ -297,7 +295,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     connect(mEndAnyTimeCheckBox, &CheckBox::toggled, this, &RecurrenceEdit::slotAnyTimeToggled);
     connect(mEndAnyTimeCheckBox, &CheckBox::toggled, this, &RecurrenceEdit::contentsChanged);
     hlayout->addWidget(mEndDateButton);
-    hlayout->addSpacing(KDialog::spacingHint());
+    hlayout->addSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     hlayout->addWidget(mEndDateEdit);
     hlayout->addWidget(mEndTimeEdit);
     hlayout->addWidget(mEndAnyTimeCheckBox);
@@ -315,8 +313,8 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     topLayout->addWidget(mExceptionGroup);
     topLayout->setStretchFactor(mExceptionGroup, 2);
     hlayout = new QHBoxLayout(mExceptionGroup);
-    hlayout->setMargin(KDialog::marginHint());
-    hlayout->setSpacing(KDialog::spacingHint());
+    hlayout->setMargin(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
+    hlayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     vlayout = new QVBoxLayout();
     vlayout->setMargin(0);
     hlayout->addLayout(vlayout);
@@ -1099,37 +1097,42 @@ Rule::Rule(const QString& freqText, const QString& freqWhatsThis, bool time, boo
 {
     mLayout = new QVBoxLayout(this);
     mLayout->setMargin(0);
-    mLayout->setSpacing(KDialog::spacingHint());
-    KHBox* freqBox = new KHBox(this);
-    freqBox->setMargin(0);
-    mLayout->addWidget(freqBox, 0, Qt::AlignLeft);
-    KHBox* box = new KHBox(freqBox);    // this is to control the QWhatsThis text display area
-    box->setMargin(0);
-    box->setSpacing(KDialog::spacingHint());
+    mLayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
 
-    QLabel* label = new QLabel(i18nc("@label:spinbox", "Recur e&very"), box);
+    QWidget *freqBox = new QWidget;
+    mLayout->addWidget(freqBox, 0, Qt::AlignLeft);
+    QWidget *widget = new QWidget;    // this is to control the QWhatsThis text display area
+    QHBoxLayout *box = new QHBoxLayout(widget);
+    box->setMargin(0);
+    box->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
+
+    QLabel* label = new QLabel(i18nc("@label:spinbox", "Recur e&very"));
     label->setFixedSize(label->sizeHint());
+    box->addWidget(label);
     if (time)
     {
         mIntSpinBox = Q_NULLPTR;
-        mSpinBox = mTimeSpinBox = new TimeSpinBox(1, 5999, box);
+        mSpinBox = mTimeSpinBox = new TimeSpinBox(1, 5999);
         mTimeSpinBox->setFixedSize(mTimeSpinBox->sizeHint());
         mTimeSpinBox->setReadOnly(readOnly);
+        box->addWidget(mSpinBox);
     }
     else
     {
         mTimeSpinBox = Q_NULLPTR;
-        mSpinBox = mIntSpinBox = new SpinBox(1, 999, box);
+        mSpinBox = mIntSpinBox = new SpinBox(1, 999);
         mIntSpinBox->setFixedSize(mIntSpinBox->sizeHint());
         mIntSpinBox->setReadOnly(readOnly);
+        box->addWidget(mSpinBox);
     }
     connect(mSpinBox, SIGNAL(valueChanged(int)), SIGNAL(frequencyChanged()));
     connect(mSpinBox, SIGNAL(valueChanged(int)), SIGNAL(changed()));
     label->setBuddy(mSpinBox);
-    label = new QLabel(freqText, box);
+    label = new QLabel(freqText);
     label->setFixedSize(label->sizeHint());
-    box->setFixedSize(sizeHint());
-    box->setWhatsThis(freqWhatsThis);
+    box->addWidget(label);
+    widget->setFixedSize(sizeHint());
+    widget->setWhatsThis(freqWhatsThis);
 
     new QWidget(freqBox);     // left adjust the visible widgets
     freqBox->setFixedHeight(freqBox->sizeHint().height());
@@ -1200,14 +1203,14 @@ DayWeekRule::DayWeekRule(const QString& freqText, const QString& freqWhatsThis, 
     QLabel* label = new QLabel(i18nc("@label On: Tuesday", "O&n:"), this);
     label->setFixedSize(label->sizeHint());
     grid->addWidget(label, 0, 0, Qt::AlignRight | Qt::AlignTop);
-    grid->setColumnMinimumWidth(1, KDialog::spacingHint());
+    grid->setColumnMinimumWidth(1, style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
 
     // List the days of the week starting at the user's start day of the week.
     // Save the first day of the week, just in case it changes while the dialog is open.
     QWidget* box = new QWidget(this);   // this is to control the QWhatsThis text display area
     QGridLayout* dgrid = new QGridLayout(box);
     dgrid->setMargin(0);
-    dgrid->setSpacing(KDialog::spacingHint());
+    dgrid->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     const KCalendarSystem* calendar = KLocale::global()->calendar();
     for (int i = 0;  i < 7;  ++i)
     {
@@ -1215,7 +1218,7 @@ DayWeekRule::DayWeekRule(const QString& freqText, const QString& freqWhatsThis, 
         mDayBox[i] = new CheckBox(calendar->weekDayName(day), box);
         mDayBox[i]->setFixedSize(mDayBox[i]->sizeHint());
         mDayBox[i]->setReadOnly(readOnly);
-        connect(mDayBox[i], SIGNAL(toggled(bool)), SIGNAL(changed()));
+        connect(mDayBox[i], &QAbstractButton::toggled, this, &Rule::changed);
         dgrid->addWidget(mDayBox[i], i%4, i/4, Qt::AlignLeft);
     }
     box->setFixedSize(box->sizeHint());
@@ -1340,18 +1343,20 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mButtonGroup = new ButtonGroup(this);
 
     // Month day selector
-    KHBox* box = new KHBox(this);
+    QWidget *widget = new QWidget;
+    QHBoxLayout *box = new QHBoxLayout(widget);
     box->setMargin(0);
-    box->setSpacing(KDialog::spacingHint());
-    layout()->addWidget(box);
+    box->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
+    layout()->addWidget(widget);
 
-    mDayButton = new RadioButton(i18nc("@option:radio On day number in the month", "O&n day"), box);
+    mDayButton = new RadioButton(i18nc("@option:radio On day number in the month", "O&n day"));
     mDayButton->setFixedSize(mDayButton->sizeHint());
     mDayButton->setReadOnly(readOnly);
     mButtonGroup->addButton(mDayButton);
     mDayButton->setWhatsThis(i18nc("@info:whatsthis", "Repeat the alarm on the selected day of the month"));
+    box->addWidget(mDayButton);
 
-    mDayCombo = new ComboBox(box);
+    mDayCombo = new ComboBox();
     mDayCombo->setEditable(false);
     mDayCombo->setMaxVisibleItems(11);
     for (int i = 0;  i < 31;  ++i)
@@ -1363,23 +1368,26 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mDayButton->setFocusWidget(mDayCombo);
     connect(mDayCombo, static_cast<void (ComboBox::*)(int)>(&ComboBox::activated), this, &MonthYearRule::slotDaySelected);
     connect(mDayCombo, static_cast<void (ComboBox::*)(int)>(&ComboBox::currentIndexChanged), this, &MonthYearRule::changed);
+    box->addWidget(mDayCombo);
 
-    box->setStretchFactor(new QWidget(box), 1);    // left adjust the controls
-    box->setFixedHeight(box->sizeHint().height());
+    box->setStretchFactor(new QWidget(widget), 1);    // left adjust the controls
+    widget->setFixedHeight(widget->sizeHint().height());
 
     // Month position selector
-    box = new KHBox(this);
+    widget = new QWidget;
+    box = new QHBoxLayout(widget);
     box->setMargin(0);
-    box->setSpacing(KDialog::spacingHint());
-    layout()->addWidget(box);
+    box->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
+    layout()->addWidget(widget);
 
-    mPosButton = new RadioButton(i18nc("@option:radio On the 1st Tuesday", "On t&he"), box);
+    mPosButton = new RadioButton(i18nc("@option:radio On the 1st Tuesday", "On t&he"));
     mPosButton->setFixedSize(mPosButton->sizeHint());
     mPosButton->setReadOnly(readOnly);
     mButtonGroup->addButton(mPosButton);
     mPosButton->setWhatsThis(i18nc("@info:whatsthis", "Repeat the alarm on one day of the week, in the selected week of the month"));
+    box->addWidget(mPosButton);
 
-    mWeekCombo = new ComboBox(box);
+    mWeekCombo = new ComboBox();
     mWeekCombo->setEditable(false);
     mWeekCombo->addItem(i18nc("@item:inlistbox", "1st"));
     mWeekCombo->addItem(i18nc("@item:inlistbox", "2nd"));
@@ -1401,8 +1409,9 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mWeekCombo->setReadOnly(readOnly);
     mPosButton->setFocusWidget(mWeekCombo);
     connect(mWeekCombo, static_cast<void (ComboBox::*)(int)>(&ComboBox::currentIndexChanged), this, &MonthYearRule::changed);
+    box->addWidget(mWeekCombo);
 
-    mDayOfWeekCombo = new ComboBox(box);
+    mDayOfWeekCombo = new ComboBox();
     mDayOfWeekCombo->setEditable(false);
     const KCalendarSystem* calendar = KLocale::global()->calendar();
     for (int i = 0;  i < 7;  ++i)
@@ -1413,9 +1422,10 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mDayOfWeekCombo->setReadOnly(readOnly);
     mDayOfWeekCombo->setWhatsThis(i18nc("@info:whatsthis", "Select the day of the week on which to repeat the alarm"));
     connect(mDayOfWeekCombo, static_cast<void (ComboBox::*)(int)>(&ComboBox::currentIndexChanged), this, &MonthYearRule::changed);
+    box->addWidget(mDayOfWeekCombo);
 
-    box->setStretchFactor(new QWidget(box), 1);    // left adjust the controls
-    box->setFixedHeight(box->sizeHint().height());
+    box->setStretchFactor(new QWidget(widget), 1);    // left adjust the controls
+    widget->setFixedHeight(widget->sizeHint().height());
     connect(mButtonGroup, &ButtonGroup::buttonSet, this, &MonthYearRule::clicked);
     connect(mButtonGroup, &ButtonGroup::buttonSet, this, &MonthYearRule::changed);
 }
@@ -1563,7 +1573,7 @@ YearlyRule::YearlyRule(bool readOnly, QWidget* parent)
     hlayout->addWidget(w, 1, Qt::AlignLeft);
     QGridLayout* grid = new QGridLayout(w);
     grid->setMargin(0);
-    grid->setSpacing(KDialog::spacingHint());
+    grid->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     const KCalendarSystem* calendar = KLocale::global()->calendar();
     int year = KDateTime::currentLocalDate().year();
     for (int i = 0;  i < 12;  ++i)
@@ -1571,23 +1581,26 @@ YearlyRule::YearlyRule(bool readOnly, QWidget* parent)
         mMonthBox[i] = new CheckBox(calendar->monthName(i + 1, year, KCalendarSystem::ShortName), w);
         mMonthBox[i]->setFixedSize(mMonthBox[i]->sizeHint());
         mMonthBox[i]->setReadOnly(readOnly);
-        connect(mMonthBox[i], SIGNAL(toggled(bool)), SIGNAL(changed()));
+        connect(mMonthBox[i], &QAbstractButton::toggled, this, &Rule::changed);
         grid->addWidget(mMonthBox[i], i%3, i/3, Qt::AlignLeft);
     }
-    connect(mMonthBox[1], SIGNAL(toggled(bool)), SLOT(enableFeb29()));
+    connect(mMonthBox[1], &QAbstractButton::toggled, this, &YearlyRule::enableFeb29);
     w->setFixedHeight(w->sizeHint().height());
     w->setWhatsThis(i18nc("@info:whatsthis", "Select the months of the year in which to repeat the alarm"));
 
     // February 29th handling option
-    KHBox* f29box = new KHBox(this);
-    f29box->setMargin(0);
-    layout()->addWidget(f29box);
-    KHBox* box = new KHBox(f29box);    // this is to control the QWhatsThis text display area
+    QWidget *widget = new QWidget;
+    layout()->addWidget(widget);
+    QHBoxLayout *f29box = new QHBoxLayout(widget);
+    w = new QWidget(this);     // this is to control the QWhatsThis text display area
+    f29box->addWidget(w);
+    QHBoxLayout *box = new QHBoxLayout(w);
     box->setMargin(0);
-    box->setSpacing(KDialog::spacingHint());
-    mFeb29Label = new QLabel(i18nc("@label:listbox", "February 2&9th alarm in non-leap years:"), box);
+    box->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
+    mFeb29Label = new QLabel(i18nc("@label:listbox", "February 2&9th alarm in non-leap years:"));
     mFeb29Label->setFixedSize(mFeb29Label->sizeHint());
-    mFeb29Combo = new ComboBox(box);
+    box->addWidget(mFeb29Label);
+    mFeb29Combo = new ComboBox();
     mFeb29Combo->setEditable(false);
     mFeb29Combo->addItem(i18nc("@item:inlistbox No date", "None"));
     mFeb29Combo->addItem(i18nc("@item:inlistbox 1st March (short form)", "1 Mar"));
@@ -1596,10 +1609,11 @@ YearlyRule::YearlyRule(bool readOnly, QWidget* parent)
     mFeb29Combo->setReadOnly(readOnly);
     connect(mFeb29Combo, static_cast<void (ComboBox::*)(int)>(&ComboBox::currentIndexChanged), this, &YearlyRule::changed);
     mFeb29Label->setBuddy(mFeb29Combo);
-    box->setFixedSize(box->sizeHint());
-    box->setWhatsThis(i18nc("@info:whatsthis", "Select which date, if any, the February 29th alarm should trigger in non-leap years"));
-    new QWidget(f29box);     // left adjust the visible widgets
-    f29box->setFixedHeight(f29box->sizeHint().height());
+    box->addWidget(mFeb29Combo);
+    w->setFixedSize(w->sizeHint());
+    w->setWhatsThis(i18nc("@info:whatsthis", "Select which date, if any, the February 29th alarm should trigger in non-leap years"));
+    f29box->setStretchFactor(new QWidget(widget), 1);     // left adjust the visible widgets
+    widget->setFixedHeight(widget->sizeHint().height());
 }
 
 void YearlyRule::setDefaultValues(int dayOfMonth, int dayOfWeek, int month)

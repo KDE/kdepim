@@ -31,29 +31,29 @@
 #include "ui_kogroupwareprefspage.h"
 #include <QDialog>
 
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/categoryconfig.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/CategoryConfig>
 
-#include <incidenceeditor-ng/globalsettings.h>
-#include <widgets/tagselectioncombo.h>
-#include <widgets/tagwidgets.h>
+#include <IncidenceEditorsng/IncidenceEditorSettings>
+#include <Libkdepim/TagSelectionCombo>
+#include <libkdepim/tagwidgets.h>
 
 #include <AkonadiCore/AgentFilterProxyModel>
 #include <AkonadiCore/AgentInstanceCreateJob>
 #include <AkonadiCore/AgentManager>
+#include <AkonadiCore/EntityTreeModel>
 #include <AkonadiWidgets/AgentTypeDialog>
 #include <AkonadiWidgets/CollectionComboBox>
-#include <AkonadiCore/CollectionModel>
 #include <akonadi/calendar/calendarsettings.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>
 
-#include <KHolidays/Holidays>
+#include <KHolidays/HolidayRegion>
 
 #include <MailTransport/TransportManagementWidget>
 
-#include "pimcommon/widgets/manageaccountwidget.h"
+#include "AkonadiWidgets/ManageAccountWidget"
 
 #include <KCalendarSystem>
 #include <KColorButton>
@@ -67,7 +67,6 @@
 #include <KTimeComboBox>
 #include <KUrlRequester>
 #include <KWindowSystem>
-#include <KGlobal>
 #include "korganizer_debug.h"
 #include <QIcon>
 #include <QPushButton>
@@ -118,7 +117,7 @@ KOPrefsDialogMain::KOPrefsDialogMain(QWidget *parent)
 
     KPIM::KPrefsWidRadios *defaultEmailAttachMethod =
         addWidRadios(
-            IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethodItem(), personalFrame);
+            IncidenceEditorNG::IncidenceEditorSettings::self()->defaultEmailAttachMethodItem(), personalFrame);
     personalLayout->addWidget(defaultEmailAttachMethod->groupBox());
     personalLayout->addStretch(1);
 
@@ -143,10 +142,10 @@ KOPrefsDialogMain::KOPrefsDialogMain(QWidget *parent)
 
     KPIM::KPrefsWidInt *autoExportInterval =
         addWidInt(KOPrefs::instance()->autoExportIntervalItem(), saveGroupBox);
-    connect(autoExportHTML->checkBox(), SIGNAL(toggled(bool)),
-            autoExportInterval->label(), SLOT(setEnabled(bool)));
-    connect(autoExportHTML->checkBox(), SIGNAL(toggled(bool)),
-            autoExportInterval->spinBox(), SLOT(setEnabled(bool)));
+    connect(autoExportHTML->checkBox(), &QAbstractButton::toggled,
+            autoExportInterval->label(), &QWidget::setEnabled);
+    connect(autoExportHTML->checkBox(), &QAbstractButton::toggled,
+            autoExportInterval->spinBox(), &QWidget::setEnabled);
     intervalLayout->addWidget(autoExportInterval->label());
     intervalLayout->addWidget(autoExportInterval->spinBox());
 
@@ -194,7 +193,7 @@ KOPrefsDialogMain::KOPrefsDialogMain(QWidget *parent)
                       i18nc("@title:tab calendar account settings", "Calendars"));
     QHBoxLayout *calendarFrameLayout = new QHBoxLayout;
     calendarFrame->setLayout(calendarFrameLayout);
-    PimCommon::ManageAccountWidget *manageAccountWidget = new PimCommon::ManageAccountWidget(this);
+    Akonadi::ManageAccountWidget *manageAccountWidget = new Akonadi::ManageAccountWidget(this);
     calendarFrameLayout->addWidget(manageAccountWidget);
 
     manageAccountWidget->setMimeTypeFilter(QStringList() << QStringLiteral("text/calendar"));
@@ -206,7 +205,7 @@ KOPrefsDialogMain::KOPrefsDialogMain(QWidget *parent)
 void KOPrefsDialogMain::usrWriteConfig()
 {
     KPIM::KPrefsModule::usrWriteConfig();
-    IncidenceEditorNG::GlobalSettings::self()->save();
+    IncidenceEditorNG::IncidenceEditorSettings::self()->save();
 }
 
 void KOPrefsDialogMain::toggleEmailSettings(bool on)
@@ -338,7 +337,7 @@ public:
                       "this box, or the working hours will not be "
                       "marked with color."));
 
-            connect(mWorkDays[ index ], SIGNAL(stateChanged(int)), SLOT(slotWidChanged()));
+            connect(mWorkDays[ index ], &QCheckBox::stateChanged, this, &KPIM::KPrefsModule::slotWidChanged);
 
             workDaysLayout->addWidget(mWorkDays[ index ]);
         }
@@ -386,7 +385,7 @@ public:
 
         KPIM::KPrefsWidDuration *defaultDuration =
             addWidDuration(CalendarSupport::KCalPrefs::instance()->defaultDurationItem(),
-                           QLatin1String("hh:mm"), defaultPage);
+                           QStringLiteral("hh:mm"), defaultPage);
 
         timesLayout->addWidget(defaultDuration->label(), 1, 0);
         timesLayout->addWidget(defaultDuration->timeEdit(), 1, 1);
@@ -537,10 +536,10 @@ public:
         QTabWidget *tabWidget = new QTabWidget(this);
         topTopLayout->addWidget(tabWidget);
 
-        connect(mMonthIconComboBox, SIGNAL(checkedItemsChanged(QStringList)),
-                SLOT(slotWidChanged()));
-        connect(mAgendaIconComboBox, SIGNAL(checkedItemsChanged(QStringList)),
-                SLOT(slotWidChanged()));
+        connect(mMonthIconComboBox, &KPIM::KCheckComboBox::checkedItemsChanged,
+                this, &KPIM::KPrefsModule::slotWidChanged);
+        connect(mAgendaIconComboBox, &KPIM::KCheckComboBox::checkedItemsChanged,
+                this, &KPIM::KPrefsModule::slotWidChanged);
 
         // Tab: Views->General
         QFrame *generalFrame = new QFrame(this);
@@ -622,8 +621,8 @@ public:
 
         KPIM::KPrefsWidBool *marcusBainsShowSeconds =
             addWidBool(KOPrefs::instance()->marcusBainsShowSecondsItem());
-        connect(marcusBainsEnabled->checkBox(), SIGNAL(toggled(bool)),
-                marcusBainsShowSeconds->checkBox(), SLOT(setEnabled(bool)));
+        connect(marcusBainsEnabled->checkBox(), &QAbstractButton::toggled,
+                marcusBainsShowSeconds->checkBox(), &QWidget::setEnabled);
 
         adisplayLayout->addWidget(marcusBainsShowSeconds->checkBox());
         adisplayLayout->addWidget(
@@ -956,7 +955,7 @@ void KOPrefsDialogColorsAndFonts::setResourceColor()
     const QString id =
         QString::number(mResourceCombo->itemData(
                             mResourceCombo->currentIndex(),
-                            Akonadi::CollectionModel::CollectionIdRole).toLongLong(&ok));
+                            Akonadi::EntityTreeModel::CollectionIdRole).toLongLong(&ok));
     if (! ok) {
         return;
     }
@@ -970,7 +969,7 @@ void KOPrefsDialogColorsAndFonts::updateResourceColor()
     const QString id =
         QString::number(mResourceCombo->itemData(
                             mResourceCombo->currentIndex(),
-                            Akonadi::CollectionModel::CollectionIdRole).toLongLong(&ok));
+                            Akonadi::EntityTreeModel::CollectionIdRole).toLongLong(&ok));
     if (!ok) {
         return;
     }
@@ -1144,7 +1143,7 @@ void KOPrefsDialogGroupwareScheduling::usrWriteConfig()
         mGroupwarePage->retrieveSavePassword->isChecked());
 
     // clear the url cache for our user
-    const QString configFile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/freebusyurls") ;
+    const QString configFile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/freebusyurls");
     KConfig cfg(configFile);
     cfg.deleteGroup(CalendarSupport::KCalPrefs::instance()->email());
 
@@ -1276,7 +1275,7 @@ void KOPrefsDialogPlugins::usrReadConfig()
         QTreeWidgetItem *item = Q_NULLPTR;
         if ((*it)->hasServiceType(EventViews::CalendarDecoration::Decoration::serviceType())) {
             item = new PluginItem(decorations, *it);
-        } else if (!(*it)->hasServiceType(QLatin1String("KOrganizer/PrintPlugin"))) {
+        } else if (!(*it)->hasServiceType(QStringLiteral("KOrganizer/PrintPlugin"))) {
             // we specifically skip print plugins since we no longer support them
             item = new PluginItem(others, *it);
         } else {
@@ -1339,7 +1338,7 @@ void KOPrefsDialogPlugins::configure()
     } else {
         KMessageBox::sorry(this,
                            i18nc("@info", "Unable to configure this plugin"),
-                           QLatin1String("PluginConfigUnable"));
+                           QStringLiteral("PluginConfigUnable"));
     }
 }
 
@@ -1403,7 +1402,7 @@ void KOPrefsDialogPlugins::selectionChanged()
         return;
     }
 
-    QVariant variant = item->service()->property(QLatin1String("X-KDE-KOrganizer-HasSettings"));
+    QVariant variant = item->service()->property(QStringLiteral("X-KDE-KOrganizer-HasSettings"));
 
     bool hasSettings = true;
     if (variant.isValid()) {
@@ -1474,7 +1473,7 @@ KOPrefsDesignerFields::KOPrefsDesignerFields(QWidget *parent)
 
 QString KOPrefsDesignerFields::localUiDir()
 {
-    const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/designer/event/") ;
+    const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/designer/event/");
     return dir;
 }
 

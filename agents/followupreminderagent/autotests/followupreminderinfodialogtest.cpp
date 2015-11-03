@@ -18,7 +18,7 @@
 #include "followupreminderinfodialogtest.h"
 #include "../followupreminderinfodialog.h"
 #include "../followupreminderinfowidget.h"
-#include "../followupreminderinfo.h"
+#include "FollowupReminder/FollowUpReminderInfo"
 #include <qtest.h>
 #include <QStandardPaths>
 

@@ -10,14 +10,15 @@ macro(add_kmail_unittest _source _additionalsource)
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(kmail-${_name})
   target_link_libraries( ${_name}
-    pimcommon
+    KF5::PimCommon
     Qt5::Test
     KF5::KIOCore
+    KF5::KIOWidgets
   )
 endmacro ()
 
 add_kmail_unittest( mailmergewidgettest.cpp "../widgets/csvwidget.cpp;../widgets/addressbookwidget.cpp;../widgets/mailmergewidget.cpp;../widgets/attachmentlistwidget.cpp;../widgets/selectattachmentdialog.cpp")
 add_kmail_unittest(addressbookwidgettest.cpp "../widgets/csvwidget.cpp")
 add_kmail_unittest(csvwidgettest.cpp "../widgets/csvwidget.cpp")
-add_kmail_unittest(mailmergedialogtest.cpp "../mailmergedialog.cpp;../widgets/attachmentlistwidget.cpp;../widgets/selectattachmentdialog.cpp;../widgets/mailmergewidget.cpp;../widgets/csvwidget.cpp;../widgets/addressbookwidget.cpp;../widgets/selectattachmentdialog.cpp" "pimcommon")
+add_kmail_unittest(mailmergedialogtest.cpp "../mailmergedialog.cpp;../widgets/attachmentlistwidget.cpp;../widgets/selectattachmentdialog.cpp;../widgets/mailmergewidget.cpp;../widgets/csvwidget.cpp;../widgets/addressbookwidget.cpp;../widgets/selectattachmentdialog.cpp" "KF5::PimCommon")
 add_kmail_unittest(mailmergejobtest.cpp "../job/mailmergejob.cpp" "")

@@ -21,7 +21,7 @@
 #include "createnewcontactjob.h"
 #include "util.h"
 
-#include <libkdepim/misc/broadcaststatus.h>
+#include <Libkdepim/BroadcastStatus>
 
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
@@ -67,7 +67,7 @@ void CreateNewContactJob::slotCollectionsFetched(KJob *job)
 
     const Akonadi::CollectionFetchJob *addressBookJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
 
-    Akonadi::Collection::List canCreateItemCollections ;
+    Akonadi::Collection::List canCreateItemCollections;
 
     foreach (const Akonadi::Collection &collection, addressBookJob->collections()) {
         if (Akonadi::Collection::CanCreateItem & collection.rights()) {

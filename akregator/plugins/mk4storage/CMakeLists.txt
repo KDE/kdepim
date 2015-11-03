@@ -5,7 +5,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/akregator/interfaces
   ${CMAKE_SOURCE_DIR}/akregator/plugins/mk4storage/metakit/include
   ${CMAKE_BINARY_DIR}/akregator
-  ${Boost_INCLUDE_DIR}
 )
 
 set(libmetakitlocal_SRCS
@@ -40,9 +39,10 @@ set(akregator_mk4storage_plugin_PART_SRCS
 add_library(akregator_mk4storage_plugin MODULE ${akregator_mk4storage_plugin_PART_SRCS})
 
 target_link_libraries(akregator_mk4storage_plugin
-  
   KF5::Syndication
   akregatorinterfaces
+  KF5::I18n
+  KF5::CoreAddons
 )
 
 install(TARGETS akregator_mk4storage_plugin DESTINATION ${KDE_INSTALL_PLUGINDIR})

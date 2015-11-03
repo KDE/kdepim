@@ -21,7 +21,7 @@
 
 #include "messageactions.h"
 
-#include "mailcommon/tag/addtagdialog.h"
+#include "MailCommon/AddTagDialog"
 
 #include <QAction>
 #include <KActionCollection>
@@ -229,14 +229,14 @@ void TagActionManager::createTagActions(const QList<MailCommon::Tag::Ptr> &tags)
 
         if (!mMoreAction) {
             mMoreAction = new QAction(i18n("More..."), this);
-            connect(mMoreAction, SIGNAL(triggered(bool)),
-                    this, SIGNAL(tagMoreActionClicked()));
+            connect(mMoreAction, &QAction::triggered,
+                    this, &TagActionManager::tagMoreActionClicked);
         }
         mMessageActions->messageStatusMenu()->menu()->addAction(mMoreAction);
     }
 
     if (!mToolbarActions.isEmpty() && mGUIClient->factory()) {
-        mGUIClient->plugActionList(QLatin1String("toolbar_messagetag_actions"), mToolbarActions);
+        mGUIClient->plugActionList(QStringLiteral("toolbar_messagetag_actions"), mToolbarActions);
     }
 }
 
@@ -250,7 +250,7 @@ void TagActionManager::updateActionStates(int numberOfSelectedMessages,
         Q_ASSERT(selectedItem.isValid());
         for (; it != end; ++it) {
             //FIXME Not very performant tag label retrieval
-            QString label(QLatin1String("not found"));
+            QString label(QStringLiteral("not found"));
             foreach (const MailCommon::Tag::Ptr &tag, mTags) {
                 if (tag->id() == it.key()) {
                     label = tag->name();

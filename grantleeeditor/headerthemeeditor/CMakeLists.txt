@@ -1,18 +1,7 @@
 project( headerthemeeditor )
 
-
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}/messageviewer
-  ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/grantleeeditor/grantleethemeeditor
-  ${CMAKE_SOURCE_DIR}/grantleeeditor/
-)
-
-
 set(headerthemeeditor_SRCS
   main.cpp
-  headerthemeeditor_debug.cpp
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
   previewwidget.cpp
@@ -25,13 +14,12 @@ set(headerthemeeditor_SRCS
   themeeditorwidget.cpp
 )
 
+ecm_qt_declare_logging_category(headerthemeeditor_SRCS HEADER headerthemeeditor_debug.h IDENTIFIER HEADERTHEMEEDITOR_LOG CATEGORY_NAME log_headerthemeeditor)
+qt5_add_resources(headerthemeeditor_SRCS headerthemeeditor.qrc)
 
 add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
-target_link_libraries(headerthemeeditor KF5::Mime  KF5::NewStuff pimcommon messageviewer grantleethemeeditor KF5::DBusAddons grantleetheme)
+target_link_libraries(headerthemeeditor KF5::Mime  KF5::NewStuff KF5::PimCommon KF5::MessageViewer grantleethemeeditor KF5::DBusAddons KF5::GrantleeTheme KF5::PimTextEdit)
 
 install(TARGETS headerthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES
-  headerthemeeditorui.rc
-  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/headerthemeeditor)
 
 install(PROGRAMS org.kde.headerthemeeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})

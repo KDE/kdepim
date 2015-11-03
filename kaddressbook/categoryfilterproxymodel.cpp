@@ -99,7 +99,7 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
                 const int idx = cat.indexOf(QStringLiteral("?tag="));
                 if (idx >= 0) {
                     ++validCategories;
-                    Tag::Id id = cat.mid(idx + 5).toInt();
+                    Tag::Id id = cat.midRef(idx + 5).toInt();
                     if (d->filterIdList.contains(id)) {
                         //qCDebug(KADDRESSBOOK_LOG) << "matches category" << cat;
                         return true;            // a category matches filter

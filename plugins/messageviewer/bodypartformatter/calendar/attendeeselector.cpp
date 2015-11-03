@@ -19,12 +19,11 @@
 
 #include "attendeeselector.h"
 
-#include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
+#include <Libkdepim/AddresseeLineEdit>
 #include <KEmailAddress>
 
 #include <KLocalizedString>
 #include <QPushButton>
-#include <kguiitem.h>
 #include <KGuiItem>
 #include <KStandardGuiItem>
 #include <KConfigGroup>

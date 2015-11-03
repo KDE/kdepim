@@ -30,8 +30,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURR
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/
-  ${CMAKE_SOURCE_DIR}/libkleo
-  ${CMAKE_SOURCE_DIR}/libkdepim
   ${Boost_INCLUDE_DIR}
   ${GPGME_INCLUDES}
 )
@@ -45,8 +43,6 @@ if(USABLE_ASSUAN_FOUND)
 endif()
 
 add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS)
-add_definitions(-DQT_STL)
-remove_definitions(-DQT_NO_STL)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers")
@@ -61,7 +57,6 @@ if(USABLE_ASSUAN_FOUND)
   add_subdirectory(libkleopatraclient)
 endif()
 
-add_subdirectory(kgpgconf)
 add_subdirectory(kwatchgnupg)
 
 if(BUILD_TESTING)
@@ -290,9 +285,10 @@ set(_kleopatra_SRCS
   aboutdata.cpp
   systrayicon.cpp
   kleopatraapplication.cpp
-  kleopatra_debug.cpp
   main.cpp
 )
+
+ecm_qt_declare_logging_category(_kleopatra_SRCS HEADER kleopatra_debug.h IDENTIFIER KLEOPATRA_LOG CATEGORY_NAME log_kleopatra)
 
 if(KLEO_MODEL_TEST)
   add_definitions(-DKLEO_MODEL_TEST)
@@ -338,34 +334,33 @@ if(KDEPIM_ONLY_KLEO)
   set(_kleopatra_libkdepim_LIBS)
 else()
   set(_kleopatra_libkdepim_SRCS)
-  set(_kleopatra_libkdepim_LIBS kdepim)
+  set(_kleopatra_libkdepim_LIBS KF5::Libkdepim)
 endif()
 
-if(KDEPIM_MOBILE_UI)
-  set(_kleopatra_uiserver_extra_libs ${_kleopatra_uiserver_extra_libs} kdepimmobileui)
-  set(_kleopatra_mainwindow_SRCS mainwindow_mobile.cpp)
-else()
-  set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
-endif()
+set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kleopatra.png")
 ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})
+
+qt5_add_resources(_kleopatra_SRCS kleopatra.qrc)
 
 add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
 
 target_link_libraries(kleopatra_bin
   ${_kleopatra_extra_libs}
-  kleo
+  KF5::Libkleo
   KF5::Mime
   KF5::KCMUtils
+  KF5::I18n
+  KF5::XmlGui
+  KF5::IconThemes
+  KF5::WindowSystem
+  KF5::DBusAddons
+  Qt5::Network
   ${_kleopatra_uiserver_extra_libs}
   ${_kleopatra_libkdepim_LIBS}
 )
-
-if(KDEPIM_MOBILE_UI)
-  target_link_libraries(kleopatra_bin Qt5::Declarative)
-endif()
 
 if(USABLE_ASSUAN_FOUND)
   target_link_libraries(kleopatra_bin )
@@ -386,12 +381,4 @@ install(
   DESTINATION ${KDE_INSTALL_KSERVICES5DIR}
 )
 
-install(FILES kleopatra.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kleopatra)
-
-if(KDEPIM_MOBILE_UI)
-  install(
-    FILES qml/kleopatra-mobile.qml qml/KleopatraActions.qml
-    DESTINATION ${KDE_INSTALL_DATADIR}/kleopatra
-  )
-endif()
 add_subdirectory(icons)

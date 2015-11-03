@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+find_dependency(KF5KDGantt2 "@KDEPIM_LIB_VERSION@")
+find_dependency(KF5EventViews "@KDEPIM_LIB_VERSION@")
+find_dependency(KF5CalendarSupport "@KDEPIM_LIB_VERSION@")
+find_dependency(KF5CalendarUtils "@CALENDARUTILS_LIB_VERSION@")
+find_dependency(KF5CalendarCore "@KCALENDARCORE_LIB_VERSION@")
+find_dependency(KF5MailTransport "@KMAILTRANSPORT_LIB_VERSION@")
+find_dependency(KF5Mime "@KMIME_LIB_VERSION@")
+
+
+
+include("${CMAKE_CURRENT_LIST_DIR}/KF5IncidenceEditorsngTargets.cmake")

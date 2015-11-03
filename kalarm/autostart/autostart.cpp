@@ -71,12 +71,12 @@ AutostartApp::AutostartApp()
     // Login session is starting up - need to wait for it to complete
     // in order to avoid starting the client before it is restored by
     // the session (where applicable).
-    QTimer::singleShot(AUTOSTART_DELAY * 1000, this, SLOT(slotAutostart()));
+    QTimer::singleShot(AUTOSTART_DELAY * 1000, this, &AutostartApp::slotAutostart);
 }
 
 void AutostartApp::slotAutostart()
 {
-    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String(KALARM_DBUS_SERVICE));
+    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral(KALARM_DBUS_SERVICE));
     if (reply.isValid()  &&  reply.value())
         qCDebug(KALARMAUTOSTART_LOG) << "KAlarm already running";
     else
@@ -86,8 +86,8 @@ void AutostartApp::slotAutostart()
             qCWarning(KALARMAUTOSTART_LOG) << "No command line";
         else
         {
-            QString prog = args->arg(0);
-            QString exe = QStandardPaths::findExecutable(prog);
+            const QString prog = args->arg(0);
+            const QString exe = QStandardPaths::findExecutable(prog);
             if (exe.isEmpty())
                 qCWarning(KALARMAUTOSTART_LOG) << "Executable not found:" << prog;
             else

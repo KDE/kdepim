@@ -30,13 +30,13 @@
 #include "mailclient.h"
 #include "koalarmclient_debug.h"
 
-#include <calendarsupport/next/incidenceviewer.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/identitymanager.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/IncidenceViewer>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/IdentityManager>
+#include <CalendarSupport/Utils>
 
-#include <incidenceeditor-ng/incidencedialog.h>
-#include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <IncidenceEditorsng/IncidenceDialog>
+#include <IncidenceEditorsng/IncidenceDialogFactory>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
@@ -95,7 +95,7 @@ public:
         : QTreeWidgetItem(parent), mIncidence(incidence), mNotified(false)
     {
     }
-    bool operator<(const QTreeWidgetItem &other) const;
+    bool operator<(const QTreeWidgetItem &other) const Q_DECL_OVERRIDE;
 
     QString mDisplayText;
 
@@ -137,9 +137,9 @@ AlarmDialog::AlarmDialog(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *par
     // User3 => Dismiss Selected
     //    Ok => Suspend
 
-    connect(calendar.data(), SIGNAL(calendarChanged()), SLOT(slotCalendarChanged()));
+    connect(calendar.data(), &Akonadi::ETMCalendar::calendarChanged, this, &AlarmDialog::slotCalendarChanged);
 
-    KIconLoader::global()->addAppDir(QLatin1String("korgac"));
+    KIconLoader::global()->addAppDir(QStringLiteral("korgac"));
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup generalConfig(config, "General");
@@ -340,9 +340,9 @@ void AlarmDialog::addIncidence(const Akonadi::Item &incidenceitem,
                                displayStr);
 
     if (incidence->type() == Incidence::TypeEvent) {
-        item->setIcon(0, SmallIcon(QStringLiteral("view-calendar-day")));
+        item->setIcon(0, QIcon::fromTheme(QStringLiteral("view-calendar-day")));
     } else if (incidence->type() == Incidence::TypeTodo) {
-        item->setIcon(0, SmallIcon(QStringLiteral("view-calendar-tasks")));
+        item->setIcon(0, QIcon::fromTheme(QStringLiteral("view-calendar-tasks")));
     }
 
     item->mHappening = dateTime;
@@ -460,11 +460,7 @@ void AlarmDialog::edit()
         return;
     }
 
-#if !defined(KDEPIM_MOBILE_UI)
     openIncidenceEditorNG(selection.first()->mIncidence);
-#else
-    openIncidenceEditorThroughKOrganizer(incidence);
-#endif
 }
 
 void AlarmDialog::suspend()
@@ -937,8 +933,8 @@ void AlarmDialog::keyPressEvent(QKeyEvent *e)
 
 bool AlarmDialog::openIncidenceEditorThroughKOrganizer(const Incidence::Ptr &incidence)
 {
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.korganizer"))) {
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("korganizer"), QString())) {
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.korganizer"))) {
+        if (KToolInvocation::startServiceByDesktopName(QStringLiteral("korganizer"), QString())) {
             KMessageBox::error(
                 this,
                 i18nc("@info",
@@ -947,7 +943,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer(const Incidence::Ptr &inc
         }
     }
     org::kde::korganizer::Korganizer korganizer(
-        QLatin1String("org.kde.korganizer"), QStringLiteral("/Korganizer"), QDBusConnection::sessionBus());
+        QStringLiteral("org.kde.korganizer"), QStringLiteral("/Korganizer"), QDBusConnection::sessionBus());
 
     qCDebug(KOALARMCLIENT_LOG) << "editing incidence " << incidence->summary();
     if (!korganizer.editIncidence(incidence->uid())) {
@@ -960,11 +956,11 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer(const Incidence::Ptr &inc
 
     // get desktop # where korganizer (or kontact) runs
     QString object =
-        QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kontact")) ?
-        QLatin1String("kontact/MainWindow_1") : QLatin1String("korganizer/MainWindow_1");
-    QDBusInterface korganizerObj(QLatin1String("org.kde.korganizer"), QLatin1Char('/') + object);
+        QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kontact")) ?
+        QStringLiteral("kontact/MainWindow_1") : QStringLiteral("korganizer/MainWindow_1");
+    QDBusInterface korganizerObj(QStringLiteral("org.kde.korganizer"), QLatin1Char('/') + object);
 #if KDEPIM_HAVE_X11
-    QDBusReply<int> reply = korganizerObj.call(QLatin1String("winId"));
+    QDBusReply<int> reply = korganizerObj.call(QStringLiteral("winId"));
     if (reply.isValid()) {
         int window = reply;
         int desktop = KWindowSystem::windowInfo(window, NET::WMDesktop).desktop();
@@ -977,7 +973,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer(const Incidence::Ptr &inc
     }
 #elif defined(Q_OS_WIN)
     // WId is a typedef to a void* on windows
-    QDBusReply<qlonglong> reply = korganizerObj.call(QLatin1String("winId"));
+    QDBusReply<qlonglong> reply = korganizerObj.call(QStringLiteral("winId"));
     if (reply.isValid()) {
         qlonglong window = reply;
         KWindowSystem::minimizeWindow(winId(), false);

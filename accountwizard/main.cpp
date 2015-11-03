@@ -35,8 +35,9 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     KLocalizedString::setApplicationDomain("accountwizard");
+
     KAboutData aboutData(QStringLiteral("accountwizard"),
                          i18n("Account Assistant"),
                          QStringLiteral("0.2"),
@@ -45,7 +46,7 @@ int main(int argc, char **argv)
                          i18n("(c) 2009-2015 the Akonadi developers"),
                          QStringLiteral("http://pim.kde.org/akonadi/"));
     aboutData.addAuthor(i18n("Volker Krause"),  i18n("Author"), QStringLiteral("vkrause@kde.org"));
-    aboutData.addAuthor(i18n("Laurent Montel"), QString() , QStringLiteral("montel@kde.org"));
+    aboutData.addAuthor(i18n("Laurent Montel"), QString(), QStringLiteral("montel@kde.org"));
 
     app.setOrganizationDomain(QStringLiteral("kde.org"));
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
@@ -64,14 +65,16 @@ int main(int argc, char **argv)
 
     Akonadi::ControlGui::start(0);
 
-    if (!parser.value(QStringLiteral("package")).isEmpty()) {
-        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(parser.value(QStringLiteral("package")))));
+    const QString packageArgument = parser.value(QStringLiteral("package"));
+    if (!packageArgument.isEmpty()) {
+        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(packageArgument)));
     } else {
         Global::setAssistant(parser.value(QStringLiteral("assistant")));
     }
 
-    if (!parser.value(QStringLiteral("type")).isEmpty()) {
-        Global::setTypeFilter(parser.value(QStringLiteral("type")).split(QLatin1Char(',')));
+    QString typeValue = parser.value(QStringLiteral("type"));
+    if (!typeValue.isEmpty()) {
+        Global::setTypeFilter(typeValue.split(QLatin1Char(',')));
     }
 
     Dialog dlg(0/*, Qt::WindowStaysOnTopHint*/);

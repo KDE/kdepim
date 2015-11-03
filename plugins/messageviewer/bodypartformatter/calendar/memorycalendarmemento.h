@@ -20,9 +20,9 @@
 #ifndef MEMORYCALENDARMEMENTO_H
 #define MEMORYCALENDARMEMENTO_H
 
-#include <messageviewer/interfaces/bodypart.h>
+#include <messageviewer/bodypart.h>
 
-#include <messageviewer/viewer/viewer.h>
+#include <messageviewer/viewer.h>
 
 #include <KCalCore/MemoryCalendar>
 #include <QObject>

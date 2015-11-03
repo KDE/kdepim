@@ -40,7 +40,7 @@ public:
     explicit AkregatorUniqueAppHandler(KontactInterface::Plugin *plugin)
         : KontactInterface::UniqueAppHandler(plugin) {}
     void loadCommandLineOptions(QCommandLineParser *parser) Q_DECL_OVERRIDE;
-    int activate(const QStringList &args) Q_DECL_OVERRIDE;
+    int activate(const QStringList &args, const QString &workingDir) Q_DECL_OVERRIDE;
 };
 
 class AkregatorPlugin : public KontactInterface::Plugin
@@ -51,7 +51,6 @@ public:
     AkregatorPlugin(KontactInterface::Core *core, const QVariantList &);
     ~AkregatorPlugin();
 
-    QString tipFile() const Q_DECL_OVERRIDE;
     int weight() const Q_DECL_OVERRIDE
     {
         return 475;

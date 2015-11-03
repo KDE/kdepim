@@ -80,7 +80,7 @@ ResolveRecipientsPage::ListWidget::ListWidget(QWidget *parent, Qt::WindowFlags f
     m_listWidget->setSelectionMode(QAbstractItemView::MultiSelection);
     QVBoxLayout *const layout = new QVBoxLayout(this);
     layout->addWidget(m_listWidget);
-    connect(m_listWidget, SIGNAL(itemSelectionChanged()), this, SLOT(onSelectionChange()));
+    connect(m_listWidget, &QListWidget::itemSelectionChanged, this, &ListWidget::onSelectionChange);
 }
 
 ResolveRecipientsPage::ListWidget::~ListWidget()
@@ -89,7 +89,7 @@ ResolveRecipientsPage::ListWidget::~ListWidget()
 
 void ResolveRecipientsPage::ListWidget::onSelectionChange()
 {
-    Q_FOREACH (const QString &i, widgets.keys()) {   //krazy:exclude=foreach
+    Q_FOREACH (const QString &i, widgets.keys()) {
         assert(items.contains(i));
         widgets[i]->setSelected(items[i]->isSelected());
     }
@@ -112,7 +112,7 @@ void ResolveRecipientsPage::ListWidget::addEntry(const QString &id, const QStrin
     QListWidgetItem *item = new QListWidgetItem;
     item->setData(IdRole, id);
     ItemWidget *wid = new ItemWidget(id, name, mbox, this);
-    connect(wid, SIGNAL(changed()), this, SIGNAL(completeChanged()));
+    connect(wid, &ItemWidget::changed, this, &ListWidget::completeChanged);
     wid->setProtocol(m_protocol);
     item->setSizeHint(wid->sizeHint());
     m_listWidget->addItem(item);
@@ -208,8 +208,8 @@ ResolveRecipientsPage::ItemWidget::ItemWidget(const QString &id, const QString &
     layout->addWidget(m_certCombo);
     m_selectButton = new QToolButton;
     m_selectButton->setText(i18n("..."));
-    connect(m_selectButton, SIGNAL(clicked()),
-            this, SLOT(showSelectionDialog()));
+    connect(m_selectButton, &QAbstractButton::clicked,
+            this, &ItemWidget::showSelectionDialog);
     layout->addWidget(m_selectButton);
     layout->addSpacing(15);
     setCertificates(std::vector<Key>(), std::vector<Key>());
@@ -353,14 +353,7 @@ void ResolveRecipientsPage::ItemWidget::setCertificates(const std::vector<Key> &
 
 Key ResolveRecipientsPage::ItemWidget::selectedCertificate() const
 {
-#ifdef QT_STL
     return KeyCache::instance()->findByKeyIDOrFingerprint(m_certCombo->itemData(m_certCombo->currentIndex(), ListWidget::IdRole).toString().toStdString());
-#else
-    const QString tmpStr = m_certCombo->itemData(m_certCombo->currentIndex(), ListWidget::IdRole).toString();
-    const QByteArray asc = tmpStr.toLatin1();
-    std::string tmpstdstring = std::string(asc.constData(), asc.length());
-    return KeyCache::instance()->findByKeyIDOrFingerprint(tmpstdstring);
-#endif
 }
 
 GpgME::Key ResolveRecipientsPage::ItemWidget::selectedCertificate(GpgME::Protocol prot) const
@@ -372,14 +365,7 @@ std::vector<Key> ResolveRecipientsPage::ItemWidget::certificates() const
 {
     std::vector<Key> certs;
     for (int i = 0; i < m_certCombo->count(); ++i) {
-#ifdef QT_STL
         certs.push_back(KeyCache::instance()->findByKeyIDOrFingerprint(m_certCombo->itemData(i, ListWidget::IdRole).toString().toStdString()));
-#else
-        const QString tmpStr = m_certCombo->itemData(i, ListWidget::IdRole).toString();
-        const QByteArray asc = tmpStr.toLatin1();
-        std::string tmpstdstring = std::string(asc.constData(), asc.length());
-        certs.push_back(KeyCache::instance()->findByKeyIDOrFingerprint(tmpstdstring));
-#endif
     }
     return certs;
 }
@@ -424,7 +410,7 @@ ResolveRecipientsPage::Private::Private(ResolveRecipientsPage *qq)
     QVBoxLayout *const layout = new QVBoxLayout(q);
     m_listWidget = new ListWidget;
     connect(m_listWidget, SIGNAL(selectionChanged()), q, SLOT(selectionChanged()));
-    connect(m_listWidget, SIGNAL(completeChanged()), q, SIGNAL(completeChanged()));
+    connect(m_listWidget, &ListWidget::completeChanged, q, &WizardPage::completeChanged);
     layout->addWidget(m_listWidget);
     m_additionalRecipientsLabel = new QLabel;
     m_additionalRecipientsLabel->setWordWrap(true);
@@ -623,7 +609,7 @@ static QString listKeysForInfo(const std::vector<Key> &keys)
 {
     QStringList list;
     std::transform(keys.begin(), keys.end(), list.begin(), &Formatting::formatKeyLink);
-    return list.join(QLatin1String("<br/>"));
+    return list.join(QStringLiteral("<br/>"));
 }
 
 void ResolveRecipientsPage::setAdditionalRecipientsInfo(const std::vector<Key> &recipients)

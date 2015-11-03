@@ -45,7 +45,7 @@ class MultiValidator : public QValidator
 public:
     explicit MultiValidator(QObject *parent = Q_NULLPTR)
         : QValidator(parent) {}
-    explicit MultiValidator(QValidator *validator1, QValidator *validator2 = 0, QObject *parent = Q_NULLPTR)
+    explicit MultiValidator(QValidator *validator1, QValidator *validator2 = Q_NULLPTR, QObject *parent = Q_NULLPTR)
         : QValidator(parent)
     {
         addValidator(validator1);

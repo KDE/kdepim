@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("gravatarupdatedialog_gui"), i18n("Gravatarupdatedialog_Gui"), QStringLiteral("1.0"));
-    aboutData.setShortDescription(i18n("Test for gravatar update dialog"));
+    aboutData.setShortDescription(i18n("Test for Gravatar update dialog"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

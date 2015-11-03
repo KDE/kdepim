@@ -24,7 +24,6 @@
 #include "combobox.h"
 #include "timeselector.h"
 
-#include <kdialog.h>
 #include <QHBoxLayout>
 #include "kalarm_debug.h"
 
@@ -39,7 +38,6 @@ TimeSelector::TimeSelector(const QString& selectText, const QString& selectWhats
 {
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setMargin(0);
-    layout->setSpacing(KDialog::spacingHint());
     mSelect = new CheckBox(selectText, this);
     mSelect->setFixedSize(mSelect->sizeHint());
     connect(mSelect, &CheckBox::toggled, this, &TimeSelector::selectToggled);
@@ -130,10 +128,10 @@ Duration TimeSelector::period() const
 */
 void TimeSelector::setPeriod(const Duration& period, bool dateOnly, TimePeriod::Units defaultUnits)
 {
-    mSelect->setChecked(period);
-    mPeriod->setEnabled(period);
+    mSelect->setChecked(!period.isNull());
+    mPeriod->setEnabled(!period.isNull());
     if (mSignWidget)
-        mSignWidget->setEnabled(period);
+        mSignWidget->setEnabled(!period.isNull());
     mPeriod->setPeriod(period, dateOnly, defaultUnits);
 }
 

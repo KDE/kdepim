@@ -27,7 +27,6 @@
 #include <QPointer>
 #include <QPrintPreviewDialog>
 
-#include <kdeprintdialog.h>
 #include <KMessageBox>
 
 #include <KLocalizedString>
@@ -65,8 +64,8 @@ void KNotePrinter::doPrintPreview(const QString &htmlText)
     printer.setCollateCopies(true);
     QPrintPreviewDialog previewdlg(&printer, 0);
 
-    connect(&previewdlg, SIGNAL(paintRequested(QPrinter*)), this, SLOT(slotPrinterPage(QPrinter*))) ;
-    previewdlg.exec() ;
+    connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, &KNotePrinter::slotPrinterPage);
+    previewdlg.exec();
 }
 
 void KNotePrinter::slotPrinterPage(QPrinter *printer)
@@ -79,7 +78,7 @@ void KNotePrinter::doPrint(const QString &htmlText,
 {
     QPrinter printer(QPrinter::HighResolution);
     //printer.setFullPage( true );  //disabled, causes asymmetric margins
-    QPointer<QPrintDialog> printDialog = KdePrint::createPrintDialog(&printer);
+    QPointer<QPrintDialog> printDialog = new QPrintDialog(&printer);
     printDialog->setWindowTitle(dialogCaption);
     if (!printDialog->exec() || !printDialog) {
         delete printDialog;

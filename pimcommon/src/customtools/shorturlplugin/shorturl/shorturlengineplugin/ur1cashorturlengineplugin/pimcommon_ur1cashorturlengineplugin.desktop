@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=PimCommonShortUrlEngine/Plugin
+X-KDE-Library=pimcommon_ur1cashorturlengineplugin
+Name=Ur1Ca
+Name[ca]=Ur1Ca
+Name[de]=Ur1Ca
+Name[en_GB]=Ur1Ca
+Name[es]=Ur1Ca
+Name[nl]=Ur1Ca
+Name[pl]=Ur1Ca
+Name[pt]=Ur1Ca
+Name[pt_BR]=Ur1Ca
+Name[sk]=Ur1Ca
+Name[sl]=Ur1Ca
+Name[sr]=Ур1.ца
+Name[sr@ijekavian]=Ур1.ца
+Name[sr@ijekavianlatin]=Ur1.ca
+Name[sr@latin]=Ur1.ca
+Name[sv]=Ur1Ca
+Name[uk]=Ur1Ca
+Name[x-test]=xxUr1Caxx

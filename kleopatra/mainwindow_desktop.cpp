@@ -56,24 +56,23 @@
 #include "utils/clipboardmenu.h"
 
 // from libkdepim
-#include "progresswidget/statusbarprogresswidget.h"
-#include "progresswidget/progressdialog.h"
+#include "libkdepim/statusbarprogresswidget.h"
+#include "libkdepim/progressdialog.h"
 #include <QStatusBar>
 #include <KXMLGUIFactory>
-#include <KApplication>
+#include <QApplication>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <QAction>
-#include <K4AboutData>
+#include <KAboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KShortcutsDialog>
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
 #include "kleopatra_debug.h"
-#include <KLineEdit>
-#include "kleopatra_debug.h"
+#include <QLineEdit>
 #include <KActionMenu>
 #include <KConfigGroup>
 
@@ -86,10 +85,10 @@
 #include <QVBoxLayout>
 #include <QMimeData>
 
-#include <kleo/cryptobackendfactory.h>
-#include <ui/cryptoconfigdialog.h>
-#include <kleo/cryptoconfig.h>
-#include <kleo/stl_util.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <libkleo/cryptoconfigdialog.h>
+#include <Libkleo/CryptoConfig>
+#include <Libkleo/Stl_Util>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -97,27 +96,10 @@
 #include <vector>
 #include <KSharedConfig>
 
-#ifdef Q_OS_WIN32
-static const bool OS_WIN = true;
-#else
-static const bool OS_WIN = false;
-#endif
-
 using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
-
-namespace
-{
-
-static const K4AboutData *aboutGpg4WinData()
-{
-    static const AboutGpg4WinData data;
-    return &data;
-}
-
-}
 
 static KGuiItem KStandardGuiItem_quit()
 {
@@ -213,24 +195,16 @@ public:
 
     void gnupgLogViewer()
     {
-        if (!QProcess::startDetached(QLatin1String("kwatchgnupg")))
+        if (!QProcess::startDetached(QStringLiteral("kwatchgnupg")))
             KMessageBox::error(q, i18n("Could not start the GnuPG Log Viewer (kwatchgnupg). "
                                        "Please check your installation."),
                                i18n("Error Starting KWatchGnuPG"));
     }
 
-    void gnupgAdministrativeConsole()
-    {
-        if (!QProcess::startDetached(QLatin1String("kgpgconf")))
-            KMessageBox::error(q, i18n("Could not start the GnuPG Administrative Console (kgpgconf). "
-                                       "Please check your installation."),
-                               i18n("Error Starting KGpgConf"));
-    }
-
     void slotConfigCommitted();
     void slotContextMenuRequested(QAbstractItemView *, const QPoint &p)
     {
-        if (QMenu *const menu = qobject_cast<QMenu *>(q->factory()->container(QLatin1String("listview_popup"), q))) {
+        if (QMenu *const menu = qobject_cast<QMenu *>(q->factory()->container(QStringLiteral("listview_popup"), q))) {
             menu->exec(p);
         } else {
             qCDebug(KLEOPATRA_LOG) << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
@@ -317,10 +291,10 @@ MainWindow::Private::Private(MainWindow *qq)
 
     setupActions();
 
-    connect(&controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)));
+    connect(&controller, &KeyListController::message,  q->statusBar(), &QStatusBar::showMessage);
     connect(&controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)), q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)));
 
-    q->createGUI(QLatin1String("kleopatra.rc"));
+    q->createGUI(QStringLiteral("kleopatra.rc"));
 
     q->setAcceptDrops(true);
 
@@ -349,12 +323,6 @@ void MainWindow::Private::setupActions()
         {
             "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
             "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, true
-        },
-#endif
-#if 0
-        {
-            "tools_start_kgpgconf", i18n("GnuPG Administrative Console"), QString(),
-            "kgpgconf", q, SLOT(gnupgLogViewer()), QString(), false, true
         },
 #endif
         // most have been MOVED TO keylistcontroller.cpp
@@ -461,8 +429,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
             // wait for them to be finished:
             setEnabled(false);
             QEventLoop ev;
-            QTimer::singleShot(100, &ev, SLOT(quit()));
-            connect(&d->controller, SIGNAL(commandsExecuting(bool)), &ev, SLOT(quit()));
+            QTimer::singleShot(100, &ev, &QEventLoop::quit);
+            connect(&d->controller, &KeyListController::commandsExecuting, &ev, &QEventLoop::quit);
             ev.exec();
             if (d->controller.hasRunningCommands())
                 qCWarning(KLEOPATRA_LOG)
@@ -470,7 +438,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
             setEnabled(true);
         }
     }
-    if (isQuitting || kapp->sessionSaving()) {
+    if (isQuitting || qApp->isSavingSession()) {
         d->ui.tabWidget.saveViews(KSharedConfig::openConfig().data());
         KConfigGroup grp(KConfigGroup(KSharedConfig::openConfig(), autoSaveGroup()));
         saveMainWindowSettings(grp);
@@ -560,13 +528,13 @@ void MainWindow::dropEvent(QDropEvent *e)
     QMenu menu;
 
     QAction *const signEncrypt = menu.addAction(i18n("Sign/Encrypt..."));
-    QAction *const decryptVerify = mayBeAnyMessageType(classification) ? menu.addAction(i18n("Decrypt/Verify...")) : 0 ;
+    QAction *const decryptVerify = mayBeAnyMessageType(classification) ? menu.addAction(i18n("Decrypt/Verify...")) : 0;
     if (signEncrypt || decryptVerify) {
         menu.addSeparator();
     }
 
-    QAction *const importCerts = mayBeAnyCertStoreType(classification) ? menu.addAction(i18n("Import Certificates")) : 0 ;
-    QAction *const importCRLs  = mayBeCertificateRevocationList(classification) ? menu.addAction(i18n("Import CRLs")) : 0 ;
+    QAction *const importCerts = mayBeAnyCertStoreType(classification) ? menu.addAction(i18n("Import Certificates")) : 0;
+    QAction *const importCRLs  = mayBeCertificateRevocationList(classification) ? menu.addAction(i18n("Import CRLs")) : 0;
     if (importCerts || importCRLs) {
         menu.addSeparator();
     }

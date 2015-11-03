@@ -16,9 +16,9 @@
 */
 
 #include "mailsourceviewtextbrowserwidgettest.h"
-#include "../widgets/mailsourceviewtextbrowserwidget.h"
-#include "../findbar/findbarsourceview.h"
-#include "pimcommon/texttospeech/texttospeechwidget.h"
+#include "../src/widgets/mailsourceviewtextbrowserwidget.h"
+#include "../src/findbar/findbarsourceview.h"
+#include "kpimtextedit/texttospeechwidget.h"
 #include <qtest.h>
 
 MailSourceViewTextBrowserWidgetTest::MailSourceViewTextBrowserWidgetTest(QObject *parent)
@@ -43,7 +43,7 @@ void MailSourceViewTextBrowserWidgetTest::shouldHaveDefaultValue()
     QVERIFY(findbar);
     QVERIFY(findbar->isHidden());
 
-    PimCommon::TextToSpeechWidget *texttospeechwidget = widget.findChild<PimCommon::TextToSpeechWidget *>(QStringLiteral("texttospeech"));
+    KPIMTextEdit::TextToSpeechWidget *texttospeechwidget = widget.findChild<KPIMTextEdit::TextToSpeechWidget *>(QStringLiteral("texttospeech"));
     QVERIFY(texttospeechwidget);
     QVERIFY(texttospeechwidget->isHidden());
 

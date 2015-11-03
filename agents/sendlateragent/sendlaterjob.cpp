@@ -18,10 +18,10 @@
 #include "sendlaterjob.h"
 #include "sendlaterinfo.h"
 
-#include "messagecomposer/sender/akonadisender.h"
-#include "messagecomposer/utils/util.h"
-#include "messagecore/helpers/messagehelpers.h"
-#include "messagecore/utils/stringutil.h"
+#include "MessageComposer/AkonadiSender"
+#include "MessageComposer/Util"
+#include "messagecore/messagehelpers.h"
+#include "MessageCore/StringUtil"
 
 #include <MailTransport/mailtransport/transportattribute.h>
 #include <MailTransport/mailtransport/sentbehaviourattribute.h>

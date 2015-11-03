@@ -190,7 +190,7 @@ CSVImportDialog::CSVImportDialog(QWidget *parent)
 
     connect(mUrlRequester, SIGNAL(returnPressed(QString)), this, SLOT(setFile(QString)));
     connect(mUrlRequester, SIGNAL(urlSelected(QUrl)), this, SLOT(setFile(QUrl)));
-    connect(mUrlRequester->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(urlChanged(QString)));
+    connect(mUrlRequester->lineEdit(), &QLineEdit::textChanged, this, &CSVImportDialog::urlChanged);
     connect(mDelimiterGroup, SIGNAL(buttonClicked(int)), this, SLOT(delimiterClicked(int)));
     connect(mDelimiterEdit, SIGNAL(returnPressed()), this, SLOT(customDelimiterChanged()));
     connect(mDelimiterEdit, SIGNAL(textChanged(QString)),  this, SLOT(customDelimiterChanged(QString)));
@@ -201,7 +201,7 @@ CSVImportDialog::CSVImportDialog(QWidget *parent)
     connect(mModel, &QCsvModel::finishedLoading, this, &CSVImportDialog::modelFinishedLoading);
 
     delimiterClicked(0);
-    textQuoteChanged(QLatin1String("\""));
+    textQuoteChanged(QStringLiteral("\""));
     skipFirstRowChanged(false);
 }
 
@@ -278,9 +278,9 @@ void CSVImportDialog::initGUI()
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotApplyTemplate()));
+    connect(mUser1Button, &QAbstractButton::clicked, this, &CSVImportDialog::slotApplyTemplate);
     mUser2Button = new QPushButton;
-    connect(mUser2Button, SIGNAL(clicked()), this, SLOT(slotSaveTemplate()));
+    connect(mUser2Button, &QAbstractButton::clicked, this, &CSVImportDialog::slotSaveTemplate);
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &CSVImportDialog::slotOk);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
@@ -407,7 +407,7 @@ void CSVImportDialog::initGUI()
 
     mDatePatternEdit = new QLineEdit(page);
     mainLayout->addWidget(mDatePatternEdit);
-    mDatePatternEdit->setText(QLatin1String("Y-M-D"));   // ISO 8601 date format as default
+    mDatePatternEdit->setText(QStringLiteral("Y-M-D"));   // ISO 8601 date format as default
     mDatePatternEdit->setToolTip(
         xi18nc("@info:tooltip",
                "<para><list><item>y: year with 2 digits</item>"
@@ -481,7 +481,6 @@ void CSVImportDialog::initGUI()
     mUser1Button->setEnabled(false);
     mUser2Button->setEnabled(false);
     mainLayout->addWidget(buttonBox);
-
 
     resize(500, 400);
 }

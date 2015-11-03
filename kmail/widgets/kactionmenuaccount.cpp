@@ -18,7 +18,7 @@
 #include "kactionmenuaccount.h"
 #include <AkonadiCore/AgentInstance>
 #include <AkonadiCore/AgentManager>
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 #include "kmail_debug.h"
 #include <QMenu>
 
@@ -29,9 +29,9 @@ KActionMenuAccount::KActionMenuAccount(QObject *parent)
     setDelayed(true);
     connect(menu(), &QMenu::aboutToShow, this, &KActionMenuAccount::slotCheckTransportMenu);
     connect(menu(), &QMenu::triggered, this, &KActionMenuAccount::slotSelectAccount);
-    connect(Akonadi::AgentManager::self(), SIGNAL(instanceNameChanged(Akonadi::AgentInstance)), this, SLOT(updateAccountMenu()));
-    connect(Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), this, SLOT(updateAccountMenu()));
-    connect(Akonadi::AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), this, SLOT(updateAccountMenu()));
+    connect(Akonadi::AgentManager::self(), &Akonadi::AgentManager::instanceNameChanged, this, &KActionMenuAccount::updateAccountMenu);
+    connect(Akonadi::AgentManager::self(), &Akonadi::AgentManager::instanceRemoved, this, &KActionMenuAccount::updateAccountMenu);
+    connect(Akonadi::AgentManager::self(), &Akonadi::AgentManager::instanceAdded, this, &KActionMenuAccount::updateAccountMenu);
 }
 
 KActionMenuAccount::~KActionMenuAccount()

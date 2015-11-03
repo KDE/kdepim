@@ -181,7 +181,7 @@ unsigned int Kleo::classify(const QString &filename)
 
     const unsigned int bestGuess =
         it == end(classifications) ? defaultClassification
-        /* else */                   : it->classification ;
+        /* else */                   : it->classification;
 
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -286,7 +286,7 @@ QString Kleo::findSignedData(const QString &signatureFileName)
         return QString();
     }
     const QString baseName = chopped(signatureFileName, 4);
-    return QFile::exists(baseName) ? baseName : QString() ;
+    return QFile::exists(baseName) ? baseName : QString();
 }
 
 /*!
@@ -298,7 +298,7 @@ QString Kleo::findSignedData(const QString &signatureFileName)
 QStringList Kleo::findSignatures(const QString &signedDataFileName)
 {
     QStringList result;
-    for (unsigned int i = 0, end = size(classifications) ; i < end ; ++i)
+    for (unsigned int i = 0, end = size(classifications); i < end; ++i)
         if (classifications[i].classification & DetachedSignature) {
             const QString candiate = signedDataFileName + QLatin1Char('.') + QLatin1String(classifications[i].extension);
             if (QFile::exists(candiate)) {
@@ -339,7 +339,7 @@ const char *Kleo::outputFileExtension(unsigned int classification)
         }
     }
 
-    for (unsigned int i = 0 ; i < sizeof classifications / sizeof * classifications ; ++i)
+    for (unsigned int i = 0; i < sizeof classifications / sizeof * classifications; ++i)
         if ((classifications[i].classification & classification) == classification) {
             return classifications[i].extension;
         }

@@ -8,8 +8,9 @@ set(kwatchgnupg_SRCS
   aboutdata.cpp
   tray.cpp
   main.cpp
-  kwatchgnupg_debug.cpp
 )
+ecm_qt_declare_logging_category(kwatchgnupg_SRCS HEADER kwatchgnupg_debug.h IDENTIFIER KWATCHGNUPG_LOG CATEGORY_NAME log_kwatchgnupg)
+qt5_add_resources(kwatchgnupg_SRCS kwatchgnupg.qrc)
 
 if(WIN32)
   set(kwatchgnupg_SRCS ${kwatchgnupg_SRCS} ../utils/gnupg-registry.c)
@@ -22,11 +23,13 @@ add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
 target_link_libraries(kwatchgnupg
   KF5::DBusAddons  
-  kleo
+  KF5::XmlGui
+  KF5::Notifications
+  KF5::TextWidgets
+  KF5::IconThemes
+  KF5::Libkleo
 )
 
 install(TARGETS kwatchgnupg ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES images/kwatchgnupg.png images/kwatchgnupg2.png DESTINATION ${KDE_INSTALL_DATADIR}/kwatchgnupg/pics)
-
-install(FILES kwatchgnupgui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kwatchgnupg)

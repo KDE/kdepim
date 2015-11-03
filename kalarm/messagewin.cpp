@@ -38,22 +38,23 @@
 #include "shellprocess.h"
 #include "synchtimer.h"
 
-//TODO Port to QtSpeech
+#include <kpimtextedit/texttospeech.h>
+//QT5 reactivate after porting (activated by config-kdepim.h include in texttospeech.h)
+#undef KDEPIM_HAVE_X11
+
 #include <K4AboutData>
 #include <KLocale>
 #include <kstandardguiitem.h>
 #include <KLocalizedString>
 #include <kconfig.h>
 #include <kiconloader.h>
-#include <kdialog.h>
 #include <ksystemtimezone.h>
-#include <kmimetype.h>
 #include <ktextedit.h>
 #include <kwindowsystem.h>
-#include <kio/netaccess.h>
+#include <KIO/StoredTransferJob>
+#include <KJobWidgets>
 #include <knotification.h>
 #include <ksqueezedtextlabel.h>
-#include <ktoolinvocation.h>
 #include <phonon/mediaobject.h>
 #include <phonon/audiooutput.h>
 #include <phonon/volumefadereffect.h>
@@ -82,6 +83,8 @@
 #include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QMutexLocker>
+#include <QMimeDatabase>
+#include <QUrl>
 #include "kalarm_debug.h"
 
 #include <stdlib.h>
@@ -393,8 +396,8 @@ void MessageWin::initView()
     QWidget* topWidget = new QWidget(this);
     setCentralWidget(topWidget);
     QVBoxLayout* topLayout = new QVBoxLayout(topWidget);
-    topLayout->setMargin(KDialog::marginHint());
-    topLayout->setSpacing(KDialog::spacingHint());
+    topLayout->setMargin(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
+    topLayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
 
     QPalette labelPalette = palette();
     labelPalette.setColor(backgroundRole(), labelPalette.color(QPalette::Window));
@@ -445,17 +448,23 @@ void MessageWin::initView()
                 topLayout->addWidget(label, 0, Qt::AlignHCenter);
 
                 // Display contents of file
+                const QUrl url = QUrl::fromUserInput(mMessage, QString(), QUrl::AssumeLocalFile);
+
+                auto statJob =  KIO::stat(url, KIO::StatJob::SourceSide, 0, KIO::HideProgressInfo);
+                const bool exists = statJob->exec();
+                const bool isDir = statJob->statResult().isDir();
+
                 bool opened = false;
-                bool dir = false;
-                QString tmpFile;
-                const KUrl url(mMessage);
-                if (KIO::NetAccess::download(url, tmpFile, MainWindow::mainMainWindow()))
-                {
-                    QFile qfile(tmpFile);
-                    const QFileInfo info(qfile);
-                    if (!(dir = info.isDir()))
-                    {
+                if (exists && !isDir) {
+                    auto job = KIO::storedGet(url);
+                    KJobWidgets::setWindow(job, MainWindow::mainMainWindow());
+                    if (job->exec()) {
                         opened = true;
+                        const QByteArray data = job->data();
+                        QTemporaryFile tmpFile;
+                        tmpFile.write(data);
+                        tmpFile.seek(0);
+
                         QTextBrowser* view = new QTextBrowser(topWidget);
                         view->setFrameStyle(QFrame::NoFrame);
                         view->setWordWrapMode(QTextOption::NoWrap);
@@ -464,27 +473,21 @@ void MessageWin::initView()
                         view->viewport()->setPalette(pal);
                         view->setTextColor(mFgColour);
                         view->setCurrentFont(mFont);
-                        KMimeType::Ptr mime = KMimeType::findByUrl(url);
-                        if (mime->is(QStringLiteral("application/octet-stream")))
-                            mime = KMimeType::findByFileContent(tmpFile);
+                        QMimeDatabase db;
+                        QMimeType mime = db.mimeTypeForUrl(url);
+                        if (mime.name() == QLatin1String("application/octet-stream"))
+                            mime = db.mimeTypeForData(&tmpFile);
                         switch (KAlarm::fileType(mime))
                         {
                             case KAlarm::Image:
-                                view->setHtml(QLatin1String("<img source=\"") + tmpFile + QLatin1String("\">"));
+                                view->setHtml(QLatin1String("<img source=\"") + tmpFile.fileName() + QLatin1String("\">"));
                                 break;
                             case KAlarm::TextFormatted:
-                                view->QTextBrowser::setSource(tmpFile);   //krazy:exclude=qclasses
+                                view->QTextBrowser::setSource(QUrl::fromLocalFile(tmpFile.fileName()));   //krazy:exclude=qclasses
                                 break;
                             default:
                             {
-                                // Assume a plain text file
-                                if (qfile.open(QIODevice::ReadOnly))
-                                {
-                                    QTextStream str(&qfile);
-
-                                    view->setPlainText(str.readAll());
-                                    qfile.close();
-                                }
+                                view->setPlainText(QString::fromUtf8(data));
                                 break;
                             }
                         }
@@ -499,13 +502,10 @@ void MessageWin::initView()
                         view->resize(QSize(h, h).expandedTo(view->sizeHint()));
                         view->setWhatsThis(i18nc("@info:whatsthis", "The contents of the file to be displayed"));
                     }
-                    KIO::NetAccess::removeTempFile(tmpFile);
                 }
-                if (!opened)
-                {
-                    // File couldn't be opened
-                    const bool exists = KIO::NetAccess::exists(url, KIO::NetAccess::SourceSide, MainWindow::mainMainWindow());
-                    mErrorMsgs += dir ? i18nc("@info", "File is a folder") : exists ? i18nc("@info", "Failed to open file") : i18nc("@info", "File not found");
+
+                if (!exists || isDir || !opened) {
+                    mErrorMsgs += isDir ? i18nc("@info", "File is a folder") : exists ? i18nc("@info", "Failed to open file") : i18nc("@info", "File not found");
                 }
                 break;
             }
@@ -527,7 +527,7 @@ void MessageWin::initView()
                 text->setMaximumWidth(s.width() + text->scrollBarWidth());
                 text->setWhatsThis(i18nc("@info:whatsthis", "The alarm message"));
                 const int vspace = lineSpacing/2;
-                const int hspace = lineSpacing - KDialog::marginHint();
+                const int hspace = lineSpacing - style()->pixelMetric(QStyle::PM_DefaultChildMargin);
                 topLayout->addSpacing(vspace);
                 topLayout->addStretch();
                 // Don't include any horizontal margins if message is 2/3 screen width
@@ -580,7 +580,7 @@ void MessageWin::initView()
                 MinuteTimer::connect(this, SLOT(setRemainingTextMinute()));   // update every minute
             }
             topLayout->addWidget(mRemainingText, 0, Qt::AlignHCenter);
-            topLayout->addSpacing(KDialog::spacingHint());
+            topLayout->addSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
             topLayout->addStretch();
         }
     }
@@ -597,8 +597,8 @@ void MessageWin::initView()
                 frame->setWhatsThis(i18nc("@info:whatsthis", "The email to send"));
                 topLayout->addWidget(frame, 0, Qt::AlignHCenter);
                 QGridLayout* grid = new QGridLayout(frame);
-                grid->setMargin(KDialog::marginHint());
-                grid->setSpacing(KDialog::spacingHint());
+                grid->setMargin(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
+                grid->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
 
                 QLabel* label = new QLabel(i18nc("@info Email addressee", "To:"), frame);
                 label->setFixedSize(label->sizeHint());
@@ -635,11 +635,11 @@ void MessageWin::initView()
     {
         setCaption(i18nc("@title:window", "Error"));
         QHBoxLayout* layout = new QHBoxLayout();
-        layout->setMargin(2*KDialog::marginHint());
+        layout->setMargin(2 * style()->pixelMetric(QStyle::PM_DefaultChildMargin));
         layout->addStretch();
         topLayout->addLayout(layout);
         QLabel* label = new QLabel(topWidget);
-        label->setPixmap(DesktopIcon(QStringLiteral("dialog-error")));
+        label->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-error")).pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)));
         label->setFixedSize(label->sizeHint());
         layout->addWidget(label, 0, Qt::AlignRight);
         QVBoxLayout* vlayout = new QVBoxLayout();
@@ -670,7 +670,7 @@ void MessageWin::initView()
     mOkButton->clearFocus();
     mOkButton->setFocusPolicy(Qt::ClickFocus);    // don't allow keyboard selection
     mOkButton->setFixedSize(mOkButton->sizeHint());
-    connect(mOkButton, SIGNAL(clicked()), SLOT(slotOk()));
+    connect(mOkButton, &QAbstractButton::clicked, this, &MessageWin::slotOk);
     grid->addWidget(mOkButton, 0, gridIndex++, Qt::AlignHCenter);
     mOkButton->setWhatsThis(i18nc("@info:whatsthis", "Acknowledge the alarm"));
 
@@ -680,7 +680,7 @@ void MessageWin::initView()
         mEditButton = new PushButton(i18nc("@action:button", "&Edit..."), topWidget);
         mEditButton->setFocusPolicy(Qt::ClickFocus);    // don't allow keyboard selection
         mEditButton->setFixedSize(mEditButton->sizeHint());
-        connect(mEditButton, SIGNAL(clicked()), SLOT(slotEdit()));
+        connect(mEditButton, &QAbstractButton::clicked, this, &MessageWin::slotEdit);
         grid->addWidget(mEditButton, 0, gridIndex++, Qt::AlignHCenter);
         mEditButton->setWhatsThis(i18nc("@info:whatsthis", "Edit the alarm."));
     }
@@ -689,7 +689,7 @@ void MessageWin::initView()
     mDeferButton = new PushButton(i18nc("@action:button", "&Defer..."), topWidget);
     mDeferButton->setFocusPolicy(Qt::ClickFocus);    // don't allow keyboard selection
     mDeferButton->setFixedSize(mDeferButton->sizeHint());
-    connect(mDeferButton, SIGNAL(clicked()), SLOT(slotDefer()));
+    connect(mDeferButton, &QAbstractButton::clicked, this, &MessageWin::slotDefer);
     grid->addWidget(mDeferButton, 0, gridIndex++, Qt::AlignHCenter);
     mDeferButton->setWhatsThis(xi18nc("@info:whatsthis", "<para>Defer the alarm until later.</para>"
                                     "<para>You will be prompted to specify when the alarm should be redisplayed.</para>"));
@@ -719,7 +719,7 @@ void MessageWin::initView()
         const QPixmap pixmap = iconLoader.loadIcon(QStringLiteral("internet-mail"), KIconLoader::MainToolbar);
         mKMailButton = new PushButton(topWidget);
         mKMailButton->setIcon(pixmap);
-        connect(mKMailButton, SIGNAL(clicked()), SLOT(slotShowKMailMessage()));
+        connect(mKMailButton, &QAbstractButton::clicked, this, &MessageWin::slotShowKMailMessage);
         grid->addWidget(mKMailButton, 0, gridIndex++, Qt::AlignHCenter);
         mKMailButton->setToolTip(xi18nc("@info:tooltip Locate this email in KMail", "Locate in <application>KMail</application>"));
         mKMailButton->setWhatsThis(xi18nc("@info:whatsthis", "Locate and highlight this email in <application>KMail</application>"));
@@ -729,7 +729,7 @@ void MessageWin::initView()
     const QPixmap pixmap = iconLoader.loadIcon(KComponentData::mainComponent().aboutData()->appName(), KIconLoader::MainToolbar);
     mKAlarmButton = new PushButton(topWidget);
     mKAlarmButton->setIcon(pixmap);
-    connect(mKAlarmButton, SIGNAL(clicked()), SLOT(displayMainWindow()));
+    connect(mKAlarmButton, &QAbstractButton::clicked, this, &MessageWin::displayMainWindow);
     grid->addWidget(mKAlarmButton, 0, gridIndex++, Qt::AlignHCenter);
     mKAlarmButton->setToolTip(xi18nc("@info:tooltip", "Activate <application>KAlarm</application>"));
     mKAlarmButton->setWhatsThis(xi18nc("@info:whatsthis", "Activate <application>KAlarm</application>"));
@@ -757,7 +757,8 @@ void MessageWin::initView()
     mKAlarmButton->setEnabled(false);
 
     topLayout->activate();
-    setMinimumSize(QSize(grid->sizeHint().width() + 2*KDialog::marginHint(), sizeHint().height()));
+    setMinimumSize(QSize(grid->sizeHint().width() + 2 * style()->pixelMetric(QStyle::PM_DefaultChildMargin),
+                         sizeHint().height()));
     const bool modal = !(windowFlags() & Qt::X11BypassWindowManagerHint);
     const unsigned long wstate = (modal ? NET::Modal : 0) | NET::Sticky | NET::StaysOnTop;
     WId winid = winId();
@@ -863,10 +864,10 @@ QString MessageWin::dateTimeToDisplay()
                 // zone. Note that the iCalendar time zone might represent the local
                 // time zone in a slightly different way from the system time zone,
                 // so the zone comparison above might not produce the desired result.
-                const QString tz = mDateTime.kDateTime().toString(QString::fromLatin1("%Z"));
+                const QString tz = mDateTime.kDateTime().toString(QStringLiteral("%Z"));
                 KDateTime local = mDateTime.kDateTime();
                 local.setTimeSpec(KDateTime::Spec::LocalZone());
-                showZone = (local.toString(QString::fromLatin1("%Z")) != tz);
+                showZone = (local.toString(QStringLiteral("%Z")) != tz);
             }
             tm = KLocale::global()->formatDateTime(mDateTime.kDateTime(), KLocale::ShortDate, KLocale::DateTimeFormatOptions(showZone ? KLocale::TimeZone : 0));
         }
@@ -1070,8 +1071,8 @@ void MessageWin::readProperties(const KConfigGroup& config)
             // Close any other window for this alarm which has already been restored by redisplayAlarms()
             if (!AkonadiModel::instance()->isCollectionTreeFetched())
             {
-                connect(AkonadiModel::instance(), SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
-                                                  SLOT(showRestoredAlarm()));
+                connect(AkonadiModel::instance(), &Akonadi::EntityTreeModel::collectionTreeFetched,
+                                                  this, &MessageWin::showRestoredAlarm);
                 return;
             }
             redisplayAlarm();
@@ -1362,7 +1363,7 @@ void MessageWin::playAudio()
     {
         // The message is to be spoken. In case of error messges,
         // call it on a timer to allow the window to display first.
-        QTimer::singleShot(0, this, SLOT(slotSpeak()));
+        QTimer::singleShot(0, this, &MessageWin::slotSpeak);
     }
 }
 
@@ -1372,28 +1373,14 @@ void MessageWin::playAudio()
 */
 void MessageWin::slotSpeak()
 {
-#if 0 //QT5 port qtspeech
-    QString error;
-    OrgKdeKSpeechInterface* kspeech = theApp()->kspeechInterface(error);
-    if (!kspeech)
-    {
-        if (!haveErrorMessage(ErrMsg_Speak))
-        {
-            KAMessageBox::detailedError(MainWindow::mainMainWindow(), i18nc("@info", "Unable to speak message"), error);
-            clearErrorMessage(ErrMsg_Speak);
-        }
+    KPIMTextEdit::TextToSpeech *tts = KPIMTextEdit::TextToSpeech::self();
+    if (!tts->isReady()) {
+        KAMessageBox::detailedError(MainWindow::mainMainWindow(), i18nc("@info", "Unable to speak message"), i18nc("@info", "Text-to-speech subsystem is not available"));
+        clearErrorMessage(ErrMsg_Speak);
         return;
     }
-    if (!kspeech->say(mMessage, 0))
-    {
-        qCDebug(KALARM_LOG) << "SayMessage() D-Bus error";
-        if (!haveErrorMessage(ErrMsg_Speak))
-        {
-            KAMessageBox::detailedError(MainWindow::mainMainWindow(), i18nc("@info", "Unable to speak message"), i18nc("@info", "D-Bus call say() failed"));
-            clearErrorMessage(ErrMsg_Speak);
-        }
-    }
-#endif
+
+    tts->say(mMessage);
 }
 
 /******************************************************************************
@@ -1408,16 +1395,16 @@ void MessageWin::startAudio()
     {
         // An audio file is already playing for another message
         // window, so wait until it has finished.
-        connect(mAudioThread, SIGNAL(destroyed(QObject*)), SLOT(audioTerminating()));
+        connect(mAudioThread.data(), &QObject::destroyed, this, &MessageWin::audioTerminating);
     }
     else
     {
         qCDebug(KALARM_LOG) << QThread::currentThread();
         mAudioThread = new AudioThread(this, mAudioFile, mVolume, mFadeVolume, mFadeSeconds, mAudioRepeatPause);
-        connect(mAudioThread, SIGNAL(readyToPlay()), SLOT(playReady()));
-        connect(mAudioThread, SIGNAL(finished()), SLOT(playFinished()));
+        connect(mAudioThread.data(), &AudioThread::readyToPlay, this, &MessageWin::playReady);
+        connect(mAudioThread.data(), &QThread::finished, this, &MessageWin::playFinished);
         if (mSilenceButton)
-            connect(mSilenceButton, SIGNAL(clicked()), mAudioThread, SLOT(quit()));
+            connect(mSilenceButton, &QAbstractButton::clicked, mAudioThread.data(), &QThread::quit);
         // Notify after creating mAudioThread, so that isAudioPlaying() will
         // return the correct value.
         theApp()->notifyAudioPlaying(true);
@@ -1449,7 +1436,7 @@ void MessageWin::stopAudio(bool wait)
 */
 void MessageWin::audioTerminating()
 {
-    QTimer::singleShot(0, this, SLOT(startAudio()));
+    QTimer::singleShot(0, this, &MessageWin::startAudio);
 }
 
 /******************************************************************************
@@ -1513,7 +1500,7 @@ AudioThread::~AudioThread()
         mAudioOwner = Q_NULLPTR;
     // Notify after deleting mAudioThread, so that isAudioPlaying() will
     // return the correct value.
-    QTimer::singleShot(0, theApp(), SLOT(notifyAudioStopped()));
+    QTimer::singleShot(0, theApp(), &KAlarmApp::notifyAudioStopped);
 }
 
 /******************************************************************************
@@ -1574,8 +1561,8 @@ void AudioThread::run()
             mPath.insertEffect(fader);
         }
     }
-    connect(mAudioObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)), SLOT(playStateChanged(Phonon::State)), Qt::DirectConnection);
-    connect(mAudioObject, SIGNAL(finished()), SLOT(checkAudioPlay()), Qt::DirectConnection);
+    connect(mAudioObject, &Phonon::MediaObject::stateChanged, this, &AudioThread::playStateChanged, Qt::DirectConnection);
+    connect(mAudioObject, &Phonon::MediaObject::finished, this, &AudioThread::checkAudioPlay, Qt::DirectConnection);
     mPlayedOnce = false;
     mPausing    = false;
     mMutex.unlock();
@@ -1585,7 +1572,7 @@ void AudioThread::run()
     // Start an event loop.
     // The function will exit once exit() or quit() is called.
     // First, ensure that the thread object is deleted once it has completed.
-    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+    connect(this, &QThread::finished, this, &QObject::deleteLater);
     exec();
     stopPlay();
 }
@@ -1622,7 +1609,7 @@ void AudioThread::checkAudioPlay()
             {
                 // Pause before playing the file again
                 mPausing = true;
-                QTimer::singleShot(mRepeatPause * 1000, this, SLOT(checkAudioPlay()));
+                QTimer::singleShot(mRepeatPause * 1000, this, &AudioThread::checkAudioPlay);
                 mMutex.unlock();
                 return;
             }
@@ -1736,7 +1723,7 @@ void MessageWin::show()
         int delay = KDateTime::currentUtcDateTime().dateTime().secsTo(mCloseTime);
         if (delay < 0)
             delay = 0;
-        QTimer::singleShot(delay * 1000, this, SLOT(close()));
+        QTimer::singleShot(delay * 1000, this, &QWidget::close);
         if (!delay)
             return;    // don't show the window if auto-closing is already due
     }
@@ -1761,7 +1748,7 @@ QSize MessageWin::sizeHint() const
             {
                 // For command output, expand the window to accommodate the text
                 const QSize texthint = mCommandText->sizeHint();
-                int w = texthint.width() + 2*KDialog::marginHint();
+                int w = texthint.width() + 2 * style()->pixelMetric(QStyle::PM_DefaultChildMargin);
                 if (w < width())
                     w = width();
                 const int ypadding = height() - mCommandText->height();
@@ -1870,7 +1857,7 @@ void MessageWin::showEvent(QShowEvent* se)
     }
 
     // Set the window size etc. once the frame size is known
-    QTimer::singleShot(0, this, SLOT(frameDrawn()));
+    QTimer::singleShot(0, this, &MessageWin::frameDrawn);
 
     mShown = true;
 }
@@ -1920,7 +1907,7 @@ void MessageWin::displayComplete()
     {
         // Enable the window's buttons either now or after the configured delay
         if (mButtonDelay > 0)
-            QTimer::singleShot(mButtonDelay, this, SLOT(enableButtons()));
+            QTimer::singleShot(mButtonDelay, this, &MessageWin::enableButtons);
         else
             enableButtons();
     }
@@ -2046,10 +2033,10 @@ void MessageWin::slotEdit()
     KWindowSystem::setMainWindow(mEditDlg, winId());
     KWindowSystem::setOnAllDesktops(mEditDlg->winId(), false);
     setButtonsReadOnly(true);
-    connect(mEditDlg, SIGNAL(accepted()), SLOT(editCloseOk()));
-    connect(mEditDlg, SIGNAL(rejected()), SLOT(editCloseCancel()));
-    connect(mEditDlg, SIGNAL(destroyed(QObject*)), SLOT(editCloseCancel()));
-    connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), SLOT(activeWindowChanged(WId)));
+    connect(mEditDlg, &QDialog::accepted, this, &MessageWin::editCloseOk);
+    connect(mEditDlg, &QDialog::rejected, this, &MessageWin::editCloseCancel);
+    connect(mEditDlg, &QObject::destroyed, this, &MessageWin::editCloseCancel);
+    connect(KWindowSystem::self(), &KWindowSystem::activeWindowChanged, this, &MessageWin::activeWindowChanged);
     mainWin->editAlarm(mEditDlg, mOriginalEvent);
 }
 
@@ -2134,7 +2121,7 @@ void MessageWin::checkDeferralLimit()
         n = KDateTime::currentUtcDateTime().dateTime().secsTo(mDeferLimit);
         if (n > 0)
         {
-            QTimer::singleShot(n * 1000, this, SLOT(checkDeferralLimit()));
+            QTimer::singleShot(n * 1000, this, &MessageWin::checkDeferralLimit);
             return;
         }
     }

@@ -33,7 +33,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-#if q4_WINCE
+#if defined(q4_WINCE) && q4_WINCE
 
 // MS C/C++ has this handy stricmp: a case-insensitive version of strcmp
 // This version only works with 7-bit ASCII characters 0x00 through 0x7F
@@ -70,7 +70,7 @@ const char *strrchr(const char *p, char ch)
     return q;
 }
 
-#elif q4_MSVC || q4_WATC || q4_BORC || (q4_MWCW && __MWERKS__ < 0x3000)
+#elif (defined(q4_MSVC) && q4_MSVC) || (defined(q4_WATC) && q4_WATC) || (defined(q4_BORC) && q4_BORC) || (defined(q4_MWCW) && q4_MWCW && __MWERKS__ < 0x3000)
 #define strcasecmp stricmp
 #endif
 
@@ -202,7 +202,7 @@ void c4_String::Init(const void *p, int n)
         }
 
         _value = nullVec; // use this buffer as our empty string
-        return ; // done... that was quick, wasn't it?
+        return; // done... that was quick, wasn't it?
     }
 
     _value = new unsigned char[n + 3];
@@ -259,8 +259,8 @@ c4_String c4_String::Right(int nCount)const
 
 bool operator == (const c4_String &a, const c4_String &b)
 {
-    return a._value == b._value || a.GetLength() == b.GetLength() && memcmp
-           (a.Data(), b.Data(), a.GetLength()) == 0;
+    return a._value == b._value || (a.GetLength() == b.GetLength() && memcmp
+                                    (a.Data(), b.Data(), a.GetLength()) == 0);
 }
 
 int c4_String::Compare(const char *str)const

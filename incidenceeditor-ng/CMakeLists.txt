@@ -1,192 +1,110 @@
-if(KDEPIM_MOBILE_UI)
-  remove_definitions(-DKDEPIM_MOBILE_UI)
+cmake_minimum_required(VERSION 2.8.12)
+
+project(incidenceeditorsng)
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${incidenceeditorsng_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(LIBRARY_NAMELINK)
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
+
+
+set(KF5_VERSION "5.16.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.47")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+set(KMAILTRANSPORT_LIB_VERSION "4.78.0")
+set(KLDAP_LIB_VERSION "4.80.0")
+set(CALENDARUTILS_LIB_VERSION "4.80.0")
+set(KCALENDARCORE_LIB_VERSION "4.81.0")
+
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools WebKitWidgets)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+
+find_package(KF5Ldap ${KLDAP_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarSupport ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5EventViews ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5KdepimDBusInterfaces ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5KDGantt2 ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarUtils ${CALENDARUTILS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarCore ${KCALENDARCORE_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+
+#  KF5::AkonadiCalendar
+
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX INCIDENCEEDITORSNG
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfigVersion.cmake"
+                        SOVERSION 5
+)
+
+option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
+
+
+# config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
+configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config-enterprise.h )
+
+########### Targets ###########
+
+#REACTIVE IT
+#add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+#TODO verify it
+remove_definitions("-DQT_NO_URL_CAST_FROM_STRING")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5IncidenceEditorsng")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5IncidenceEditorsngConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5IncidenceEditorsngTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5IncidenceEditorsngTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX INCIDENCEEDITORSNG
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfigVersion.cmake"
+                        SOVERSION 5
+)
 endif()
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
-
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${Boost_INCLUDE_DIR}
-)
-
-set(incidenceeditors_ng_shared_LIB_SRCS
-  incidenceeditor_debug.cpp
-  attachmenteditdialog.cpp
-  attachmenticonview.cpp
-  attendeedata.cpp
-  attendeeline.cpp
-  attendeecomboboxdelegate.cpp
-  attendeelineeditdelegate.cpp
-  attendeetablemodel.cpp
-  attendeeeditor.cpp
-
-  alarmpresets.cpp
-  alarmdialog.cpp
-  globalsettings.cpp
-
-  ktimezonecombobox.cpp
-
-  # TODO: Move the next two to akonadi libs when finished
-  editoritemmanager.cpp
-
-  freebusyurldialog.cpp
-
-  # Shared incidence editors code
-  combinedincidenceeditor.cpp
-  incidenceeditor.cpp
-
-  # Specific editors
-  incidencealarm.cpp
-  incidenceattachment.cpp
-  incidenceattendee.cpp
-  incidencecategories.cpp
-  incidencecompletionpriority.cpp
-  incidencedescription.cpp
-  incidencewhatwhere.cpp
-  incidencedatetime.cpp
-  incidencerecurrence.cpp
-  incidenceresource.cpp
-  incidencesecrecy.cpp
-
-  freebusyganttproxymodel.cpp
-  conflictresolver.cpp
-  schedulingdialog.cpp
-  groupwareuidelegate.cpp
-
-  incidencedefaults.cpp
-  editorconfig.cpp
-  korganizereditorconfig.cpp
-
-  autochecktreewidget.cpp
-  categoryeditdialog.cpp
-  categoryselectdialog.cpp
-  categorydialog.cpp
-
-  # Individual mail
-  individualmailcomponentfactory.cpp
-  individualmaildialog.cpp
-  opencomposerjob.cpp
-
-  # Resourcemanagement
-  ldaputils.cpp
-  resourcemanagement.cpp
-  resourceitem.cpp
-  resourcemodel.cpp
-)
-
-kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
-
-### Build the desktop version
-
-set(incidenceeditors_ng_desktop_LIB_SRCS
-  ${incidenceeditors_ng_shared_LIB_SRCS}
-  templatemanagementdialog.cpp
-  incidencedialogfactory.cpp
-  incidencedialog.cpp
-  visualfreebusywidget.cpp
-)
-
-ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
-  categoryeditdialog_base.ui
-  categoryselectdialog_base.ui
-  categorydialog_base.ui
-  template_management_dialog_base.ui
-  dialogdesktop.ui
-  alarmdialog.ui
-  attachmenteditdialog.ui
-  schedulingdialog.ui
-  resourcemanagement.ui
-)
-
-add_library(incidenceeditorsng ${incidenceeditors_ng_desktop_LIB_SRCS})
-generate_export_header(incidenceeditorsng BASE_NAME incidenceeditors_ng)
-
-target_link_libraries(incidenceeditorsng
-  KF5::AkonadiCalendar
-  KF5::AkonadiMime
-  KF5::CalendarCore
-  KF5::CalendarUtils
-  KF5::MailTransport
-  KF5::Codecs
-  kdepim
-  kdepimdbusinterfaces # For UriHandler
-  calendarsupport      # For KCalPrefs
-  eventviews
-  kdgantt2             # For FreeBusy Editor
-)
-
-set_target_properties(incidenceeditorsng
-  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_SOVERSION}
-)
-
-install(TARGETS incidenceeditorsng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-
-### Build the mobile version if needed
-
-#if(KDEPIM_MOBILE_UI)
-  set(incidenceeditors_ng_mobile_LIB_SRCS
-    ${incidenceeditors_ng_shared_LIB_SRCS}
-  )
-
-  ki18n_wrap_ui(incidenceeditors_ng_mobile_LIB_SRCS
-    categoryeditdialog_base.ui
-    categoryselectdialog_base.ui
-    categorydialog_base.ui
-    editoralarms_base.ui
-    dialogdesktop.ui
-    dialogmobile.ui
-    dialogmoremobile.ui
-    attachmenteditdialog.ui
-    alarmdialog.ui
-    mobileschedulingdialog.ui
-  )
-
-  add_library(incidenceeditorsngmobile ${incidenceeditors_ng_mobile_LIB_SRCS})
-
-  target_link_libraries(incidenceeditorsngmobile
-    KF5::AkonadiCalendar
-    KF5::AkonadiMime
-    KF5::Codecs
-    kdepim               # For KPIM::K{Date|Time}Edit
-    calendarsupport      # For KCalPrefs
-    kdepimdbusinterfaces # For UriHandler
-    kdgantt2
-    eventviews
-    KF5::CalendarUtils
-    KF5::CalendarCore
-    KF5::MailTransport
-  )
-
-  set_target_properties(incidenceeditorsngmobile PROPERTIES
-    COMPILE_FLAGS -DKDEPIM_MOBILE_UI
-    VERSION ${KDEPIM_LIB_VERSION}
-    SOVERSION ${KDEPIM_LIB_SOVERSION}
-  )
-
-  install(TARGETS incidenceeditorsngmobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-#endif(KDEPIM_MOBILE_UI)
-
-### Build the test app TODO: Make optional
-
-set(testincidenceeditor_SRCS main.cpp)
-
-add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
-
-target_link_libraries(kincidenceeditor
-  KF5::AkonadiCalendar
-  KF5::AkonadiCore
-  KF5::CalendarCore
-  KF5::CalendarUtils
-  incidenceeditorsng
-  calendarsupport
-  kdepimdbusinterfaces
-)
-
-install(TARGETS kincidenceeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
+add_subdirectory(src)
 if (BUILD_TESTING)
    add_subdirectory(autotests)
+   add_subdirectory(tests)
 endif()
 

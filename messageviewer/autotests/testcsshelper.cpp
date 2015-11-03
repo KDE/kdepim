@@ -52,8 +52,15 @@ TestCSSHelper::TestCSSHelper(const QPaintDevice *pd) :
     cPgpOk0H  = QColor(0xff, 0xff, 0x40);
     cPgpWarnH = QColor(0xff, 0xff, 0x40);
     cPgpErrH  = QColor(0xff, 0x00, 0x00);
+
+    cPgpEncrHT = QColor(0xff, 0xff, 0xff);
+    cPgpOk1HT  = QColor(0x27, 0xae, 0x60);
+    cPgpOk0HT  = QColor(0xf6, 0x74, 0x00);
+    cPgpWarnHT = QColor(0xf6, 0x74, 0x00);
+    cPgpErrHT  = QColor(0xda, 0x44, 0x53);
+
     cHtmlWarning = QColor(0xff, 0x40, 0x40);
-    for (int i = 0 ; i < 3 ; ++i) {
+    for (int i = 0; i < 3; ++i) {
         mQuoteColor[i] = QColor(0x00, 0x80 - i * 0x10, 0x00);
     }
 
@@ -63,7 +70,7 @@ TestCSSHelper::TestCSSHelper(const QPaintDevice *pd) :
     mFixedFont = defaultFont;
     mFixedPrintFont = defaultFont;
     defaultFont.setItalic(true);
-    for (int i = 0 ; i < 3 ; ++i) {
+    for (int i = 0; i < 3; ++i) {
         mQuoteFont[i] = defaultFont;
     }
 

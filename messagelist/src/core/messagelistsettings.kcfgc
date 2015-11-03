@@ -1,0 +1,12 @@
+File=settings.kcfg
+ClassName=MessageListSettings
+Visibility=MESSAGELIST_EXPORT
+NameSpace=MessageList
+MemberVariables=dpointer
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=qapplication.h, messagelist_export.h, messagelistutil.h
+TranslationDomain=libmessagelist
+TranslationSystem=kde

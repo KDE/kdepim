@@ -24,7 +24,7 @@
 #include <QObject>
 #include <AkonadiCore/Item>
 #include <QUrl>
-namespace PimCommon
+namespace Gravatar
 {
 class GravatarResolvUrlJob;
 }
@@ -51,7 +51,7 @@ Q_SIGNALS:
     void gravatarPixmap(const QPixmap &pix);
 
 private Q_SLOTS:
-    void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job);
+    void slotGravatarResolvUrlFinished(Gravatar::GravatarResolvUrlJob *job);
 
     void slotUpdateGravatarDone(KJob *job);
 private:

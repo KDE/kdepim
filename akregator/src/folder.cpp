@@ -39,7 +39,7 @@
 
 using namespace Akregator;
 
-// efficient alternative to hash.values().toVector():
+// efficient alternative so we don't convert first to a temporary QList then to QVector
 template <typename T>
 static QVector<T> hashValuesToVector(const QHash<int, T> &hash)
 {
@@ -96,9 +96,9 @@ bool Folder::accept(TreeNodeVisitor *visitor)
 
 Folder *Folder::fromOPML(const QDomElement &e)
 {
-    Folder *fg = new Folder(e.hasAttribute(QString::fromLatin1("text")) ? e.attribute(QString::fromLatin1("text")) : e.attribute(QString::fromLatin1("title")));
-    fg->setOpen(e.attribute(QString::fromLatin1("isOpen")) == QString::fromLatin1(("true")));
-    fg->setId(e.attribute(QString::fromLatin1("id")).toUInt());
+    Folder *fg = new Folder(e.hasAttribute(QStringLiteral("text")) ? e.attribute(QStringLiteral("text")) : e.attribute(QStringLiteral("title")));
+    fg->setOpen(e.attribute(QStringLiteral("isOpen")) == QLatin1String("true"));
+    fg->setId(e.attribute(QStringLiteral("id")).toUInt());
     return fg;
 }
 
@@ -139,6 +139,7 @@ QDomElement Folder::toOPML(QDomElement parent, QDomDocument document) const
 QList<const TreeNode *> Folder::children() const
 {
     QList<const TreeNode *> children;
+    children.reserve(d->children.size());
     Q_FOREACH (const TreeNode *i, d->children) {
         children.append(i);
     }
@@ -389,11 +390,11 @@ void Folder::doArticleNotification()
 
 void Folder::connectToNode(TreeNode *child)
 {
-    connect(child, SIGNAL(signalChanged(Akregator::TreeNode*)), this, SLOT(slotChildChanged(Akregator::TreeNode*)));
-    connect(child, SIGNAL(signalDestroyed(Akregator::TreeNode*)), this, SLOT(slotChildDestroyed(Akregator::TreeNode*)));
-    connect(child, SIGNAL(signalArticlesAdded(Akregator::TreeNode*,QVector<Akregator::Article>)), this, SIGNAL(signalArticlesAdded(Akregator::TreeNode*,QVector<Akregator::Article>)));
-    connect(child, SIGNAL(signalArticlesRemoved(Akregator::TreeNode*,QVector<Akregator::Article>)), this, SIGNAL(signalArticlesRemoved(Akregator::TreeNode*,QVector<Akregator::Article>)));
-    connect(child, SIGNAL(signalArticlesUpdated(Akregator::TreeNode*,QVector<Akregator::Article>)), this, SIGNAL(signalArticlesUpdated(Akregator::TreeNode*,QVector<Akregator::Article>)));
+    connect(child, &TreeNode::signalChanged, this, &Folder::slotChildChanged);
+    connect(child, &TreeNode::signalDestroyed, this, &Folder::slotChildDestroyed);
+    connect(child, &TreeNode::signalArticlesAdded, this, &TreeNode::signalArticlesAdded);
+    connect(child, &TreeNode::signalArticlesRemoved, this, &TreeNode::signalArticlesRemoved);
+    connect(child, &TreeNode::signalArticlesUpdated, this, &TreeNode::signalArticlesUpdated);
 }
 
 void Folder::disconnectFromNode(TreeNode *child)

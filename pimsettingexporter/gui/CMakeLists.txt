@@ -23,28 +23,32 @@ set(pimsettingexporter_SRCS
     importexportprogressindicatorgui.cpp
     pimsettingexporterwindow.cpp
     pimsettingcommandlineoption.cpp
-    pimsettingexportgui_debug.cpp
     main.cpp)
+qt5_add_resources(pimsettingexporter_SRCS pimsettingexporter.qrc)
+
+ecm_qt_declare_logging_category(pimsettingexporter_SRCS HEADER pimsettingexportgui_debug.h IDENTIFIER PIMSETTINGEXPORTERGUI_LOG CATEGORY_NAME log_pimsettingexportergui)
 
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
+ PRIVATE
+  KF5::XmlGui
   KF5::DBusAddons
-  mailcommon
-  pimcommon
-  kdepim
+  KF5::MailCommon
+  KF5::PimCommon
+  KF5::Libkdepim
   pimsettingexporterprivate
+  KF5::Archive
+  KF5::ItemViews
 )
 
 add_subdirectory(kconf_update)
 
 install(TARGETS pimsettingexporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES
-    pimsettingexporter.rc
-    DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/pimsettingexporter
-)
-
 install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 

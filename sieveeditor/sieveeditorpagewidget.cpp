@@ -19,7 +19,7 @@
 */
 
 #include "sieveeditorpagewidget.h"
-#include "editor/sieveeditorwidget.h"
+#include "ksieveui/sieveeditorwidget.h"
 
 #include <kmanagesieve/sievejob.h>
 
@@ -41,7 +41,6 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::checkSyntax, this, &SieveEditorPageWidget::slotCheckSyntaxClicked);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::modeEditorChanged, this, &SieveEditorPageWidget::modeEditorChanged);
-    //qCDebug(SIEVEEDITOR_LOG)<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::undoAvailable, this, &SieveEditorPageWidget::undoAvailable);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::redoAvailable, this, &SieveEditorPageWidget::redoAvailable);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::copyAvailable, this, &SieveEditorPageWidget::copyAvailable);
@@ -49,17 +48,20 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
 {
-    //qCDebug(SIEVEEDITOR_LOG)<<" SieveEditorPageWidget::~SieveEditorPageWidget"<<this;
 }
 
 void SieveEditorPageWidget::slotCheckSyntaxClicked()
 {
-    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive);
+    const QString script = mSieveEditorWidget->script();
+    if (script.isEmpty()) {
+        return;
+    }
+    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, script, mWasActive, mWasActive);
     job->setInteractive(false);
     connect(job, &KManageSieve::SieveJob::errorMessage, this, &SieveEditorPageWidget::slotPutResultDebug);
 }
 
-void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg)
+void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg)
 {
     if (success) {
         mSieveEditorWidget->addOkMessage(i18n("No errors found."));
@@ -306,6 +308,21 @@ void SieveEditorPageWidget::zoomIn()
 void SieveEditorPageWidget::zoomOut()
 {
     mSieveEditorWidget->zoomOut();
+}
+
+void SieveEditorPageWidget::wordWrap(bool state)
+{
+    mSieveEditorWidget->wordWrap(state);
+}
+
+bool SieveEditorPageWidget::isWordWrap() const
+{
+    return mSieveEditorWidget->isWordWrap();
+}
+
+void SieveEditorPageWidget::zoomReset()
+{
+    mSieveEditorWidget->zoomReset();
 }
 
 void SieveEditorPageWidget::openBookmarkUrl(const QUrl &url)

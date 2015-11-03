@@ -33,7 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "keylistmodel.h"
-#include "predicates.h"
+#include "Libkleo/Predicates"
 
 #ifdef KLEO_MODEL_TEST
 # include "modeltest.h"
@@ -41,8 +41,8 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/keyfiltermanager.h>
-#include <kleo/keyfilter.h>
+#include <Libkleo/KeyFilterManager>
+#include <Libkleo/KeyFilter>
 
 #include <KLocalizedString>
 
@@ -205,7 +205,7 @@ QList<QModelIndex> AbstractKeyListModel::indexes(const std::vector<Key> &keys) c
     QList<QModelIndex> result;
     std::transform(keys.begin(), keys.end(),
                    std::back_inserter(result),
-                   // if some compilers are complaining about ambigious overloads, use this line instead:
+                   // if some compilers are complaining about ambiguous overloads, use this line instead:
                    //bind( static_cast<QModelIndex(AbstractKeyListModel::*)(const Key&,int)const>( &AbstractKeyListModel::index ), this, _1, 0 ) );
                    boost::bind(&AbstractKeyListModel::index, this, _1, 0));
     return result;
@@ -221,7 +221,7 @@ QModelIndex AbstractKeyListModel::addKey(const Key &key)
 {
     const std::vector<Key> vec(1, key);
     const QList<QModelIndex> l = doAddKeys(vec);
-    return l.empty() ? QModelIndex() : l.front() ;
+    return l.empty() ? QModelIndex() : l.front();
 }
 
 void AbstractKeyListModel::removeKey(const Key &key)
@@ -262,14 +262,12 @@ QVariant AbstractKeyListModel::headerData(int section, Qt::Orientation o, int ro
         if (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole)
             switch (section) {
             case PrettyName:       return i18n("Name");
-#ifndef KDEPIM_MOBILE_UI
             case PrettyEMail:      return i18n("E-Mail");
             case ValidFrom:        return i18n("Valid From");
             case ValidUntil:       return i18n("Valid Until");
             case TechnicalDetails: return i18n("Details");
             case ShortKeyID:       return i18n("Key-ID");
-#endif
-            case NumColumns:       ;
+            case NumColumns:;
             }
     return QVariant();
 }
@@ -304,9 +302,6 @@ QVariant AbstractKeyListModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole)
         switch (column) {
         case PrettyName:
-#ifdef KDEPIM_MOBILE_UI
-            return Formatting::formatForComboBox(key);
-#else
             return Formatting::prettyName(key);
         case PrettyEMail:
             if (const char *const fpr = key.primaryFingerprint()) {
@@ -335,19 +330,15 @@ QVariant AbstractKeyListModel::data(const QModelIndex &index, int role) const
             return Formatting::type(key);
         case ShortKeyID:
             return QString::fromLatin1(key.shortKeyID());
-#endif // KDEPIM_MOBILE_UI
         case NumColumns:
             break;
         }
-#ifndef KDEPIM_MOBILE_UI
     else if (role == Qt::ToolTipRole) {
         return Formatting::toolTip(key, toolTipOptions());
     } else if (role == Qt::FontRole) {
-        return KeyFilterManager::instance()->font(key, (column == ShortKeyID) ? QFont(QLatin1String("courier")) : QFont());
-    }
-#endif
-    else if (role == Qt::DecorationRole) {
-        return column == Icon ? returnIfValid(KeyFilterManager::instance()->icon(key)) : QVariant() ;
+        return KeyFilterManager::instance()->font(key, (column == ShortKeyID) ? QFont(QStringLiteral("courier")) : QFont());
+    } else if (role == Qt::DecorationRole) {
+        return column == Icon ? returnIfValid(KeyFilterManager::instance()->icon(key)) : QVariant();
     } else if (role == Qt::BackgroundRole) {
         return returnIfValid(KeyFilterManager::instance()->bgColor(key));
     } else if (role == Qt::ForegroundRole) {
@@ -364,13 +355,13 @@ template <typename Base>
 class TableModelMixin : public Base
 {
 public:
-    explicit TableModelMixin(QObject *p = 0) : Base(p) {}
+    explicit TableModelMixin(QObject *p = Q_NULLPTR) : Base(p) {}
     ~TableModelMixin() {}
 
     using Base::index;
     QModelIndex index(int row, int column, const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE
     {
-        return this->hasIndex(row, column, pidx) ? this->createIndex(row, column, Q_NULLPTR) : QModelIndex() ;
+        return this->hasIndex(row, column, pidx) ? this->createIndex(row, column, Q_NULLPTR) : QModelIndex();
     }
 
 private:
@@ -380,7 +371,7 @@ private:
     }
     bool hasChildren(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
-        return (pidx.model() == this || !pidx.isValid()) && this->rowCount(pidx) > 0 && this->columnCount(pidx) > 0 ;
+        return (pidx.model() == this || !pidx.isValid()) && this->rowCount(pidx) > 0 && this->columnCount(pidx) > 0;
     }
 };
 
@@ -396,18 +387,17 @@ public:
     explicit FlatKeyListModel(QObject *parent = Q_NULLPTR);
     ~FlatKeyListModel();
 
-    /* reimp */ int rowCount(const QModelIndex &pidx) const
+    int rowCount(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
-        return pidx.isValid() ? 0 : mKeysByFingerprint.size() ;
+        return pidx.isValid() ? 0 : mKeysByFingerprint.size();
     }
 
 private:
-    /* reimp */ Key doMapToKey(const QModelIndex &index) const;
-    /* reimp */ QModelIndex doMapFromKey(const Key &key, int col) const;
-    /* reimp */ QList<QModelIndex> doAddKeys(const std::vector<Key> &keys);
-    /* reimp */ void doRemoveKey(const Key &key);
-    /* reimp */ void doClear()
-    {
+    Key doMapToKey(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QModelIndex doMapFromKey(const Key &key, int col) const Q_DECL_OVERRIDE;
+    QList<QModelIndex> doAddKeys(const std::vector<Key> &keys) Q_DECL_OVERRIDE;
+    void doRemoveKey(const Key &key) Q_DECL_OVERRIDE;
+    void doClear() Q_DECL_OVERRIDE {
         mKeysByFingerprint.clear();
     }
 
@@ -422,23 +412,22 @@ public:
     explicit HierarchicalKeyListModel(QObject *parent = Q_NULLPTR);
     ~HierarchicalKeyListModel();
 
-    /* reimp */ int rowCount(const QModelIndex &pidx) const;
+    int rowCount(const QModelIndex &pidx) const Q_DECL_OVERRIDE;
     using AbstractKeyListModel::index;
-    /* reimp */ QModelIndex index(int row, int col, const QModelIndex &pidx) const;
-    /* reimp */ QModelIndex parent(const QModelIndex &idx) const;
+    QModelIndex index(int row, int col, const QModelIndex &pidx) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &idx) const Q_DECL_OVERRIDE;
 
-    bool hasChildren(const QModelIndex &pidx) const
+    bool hasChildren(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
-        return rowCount(pidx) > 0 ;
+        return rowCount(pidx) > 0;
     }
 
 private:
-    /* reimp */ Key doMapToKey(const QModelIndex &index) const;
-    /* reimp */ QModelIndex doMapFromKey(const Key &key, int col) const;
-    /* reimp */ QList<QModelIndex> doAddKeys(const std::vector<Key> &keys);
-    /* reimp */ void doRemoveKey(const Key &key);
-    /* reimp */ void doClear()
-    {
+    Key doMapToKey(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QModelIndex doMapFromKey(const Key &key, int col) const Q_DECL_OVERRIDE;
+    QList<QModelIndex> doAddKeys(const std::vector<Key> &keys) Q_DECL_OVERRIDE;
+    void doRemoveKey(const Key &key) Q_DECL_OVERRIDE;
+    void doClear() Q_DECL_OVERRIDE {
         mTopLevels.clear();
         mKeysByFingerprint.clear();
         mKeysByExistingParent.clear();
@@ -511,7 +500,7 @@ QList<QModelIndex> FlatKeyListModel::doAddKeys(const std::vector<Key> &keys)
         return QList<QModelIndex>();
     }
 
-    for (std::vector<Key>::const_iterator it = keys.begin(), end = keys.end() ; it != end ; ++it) {
+    for (std::vector<Key>::const_iterator it = keys.begin(), end = keys.end(); it != end; ++it) {
 
         // find an insertion point:
         const std::vector<Key>::iterator pos = std::upper_bound(mKeysByFingerprint.begin(), mKeysByFingerprint.end(), *it, _detail::ByFingerprint<std::less>());
@@ -758,7 +747,7 @@ static std::vector<Key> topological_sort(const std::vector<Key> &keys)
     boost::adjacency_list<> graph(keys.size());
 
     // add edges from children to parents:
-    for (unsigned int i = 0, end = keys.size() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = keys.size(); i != end; ++i) {
         const char *const issuer_fpr = cleanChainID(keys[i]);
         if (!issuer_fpr || !*issuer_fpr) {
             continue;
@@ -874,7 +863,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys(const std::vector<Key> &k
             const QModelIndex new_parent = index(key);
             // Q_EMIT the rowMoved() signals in reversed direction, so the
             // implementation can use a stack for mapping.
-            for (int i = children.size() - 1 ; i >= 0 ; --i) {
+            for (int i = children.size() - 1; i >= 0; --i) {
                 Q_EMIT rowMoved(new_parent, i);
             }
         }

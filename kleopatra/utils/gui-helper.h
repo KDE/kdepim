@@ -50,7 +50,7 @@ static inline bool xconnect(const QObject *a, const char *signal,
 {
     return
         QObject::connect(a, signal, b, slot) &&
-        QObject::connect(b, signal, a, slot) ;
+        QObject::connect(b, signal, a, slot);
 }
 }
 

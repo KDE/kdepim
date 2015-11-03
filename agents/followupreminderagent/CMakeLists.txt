@@ -1,28 +1,6 @@
 project(followupreminderagent)
 
-
-
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_followupreminder_agent\")
-
-set(followupreminderlib_SRCS 
-    followupreminderinfo.cpp
-    followupreminderutil.cpp
-)
-
-kconfig_add_kcfg_files(followupreminderlib_SRCS
-    settings/followupreminderagentsettings.kcfgc
-)
-
-
-add_library( followupreminder ${followupreminderlib_SRCS} )
-generate_export_header(followupreminder BASE_NAME followupreminder)
-target_link_libraries( followupreminder KF5::AkonadiCore KF5::ConfigGui Qt5::DBus )
-
-set_target_properties( followupreminder PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
-
-
-install( TARGETS followupreminder ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
-
 
 set(followupreminderagent_job_SRCS
     jobs/followupreminderjob.cpp
@@ -31,7 +9,6 @@ set(followupreminderagent_job_SRCS
 )
 
 set(followupreminderagent_SRCS
-    followupreminderagent_debug.cpp
     followupreminderagent.cpp
     followupremindermanager.cpp
     followupreminderinfodialog.cpp
@@ -40,6 +17,7 @@ set(followupreminderagent_SRCS
     ${followupreminderagent_job_SRCS}
 )
 
+ecm_qt_declare_logging_category(followupreminderagent_SRCS HEADER followupreminderagent_debug.h IDENTIFIER FOLLOWUPREMINDERAGENT_LOG CATEGORY_NAME log_followupreminderagent)
 qt5_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)
 
 add_executable(akonadi_followupreminder_agent ${followupreminderagent_SRCS})
@@ -51,9 +29,8 @@ target_link_libraries(akonadi_followupreminder_agent
   KF5::Mime
   KF5::CalendarCore
   KF5::DBusAddons
-  followupreminder
+  KF5::FollowupReminder
   Qt5::Widgets
-  KF5::KDELibs4Support
 )
 
 if( APPLE )

@@ -26,9 +26,6 @@ public:
     ViewerTest();
 private Q_SLOTS:
     void shouldHaveDefaultValuesOnCreation();
-    void shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage();
-    void shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage();
-    void shouldShowCreateNoteWidgetWhenActivateItAndWeHaveAMessage();
 };
 
 #endif // VIEWERTEST_H

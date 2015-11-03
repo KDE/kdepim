@@ -32,16 +32,21 @@
 
 #include "kleo_test.h"
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/verifydetachedjob.h>
-#include <kleo/keylistjob.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/VerifyDetachedJob>
+#include <Libkleo/KeyListJob>
 #include <KAboutData>
 
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/key.h>
-
+#include <QTimer>
 #include <QObject>
+#include <QSignalSpy>
+
+// Replace this with a gpgme version check once GnuPG Bug #2092
+// ( https://bugs.gnupg.org/gnupg/issue2092 ) is fixed.
+#define GPGME_MULTITHREADED_KEYLIST_BROKEN
 
 Q_DECLARE_METATYPE(GpgME::VerificationResult)
 
@@ -85,8 +90,8 @@ public Q_SLOTS:
         // Start a key list job
         Kleo::KeyListJob *job = mBackend->keyListJob();
         mParallelKeyListJobs.append(job);
-        connect(job, SIGNAL(done()),
-                this, SLOT(slotParallelKeyListJobFinished()));
+        connect(job, &Kleo::Job::done,
+                this, &VerifyTest::slotParallelKeyListJobFinished);
         QVERIFY(!job->start(QStringList()));
     }
 
@@ -118,14 +123,14 @@ public Q_SLOTS:
             job = klj;
         }
         mRunningJobs.append(job);
-        connect(job, SIGNAL(done()), this, SLOT(someJobDone()));
+        connect(job, &Kleo::Job::done, this, &VerifyTest::someJobDone);
 
         // Quit after 2500 jobs, that should be enough
         mJobsStarted++;
         if (mJobsStarted >= 2500) {
-            QTimer::singleShot(1000, &mEventLoop, SLOT(quit()));
+            QTimer::singleShot(1000, &mEventLoop, &QEventLoop::quit);
         } else {
-            QTimer::singleShot(0, this, SLOT(startAnotherJob()));
+            QTimer::singleShot(0, this, &VerifyTest::startAnotherJob);
         }
     }
 
@@ -167,9 +172,16 @@ private Q_SLOTS:
         QCOMPARE(sig.validity(), GpgME::Signature::Full);
     }
 
+#ifndef GPGME_MULTITHREADED_KEYLIST_BROKEN
+    // The following two tests are disabled because they trigger an
+    // upstream bug in gpgme. See: https://bugs.gnupg.org/gnupg/issue2092
+    // Which has a testcase attached that does similar things using gpgme
+    // directly and triggers various problems.
     void testParallelVerifyAndKeyListJobs()
     {
         // ### Increasing 10 to 500 makes the verify jobs fail!
+        // ^ This should also be reevaluated if the underlying bug in gpgme
+        // is fixed.
         for (int i = 0; i < 10; ++i) {
             Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
             mParallelVerifyJobs.append(job);
@@ -187,8 +199,9 @@ private Q_SLOTS:
         QTimer::singleShot(0, this, SLOT(startAnotherJob()));
         mEventLoop.exec();
     }
+#endif
 };
 
-QTEST_KLEOMAIN(VerifyTest, NoGUI)
+QTEST_KLEOMAIN(VerifyTest)
 
 #include "test_verify.moc"

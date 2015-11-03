@@ -28,8 +28,8 @@
 #include <KontactInterface/Core>
 #include <KontactInterface/Plugin>
 
-#include <calendarsupport/utils.h>
-#include <calendarsupport/calendarsingleton.h>
+#include <CalendarSupport/Utils>
+#include <CalendarSupport/CalendarSingleton>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 #include <AkonadiCore/SearchQuery>
@@ -46,7 +46,7 @@
 #include <KIconLoader>
 #include <KConfigGroup>
 #include <QDesktopServices>
-#include <KHolidays/kholidays/Holidays>
+#include <KHolidays/HolidayRegion>
 
 #include <QDate>
 #include <QEvent>
@@ -62,7 +62,7 @@ public:
 };
 
 BirthdaySearchJob::BirthdaySearchJob(QObject *parent, int daysInAdvance)
-    : ItemSearchJob(QString(), parent)
+    : ItemSearchJob(parent)
 {
     fetchScope().fetchFullPayload();
     setMimeTypes(QStringList() << KContacts::Addressee::mimeType());
@@ -138,13 +138,13 @@ SDSummaryWidget::SDSummaryWidget(KontactInterface::Plugin *plugin, QWidget *pare
     mShowSpecialsFromCal = true;
 
     // Setup the Addressbook
-    connect(mPlugin->core(), SIGNAL(dayChanged(QDate)),
-            this, SLOT(updateView()));
+    connect(mPlugin->core(), &KontactInterface::Core::dayChanged,
+            this, &SDSummaryWidget::updateView);
 
-    connect(mCalendar.data(), SIGNAL(calendarChanged()),
-            this, SLOT(updateView()));
-    connect(mPlugin->core(), SIGNAL(dayChanged(QDate)),
-            this, SLOT(updateView()));
+    connect(mCalendar.data(), &Akonadi::ETMCalendar::calendarChanged,
+            this, &SDSummaryWidget::updateView);
+    connect(mPlugin->core(), &KontactInterface::Core::dayChanged,
+            this, &SDSummaryWidget::updateView);
 
     // Update Configuration
     configUpdated();
@@ -394,7 +394,7 @@ void SDSummaryWidget::createLabels()
                     entry.category = ((*it).dayType() == Holiday::NonWorkday) ?
                                      CategoryHoliday : CategoryOther;
                     entry.date = dt;
-                    entry.summary = (*it).text();
+                    entry.summary = (*it).name();
                     dateDiff(dt, entry.daysTo, entry.yearsOld);
                     entry.yearsOld = -1; //ignore age of holidays
                     entry.span = 1;
@@ -665,10 +665,10 @@ void SDSummaryWidget::popupMenu(const QString &url)
 {
     QMenu popup(this);
     const QAction *sendMailAction = popup.addAction(
-                                        KIconLoader::global()->loadIcon(QLatin1String("mail-message-new"), KIconLoader::Small),
+                                        KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small),
                                         i18n("Send &Mail"));
     const QAction *viewContactAction = popup.addAction(
-                                           KIconLoader::global()->loadIcon(QLatin1String("view-pim-contacts"), KIconLoader::Small),
+                                           KIconLoader::global()->loadIcon(QStringLiteral("view-pim-contacts"), KIconLoader::Small),
                                            i18n("View &Contact"));
 
     const QAction *ret = popup.exec(QCursor::pos());

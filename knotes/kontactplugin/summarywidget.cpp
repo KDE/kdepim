@@ -27,10 +27,10 @@
 #include "knotes_plugin.h"
 #include "knotesinterface.h"
 
-#include "noteshared/akonadi/notesakonaditreemodel.h"
-#include "noteshared/akonadi/noteschangerecorder.h"
-#include "noteshared/attributes/showfoldernotesattribute.h"
-#include "noteshared/attributes/notedisplayattribute.h"
+#include "NoteShared/NotesAkonadiTreeModel"
+#include "NoteShared/NotesChangeRecorder"
+#include "NoteShared/ShowFolderNotesAttribute"
+#include "NoteShared/NoteDisplayAttribute"
 
 #include <AkonadiCore/Item>
 #include <AkonadiCore/Session>
@@ -86,8 +86,8 @@ KNotesSummaryWidget::KNotesSummaryWidget(KontactInterface::Plugin *plugin, QWidg
 
     connect(mNoteTreeModel, &NoteShared::NotesAkonadiTreeModel::rowsInserted, this, &KNotesSummaryWidget::updateFolderList);
 
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(updateFolderList()));
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(updateFolderList()));
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemChanged, this, &KNotesSummaryWidget::updateFolderList);
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemRemoved, this, &KNotesSummaryWidget::updateFolderList);
 
     mSelectionModel = new QItemSelectionModel(mNoteTreeModel);
     mModelProxy = new KCheckableProxyModel(this);

@@ -1,10 +1,5 @@
 
 include_directories(${AKONADI_INCLUDE_DIR} 
-                    ${CMAKE_SOURCE_DIR}/libkdepim
-                    ${CMAKE_SOURCE_DIR}/mailcommon
-                    ${CMAKE_SOURCE_DIR}/messageviewer
-                    ${CMAKE_SOURCE_DIR}/pimcommon
-                    ${CMAKE_SOURCE_DIR}/messagecomposer/
                     ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/ 
 )
 
@@ -17,9 +12,11 @@ set(pimsettingexporterconsole_SRCS
     loginfile.cpp
     main.cpp)
 
+ecm_qt_declare_logging_category(pimsettingexporterconsole_SRCS HEADER pimsettingexportconsole_debug.h IDENTIFIER PIMSETTINGEXPORTERCONSOLE_LOG CATEGORY_NAME log_pimsettingexporterconsole)
+
 add_executable(pimsettingexporterconsole ${pimsettingexporterconsole_SRCS})
 
-target_link_libraries(pimsettingexporterconsole
+target_link_libraries(pimsettingexporterconsole KF5::ConfigCore Qt5::Xml KF5::CoreAddons KF5::I18n KF5::Archive
   pimsettingexporterprivate
 )
 if (BUILD_TESTING)

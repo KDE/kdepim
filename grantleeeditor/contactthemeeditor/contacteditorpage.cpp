@@ -190,7 +190,7 @@ void ContactEditorPage::uploadTheme()
         zip->close();
         //qCDebug(CONTACTTHEMEEDITOR_LOG)<< "zipFilename"<<zipFileName;
 
-        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QStringLiteral("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(QUrl::fromLocalFile(zipFileName));
         dialog->setUploadName(themename);
         dialog->setPreviewImageFile(0, QUrl::fromLocalFile(previewContactFileName));

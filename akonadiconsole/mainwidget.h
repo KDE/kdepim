@@ -41,7 +41,6 @@ private Q_SLOTS:
     void startServer();
     void stopServer();
     void restartServer();
-    void configureServer();
 
 private:
     BrowserWidget *mBrowser;

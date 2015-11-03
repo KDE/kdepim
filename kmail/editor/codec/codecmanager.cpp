@@ -27,11 +27,11 @@
 #include "kmkernel.h"
 
 // Qt
+#include <QTextCodec>
 
 // KDE libs
 #include <kcodecaction.h>
-#include <KLocale>
-#include <settings/messagecomposersettings.h>
+#include <messagecomposer/messagecomposersettings.h>
 
 class CodecManagerPrivate
 {
@@ -81,7 +81,7 @@ void CodecManager::updatePreferredCharsets()
         QByteArray charset = str.toLatin1().toLower();
 
         if (charset == "locale") {
-            charset = KLocale::global()->encoding().toLower();
+            charset = QTextCodec::codecForLocale()->name();
 
             // Special case for Japanese:
             // (Introduction to i18n, 6.6 Limit of Locale technology):

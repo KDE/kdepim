@@ -42,8 +42,8 @@ protected:
     void createGroup(const KContacts::ContactGroup &group);
     void createContact(const KContacts::Addressee &address);
 
-    void addImportInfo(const QString &log);
-    void addImportError(const QString &log);
+    void addImportInfo(const QString &log) Q_DECL_OVERRIDE;
+    void addImportError(const QString &log) Q_DECL_OVERRIDE;
 
     void addAddressBookImportInfo(const QString &log);
     void addAddressBookImportError(const QString &log);

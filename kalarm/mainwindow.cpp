@@ -44,7 +44,7 @@
 #include <kalarmcal/alarmtext.h>
 #include <kalarmcal/kaevent.h>
 
-#include <libkdepim/misc/maillistdrag.h>
+#include <Libkdepim/MaillistDrag>
 #include <kmime/kmime_content.h>
 #include <KCalCore/MemoryCalendar>
 #include <KCalUtils/kcalutils/icaldrag.h>
@@ -58,7 +58,6 @@ using namespace KCalUtils;
 #include <ksystemtrayicon.h>
 #include <kstandardaction.h>
 #include <kiconloader.h>
-#include <kurl.h>
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <kconfiggroup.h>
@@ -78,7 +77,9 @@ using namespace KCalUtils;
 #include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QMenu>
+#include <QMimeDatabase>
 #include <qinputdialog.h>
+#include <QUrl>
 #include "kalarm_debug.h"
 
 using namespace KAlarmCal;
@@ -175,10 +176,10 @@ MainWindow::MainWindow(bool restored)
     mListView->selectTimeColumns(mShowTime, mShowTimeTo);
     mListView->sortByColumn(mShowTime ? AlarmListModel::TimeColumn : AlarmListModel::TimeToColumn, Qt::AscendingOrder);
     mListView->setItemDelegate(new AlarmListDelegate(mListView));
-    connect(mListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(slotSelection()));
+    connect(mListView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::slotSelection);
     connect(mListView, &AlarmListView::contextMenuRequested, this, &MainWindow::slotContextMenuRequested);
-    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)),
-                       SLOT(slotCalendarStatusChanged()));
+    connect(AkonadiModel::instance(), &AkonadiModel::collectionStatusChanged,
+                       this, &MainWindow::slotCalendarStatusChanged);
     connect(mResourceSelector, &ResourceSelector::resized, this, &MainWindow::resourcesResized);
     mListView->installEventFilter(this);
     initActions();
@@ -597,15 +598,15 @@ void MainWindow::initActions()
     QMenu* resourceMenu = static_cast<QMenu*>(factory()->container(QStringLiteral("resourceContext"), this));
     mResourceSelector->setContextMenu(resourceMenu);
     mMenuError = (!mContextMenu  ||  !mActionsMenu  ||  !resourceMenu);
-    connect(mActionUndo->menu(), SIGNAL(aboutToShow()), SLOT(slotInitUndoMenu()));
-    connect(mActionUndo->menu(), SIGNAL(triggered(QAction*)), SLOT(slotUndoItem(QAction*)));
-    connect(mActionRedo->menu(), SIGNAL(aboutToShow()), SLOT(slotInitRedoMenu()));
-    connect(mActionRedo->menu(), SIGNAL(triggered(QAction*)), SLOT(slotRedoItem(QAction*)));
-    connect(Undo::instance(), SIGNAL(changed(QString,QString)), SLOT(slotUndoStatus(QString,QString)));
+    connect(mActionUndo->menu(), &QMenu::aboutToShow, this, &MainWindow::slotInitUndoMenu);
+    connect(mActionUndo->menu(), &QMenu::triggered, this, &MainWindow::slotUndoItem);
+    connect(mActionRedo->menu(), &QMenu::aboutToShow, this, &MainWindow::slotInitRedoMenu);
+    connect(mActionRedo->menu(), &QMenu::triggered, this, &MainWindow::slotRedoItem);
+    connect(Undo::instance(), &Undo::changed, this, &MainWindow::slotUndoStatus);
     connect(mListView, &AlarmListView::findActive, this, &MainWindow::slotFindActive);
     Preferences::connect(SIGNAL(archivedKeepDaysChanged(int)), this, SLOT(updateKeepArchived(int)));
     Preferences::connect(SIGNAL(showInSystemTrayChanged(bool)), this, SLOT(updateTrayIconAction()));
-    connect(theApp(), SIGNAL(trayIconToggled()), SLOT(updateTrayIconAction()));
+    connect(theApp(), &KAlarmApp::trayIconToggled, this, &MainWindow::updateTrayIconAction);
 
     // Set menu item states
     setEnableText(true);
@@ -962,7 +963,7 @@ void MainWindow::slotTemplates()
     {
         mTemplateDlg = TemplateDlg::create(this);
         enableTemplateMenuItem(false);     // disable menu item in all windows
-        connect(mTemplateDlg, SIGNAL(finished()), SLOT(slotTemplatesEnd()));
+        connect(mTemplateDlg, &QDialog::finished, this, &MainWindow::slotTemplatesEnd);
         mTemplateDlg->show();
     }
 }
@@ -974,7 +975,7 @@ void MainWindow::slotTemplatesEnd()
 {
     if (mTemplateDlg)
     {
-        mTemplateDlg->delayedDestruct();   // this deletes the dialog once it is safe to do so
+        mTemplateDlg->deleteLater();   // this deletes the dialog once it is safe to do so
         mTemplateDlg = Q_NULLPTR;
         enableTemplateMenuItem(true);      // re-enable menu item in all windows
     }
@@ -1236,7 +1237,7 @@ void MainWindow::executeDragEnterEvent(QDragEnterEvent* e)
     const QMimeData* data = e->mimeData();
     bool accept = ICalDrag::canDecode(data) ? !e->source()   // don't accept "text/calendar" objects from this application
                                                :    data->hasText()
-                                                 || KUrl::List::canDecode(data)
+                                                 || data->hasUrls()
                                                  || KPIM::MailList::canDecode(data);
     if (accept)
         e->acceptProposedAction();
@@ -1269,7 +1270,7 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
     QByteArray         bytes;
     AlarmText          alarmText;
     KPIM::MailList     mailList;
-    KUrl::List         files;
+    QList<QUrl>        files;
     MemoryCalendar::Ptr calendar(new MemoryCalendar(Preferences::timeZone(true)));
 #ifndef NDEBUG
     QString fmts = data->formats().join(QStringLiteral(", "));
@@ -1355,13 +1356,14 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
         KAlarm::editNewAlarm(&ev, win);
         return;
     }
-    else if (!(files = KUrl::List::fromMimeData(data)).isEmpty())
+    else if (!(files = data->urls()).isEmpty())
     {
         qCDebug(KALARM_LOG) << "URL";
         // Try to find the mime type of the file, without downloading a remote file
-        KMimeType::Ptr mimeType = KMimeType::findByUrl(files[0]);
-        action = mimeType->name().startsWith(QStringLiteral("audio/")) ? KAEvent::AUDIO : KAEvent::FILE;
-        alarmText.setText(files[0].prettyUrl());
+        QMimeDatabase mimeDb;
+        const QString mimeTypeName = mimeDb.mimeTypeForUrl(files[0]).name();
+        action = mimeTypeName.startsWith(QStringLiteral("audio/")) ? KAEvent::AUDIO : KAEvent::FILE;
+        alarmText.setText(files[0].toDisplayString());
     }
     else if (data->hasText())
     {

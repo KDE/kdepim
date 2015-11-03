@@ -35,7 +35,7 @@
 #include "kwatchgnupgconfig.h"
 #include "kwatchgnupg.h"
 
-#include "libkleo/ui/filenamerequester.h"
+#include "Libkleo/FileNameRequester"
 
 #include <KLocalizedString>
 #include <kconfig.h>

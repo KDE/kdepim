@@ -17,10 +17,10 @@
 
 #include "operasettings.h"
 #include "importwizard_debug.h"
-#include "mailimporter/filter_opera.h"
+#include "mailimporter/filteropera.h"
 
 #include <MailTransport/mailtransport/transportmanager.h>
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/signature.h>
@@ -99,14 +99,14 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         //We have not settings for it => same than manual check
         addCheckMailOnStartup(agentIdentifyName, enableManualCheck);
     } else if (incomingProtocol == QLatin1String("POP")) {
-        settings.insert(QLatin1String("Host"), serverName);
-        settings.insert(QLatin1String("Login"), userName);
+        settings.insert(QStringLiteral("Host"), serverName);
+        settings.insert(QStringLiteral("Login"), userName);
 
         const int leaveOnServer = grp.readEntry(QStringLiteral("Leave On Server"), -1);
         if (leaveOnServer == 1) {
-            settings.insert(QLatin1String("LeaveOnServer"), true);
+            settings.insert(QStringLiteral("LeaveOnServer"), true);
         } else if (leaveOnServer == 0) {
-            settings.insert(QLatin1String("LeaveOnServer"), false);
+            settings.insert(QStringLiteral("LeaveOnServer"), false);
         } else {
             qCDebug(IMPORTWIZARD_LOG) << " leave on server option unknown : " << leaveOnServer;
         }
@@ -117,12 +117,12 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
             if (removeDelay != -1) {
                 //Opera store delay as second !!! :)
                 removeDelay = removeDelay / (24 * 60 * 60);
-                settings.insert(QLatin1String("LeaveOnServerDays"), removeDelay);
+                settings.insert(QStringLiteral("LeaveOnServerDays"), removeDelay);
             }
         } //TODO: else
 
         if (port != -1) {
-            settings.insert(QLatin1String("Port"), port);
+            settings.insert(QStringLiteral("Port"), port);
         }
         //TODO:
         const int delay = grp.readEntry(QStringLiteral("Initial Poll Delay"), -1);
@@ -250,7 +250,7 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
         KIdentityManagement::Signature signature;
         const int signatureHtml = grp.readEntry(QStringLiteral("Signature is HTML"), -1);
         if (signatureFile.contains(QStringLiteral("{Preferences}"))) {
-            signatureFile.replace(QLatin1String("{Preferences}"), MailImporter::FilterOpera::defaultSettingsPath() + QLatin1String("/"));
+            signatureFile.replace(QStringLiteral("{Preferences}"), MailImporter::FilterOpera::defaultSettingsPath() + QLatin1String("/"));
         }
 
         QFile file(signatureFile);

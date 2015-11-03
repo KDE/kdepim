@@ -19,33 +19,41 @@
 #define ExportMailJob_H
 
 #include "abstractimportexportjob.h"
-#include "pimsettingexporter_export.h"
 #include <KSharedConfig>
 #include <QDateTime>
 #include <time.h>
-class QUrl;
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ExportMailJob : public AbstractImportExportJob
+class ExportMailJob : public AbstractImportExportJob
 {
+    Q_OBJECT
 public:
     explicit ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportMailJob();
 
     void start() Q_DECL_OVERRIDE;
 
-private:
-    QUrl subdirPath(const QUrl &url) const;
+Q_SIGNALS:
+    void taskCanceled();
 
+private Q_SLOTS:
+    void slotCheckBackupIdentity();
+    void slotCheckBackupMailTransport();
+    void slotCheckBackupConfig();
+    void slotCheckBackupMails();
+    void slotCheckBackupResources();
+    void slotMailsJobTerminated();
+    void slotWriteNextArchiveResource();
+private:
+    bool checkBackupType(Utils::StoredType type) const;
     void backupTransports();
     void backupResources();
-    void backupMails();
     void backupConfig();
     void backupIdentity();
-    void backupAkonadiDb();
-    void writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive);
-    bool checkProgram();
+    //void backupAkonadiDb();
+    //bool checkProgram();
     QDateTime mArchiveTime;
+    int mIndexIdentifier;
 };
 
 #endif // ExportMailJob_H

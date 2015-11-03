@@ -63,20 +63,20 @@ void NotificationManager::slotNotifyArticle(const Article &article)
         doNotify();
     } else if (!m_running) {
         m_running = true;
-        QTimer::singleShot(m_checkInterval, this, SLOT(slotIntervalCheck()));
+        QTimer::singleShot(m_checkInterval, this, &NotificationManager::slotIntervalCheck);
     }
 }
 
 void NotificationManager::slotNotifyFeeds(const QStringList &feeds)
 {
     if (feeds.count() == 1) {
-        KNotification::event(QStringLiteral("FeedAdded"), i18n("Feed added:\n %1", feeds[0]), QPixmap() , m_widget, KNotification::CloseOnTimeout, m_componantName);
+        KNotification::event(QStringLiteral("FeedAdded"), i18n("Feed added:\n %1", feeds[0]), QPixmap(), m_widget, KNotification::CloseOnTimeout, m_componantName);
     } else if (feeds.count() > 1) {
         QString message;
         for (QStringList::ConstIterator it = feeds.constBegin(); it != feeds.constEnd(); ++it) {
             message += *it + QLatin1Char('\n');
         }
-        KNotification::event(QStringLiteral("FeedAdded"), i18n("Feeds added:\n %1", message), QPixmap() , m_widget, KNotification::CloseOnTimeout, m_componantName);
+        KNotification::event(QStringLiteral("FeedAdded"), i18n("Feeds added:\n %1", message), QPixmap(), m_widget, KNotification::CloseOnTimeout, m_componantName);
     }
 }
 
@@ -88,12 +88,12 @@ void NotificationManager::doNotify()
     Q_FOREACH (const Article &i, m_articles) {
         if (feedTitle != i.feed()->title()) {
             feedTitle = i.feed()->title();
-            message += QString::fromLatin1("<p><b>%1:</b></p>").arg(feedTitle);
+            message += QStringLiteral("<p><b>%1:</b></p>").arg(feedTitle);
         }
         message += i.title() + QLatin1String("<br>");
     }
     message += QLatin1String("</body></html>");
-    KNotification::event(QStringLiteral("NewArticles"), message, QPixmap() , m_widget, KNotification::CloseOnTimeout, m_componantName);
+    KNotification::event(QStringLiteral("NewArticles"), message, QPixmap(), m_widget, KNotification::CloseOnTimeout, m_componantName);
 
     m_articles.clear();
     m_running = false;
@@ -111,7 +111,7 @@ void NotificationManager::slotIntervalCheck()
         doNotify();
     } else {
         m_addedInLastInterval = false;
-        QTimer::singleShot(m_checkInterval, this, SLOT(slotIntervalCheck()));
+        QTimer::singleShot(m_checkInterval, this, &NotificationManager::slotIntervalCheck);
     }
 
 }

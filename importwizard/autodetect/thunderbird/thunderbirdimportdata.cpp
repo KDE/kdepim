@@ -20,9 +20,9 @@
 #include "thunderbirdsettings.h"
 #include "thunderbirdaddressbook.h"
 
-#include "mailimporter/filter_thunderbird.h"
+#include "mailimporter/filterthunderbird.h"
 #include "mailimporter/filterinfo.h"
-#include "mailcommon/filter/filterimporterexporter.h"
+#include "MailCommon/FilterImporterExporter"
 #include "importwizard.h"
 
 #include <KLocalizedString>

@@ -81,8 +81,8 @@ public:
         vlay.addWidget(&logTextWidget, 1);
         vlay.addWidget(&buttonBox);
 
-        connect(closeButton(), SIGNAL(clicked()), this, SLOT(close()));
-        connect(cancelButton(), SIGNAL(clicked()), this, SLOT(slotCancelClicked()));
+        connect(closeButton(), &QAbstractButton::clicked, this, &QWidget::close);
+        connect(cancelButton(), &QAbstractButton::clicked, this, &OutputDialog::slotCancelClicked);
     }
 
 Q_SIGNALS:
@@ -145,7 +145,7 @@ private:
             dialog = new OutputDialog;
             dialog->setAttribute(Qt::WA_DeleteOnClose);
             applyWindowID(dialog);
-            connect(dialog, SIGNAL(cancelRequested()), q, SLOT(cancel()));
+            connect(dialog.data(), &OutputDialog::cancelRequested, q, &Command::cancel);
             dialog->setWindowTitle(i18n("Subprocess Diagnostics"));
         }
     }
@@ -278,7 +278,7 @@ void GnuPGProcessCommand::doStart()
         d->finished();
     } else {
         d->ensureDialogVisible();
-        d->message(i18n("Starting %1...", d->arguments.join(QLatin1String(" "))));
+        d->message(i18n("Starting %1...", d->arguments.join(QStringLiteral(" "))));
     }
 }
 
@@ -287,13 +287,13 @@ void GnuPGProcessCommand::doCancel()
     d->canceled = true;
     if (d->process.state() != QProcess::NotRunning) {
         d->process.terminate();
-        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, SLOT(kill()));
+        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, &QProcess::kill);
     }
 }
 
 void GnuPGProcessCommand::Private::slotProcessFinished(int code, QProcess::ExitStatus status)
 {
-    if (!canceled)
+    if (!canceled) {
         if (status == QProcess::CrashExit) {
             error(q->crashExitMessage(arguments), q->errorCaption());
         } else if (ignoresSuccessOrFailure) {
@@ -313,6 +313,8 @@ void GnuPGProcessCommand::Private::slotProcessFinished(int code, QProcess::ExitS
                 information(successMessage, q->successCaption());
             }
         }
+    }
+
     if (dialog) {
         dialog->setComplete(true);
     }

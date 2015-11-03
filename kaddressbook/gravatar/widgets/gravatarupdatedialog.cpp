@@ -22,20 +22,33 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace KABGravatar;
 
 GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      mSaveUrl(false)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
+    setWindowTitle(i18n("Check and update Gravatar"));
     mGravatarUpdateWidget = new GravatarUpdateWidget(this);
+    connect(mGravatarUpdateWidget, &GravatarUpdateWidget::activateDialogButton, this, &GravatarUpdateDialog::slotActivateButton);
     mGravatarUpdateWidget->setObjectName(QStringLiteral("gravatarupdatewidget"));
     mainLayout->addWidget(mGravatarUpdateWidget);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &GravatarUpdateDialog::slotAccepted);
+    mSaveImageButton = new QPushButton(i18n("Save Image"), this);
+    mSaveImageButton->setEnabled(false);
+    buttonBox->addButton(mSaveImageButton, QDialogButtonBox::ActionRole);
+    connect(mSaveImageButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveImage);
+
+    mSaveUrlButton = new QPushButton(i18n("Save Image URL"), this);
+    buttonBox->addButton(mSaveUrlButton, QDialogButtonBox::ActionRole);
+    mSaveUrlButton->setEnabled(false);
+    connect(mSaveUrlButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveUrl);
+
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     mainLayout->addWidget(buttonBox);
     readConfig();
@@ -46,6 +59,29 @@ GravatarUpdateDialog::~GravatarUpdateDialog()
     writeConfig();
 }
 
+void GravatarUpdateDialog::slotActivateButton(bool state)
+{
+    mSaveUrlButton->setEnabled(state);
+    mSaveImageButton->setEnabled(state);
+}
+
+bool GravatarUpdateDialog::saveUrl() const
+{
+    return mSaveUrl;
+}
+
+void GravatarUpdateDialog::slotSaveUrl()
+{
+    mSaveUrl = true;
+    accept();
+}
+
+void GravatarUpdateDialog::slotSaveImage()
+{
+    mSaveUrl = false;
+    accept();
+}
+
 void GravatarUpdateDialog::setEmail(const QString &email)
 {
     mGravatarUpdateWidget->setEmail(email);
@@ -54,6 +90,16 @@ void GravatarUpdateDialog::setEmail(const QString &email)
 QPixmap GravatarUpdateDialog::pixmap() const
 {
     return mGravatarUpdateWidget->pixmap();
+}
+
+void GravatarUpdateDialog::setOriginalUrl(const QString &url)
+{
+    mGravatarUpdateWidget->setOriginalUrl(url);
+}
+
+QUrl GravatarUpdateDialog::resolvedUrl() const
+{
+    return mGravatarUpdateWidget->resolvedUrl();
 }
 
 void GravatarUpdateDialog::setOriginalPixmap(const QPixmap &pix)

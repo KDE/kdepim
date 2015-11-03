@@ -33,27 +33,28 @@
 #include "xfaceconfigurator.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
-#include <kcombobox.h>
-#include <QDialog>
-#include <kio/netaccess.h>
-#include <KLocalizedString>
-#include <kmessagebox.h>
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include <messageviewer/header/kxface.h>
+#include "kpimtextedit/plaintexteditor.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
+#include <messageviewer/kxface.h>
+
+#include <KConfigGroup>
+#include <KJobWidgets>
+#include <kcombobox.h>
+#include <KLocalizedString>
+#include <kmessagebox.h>
+#include <KIO/StoredTransferJob>
 
 #include <QCheckBox>
+#include <QDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QVBoxLayout>
-
 #include <QFontDatabase>
 #include <QImageReader>
-#include <KConfigGroup>
 #include <QFileDialog>
 using namespace KContacts;
 using namespace KIO;
@@ -160,7 +161,7 @@ XFaceConfigurator::XFaceConfigurator(QWidget *parent)
     widgetStack->insertWidget(pageno, page);
     page_vlay = new QVBoxLayout(page);
     page_vlay->setMargin(0);
-    mTextEdit = new PimCommon::PlainTextEditorWidget(page);
+    mTextEdit = new KPIMTextEdit::PlainTextEditorWidget(page);
     mTextEdit->editor()->setSpellCheckingSupport(false);
     page_vlay->addWidget(mTextEdit);
     mTextEdit->editor()->setWhatsThis(i18n("Use this field to enter an arbitrary X-Face string."));
@@ -175,7 +176,7 @@ XFaceConfigurator::XFaceConfigurator(QWidget *parent)
 
     page_vlay->addWidget(label2);
 
-    connect(mTextEdit->editor(), &PimCommon::PlainTextEditor::textChanged, this, &XFaceConfigurator::slotUpdateXFace);
+    connect(mTextEdit->editor(), &KPIMTextEdit::PlainTextEditor::textChanged, this, &XFaceConfigurator::slotUpdateXFace);
 }
 
 XFaceConfigurator::~XFaceConfigurator()
@@ -205,13 +206,13 @@ void XFaceConfigurator::setXFace(const QString &text)
 
 void XFaceConfigurator::setXfaceFromFile(const QUrl &url)
 {
-    QString tmpFile;
-    if (KIO::NetAccess::download(url, tmpFile, this)) {
+    auto job = KIO::storedGet(url);
+    KJobWidgets::setWindow(job, this);
+    if (job->exec()) {
         KXFace xf;
-        mTextEdit->editor()->setPlainText(xf.fromImage(QImage(tmpFile)));
-        KIO::NetAccess::removeTempFile(tmpFile);
+        mTextEdit->editor()->setPlainText(xf.fromImage(QImage::fromData(job->data())));
     } else {
-        KMessageBox::error(this, KIO::NetAccess::lastErrorString());
+        KMessageBox::error(this, job->errorString());
     }
 }
 
@@ -222,7 +223,7 @@ void XFaceConfigurator::slotSelectFile()
     Q_FOREACH (const QByteArray &mime, mimeTypes) {
         filter += QString::fromLatin1(mime);
     }
-    const QUrl url = QFileDialog::getOpenFileUrl(this, QString() , QString(), i18n("Image (%1)", filter));
+    const QUrl url = QFileDialog::getOpenFileUrl(this, QString(), QString(), i18n("Image (%1)", filter));
     if (!url.isEmpty()) {
         setXfaceFromFile(url);
     }
@@ -277,7 +278,7 @@ void XFaceConfigurator::slotUpdateXFace()
 
     if (!str.isEmpty()) {
         if (str.startsWith(QStringLiteral("x-face:"), Qt::CaseInsensitive)) {
-            str = str.remove(QLatin1String("x-face:"), Qt::CaseInsensitive);
+            str = str.remove(QStringLiteral("x-face:"), Qt::CaseInsensitive);
             mTextEdit->editor()->setPlainText(str);
         }
         KXFace xf;

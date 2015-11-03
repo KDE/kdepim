@@ -39,8 +39,8 @@
 #include <utils/path-helper.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/exception.h>
-#include <kleo/cryptobackendfactory.h>
+#include <Libkleo/Exception>
+#include <Libkleo/CryptoBackendFactory>
 
 #include <KConfigGroup>
 #include "kleopatra_debug.h"
@@ -67,12 +67,13 @@ QString ArchiveDefinition::installPath()
 {
     const QMutexLocker locker(&installPathMutex);
     QString *const ip = _installPath();
-    if (ip->isEmpty())
+    if (ip->isEmpty()) {
         if (QCoreApplication::instance()) {
             *ip = QCoreApplication::applicationDirPath();
         } else {
             qCWarning(KLEOPATRA_LOG) << "called before QCoreApplication was constructed";
         }
+    }
     return *ip;
 }
 void ArchiveDefinition::setInstallPath(const QString &ip)
@@ -126,8 +127,8 @@ static QString try_extensions(const QString &path)
     static const char exts[][4] = {
         "", "exe", "bat", "bin", "cmd",
     };
-    static const size_t numExts = sizeof exts / sizeof * exts ;
-    for (unsigned int i = 0 ; i < numExts ; ++i) {
+    static const size_t numExts = sizeof exts / sizeof * exts;
+    for (unsigned int i = 0; i < numExts; ++i) {
         const QFileInfo fi(path + QLatin1Char('.') + QLatin1String(exts[i]));
         if (fi.exists()) {
             return fi.filePath();
@@ -161,9 +162,9 @@ static void parse_command(QString cmdline, const QString &id, const QString &whi
     cmdline.replace(FILE_PLACEHOLDER,        QLatin1String("__files_go_here__"))
     .replace(INSTALLPATH_PLACEHOLDER, QStringLiteral("__path_goes_here__"));
     l = KShell::splitArgs(cmdline, KShell::AbortOnMeta | KShell::TildeExpand, &errors);
-    l = l.replaceInStrings(QLatin1String("__files_go_here__"), FILE_PLACEHOLDER);
-    if (l.indexOf(QRegExp(QLatin1String(".*__path_goes_here__.*"))) >= 0) {
-        l = l.replaceInStrings(QLatin1String("__path_goes_here__"), ArchiveDefinition::installPath());
+    l = l.replaceInStrings(QStringLiteral("__files_go_here__"), FILE_PLACEHOLDER);
+    if (l.indexOf(QRegExp(QStringLiteral(".*__path_goes_here__.*"))) >= 0) {
+        l = l.replaceInStrings(QStringLiteral("__path_goes_here__"), ArchiveDefinition::installPath());
     }
     if (errors == KShell::BadQuoting) {
         throw ArchiveDefinitionError(id, i18n("Quoting error in '%1' entry", whichCommand));
@@ -299,19 +300,19 @@ public:
     }
 
 private:
-    /* reimp */ QString doGetPackCommand(Protocol p) const
+    QString doGetPackCommand(Protocol p) const Q_DECL_OVERRIDE
     {
         return m_packCommand[p];
     }
-    /* reimp */ QString doGetUnpackCommand(Protocol p) const
+    QString doGetUnpackCommand(Protocol p) const Q_DECL_OVERRIDE
     {
         return m_unpackCommand[p];
     }
-    /* reimp */ QStringList doGetPackArguments(Protocol p, const QStringList &files) const
+    QStringList doGetPackArguments(Protocol p, const QStringList &files) const Q_DECL_OVERRIDE
     {
         return m_packPrefixArguments[p] + files + m_packPostfixArguments[p];
     }
-    /* reimp */ QStringList doGetUnpackArguments(Protocol p, const QString &file) const
+    QStringList doGetUnpackArguments(Protocol p, const QString &file) const Q_DECL_OVERRIDE
     {
         QStringList copy = m_unpackArguments[p];
         copy.replaceInStrings(FILE_PLACEHOLDER, file);
@@ -350,7 +351,7 @@ shared_ptr<Input> ArchiveDefinition::createInputFromPackCommand(GpgME::Protocol 
     checkProtocol(p);
     const QString base = heuristicBaseDirectory(files);
     if (base.isEmpty()) {
-        throw Kleo::Exception(GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join(QLatin1String("\n"))));
+        throw Kleo::Exception(GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join(QStringLiteral("\n"))));
     }
     qCDebug(KLEOPATRA_LOG) << "heuristicBaseDirectory(" << files << ") ->" << base;
     const QStringList relative = makeRelativeTo(base, files);
@@ -397,7 +398,7 @@ std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefini
 {
     std::vector< shared_ptr<ArchiveDefinition> > result;
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
-        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Archive Definition #")));
+        const QStringList groups = config->groupList().filter(QRegExp(QStringLiteral("^Archive Definition #")));
         result.reserve(groups.size());
         Q_FOREACH (const QString &group, groups)
             try {

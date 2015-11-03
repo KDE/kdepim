@@ -1,8 +1,8 @@
 #include "dummykernel.h"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <messagecomposer/sender/akonadisender.h>
-#include <mailcommon/folder/foldercollectionmonitor.h>
+#include <MessageComposer/AkonadiSender>
+#include <MailCommon/FolderCollectionMonitor>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
@@ -19,7 +19,7 @@ DummyKernel::DummyKernel(QObject *parent)
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
 
     mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
-    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setListFilter(Akonadi::CollectionFetchScope::Enabled);
     mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
@@ -93,13 +93,13 @@ bool DummyKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id DummyKernel::lastSelectedFolder()
+Akonadi::Collection::Id DummyKernel::lastSelectedFolder()
 {
     Q_ASSERT(false);
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void DummyKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void DummyKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

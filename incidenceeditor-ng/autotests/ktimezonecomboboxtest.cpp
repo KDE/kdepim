@@ -18,7 +18,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "ktimezonecomboboxtest.h"
-#include "../ktimezonecombobox.h"
+#include "../src/ktimezonecombobox.h"
 
 #include "qtest.h"
 

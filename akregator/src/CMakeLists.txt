@@ -3,14 +3,13 @@
 add_subdirectory(about)
 add_subdirectory(icons)
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/akregator/interfaces
-  ${CMAKE_BINARY_DIR}/akregator/interfaces
-)
 
 ########### next target ###############
 
-set(akregator_SRCS main.cpp mainwindow.cpp akregator_debug.cpp)
+set(akregator_common_SRCS)
+ecm_qt_declare_logging_category(akregator_common_SRCS HEADER akregator_debug.h IDENTIFIER AKREGATOR_LOG CATEGORY_NAME log_akregator)
+
+set(akregator_SRCS main.cpp mainwindow.cpp ${akregator_common_SRCS})
 
 file(GLOB ICONS_AKREGATOR_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-akregator.png")
 ecm_add_app_icon(akregator_SRCS ICONS ${ICONS_AKREGATOR_SRCS})
@@ -18,11 +17,12 @@ ecm_add_app_icon(akregator_SRCS ICONS ${ICONS_AKREGATOR_SRCS})
 add_executable(akregator ${akregator_SRCS})
 
 target_link_libraries(akregator
+  KF5::Notifications
   KF5::KontactInterface
-  kdepim
+  KF5::Libkdepim
   akregatorprivate
   akregatorinterfaces
-  pimcommon
+  KF5::PimCommon
 )
 
 install(TARGETS akregator ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
@@ -31,7 +31,7 @@ install(TARGETS akregator ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(akregatorprivate_LIB_SRCS
   akregratormigrateapplication.cpp
-  akregator_debug.cpp
+  ${akregator_common_SRCS} 
   aboutdata.cpp
   trayicon.cpp
   article.cpp
@@ -64,11 +64,17 @@ target_link_libraries(akregatorprivate
 PUBLIC
   KF5::KHtml
 PRIVATE
-  kdepim
+  KF5::Notifications
+  KF5::Libkdepim
   KF5::Syndication
   akregatorinterfaces
-  pimcommon
+  KF5::PimCommon
+  KF5::WindowSystem
+  KF5::IconThemes
+  KF5::PimTextEdit
 )
+
+target_include_directories(akregatorprivate PUBLIC "$<BUILD_INTERFACE:${akregator_SOURCE_DIR}/src;${akregator_BINARY_DIR}/src>")
 
 set_target_properties(akregatorprivate
   PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
@@ -86,7 +92,7 @@ set(akregatorpart_PART_SRCS
   ${akregator_utils_SRCS}
   akregatortexttospeech.cpp
   akregatortexttospeechinterface.cpp
-  akregator_debug.cpp
+  ${akregator_common_SRCS}
   deletesubscriptioncommand.cpp
   abstractselectioncontroller.cpp
   articlematcher.cpp
@@ -128,13 +134,15 @@ ki18n_wrap_ui(akregatorpart_PART_SRCS
 add_library(akregatorpart MODULE ${akregatorpart_PART_SRCS})
 generate_export_header(akregatorpart BASE_NAME akregatorpart)
 target_link_libraries(akregatorpart
+  KF5::KDELibs4Support
   akregatorinterfaces
   akregatorprivate
   KF5::KCMUtils
   KF5::NotifyConfig
-  kdepim
+  KF5::Libkdepim
   KF5::Syndication
-  pimcommon
+  KF5::PimCommon
+  KF5::PimTextEdit
 )
 
 install(TARGETS akregatorpart DESTINATION ${KDE_INSTALL_PLUGINDIR})

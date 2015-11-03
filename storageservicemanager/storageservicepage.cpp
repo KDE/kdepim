@@ -23,9 +23,9 @@
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
 #include "storageservicenavigationbuttons.h"
-#include "pimcommon/storageservice/storageserviceabstract.h"
-#include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
-#include "pimcommon/storageservice/widgets/storageserviceprogressindicator.h"
+#include "PimCommon/StorageServiceAbstract"
+#include "PimCommon/StorageServiceProgressWidget"
+#include "PimCommon/StorageServiceProgressIndicator"
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -203,7 +203,7 @@ void StorageServicePage::slotActionFailed(const QString &serviceName, const QStr
     if (verifyService(serviceName)) {
         mStorageServiceWarning->addLog(error);
         mStorageServiceWarning->animatedShow();
-        KNotification::event(QStringLiteral("action-failed"), error, QPixmap() , this, KNotification::CloseOnTimeout);
+        KNotification::event(QStringLiteral("action-failed"), error, QPixmap(), this, KNotification::CloseOnTimeout);
     }
 }
 
@@ -369,7 +369,7 @@ void StorageServicePage::updateList(const QString &serviceName)
 
 void StorageServicePage::refreshList()
 {
-    QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
+    QTimer::singleShot(0, mTreeWidget, &PimCommon::StorageServiceTreeWidget::refreshList);
 }
 
 void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, const QString &filename)

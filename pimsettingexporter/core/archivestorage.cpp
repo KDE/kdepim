@@ -49,7 +49,7 @@ QString ArchiveStorage::filename() const
 
 bool ArchiveStorage::openArchive(bool write)
 {
-    bool result = mArchive->open(write ? QIODevice::WriteOnly : QIODevice::ReadOnly);
+    const bool result = mArchive->open(write ? QIODevice::WriteOnly : QIODevice::ReadOnly);
     if (!result) {
         if (write) {
             Q_EMIT error(i18n("Archive cannot be opened in write mode."));

@@ -17,10 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "viewer/viewer.h"
-#include "header/headerstyle.h"
-#include "header/headerstrategy.h"
-
+#include "messageviewer/viewer.h"
+#include "messageviewer/headerstylepluginmanager.h"
 #include <KAboutData>
 #include <KLocalizedString>
 
@@ -46,12 +44,19 @@ int main(int argc, char **argv)
     parser.addVersionOption();
     parser.addHelpOption();
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("+[file]"), i18n("File containing an email")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("headerstrategy"), i18n("Header Strategy: [all|rich|standard|brief|custom]"), QStringLiteral("strategy")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("headerstyle"), i18n("Header Style: [brief|plain|enterprise|mobile|fancy]"), QStringLiteral("style")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("headerstyleplugin"), i18n("Header Style Plugin"), QStringLiteral("headerstyleplugin")));
+
+    QCommandLineOption pluginlistnameOption(QStringList() << QStringLiteral("list"), QStringLiteral("Show list of plugin installed."));
+    parser.addOption(pluginlistnameOption);
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
+
+    if (parser.isSet(pluginlistnameOption)) {
+        qDebug() << "List of Plugin :" << MessageViewer::HeaderStylePluginManager::self()->pluginListName();
+        return 0;
+    }
 
     KMime::Message *msg = new KMime::Message;
     if (parser.positionalArguments().count() == 0) {
@@ -79,12 +84,8 @@ int main(int argc, char **argv)
     msg->parse();
 
     Viewer *viewer = new Viewer(0);
+    viewer->setPluginName(parser.value(QStringLiteral("headerstyleplugin")));
     viewer->setMessage(KMime::Message::Ptr(msg));
-
-    const QString headerStrategy = parser.value(QStringLiteral("headerstrategy"));
-    const QString headerStyle = parser.value(QStringLiteral("headerstyle"));
-    viewer->setHeaderStyleAndStrategy(HeaderStyle::create(headerStyle),
-                                      HeaderStrategy::create(headerStrategy));
 
     viewer->show();
 

@@ -11,7 +11,6 @@
 #include "ui_mailreaderview.h"
 
 class QPainter;
-class KUrl;
 
 namespace MessageViewer
 {
@@ -73,7 +72,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void switchColors();
     void settingsChanged();
-    void urlClicked(const Akonadi::Item &, const KUrl &);
+    void urlClicked(const Akonadi::Item &, const QUrl &);
 };
 
 #endif // mailreaderVIEW_H

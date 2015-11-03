@@ -38,19 +38,17 @@
 #include "sendvcards/sendvcardsjob.h"
 #include "gravatar/widgets/gravatarupdatedialog.h"
 
-#include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
-#include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
+#include "KaddressbookGrantlee/GrantleeContactFormatter"
+#include "KaddressbookGrantlee/GrantleeContactGroupFormatter"
 #include "grantleetheme/grantleethememanager.h"
-#include "grantleetheme/globalsettings_base.h"
 
-#include "libkdepim/misc/uistatesaver.h"
+#include "Libkdepim/UiStateSaver"
 
-#include <pimcommon/acl/collectionaclpage.h>
-#include <pimcommon/acl/imapaclattribute.h>
+#include <PimCommon/CollectionAclPage>
+#include <PimCommon/ImapAclAttribute>
 
 #include <AkonadiWidgets/ETMViewStateSaver>
 #include <AkonadiCore/CollectionFilterProxyModel>
-#include <AkonadiCore/CollectionModel>
 #include <AkonadiWidgets/ControlGui>
 #include <AkonadiCore/EntityMimeTypeFilterModel>
 #include <AkonadiWidgets/EntityTreeView>
@@ -58,11 +56,11 @@
 #include <AkonadiCore/MimeTypeChecker>
 #include <AkonadiCore/AttributeFactory>
 #include <AkonadiWidgets/CollectionPropertiesDialog>
-#include <pimcommon/baloodebug/baloodebugdialog.h>
+#include <AkonadiSearch/Debug/akonadisearchdebugdialog.h>
 #include <KContacts/Addressee>
 #include <QPointer>
-#include "pimcommon/manageserversidesubscription/manageserversidesubscriptionjob.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/ManageServerSideSubscriptionJob"
+#include "PimCommon/PimUtil"
 
 #include <Akonadi/Contact/ContactDefaultActions>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
@@ -85,7 +83,6 @@
 #include <QTextBrowser>
 #include <KToggleAction>
 #include <KCMultiDialog>
-#include <kdeprintdialog.h>
 #include <KPrintPreview>
 #include <KXMLGUIClient>
 #include <KIconLoader>
@@ -100,6 +97,7 @@
 #include <QStackedWidget>
 #include <QDBusConnection>
 #include <QDesktopServices>
+#include <ItemModifyJob>
 
 namespace
 {
@@ -145,7 +143,15 @@ public:
 }
 
 MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
-    : QWidget(parent), mAllContactsModel(Q_NULLPTR), mXmlGuiClient(guiClient), mGrantleeThemeManager(Q_NULLPTR), mQuickSearchAction(Q_NULLPTR)
+    : QWidget(parent),
+      mAllContactsModel(Q_NULLPTR),
+      mXmlGuiClient(guiClient),
+      mGrantleeThemeManager(Q_NULLPTR),
+      mQuickSearchAction(Q_NULLPTR),
+      mServerSideSubscription(Q_NULLPTR),
+      mSearchGravatarAction(Q_NULLPTR),
+      mSendVcardAction(Q_NULLPTR),
+      mSendEmailAction(Q_NULLPTR)
 {
 
     (void) new KaddressbookAdaptor(this);
@@ -321,8 +327,10 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     connect(mItemView, SIGNAL(doubleClicked(Akonadi::Item)),
             mActionManager->action(Akonadi::StandardContactActionManager::EditItem),
             SLOT(trigger()));
-    connect(mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)));
+    connect(mItemView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &MainWidget::itemSelectionChanged);
+    connect(mItemView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &MainWidget::slotSelectionChanged);
 
     // show the contact details view as default
     mDetailsViewStack->setCurrentWidget(mContactDetails);
@@ -337,6 +345,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
 
     QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
     updateQuickSearchText();
+    slotSelectionChanged();
 }
 
 void MainWidget::configure()
@@ -384,10 +393,10 @@ void MainWidget::delayedInit()
     action(QStringLiteral("options_show_qrcodes"))->setChecked(showQRCodes());
 #endif
 
-    connect(GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()),
-            SLOT(saveState()));
-    connect(GlobalContactModel::instance()->model(), SIGNAL(modelReset()),
-            SLOT(restoreState()));
+    connect(GlobalContactModel::instance()->model(), &QAbstractItemModel::modelAboutToBeReset,
+            this, &MainWidget::saveState);
+    connect(GlobalContactModel::instance()->model(), &QAbstractItemModel::modelReset,
+            this, &MainWidget::restoreState);
     connect(qApp, &QApplication::aboutToQuit, this, &MainWidget::saveState);
 
     restoreState();
@@ -563,10 +572,13 @@ void MainWidget::setupGui()
 
 void MainWidget::setupActions(KActionCollection *collection)
 {
-    mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QStringLiteral("theme.desktop"), collection, QStringLiteral("kaddressbook/viewertemplates/"));
+    mGrantleeThemeManager = new GrantleeTheme::ThemeManager(QStringLiteral("addressbook"),
+                                                            QStringLiteral("theme.desktop"),
+                                                            collection,
+                                                            QStringLiteral("kaddressbook/viewertemplates/"));
     mGrantleeThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("kaddressbook_themes.knsrc"));
-    connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &MainWidget::slotGrantleeThemeSelected);
-    connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &MainWidget::slotGrantleeThemesUpdated);
+    connect(mGrantleeThemeManager, &GrantleeTheme::ThemeManager::grantleeThemeSelected, this, &MainWidget::slotGrantleeThemeSelected);
+    connect(mGrantleeThemeManager, &GrantleeTheme::ThemeManager::updateThemes, this, &MainWidget::slotGrantleeThemesUpdated);
 
     KActionMenu *themeMenu  = new KActionMenu(i18n("&Themes"), this);
     collection->addAction(QStringLiteral("theme_menu"), themeMenu);
@@ -708,30 +720,30 @@ void MainWidget::setupActions(KActionCollection *collection)
     connect(mQuickSearchAction, &QAction::triggered, mQuickSearchWidget, &QuickSearchWidget::slotFocusQuickSearch);
     collection->setDefaultShortcut(mQuickSearchAction, QKeySequence(Qt::ALT + Qt::Key_Q));
 
-    action = collection->addAction(QStringLiteral("send_mail"));
-    action->setText(i18n("Send an email..."));
-    action->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
-    connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
+    mSendEmailAction = collection->addAction(QStringLiteral("send_mail"));
+    mSendEmailAction->setText(i18n("Send an email..."));
+    mSendEmailAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
+    connect(mSendEmailAction, &QAction::triggered, this, &MainWidget::slotSendMail);
 
-    action = collection->addAction(QStringLiteral("send_vcards"));
-    action->setText(i18n("Send vCards..."));
-    action->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
-    connect(action, &QAction::triggered, this, &MainWidget::slotSendVcards);
+    mSendVcardAction = collection->addAction(QStringLiteral("send_vcards"));
+    mSendVcardAction->setText(i18n("Send vCards..."));
+    mSendVcardAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
+    connect(mSendVcardAction, &QAction::triggered, this, &MainWidget::slotSendVcards);
 
-    if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
+    if (!qEnvironmentVariableIsEmpty("KDEPIM_BALOO_DEBUG")) {
         action = collection->addAction(QStringLiteral("debug_baloo"));
         //Don't translate it. It's just for debug
         action->setText(QStringLiteral("Debug baloo..."));
-        connect(action, SIGNAL(triggered(bool)), this, SLOT(slotDebugBaloo()));
+        connect(action, &QAction::triggered, this, &MainWidget::slotDebugBaloo);
     }
 
     mServerSideSubscription = new QAction(QIcon::fromTheme(QStringLiteral("folder-bookmarks")), i18n("Serverside Subscription..."), this);
     collection->addAction(QStringLiteral("serverside_subscription"), mServerSideSubscription);
     connect(mServerSideSubscription, &QAction::triggered, this, &MainWidget::slotServerSideSubscription);
 
-    action = collection->addAction(QStringLiteral("gravatar"));
-    action->setText(i18n("Check gravatar..."));
-    connect(action, &QAction::triggered, this, &MainWidget::slotCheckGravatar);
+    mSearchGravatarAction = collection->addAction(QStringLiteral("search_gravatar"));
+    mSearchGravatarAction->setText(i18n("Check Gravatar..."));
+    connect(mSearchGravatarAction, &QAction::triggered, this, &MainWidget::slotCheckGravatar);
 }
 
 void MainWidget::printPreview()
@@ -762,7 +774,7 @@ void MainWidget::print()
     printer.setOutputFileName(Settings::self()->defaultFileName());
     printer.setCollateCopies(true);
 
-    QPointer<QPrintDialog> printDialog = KdePrint::createPrintDialog(&printer, this);
+    QPointer<QPrintDialog> printDialog = new QPrintDialog(&printer, this);
 
     printDialog->setWindowTitle(i18n("Print Contacts"));
     if (!printDialog->exec() || !printDialog) {
@@ -957,7 +969,7 @@ void MainWidget::restoreSplitterStates()
 
 void MainWidget::initGrantleeThemeName()
 {
-    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeAddressBookThemeName();
+    QString themeName = mGrantleeThemeManager->configuredThemeName();
     if (themeName.isEmpty()) {
         themeName = QStringLiteral("default");
     }
@@ -1079,10 +1091,10 @@ void MainWidget::slotDebugBaloo()
     if (lst.isEmpty()) {
         return;
     }
-    QPointer<PimCommon::BalooDebugDialog> dlg = new PimCommon::BalooDebugDialog;
+    QPointer<Akonadi::Search::AkonadiSearchDebugDialog> dlg = new Akonadi::Search::AkonadiSearchDebugDialog;
     dlg->setAkonadiId(lst.at(0).id());
     dlg->setAttribute(Qt::WA_DeleteOnClose);
-    dlg->setSearchType(PimCommon::BalooDebugSearchPathComboBox::Contacts);
+    dlg->setSearchType(Akonadi::Search::AkonadiSearchDebugSearchPathComboBox::Contacts);
     dlg->doSearch();
     dlg->show();
 }
@@ -1131,11 +1143,70 @@ void MainWidget::slotCheckGravatar()
     if (lst.count() == 1) {
         Akonadi::Item item = lst.first();
         if (item.hasPayload<KContacts::Addressee>()) {
+            KContacts::Addressee address = item.payload<KContacts::Addressee>();
+            const QString email = address.preferredEmail();
+            if (email.isEmpty()) {
+                KMessageBox::error(this, i18n("No email found for this contact."));
+                return;
+            }
             QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
+            dlg->setEmail(email);
+            if (!address.photo().isEmpty()) {
+                if (address.photo().isIntern()) {
+                    const QPixmap pix = QPixmap::fromImage(address.photo().data());
+                    dlg->setOriginalPixmap(pix);
+                } else {
+                    dlg->setOriginalUrl(address.photo().url());
+                }
+            }
             if (dlg->exec()) {
-                //extract emails.
+                KContacts::Picture picture = address.photo();
+                bool needToSave = false;
+                if (dlg->saveUrl()) {
+                    const QUrl url = dlg->resolvedUrl();
+                    if (!url.isEmpty()) {
+                        picture.setUrl(url.toString());
+                        needToSave = true;
+                    }
+                } else {
+                    const QPixmap pix = dlg->pixmap();
+                    if (!pix.isNull()) {
+                        picture.setData(pix.toImage());
+                        needToSave = true;
+                    }
+                }
+                if (needToSave) {
+                    address.setPhoto(picture);
+                    item.setPayload<KContacts::Addressee>(address);
+
+                    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item, this);
+                    connect(modifyJob, &Akonadi::ItemModifyJob::result, this, &MainWidget::slotModifyContactFinished);
+                }
             }
             delete dlg;
+        } else {
+            KMessageBox::information(this, i18n("A contact group was selected."));
         }
     }
 }
+
+void MainWidget::slotModifyContactFinished(KJob *job)
+{
+    if (job->error()) {
+        qCDebug(KADDRESSBOOK_LOG) << "Error while modifying items. " << job->error() << job->errorString();
+    }
+}
+
+void MainWidget::slotSelectionChanged()
+{
+    bool hasUniqSelection = false;
+    bool hasSelection = false;
+    if (mItemView->selectionModel()->selection().count() == 1) {
+        hasUniqSelection = (mItemView->selectionModel()->selection().at(0).height() == 1);
+        hasSelection = true;
+    }
+    mSendVcardAction->setEnabled(hasSelection);
+    mSendEmailAction->setEnabled(hasSelection);
+    mSearchGravatarAction->setEnabled(hasUniqSelection);
+}
+

@@ -18,7 +18,7 @@
 #ifndef THEMEDEFAULTTEMPLATE_H
 #define THEMEDEFAULTTEMPLATE_H
 
-#include <pimcommon/templatewidgets/templatelistwidget.h>
+#include <PimCommon/TemplateListWidget>
 
 namespace ThemeDefaultTemplate
 {

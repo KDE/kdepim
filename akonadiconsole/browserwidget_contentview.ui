@@ -382,12 +382,12 @@
   <customwidget>
    <class>CalendarSupport::IncidenceViewer</class>
    <extends>QWidget</extends>
-   <header location="global">calendarsupport/next/incidenceviewer.h</header>
+   <header location="global">CalendarSupport/IncidenceViewer</header>
   </customwidget>
   <customwidget>
    <class>MessageViewer::Viewer</class>
    <extends>QTextBrowser</extends>
-   <header location="global">messageviewer/viewer/viewer.h</header>
+   <header location="global">messageviewer/viewer.h</header>
   </customwidget>
   <customwidget>
    <class>Akonadi::ContactViewer</class>

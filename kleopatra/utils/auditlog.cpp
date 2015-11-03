@@ -34,7 +34,7 @@
 
 #include "auditlog.h"
 
-#include <kleo/job.h>
+#include <Libkleo/Job>
 
 #include <QUrl>
 #include "kleopatra_debug.h"

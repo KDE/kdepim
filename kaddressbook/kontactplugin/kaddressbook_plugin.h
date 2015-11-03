@@ -34,7 +34,7 @@ public:
     explicit KAddressBookUniqueAppHandler(KontactInterface::Plugin *plugin)
         : KontactInterface::UniqueAppHandler(plugin) {}
     void loadCommandLineOptions(QCommandLineParser *parser) Q_DECL_OVERRIDE;
-    int activate(const QStringList &args) Q_DECL_OVERRIDE;
+    int activate(const QStringList &args, const QString &workingDir) Q_DECL_OVERRIDE;
 };
 
 class KAddressBookPlugin : public KontactInterface::Plugin
@@ -45,7 +45,6 @@ public:
     KAddressBookPlugin(KontactInterface::Core *core, const QVariantList &);
     ~KAddressBookPlugin();
 
-    QString tipFile() const Q_DECL_OVERRIDE;
     bool isRunningStandalone() const Q_DECL_OVERRIDE;
     int weight() const Q_DECL_OVERRIDE
     {

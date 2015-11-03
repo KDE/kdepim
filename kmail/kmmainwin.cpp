@@ -20,9 +20,9 @@
 
 #include "kmmainwin.h"
 #include "kmmainwidget.h"
-#include "libkdepim/progresswidget/progressstatusbarwidget.h"
-#include "libkdepim/progresswidget/statusbarprogresswidget.h"
-#include "misc/broadcaststatus.h"
+#include "Libkdepim/ProgressStatusBarWidget"
+#include "Libkdepim/StatusbarProgressWidget"
+#include "libkdepim/broadcaststatus.h"
 #include "util.h"
 #include "tag/tagactionmanager.h"
 
@@ -59,7 +59,7 @@ KMMainWin::KMMainWin(QWidget *)
     resize(700, 500);   // The default size
 
     mKMMainWidget = new KMMainWidget(this, this, actionCollection());
-    connect(mKMMainWidget, SIGNAL(recreateGui()), this, SLOT(slotUpdateGui()));
+    connect(mKMMainWidget, &KMMainWidget::recreateGui, this, &KMMainWin::slotUpdateGui);
     setCentralWidget(mKMMainWidget);
     setupStatusBar();
     if (!kmkernel->xmlGuiInstanceName().isEmpty()) {
@@ -74,7 +74,7 @@ KMMainWin::KMMainWin(QWidget *)
                                  actionCollection());
 
     mHideMenuBarAction = KStandardAction::showMenubar(this, SLOT(slotToggleMenubar()), actionCollection());
-    mHideMenuBarAction->setChecked(GlobalSettings::self()->showMenuBar());
+    mHideMenuBarAction->setChecked(KMailSettings::self()->showMenuBar());
     slotToggleMenubar(true);
 
     KStandardAction::quit(this, SLOT(slotQuit()), actionCollection());
@@ -89,10 +89,6 @@ KMMainWin::KMMainWin(QWidget *)
     connect(mKMMainWidget, SIGNAL(captionChangeRequest(QString)),
             SLOT(setCaption(QString)));
 
-    if (kmkernel->firstInstance()) {
-        QTimer::singleShot(200, this, SLOT(slotShowTipOnStart()));
-    }
-
     mKMMainWidget->updateQuickSearchLineText();
 }
 
@@ -101,6 +97,11 @@ KMMainWin::~KMMainWin()
     KConfigGroup grp(KMKernel::self()->config()->group("Main Window"));
     saveMainWindowSettings(grp);
     KMKernel::self()->config()->sync();
+}
+
+KMMainWidget *KMMainWin::mainKMWidget() const
+{
+    return mKMMainWidget;
 }
 
 void KMMainWin::displayStatusMsg(const QString &aText)
@@ -138,7 +139,7 @@ void KMMainWin::slotToggleMenubar(bool dontShowWarning)
             }
             menuBar()->hide();
         }
-        GlobalSettings::self()->setShowMenuBar(mHideMenuBarAction->isChecked());
+        KMailSettings::self()->setShowMenuBar(mHideMenuBarAction->isChecked());
     }
 }
 
@@ -174,7 +175,7 @@ void KMMainWin::setupStatusBar()
     mMessageLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     statusBar()->addWidget(mMessageLabel);
 
-    QTimer::singleShot(2000, KPIM::BroadcastStatus::instance(), SLOT(reset()));
+    QTimer::singleShot(2000, KPIM::BroadcastStatus::instance(), &KPIM::BroadcastStatus::reset);
 
     statusBar()->addPermanentWidget(mKMMainWidget->vacationScriptIndicator());
     statusBar()->addPermanentWidget(mProgressBar->littleProgress());
@@ -212,11 +213,6 @@ bool KMMainWin::queryClose()
         return true;
     }
     return kmkernel->canQueryClose();
-}
-
-void KMMainWin::slotShowTipOnStart()
-{
-    KTipDialog::showTip(this);
 }
 
 void KMMainWin::slotConfigureShortcuts()

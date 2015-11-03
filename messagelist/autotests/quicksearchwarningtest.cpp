@@ -16,7 +16,8 @@
 */
 
 #include "quicksearchwarningtest.h"
-#include "../core/widgets/quicksearchwarning.h"
+#include "../src/core/widgets/quicksearchwarning.h"
+#include <QAction>
 #include <qtest.h>
 QuickSearchWarningTest::QuickSearchWarningTest(QObject *parent)
     : QObject(parent)
@@ -33,6 +34,8 @@ void QuickSearchWarningTest::shouldHaveDefaultValue()
 {
     MessageList::Core::QuickSearchWarning w;
     QVERIFY(!w.isVisible());
+    QAction *act = w.findChild<QAction *>(QStringLiteral("donotshowagain"));
+    QVERIFY(act);
 }
 
 void QuickSearchWarningTest::shouldSetVisible()

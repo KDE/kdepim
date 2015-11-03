@@ -24,10 +24,9 @@
 #include "knotes_part.h"
 #include "knotes_kontact_plugin_debug.h"
 #include "notesharedglobalconfig.h"
-#include "noteshared/noteutils.h"
+#include "noteutils.h"
 #include "knoteseditdialog.h"
 #include "knotesadaptor.h"
-#include "noteshared/job/createnewnotejob.h"
 #include "knotesiconview.h"
 #include "knoteswidget.h"
 #include "knotesselectdeletenotesdialog.h"
@@ -40,17 +39,17 @@
 #include "knotes/configdialog/knotesimpleconfigdialog.h"
 #include "knotes/finddialog/knotefinddialog.h"
 #include "utils/knoteutils.h"
-#include "alarms/notealarmdialog.h"
-#include "noteshared/resources/localresourcecreator.h"
-#include "noteshared/job/createnewnotejob.h"
+#include "NoteShared/NoteAlarmDialog"
+#include "noteshared/localresourcecreator.h"
+#include "NoteShared/CreateNewNoteJob"
 
-#include "noteshared/akonadi/notesakonaditreemodel.h"
-#include "noteshared/akonadi/noteschangerecorder.h"
-#include "noteshared/attributes/notealarmattribute.h"
-#include "noteshared/attributes/showfoldernotesattribute.h"
-#include "noteshared/attributes/notealarmattribute.h"
-#include "noteshared/attributes/notedisplayattribute.h"
-#include "noteshared/attributes/notelockattribute.h"
+#include "NoteShared/NotesAkonadiTreeModel"
+#include "NoteShared/NotesChangeRecorder"
+#include "NoteShared/NoteAlarmAttribute"
+#include "NoteShared/ShowFolderNotesAttribute"
+#include "NoteShared/NoteAlarmAttribute"
+#include "NoteShared/NoteDisplayAttribute"
+#include "NoteShared/NoteLockAttribute"
 
 #include <Akonadi/Notes/NoteUtils>
 
@@ -77,7 +76,6 @@
 #include <QInputDialog>
 #include <KMessageBox>
 #include <KXMLGUIFactory>
-#include <ksocketfactory.h>
 #include <KApplication>
 #include <KFileDialog>
 #include <KToggleAction>
@@ -94,7 +92,7 @@
 
 KNotesPart::KNotesPart(QObject *parent)
     : KParts::ReadOnlyPart(parent),
-      mNotesWidget(Q_NULLPTR) ,
+      mNotesWidget(Q_NULLPTR),
       mPublisher(Q_NULLPTR),
       mNotePrintPreview(Q_NULLPTR),
       mNoteTreeModel(Q_NULLPTR)
@@ -219,8 +217,8 @@ KNotesPart::KNotesPart(QObject *parent)
 
     connect(mNoteTreeModel, &NoteShared::NotesAkonadiTreeModel::rowsInserted, this, &KNotesPart::slotRowInserted);
 
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemChanged, this, &KNotesPart::slotItemChanged);
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemRemoved, this, &KNotesPart::slotItemRemoved);
     connect(mNoteRecorder->changeRecorder(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
 
     mSelectionModel = new QItemSelectionModel(mNoteTreeModel);
@@ -245,8 +243,8 @@ KNotesPart::KNotesPart(QObject *parent)
     connect(mNotesWidget->notesView(), SIGNAL(itemDoubleClicked(QListWidgetItem*)),
             this, SLOT(editNote(QListWidgetItem*)));
 
-    connect(mNotesWidget->notesView(), SIGNAL(itemSelectionChanged()),
-            this, SLOT(slotOnCurrentChanged()));
+    connect(mNotesWidget->notesView(), &QListWidget::itemSelectionChanged,
+            this, &KNotesPart::slotOnCurrentChanged);
     slotOnCurrentChanged();
 
     setWidget(mNotesWidget);
@@ -417,7 +415,7 @@ QString KNotesPart::text(Akonadi::Item::Id id) const
     }
 }
 
-void KNotesPart::setName(Akonadi::Entity::Id id, const QString &newName)
+void KNotesPart::setName(Akonadi::Item::Id id, const QString &newName)
 {
     KNotesIconViewItem *note = mNotesWidget->notesView()->iconView(id);
     if (note) {
@@ -532,7 +530,7 @@ void KNotesPart::popupRMB(QListWidgetItem *item, const QPoint &pos, const QPoint
     delete contextMenu;
 }
 
-void KNotesPart::editNote(Akonadi::Entity::Id id)
+void KNotesPart::editNote(Akonadi::Item::Id id)
 {
     KNotesIconViewItem *knoteItem = mNotesWidget->notesView()->iconView(id);
     if (knoteItem) {
@@ -694,7 +692,7 @@ void KNotesPart::slotSetAlarm()
         bool needToModify = true;
         QDateTime dateTime = dlg->alarm();
         if (dateTime.isValid()) {
-            NoteShared::NoteAlarmAttribute *attribute =  item.attribute<NoteShared::NoteAlarmAttribute>(Akonadi::Entity::AddIfMissing);
+            NoteShared::NoteAlarmAttribute *attribute =  item.attribute<NoteShared::NoteAlarmAttribute>(Akonadi::Item::AddIfMissing);
             attribute->setDateTime(dateTime);
         } else {
             if (item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
@@ -806,7 +804,7 @@ void KNotesPart::slotOpenFindDialog()
         mNoteFindDialog = new KNoteFindDialog(widget());
         connect(mNoteFindDialog.data(), &KNoteFindDialog::noteSelected, this, &KNotesPart::slotSelectNote);
     }
-    QHash<Akonadi::Item::Id , Akonadi::Item> lst;
+    QHash<Akonadi::Item::Id, Akonadi::Item> lst;
     QHashIterator<Akonadi::Item::Id, KNotesIconViewItem *> i(mNotesWidget->notesView()->noteList());
     while (i.hasNext()) {
         i.next();

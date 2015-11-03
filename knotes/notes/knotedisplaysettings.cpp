@@ -16,7 +16,7 @@
 */
 
 #include "knotedisplaysettings.h"
-#include "noteshared/attributes/notedisplayattribute.h"
+#include "NoteShared/NoteDisplayAttribute"
 #include "knotesglobalconfig.h"
 
 KNoteDisplaySettings::KNoteDisplaySettings(NoteShared::NoteDisplayAttribute *attr)

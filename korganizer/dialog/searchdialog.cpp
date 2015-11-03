@@ -30,10 +30,10 @@
 #include "calendarview.h"
 #include "koglobals.h"
 
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
-#include <calendarviews/list/listview.h>
+#include <EventViews/ListView>
 
 #include <KMessageBox>
 #include <KConfigGroup>
@@ -246,7 +246,7 @@ void SearchDialog::search(const QRegExp &re)
 
 void SearchDialog::readConfig()
 {
-    KConfigGroup group(KOGlobals::self()->config(), QStringLiteral("SearchDialog"));
+    KConfigGroup group = KSharedConfig::openConfig()->group(QStringLiteral("SearchDialog"));
     const QSize size = group.readEntry("Size", QSize(775, 600));
     if (size.isValid()) {
         resize(size);
@@ -255,7 +255,7 @@ void SearchDialog::readConfig()
 
 void SearchDialog::writeConfig()
 {
-    KConfigGroup group(KOGlobals::self()->config(), QStringLiteral("SearchDialog"));
+    KConfigGroup group = KSharedConfig::openConfig()->group(QStringLiteral("SearchDialog"));
     group.writeEntry("Size", size());
     group.sync();
 }

@@ -54,7 +54,7 @@ public:
     {
         timer.setSingleShot(true);
         timer.setInterval(200);
-        connect(&timer, SIGNAL(timeout()), q, SLOT(signalUpdates()));
+        connect(&timer, &QTimer::timeout, q, &JobTracker::signalUpdates);
     }
 
     bool isSession(int id) const

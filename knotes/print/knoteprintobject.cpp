@@ -16,9 +16,9 @@
 */
 
 #include "knoteprintobject.h"
-#include "noteshared/attributes/notealarmattribute.h"
-#include "noteshared/attributes/notelockattribute.h"
-#include "noteshared/attributes/notedisplayattribute.h"
+#include "NoteShared/NoteAlarmAttribute"
+#include "NoteShared/NoteLockAttribute"
+#include "NoteShared/NoteDisplayAttribute"
 
 #include <KMime/KMimeMessage>
 

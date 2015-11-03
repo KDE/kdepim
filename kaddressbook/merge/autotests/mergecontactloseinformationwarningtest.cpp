@@ -43,7 +43,7 @@ void MergeContactLoseInformationWarningTest::shouldEmitSignals()
 {
     KABMergeContacts::MergeContactLoseInformationWarning w;
     w.show();
-    QTest::qWaitForWindowShown(&w);
+    QTest::qWaitForWindowExposed(&w);
     QVERIFY(w.isVisible());
     QAction *customize = w.findChild<QAction *>(QStringLiteral("customize"));
     QAction *automatic = w.findChild<QAction *>(QStringLiteral("automatic"));

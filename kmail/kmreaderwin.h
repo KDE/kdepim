@@ -23,8 +23,8 @@
 
 #include <QWidget>
 #include <qurl.h>
-#include <messageviewer/viewer/viewer.h>
-#include <messageviewer/interfaces/bodypart.h>
+#include <messageviewer/viewer.h>
+#include <messageviewer/bodypart.h>
 #include <AkonadiCore/Item>
 #include <KContacts/Addressee>
 class KActionCollection;
@@ -33,8 +33,6 @@ class KToggleAction;
 class QMenu;
 namespace MessageViewer
 {
-class HeaderStrategy;
-class HeaderStyle;
 class CSSHelper;
 class AttachmentStrategy;
 }
@@ -57,15 +55,6 @@ public:
 
     /** Read settings from app's config file. */
     void readConfig();
-
-    MessageViewer::HeaderStyle *headerStyle() const;
-
-    /** Set the header style and strategy. We only want them to be set
-      together. */
-    void setHeaderStyleAndStrategy(MessageViewer::HeaderStyle *style,
-                                   MessageViewer::HeaderStrategy *strategy);
-    /** Getthe message header strategy. */
-    const MessageViewer::HeaderStrategy *headerStrategy() const;
 
     /** Get/set the message attachment strategy. */
     const MessageViewer::AttachmentStrategy *attachmentStrategy() const;
@@ -116,7 +105,7 @@ public:
     static QString newFeaturesMD5();
 
     /** Display a generic HTML splash page instead of a message */
-    void displaySplashPage(const QString &info);
+    void displaySplashPage(const QString &templateName, const QVariantHash &data);
 
     /** Display the about page instead of a message */
     void displayAboutPage();
@@ -170,7 +159,6 @@ public:
     }
     QAction *toggleMimePartTreeAction() const;
     QAction *speakTextAction() const;
-    QAction *translateAction() const;
     QAction *downloadImageToDiskAction() const;
     QAction *viewSourceAction() const;
     QAction *findInMessageAction() const;
@@ -180,9 +168,6 @@ public:
     QAction *blockImage() const;
     QAction *openBlockableItems() const;
     QAction *expandShortUrlAction() const;
-    QAction *createTodoAction() const;
-    QAction *createEventAction() const;
-    QAction *createNoteAction() const;
 
     QAction *editContactAction() const
     {
@@ -224,6 +209,9 @@ public:
 
     bool mimePartTreeIsEmpty() const;
     KActionMenu *shareServiceUrlMenu() const;
+
+    QList<QAction *> viewerPluginActionList(MessageViewer::ViewerPluginInterface::SpecificFeatureTypes features);
+
 Q_SIGNALS:
     /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */

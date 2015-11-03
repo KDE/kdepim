@@ -1,20 +1,12 @@
-macro(mailimporter_unittest _source)
-  set(_test ${_source} )
-  get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} )
-  add_test( ${_name} ${_name} )
-  ecm_mark_as_test(mailimporter-${_name})
-  target_link_libraries( ${_name}
-    mailimporter
-    KF5::AkonadiCore
-    Qt5::Test
-    Qt5::Core
-    Qt5::Gui
-  )
+macro(add_mailimporter_unittest _source)
+    ecm_add_test(${_source}
+        NAME_PREFIX "mailimporter-"
+        LINK_LIBRARIES KF5::MailImporter KF5::AkonadiCore Qt5::Test Qt5::Core Qt5::Gui
+    )
 endmacro ()
 
-mailimporter_unittest(filterthunderbirdtest.cpp)
-mailimporter_unittest(filtericedovetest.cpp)
-mailimporter_unittest(filterclawsmailtest.cpp)
-mailimporter_unittest(filtersylpheedtest.cpp)
+add_mailimporter_unittest(filterthunderbirdtest.cpp)
+add_mailimporter_unittest(filtericedovetest.cpp)
+add_mailimporter_unittest(filterclawsmailtest.cpp)
+add_mailimporter_unittest(filtersylpheedtest.cpp)
 

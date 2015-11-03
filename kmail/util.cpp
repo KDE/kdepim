@@ -38,10 +38,10 @@
 #include "util.h"
 #include "kmkernel.h"
 
-#include "messagecore/utils/stringutil.h"
-#include "messagecomposer/helper/messagehelper.h"
+#include "MessageCore/StringUtil"
+#include "MessageComposer/MessageHelper"
 
-#include "templateparser/templateparser.h"
+#include "TemplateParser/TemplateParser"
 
 #include <kmime/kmime_message.h>
 #include <kmessagebox.h>
@@ -54,7 +54,7 @@
 #include <QAction>
 #include <QStandardPaths>
 
-#include "foldercollection.h"
+#include "MailCommon/FolderCollection"
 
 using namespace MailCommon;
 
@@ -66,7 +66,9 @@ KMime::Types::Mailbox::List KMail::Util::mailingListsFromMessage(const Akonadi::
     if (parentCollection.isValid()) {
         const QSharedPointer<FolderCollection> fd = FolderCollection::forCollection(parentCollection, false);
         if (fd->isMailingListEnabled() && !fd->mailingListPostAddress().isEmpty()) {
-            addresses << MessageCore::StringUtil::mailboxFromUnicodeString(fd->mailingListPostAddress());
+            KMime::Types::Mailbox mailbox;
+            mailbox.fromUnicodeString(fd->mailingListPostAddress());
+            addresses << mailbox;
         }
     }
 
@@ -85,7 +87,7 @@ Akonadi::Item::Id KMail::Util::putRepliesInSameFolder(const Akonadi::Item &item)
     return -1;
 }
 
-bool KMail::Util::handleClickedURL(const KUrl &url, const QSharedPointer<MailCommon::FolderCollection> &folder)
+bool KMail::Util::handleClickedURL(const QUrl &url, const QSharedPointer<MailCommon::FolderCollection> &folder)
 {
     if (url.scheme() == QLatin1String("mailto")) {
         KMime::Message::Ptr msg(new KMime::Message);
@@ -128,7 +130,7 @@ bool KMail::Util::handleClickedURL(const KUrl &url, const QSharedPointer<MailCom
 bool KMail::Util::mailingListsHandleURL(const QList<QUrl> &lst, const QSharedPointer<MailCommon::FolderCollection> &folder)
 {
     const QString handler = (folder->mailingList().handler() == MailingList::KMail)
-                            ? QLatin1String("mailto") : QLatin1String("https");
+                            ? QStringLiteral("mailto") : QStringLiteral("https");
 
     QUrl urlToHandle;
     QList<QUrl>::ConstIterator end(lst.constEnd());
@@ -192,28 +194,8 @@ bool KMail::Util::mailingListHelp(const QSharedPointer<MailCommon::FolderCollect
 
 void KMail::Util::lastEncryptAndSignState(bool &lastEncrypt, bool &lastSign, const KMime::Message::Ptr &msg)
 {
-    lastSign = KMime::isSigned(msg.get());
-    lastEncrypt = KMime::isEncrypted(msg.get());
-}
-
-QColor KMail::Util::misspelledColor()
-{
-    return QColor(Qt::red);
-}
-
-QColor KMail::Util::quoteL1Color()
-{
-    return QColor(0x00, 0x80, 0x00);
-}
-
-QColor KMail::Util::quoteL2Color()
-{
-    return QColor(0x00, 0x70, 0x00);
-}
-
-QColor KMail::Util::quoteL3Color()
-{
-    return QColor(0x00, 0x60, 0x00);
+    lastSign = KMime::isSigned(msg.data());
+    lastEncrypt = KMime::isEncrypted(msg.data());
 }
 
 void KMail::Util::addQActionHelpText(QAction *action, const QString &text)

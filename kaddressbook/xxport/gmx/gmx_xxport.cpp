@@ -78,15 +78,17 @@
 */
 
 #include "gmx_xxport.h"
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include "kaddressbook_debug.h"
 #include <QFileDialog>
-#include <KIO/NetAccess>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
 #include <QUrl>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 
 #include <QFile>
 #include <QMap>
@@ -277,7 +279,7 @@ ContactList GMXXXPort::importContacts() const
                 addressee->setOrganization(itemList[16]);   // Company
             }
             if (!itemList[17].isEmpty()) {
-                addressee->insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-Department"), itemList[17]);   // Department
+                addressee->insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Department"), itemList[17]);   // Department
             }
             if (checkDateTime(itemList[18], dt)) {
                 addressee->setRevision(dt);   // Change_date
@@ -377,14 +379,15 @@ bool GMXXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidg
 
         doExport(&tmpFile, list.addressList());
         tmpFile.flush();
-
-        return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url);
+        KJobWidgets::setWindow(job, parentWidget());
+        return job->exec();
     } else {
         QString fileName = url.toLocalFile();
         QFile file(fileName);
 
         if (!file.open(QIODevice::WriteOnly)) {
-            QString txt = i18n("<qt>Unable to open file <b>%1</b>.</qt>", fileName);
+            const QString txt = i18n("<qt>Unable to open file <b>%1</b>.</qt>", fileName);
             KMessageBox::error(parentWidget(), txt);
             return false;
         }
@@ -465,7 +468,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
         if (categories.count() > 0) {
             for (int i = 0; i < categories.count(); ++i) {
                 if (categoryMap.contains(categories[i])) {
-                    category |= 1 << categoryMap.indexOf(categories[i], 0) ;
+                    category |= 1 << categoryMap.indexOf(categories[i], 0);
                 }
             }
         }
@@ -627,7 +630,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
                       QString()) << DELIM  // Position
 
                   << ((recId == typeHome) ?
-                      addressee->custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-SpousesName")) :
+                      addressee->custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-SpousesName")) :
                       QString()) << DELIM  // Comments
 
                   << recId << DELIM                   // Record_type_id (0,1,2)
@@ -639,7 +642,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
                       QString()) << DELIM  // Company
 
                   << ((recId == typeWork) ?
-                      addressee->custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-Department")) :
+                      addressee->custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Department")) :
                       QString()) << DELIM  // Department
 
                   << dateString(addressee->revision()) << DELIM   // Change_date

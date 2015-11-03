@@ -54,7 +54,7 @@
 #include <KMessageBox>
 #include <KHelpMenu>
 #include <AkonadiWidgets/controlgui.h>
-#include <mailcommon/kernel/mailkernel.h>
+#include <MailCommon/MailKernel>
 #include <QPushButton>
 
 ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)

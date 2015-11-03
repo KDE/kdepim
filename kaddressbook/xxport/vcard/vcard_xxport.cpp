@@ -22,9 +22,9 @@
 #include "vcardviewerdialog.h"
 #include "vcardexportselectionwidget.h"
 
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
-#include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
+#include <KaddressbookGrantlee/GrantleeContactViewer>
 
 #ifdef QGPGME_FOUND
 #include <gpgme++/context.h>
@@ -38,14 +38,17 @@
 #include "kaddressbook_debug.h"
 #include <QDialog>
 #include <QFileDialog>
-#include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
 #include <QUrl>
 #include <KStandardGuiItem>
-#include <KIO/NetAccess>
 #include <KSharedConfig>
+
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
+#include <KIO/StoredTransferJob>
 
 #include <QFile>
 #include <QPointer>
@@ -67,18 +70,18 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
 
     bool ok = true;
     if (list.count() == 1) {
-        url = KFileDialog::getSaveUrl(
-                  QString(list[ 0 ].givenName() +
-                          QLatin1Char(QLatin1Char('_')) +
-                          list[ 0 ].familyName() +
-                          QLatin1String(".vcf")));
+        url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(
+                                              QString(list[ 0 ].givenName() +
+                                                      QLatin1Char(QLatin1Char('_')) +
+                                                      list[ 0 ].familyName() +
+                                                      QLatin1String(".vcf"))));
         if (url.isEmpty()) {   // user canceled export
             return true;
         }
 
-        if (option(QLatin1String("version")) == QLatin1String("v21")) {
+        if (option(QStringLiteral("version")) == QLatin1String("v21")) {
             ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v2_1));
-        } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
+        } else if (option(QStringLiteral("version")) == QLatin1String("v30")) {
             ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v3_0));
         } else {
             ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v4_0));
@@ -108,9 +111,9 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
 
                 bool tmpOk = false;
 
-                if (option(QLatin1String("version")) == QLatin1String("v21")) {
+                if (option(QStringLiteral("version")) == QLatin1String("v21")) {
                     tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v2_1));
-                } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
+                } else if (option(QStringLiteral("version")) == QLatin1String("v30")) {
                     tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v3_0));
                 } else {
                     tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v4_0));
@@ -126,9 +129,9 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
                 return true; // user canceled export
             }
 
-            if (option(QLatin1String("version")) == QLatin1String("v21")) {
+            if (option(QStringLiteral("version")) == QLatin1String("v21")) {
                 ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v2_1));
-            } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
+            } else if (option(QStringLiteral("version")) == QLatin1String("v30")) {
                 ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v3_0));
             } else {
                 ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v4_0));
@@ -146,7 +149,6 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
 
 ContactList VCardXXPort::importContacts() const
 {
-    QString fileName;
     ContactList contactList;
     KContacts::Addressee::List addrList;
     QList<QUrl> urls;
@@ -159,11 +161,9 @@ ContactList VCardXXPort::importContacts() const
         } else {
             const QString filter = i18n("*.vcf|vCard (*.vcf)\n*|all files (*)");
             urls =
-                KFileDialog::getOpenUrls(
-                    QUrl(),
-                    filter,
-                    parentWidget(),
-                    i18nc("@title:window", "Select vCard to Import"));
+                QFileDialog::getOpenFileUrls(parentWidget(), i18nc("@title:window", "Select vCard to Import"),
+                                             QUrl(),
+                                             filter);
         }
 
         if (urls.isEmpty()) {
@@ -177,40 +177,25 @@ ContactList VCardXXPort::importContacts() const
         for (int i = 0; i < numberOfUrl; ++i) {
             const QUrl url = urls.at(i);
 
-            if (KIO::NetAccess::download(url, fileName, parentWidget())) {
+            auto job = KIO::storedGet(url);
+            KJobWidgets::setWindow(job, parentWidget());
+            if (job->exec()) {
 
-                QFile file(fileName);
-
-                if (file.open(QIODevice::ReadOnly)) {
-                    const QByteArray data = file.readAll();
-                    file.close();
-                    if (!data.isEmpty()) {
-                        addrList += parseVCard(data);
-                    }
-
-                    KIO::NetAccess::removeTempFile(fileName);
-                } else {
-                    const QString msg = xi18nc(
-                                            "@info",
-                                            "<para>When trying to read the vCard, "
-                                            "there was an error opening the file <filename>%1</filename>:</para>"
-                                            "<para>%2</para>",
-                                            url.toDisplayString(),
-                                            i18nc("QFile", file.errorString().toLatin1()));
-                    KMessageBox::error(parentWidget(), msg, caption);
-                    anyFailures = true;
+                const QByteArray data = job->data();
+                if (!data.isEmpty()) {
+                    addrList += parseVCard(data);
                 }
             } else {
                 const QString msg = xi18nc(
                                         "@info",
                                         "<para>Unable to access vCard:</para><para>%1</para>",
-                                        KIO::NetAccess::lastErrorString());
+                                        job->errorString());
                 KMessageBox::error(parentWidget(), msg, caption);
                 anyFailures = true;
             }
         }
 
-        if (!option(QLatin1String("importUrl")).isEmpty()) {     // a vcard was passed via cmd
+        if (!option(QStringLiteral("importUrl")).isEmpty()) {     // a vcard was passed via cmd
             if (addrList.isEmpty()) {
                 if (anyFailures && urls.count() > 1) {
                     KMessageBox::information(
@@ -263,8 +248,9 @@ bool VCardXXPort::doExport(const QUrl &url, const QByteArray &data) const
 
     tmpFile.write(data);
     tmpFile.flush();
-
-    return KIO::NetAccess::upload(tmpFile.fileName(), newUrl, parentWidget());
+    auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), newUrl);
+    KJobWidgets::setWindow(job, parentWidget());
+    return job->exec();
 }
 
 KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addressee::List &addrList, VCardExportSelectionWidget::ExportFields exportFieldType) const
@@ -408,8 +394,8 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
 void VCardXXPort::addKey(KContacts::Addressee &addr, KContacts::Key::Type type) const
 {
 #ifdef QGPGME_FOUND
-    const QString fingerprint = addr.custom(QLatin1String("KADDRESSBOOK"),
-                                            (type == KContacts::Key::PGP ? QLatin1String("OPENPGPFP") : QLatin1String("SMIMEFP")));
+    const QString fingerprint = addr.custom(QStringLiteral("KADDRESSBOOK"),
+                                            (type == KContacts::Key::PGP ? QStringLiteral("OPENPGPFP") : QStringLiteral("SMIMEFP")));
     if (fingerprint.isEmpty()) {
         return;
     }

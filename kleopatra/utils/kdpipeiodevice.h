@@ -24,8 +24,6 @@
 
 #include <utility>
 
-//#include "checker.h"
-
 class KDPipeIODevice : public QIODevice
 {
     Q_OBJECT

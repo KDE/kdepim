@@ -29,7 +29,7 @@
 #include <QMouseEvent>
 #include <AkonadiCore/collectionstatistics.h>
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 #include <kohelper.h>
 #include "korganizer_debug.h"
 #include "controller.h"
@@ -257,7 +257,7 @@ bool StyledCalendarDelegate::editorEvent(QEvent *event,
     QList<StyledCalendarDelegate::Action> actions = getActions(opt, index);
     if (actions.count() >= button) {
         const Action a = actions.at(button - 1);
-        emit action(index, a);
+        Q_EMIT action(index, a);
         return true;
     }
     return QStyledItemDelegate::editorEvent(event, model, option, index);

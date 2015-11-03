@@ -30,11 +30,11 @@
     your version.
 */
 #include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
-#include <ksieve/parser.h>
+#include <../src/ksieve/parser.h>
 using KSieve::Parser;
 
-#include <ksieve/error.h>
-#include <ksieve/scriptbuilder.h>
+#include <../src/ksieve/error.h>
+#include <../src/ksieve/scriptbuilder.h>
 
 #include <QString>
 
@@ -437,7 +437,7 @@ struct TestCase {
 
 };
 
-static const int numTestCases = sizeof testCases / sizeof * testCases ;
+static const int numTestCases = sizeof testCases / sizeof * testCases;
 
 // Prints out the parse tree in XML-like format. For visual inspection
 // (manual tests).
@@ -459,7 +459,7 @@ public:
         write(multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string);
     }
     void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE {
-        const QString txt = "number" + (quantifier ? QString(" quantifier=\"%1\"").arg(quantifier) : QString()) ;
+        const QString txt = "number" + (quantifier ? QStringLiteral(" quantifier=\"%1\"").arg(quantifier) : QString());
         write(txt.toLatin1(), QString::number(number));
     }
     void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
@@ -530,7 +530,7 @@ private:
     int indent;
     void write(const char *msg)
     {
-        for (int i = 2 * indent ; i > 0 ; --i) {
+        for (int i = 2 * indent; i > 0; --i) {
             cout << " ";
         }
         cout << msg << endl;
@@ -712,7 +712,7 @@ int main(int argc, char *argv[])
 
     } else if (argc == 1) {   // automated test
         bool success = true;
-        for (int i = 0 ; i < numTestCases ; ++i) {
+        for (int i = 0; i < numTestCases; ++i) {
             const TestCase &t = testCases[i];
             cerr << t.name << ":";
             VerifyingScriptBuilder v(t);

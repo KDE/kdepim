@@ -28,9 +28,9 @@ public:
     ~ImportExportProgressIndicatorBase();
 
     virtual void increaseProgressDialog();
-    virtual void createProgressDialog();
+    virtual void createProgressDialog(const QString &title);
 
-    virtual void showInfo(const QString &text);
+    virtual void setProgressDialogLabel(const QString &text);
     virtual bool wasCanceled() const;
     virtual int mergeConfigMessageBox(const QString &configName) const;
     virtual bool overwriteConfigMessageBox(const QString &configName) const;
@@ -41,6 +41,7 @@ public:
 
 Q_SIGNALS:
     void info(const QString &text);
+    void canceled();
 
 protected:
     int mNumberOfStep;

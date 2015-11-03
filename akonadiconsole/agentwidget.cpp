@@ -22,7 +22,7 @@
 #include "agentwidget.h"
 #include "agentconfigdialog.h"
 #include "akonadiconsole_debug.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 #include <AkonadiWidgets/agenttypedialog.h>
 #include <AkonadiWidgets/agentinstancewidget.h>
 #include <AkonadiCore/agentmanager.h>
@@ -66,7 +66,7 @@ public:
         connect(buttonBox, &QDialogButtonBox::accepted, this, &TextDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &TextDialog::reject);
 
-        mText = new PimCommon::PlainTextEditorWidget;
+        mText = new KPIMTextEdit::PlainTextEditorWidget;
         mainLayout->addWidget(mText);
         mainLayout->addWidget(buttonBox);
         mText->setReadOnly(true);
@@ -79,7 +79,7 @@ public:
     }
 
 private:
-    PimCommon::PlainTextEditorWidget *mText;
+    KPIMTextEdit::PlainTextEditorWidget *mText;
 };
 
 using namespace Akonadi;
@@ -381,7 +381,7 @@ void AgentWidget::cloneAgent(KJob *job)
         if (signature.startsWith("Introspect")) {   // D-Bus stuff // krazy:exclude=strings
             continue;
         }
-        const QString methodName = QString::fromLatin1(signature.left(signature.indexOf('(')));
+        const QString methodName = QLatin1String(signature.left(signature.indexOf('(')));
         const QDBusMessage reply = sourceIface.call(methodName);
         if (reply.arguments().count() != 1) {
             qCritical() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();

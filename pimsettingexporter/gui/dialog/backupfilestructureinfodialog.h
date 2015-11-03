@@ -19,7 +19,7 @@
 #define BACKUPFILESTRUCTUREINFODIALOG_H
 
 #include <QDialog>
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -34,7 +34,7 @@ private:
     void readConfig();
     void writeConfig();
     void loadStructure();
-    PimCommon::PlainTextEditorWidget *mEditor;
+    KPIMTextEdit::PlainTextEditorWidget *mEditor;
 };
 
 #endif // BACKUPFILESTRUCTUREINFODIALOG_H

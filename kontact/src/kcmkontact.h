@@ -25,7 +25,7 @@
 #ifndef KCMKONTACT_H
 #define KCMKONTACT_H
 
-#include <libkdepim/prefs/kprefsdialog.h>
+#include <Libkdepim/KPrefsDialog>
 using namespace KPIM;
 
 #include <KService>
@@ -55,10 +55,7 @@ public:
     void writeConfig() Q_DECL_OVERRIDE;
 
     QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
-    KComboBox *comboBox() const
-    {
-        return mPluginCombo;
-    }
+    KComboBox *comboBox() const;
 
 private:
     KComboBox *mPluginCombo;

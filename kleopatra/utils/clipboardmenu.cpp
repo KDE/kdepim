@@ -66,7 +66,7 @@ ClipboardMenu::ClipboardMenu(QObject *parent)
     mClipboardMenu->addAction(mSmimeSignClipboardAction);
     mClipboardMenu->addAction(mOpenPGPSignClipboardAction);
     mClipboardMenu->addAction(mDecryptVerifyClipboardAction);
-    connect(QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), this, SLOT(slotEnableDisableActions()));
+    connect(QApplication::clipboard(), &QClipboard::changed, this, &ClipboardMenu::slotEnableDisableActions);
     slotEnableDisableActions();
 }
 

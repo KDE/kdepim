@@ -22,7 +22,7 @@
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
-class UpdateContactJob::Private
+class Q_DECL_HIDDEN UpdateContactJob::Private
 {
 public:
     Private(UpdateContactJob *qq, const QString &email, const KContacts::Addressee &contact, QWidget *parentWidget)

@@ -38,10 +38,12 @@ PimSettingCommandLineOption::~PimSettingCommandLineOption()
 void PimSettingCommandLineOption::slotActivateRequested(const QStringList &arguments, const QString &workingDirectory)
 {
     Q_UNUSED(workingDirectory);
-    if (mParser.parse(arguments)) {
-        handleCommandLine();
-    } else {
-        qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " Impossible to parse argument ";
+    if (!arguments.isEmpty()) {
+        if (mParser.parse(arguments)) {
+            handleCommandLine();
+        } else {
+            qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " Impossible to parse argument ";
+        }
     }
 }
 

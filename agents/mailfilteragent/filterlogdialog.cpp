@@ -28,10 +28,9 @@
 */
 
 #include "filterlogdialog.h"
-#include <mailcommon/filter/filterlog.h>
-#include <messageviewer/utils/autoqpointer.h>
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include <MailCommon/FilterLog>
+#include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include "mailfilteragent_debug.h"
 #include <QFileDialog>
@@ -81,7 +80,7 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     pageVBoxLayout->setMargin(0);
     mainLayout->addWidget(page);
 
-    mTextEdit = new PimCommon::PlainTextEditorWidget(page);
+    mTextEdit = new KPIMTextEdit::PlainTextEditorWidget(page);
     pageVBoxLayout->addWidget(mTextEdit);
 
     mTextEdit->setReadOnly(true);
@@ -344,7 +343,7 @@ void FilterLogDialog::slotUser1()
 void FilterLogDialog::slotUser2()
 {
     QUrl url;
-    MessageViewer::AutoQPointer<QFileDialog> fdlg(new QFileDialog(this));
+    QScopedPointer<QFileDialog> fdlg(new QFileDialog(this));
 
     fdlg->setAcceptMode(QFileDialog::AcceptSave);
     fdlg->setFileMode(QFileDialog::AnyFile);

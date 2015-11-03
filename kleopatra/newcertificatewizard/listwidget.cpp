@@ -68,7 +68,7 @@ public:
         return m_rx;
     }
 
-    /* reimp */ QWidget *createEditor(QWidget *p, const QStyleOptionViewItem &o, const QModelIndex &i) const
+    QWidget *createEditor(QWidget *p, const QStyleOptionViewItem &o, const QModelIndex &i) const Q_DECL_OVERRIDE
     {
         QWidget *w = QItemDelegate::createEditor(p, o, i);
         if (!m_rx.isEmpty())
@@ -96,12 +96,12 @@ public:
         ui.listView->setItemDelegate(&delegate);
         connect(ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SLOT(slotSelectionChanged()));
-        connect(&stringListModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                q, SIGNAL(itemsChanged()));
-        connect(&stringListModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                q, SIGNAL(itemsChanged()));
-        connect(&stringListModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-                q, SIGNAL(itemsChanged()));
+        connect(&stringListModel, &QAbstractItemModel::dataChanged,
+                q, &ListWidget::itemsChanged);
+        connect(&stringListModel, &QAbstractItemModel::rowsInserted,
+                q, &ListWidget::itemsChanged);
+        connect(&stringListModel, &QAbstractItemModel::rowsRemoved,
+                q, &ListWidget::itemsChanged);
     }
 
 private:
@@ -158,7 +158,7 @@ private:
     int selectedRow() const
     {
         const QModelIndexList mil = selectedIndexes();
-        return mil.empty() ? -1 : mil.front().row() ;
+        return mil.empty() ? -1 : mil.front().row();
     }
     void selectRow(int idx)
     {

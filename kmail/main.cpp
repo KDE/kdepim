@@ -53,10 +53,10 @@ public:
         , mEventLoopReached(false)
     { }
 
-    int activate(const QStringList &args) Q_DECL_OVERRIDE;
+    int activate(const QStringList &args, const QString &workindDir) Q_DECL_OVERRIDE;
     void commitData(QSessionManager &sm);
     void setEventLoopReached();
-    void delayedInstanceCreation(const QStringList &args);
+    void delayedInstanceCreation(const QStringList &args, const QString &workindDir);
 protected:
     bool mDelayedInstanceCreation;
     bool mEventLoopReached;
@@ -67,8 +67,6 @@ void KMailApplication::commitData(QSessionManager &sm)
 {
     kmkernel->dumpDeadLetters();
     kmkernel->setShuttingDown(true);   // Prevent further dumpDeadLetters calls
-#warning KF5 PORTME
-    //KApplication::commitData(sm)
 }
 
 void KMailApplication::setEventLoopReached()
@@ -76,7 +74,7 @@ void KMailApplication::setEventLoopReached()
     mEventLoopReached = true;
 }
 
-int KMailApplication::activate(const QStringList &args)
+int KMailApplication::activate(const QStringList &args, const QString &workindDir)
 {
     qCDebug(KMAIL_LOG);
 
@@ -94,31 +92,24 @@ int KMailApplication::activate(const QStringList &args)
     }
 
     if (!kmkernel->firstInstance() || !qApp->isSessionRestored()) {
-        kmkernel->handleCommandLine(true, args);
+        kmkernel->handleCommandLine(true, args, workindDir);
     }
     kmkernel->setFirstInstance(false);
     return 0;
 }
 
-void KMailApplication::delayedInstanceCreation(const QStringList &args)
+void KMailApplication::delayedInstanceCreation(const QStringList &args, const QString &workindDir)
 {
     if (mDelayedInstanceCreation) {
-        activate(args);
+        activate(args, workindDir);
     }
 }
 
 int main(int argc, char *argv[])
 {
     KMailApplication app(argc, &argv);
-    // WABA: KMail is a KUniqueApplication. Unfortunately this makes debugging
-    // a bit harder: You should pass --nofork as commandline argument when using
-    // a debugger. In gdb you can do this by typing "set args --nofork" before
-    // typing "run".
-#if 0 // for testing KUniqueAppliaction on Windows
-    MessageBoxA(NULL,
-                QString("main() %1 pid=%2").arg(argv[0]).arg(getpid()).toLatin1(),
-                QString("main() \"%1\"").arg(argv[0]).toLatin1(), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-#endif
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     KMail::AboutData about;
     app.setAboutData(about);
 
@@ -137,7 +128,6 @@ int main(int argc, char *argv[])
     KMMigrateApplication migrate;
     migrate.migrate();
 
-
     // import i18n data and icons from libraries:
     KMail::insertLibraryCataloguesAndIcons();
 
@@ -155,7 +145,7 @@ int main(int argc, char *argv[])
 
     //If the instance hasn't been created yet, do that now
     app.setEventLoopReached();
-    app.delayedInstanceCreation(args);
+    app.delayedInstanceCreation(args, QDir::currentPath());
 
     // Go!
     int ret = qApp->exec();

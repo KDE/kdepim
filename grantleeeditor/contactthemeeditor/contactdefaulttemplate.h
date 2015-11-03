@@ -18,7 +18,7 @@
 #ifndef CONTACTDEFAULTTEMPLATE_H
 #define CONTACTDEFAULTTEMPLATE_H
 
-#include <pimcommon/templatewidgets/templatelistwidget.h>
+#include <PimCommon/TemplateListWidget>
 
 namespace ContactDefaultTemplate
 {

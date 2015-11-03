@@ -22,7 +22,9 @@
 #include <QUrl>
 class QLabel;
 class QPushButton;
-namespace PimCommon
+class QCheckBox;
+
+namespace Gravatar
 {
 class GravatarResolvUrlJob;
 }
@@ -40,17 +42,26 @@ public:
     void setOriginalPixmap(const QPixmap &pix);
     QUrl resolvedUrl() const;
 
+    void setOriginalUrl(const QString &url);
 private Q_SLOTS:
     void slotSearchGravatar();
 
-    void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job);
+    void slotSearchGravatarFinished(Gravatar::GravatarResolvUrlJob *job);
     void slotResolvUrl(const QUrl &url);
+
+Q_SIGNALS:
+    void activateDialogButton(bool state);
+
 private:
     QString mEmail;
+    QPixmap mPixmap;
     QUrl mCurrentUrl;
     QLabel *mEmailLab;
     QPushButton *mSearchGravatar;
     QLabel *mResultGravatar;
+    QCheckBox *mUseHttps;
+    QCheckBox *mUseLibravatar;
+    QCheckBox *mFallbackGravatar;
 };
 }
 

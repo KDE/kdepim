@@ -16,7 +16,7 @@
 */
 
 #include "mailapp/mailappimportdata.h"
-#include "mailimporter/filter_mailapp.h"
+#include "mailimporter/filtermailapp.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"

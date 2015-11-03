@@ -25,7 +25,7 @@
 #include "kohelper.h"
 #include "prefs/koprefs.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
 #include <KMessageBox>
 
@@ -78,7 +78,7 @@ int KOHelper::yearDiff(const QDate &start, const QDate &end)
     return end.year() - start.year();
 }
 
-bool KOHelper::isStandardCalendar(const Akonadi::Entity::Id &id)
+bool KOHelper::isStandardCalendar(const Akonadi::Collection::Id &id)
 {
     return id == CalendarSupport::KCalPrefs::instance()->defaultCalendarId();
 }

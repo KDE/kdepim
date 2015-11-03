@@ -46,7 +46,7 @@
 #include <utils/classify.h>
 #include <utils/types.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <KLocalizedString>
 #include "kleopatra_debug.h"
@@ -142,7 +142,7 @@ bool DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard()
 {
     try {
         return Input::createFromClipboard()->classification()
-               & (Class::CipherText | Class::ClearsignedMessage | Class::OpaqueSignature) ;
+               & (Class::CipherText | Class::ClearsignedMessage | Class::OpaqueSignature);
     } catch (...) {}
     return false;
 }

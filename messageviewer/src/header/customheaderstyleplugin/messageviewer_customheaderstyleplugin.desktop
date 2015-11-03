@@ -1,0 +1,24 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=MessageViewerHeaderStyle/Plugin
+X-KDE-Library=messageviewer_customheaderstyleplugin
+Name=Custom Header Style
+Name[ca]=Estil de capçalera personalitzada
+Name[en_GB]=Custom Header Style
+Name[es]=Estilo personalizado de encabezado
+Name[it]=Stile con intestazioni personalizzate
+Name[nl]=Stijl met aangepast aantal headers
+Name[pl]=Własne nagłówki
+Name[pt]=Estilo de Cabeçalho Personalizado
+Name[pt_BR]=Estilo de cabeçalho Personalizado
+Name[sk]=Vlastný štýl hlavičiek
+Name[sl]=Slog z glavami po meri
+Name[sr]=посебан стил заглавља
+Name[sr@ijekavian]=посебан стил заглавља
+Name[sr@ijekavianlatin]=poseban stil zaglavlja
+Name[sr@latin]=poseban stil zaglavlja
+Name[sv]=Egen rubrikstil
+Name[tr]=Özel Başlık Biçemi
+Name[uk]=Нетиповий стиль заголовків
+Name[x-test]=xxCustom Header Stylexx
+X-KDE-MessageViewer-Header-Order=3

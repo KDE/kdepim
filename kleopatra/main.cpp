@@ -69,14 +69,13 @@ class UiServer;
 }
 #endif
 
-#include <kleo/checksumdefinition.h>
-
-#ifdef KDEPIM_MOBILE_UI
-# include <kdeclarativeapplication.h>
-#endif
+#include <Libkleo/ChecksumDefinition>
 
 #include "kleopatra_debug.h"
-#include <kcmdlineargs.h>
+#include "kleopatra_options.h"
+
+#include <KDBusService>
+
 #include <KLocalizedString>
 #include <kiconloader.h>
 #include <QSplashScreen>
@@ -95,6 +94,8 @@ class UiServer;
 #include <boost/shared_ptr.hpp>
 
 #include <cassert>
+#include <iostream>
+#include <QCommandLineParser>
 
 using namespace boost;
 
@@ -105,7 +106,7 @@ namespace
 template <typename T>
 boost::shared_ptr<T> make_shared_ptr(T *t)
 {
-    return t ? boost::shared_ptr<T>(t) : boost::shared_ptr<T>() ;
+    return t ? boost::shared_ptr<T>(t) : boost::shared_ptr<T>();
 }
 }
 
@@ -117,7 +118,7 @@ static QPixmap UserIcon_nocached(const char *name)
     KIconLoader *const il = KIconLoader::global();
     assert(il);
     const QString iconPath = il->iconPath(QLatin1String(name), KIconLoader::User);
-    return iconPath.isEmpty() ? il->unknown() : QPixmap(iconPath) ;
+    return iconPath.isEmpty() ? il->unknown() : QPixmap(iconPath);
 }
 
 #ifndef QT_NO_SPLASHSCREEN
@@ -164,7 +165,7 @@ static bool selfCheck(SplashScreen &splash)
 #ifndef QT_NO_SPLASHSCREEN
     QObject::connect(&cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)));
 #endif
-    QTimer::singleShot(0, &cmd, SLOT(start()));   // start() may Q_EMIT finished()...
+    QTimer::singleShot(0, &cmd, &Kleo::Command::start);   // start() may Q_EMIT finished()...
     loop.exec();
     if (cmd.isCanceled()) {
 #ifndef QT_NO_SPLASHSCREEN
@@ -204,44 +205,47 @@ static void fillKeyCache(SplashScreen *splash, Kleo::UiServer *server)
 
 int main(int argc, char **argv)
 {
+    KleopatraApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+
+    QTime timer;
+    timer.start();
+
     KLocalizedString::setApplicationDomain("kleopatra");
+
+    KDBusService service(KDBusService::Unique);
+    QObject::connect(&service, &KDBusService::activateRequested,
+                     &app, &KleopatraApplication::slotActivateRequested);
+    QObject::connect(&app, &KleopatraApplication::setExitValue,
+    &service, [&service](int i) {
+        service.setExitValue(i);
+    });
+
+    AboutData aboutData;
+
+    KAboutData::setApplicationData(aboutData);
+
+    QCommandLineParser parser;
+    aboutData.setupCommandLine(&parser);
+    kleopatra_options(&parser);
+
+    parser.process(QApplication::arguments());
+    aboutData.processCommandLine(&parser);
 
     Kdelibs4ConfigMigrator migrate(QStringLiteral("kleopatra"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kleopatrarc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("kleopatra.rc"));
     migrate.migrate();
 
-    QTime timer;
-    timer.start();
+    qCDebug(KLEOPATRA_LOG) << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
 
+    // Initialize GpgME
     const GpgME::Error gpgmeInitError = GpgME::initializeLibrary(0);
 
     {
         const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
         QThreadPool::globalInstance()->setMaxThreadCount(qMax(2U, threads));
     }
-
-    AboutData aboutData;
-
-    KCmdLineArgs::init(argc, argv, &aboutData);
-
-#ifdef KDEPIM_MOBILE_UI
-    KDeclarativeApplicationBase::preApplicationSetup(KleopatraApplication::commandLineOptions());
-#else
-    KCmdLineArgs::addCmdLineOptions(KleopatraApplication::commandLineOptions());
-#endif
-
-    qCDebug(KLEOPATRA_LOG) << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
-
-    KleopatraApplication app;
-#ifdef KDEPIM_MOBILE_UI
-    KDeclarativeApplicationBase::postApplicationSetup();
-#endif
-
-    qCDebug(KLEOPATRA_LOG) << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
     if (gpgmeInitError) {
         KMessageBox::sorry(0, xi18nc("@info",
                                      "<para>The version of the <application>GpgME</application> library you are running against "
@@ -261,7 +265,7 @@ int main(int argc, char **argv)
     int rc;
 #ifdef HAVE_USABLE_ASSUAN
     try {
-        Kleo::UiServer server(args->getOption("uiserver-socket"));
+        Kleo::UiServer server(parser.value(QStringLiteral("uiserver-socket")));
 
         qCDebug(KLEOPATRA_LOG) << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer created";
 
@@ -296,7 +300,7 @@ int main(int argc, char **argv)
         qCDebug(KLEOPATRA_LOG) << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer started";
 #endif
 
-        const bool daemon = args->isSet("daemon");
+        const bool daemon = parser.isSet(QStringLiteral("daemon"));
         if (!daemon && app.isSessionRestored()) {
             app.restoreMainWindow();
         }
@@ -326,8 +330,11 @@ int main(int argc, char **argv)
         app.setIgnoreNewInstance(false);
 
         if (!daemon) {
-            app.newInstance();
-            app.setFirstNewInstance(false);
+            const QString err = app.newInstance(parser);
+            if (!err.isEmpty()) {
+                std::cerr << i18n("Invalid arguments: %1", err).toLocal8Bit().constData() << "\n";
+                exit(1);
+            }
             qCDebug(KLEOPATRA_LOG) << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
 #ifndef QT_NO_SPLASHSCREEN
             splash.finish(app.mainWindow());

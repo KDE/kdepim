@@ -26,10 +26,10 @@
  *  your version.
  */
 #include "kmsearchmessagemodel.h"
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 #include "messagelist/messagelistutil.h"
 
-#include "messagecore/utils/stringutil.h"
+#include "MessageCore/StringUtil"
 
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/monitor.h>
@@ -37,15 +37,12 @@
 
 #include <Akonadi/KMime/MessageParts>
 #include <kmime/kmime_message.h>
-#include <boost/shared_ptr.hpp>
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 #include <QColor>
 #include <QApplication>
 #include <QPalette>
 #include <QTextDocument>
 #include "kmail_debug.h"
-#include <kglobal.h>
 #include <KLocalizedString>
 #include <KFormat>
 
@@ -62,7 +59,7 @@ KMSearchMessageModel::~KMSearchMessageModel()
 
 QString toolTip(const Akonadi::Item &item)
 {
-    MessagePtr msg = item.payload<MessagePtr>();
+    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
     QColor bckColor = QApplication::palette().color(QPalette::ToolTipBase);
     QColor txtColor = QApplication::palette().color(QPalette::ToolTipText);
@@ -106,21 +103,21 @@ QString toolTip(const Akonadi::Item &item)
     QString content = MessageList::Util::contentSummary(item);
 
     if (textIsLeftToRight) {
-        tip += htmlCodeForStandardRow.arg(i18n("From")).arg(MessageCore::StringUtil::stripEmailAddr(msg->from()->asUnicodeString()));
-        tip += htmlCodeForStandardRow.arg(i18nc("Receiver of the email", "To")).arg(MessageCore::StringUtil::stripEmailAddr(msg->to()->asUnicodeString()));
+        tip += htmlCodeForStandardRow.arg(i18n("From")).arg(msg->from()->displayString());
+        tip += htmlCodeForStandardRow.arg(i18nc("Receiver of the email", "To")).arg(msg->to()->displayString());
         tip += htmlCodeForStandardRow.arg(i18n("Date")).arg(QLocale().toString(msg->date()->dateTime()));
         if (!content.isEmpty()) {
             tip += htmlCodeForStandardRow.arg(i18n("Preview")).arg(content.replace(QLatin1Char('\n'), QStringLiteral("<br>")));
         }
     } else {
-        tip += htmlCodeForStandardRow.arg(MessageCore::StringUtil::stripEmailAddr(msg->from()->asUnicodeString())).arg(i18n("From"));
-        tip += htmlCodeForStandardRow.arg(MessageCore::StringUtil::stripEmailAddr(msg->to()->asUnicodeString())).arg(i18nc("Receiver of the email", "To"));
+        tip += htmlCodeForStandardRow.arg(msg->from()->displayString()).arg(i18n("From"));
+        tip += htmlCodeForStandardRow.arg(msg->to()->displayString()).arg(i18nc("Receiver of the email", "To"));
         tip += htmlCodeForStandardRow.arg(QLocale().toString(msg->date()->dateTime())).arg(i18n("Date"));
         if (!content.isEmpty()) {
             tip += htmlCodeForStandardRow.arg(content.replace(QLatin1Char('\n'), QStringLiteral("<br>"))).arg(i18n("Preview"));
         }
     }
-    tip += QString::fromLatin1(
+    tip += QLatin1String(
                "</table"         \
                "</td>"           \
                "</tr>"
@@ -155,17 +152,17 @@ QVariant KMSearchMessageModel::data(const QModelIndex &index, int role) const
     if (!collection().contentMimeTypes().contains(QStringLiteral("message/rfc822"))) {
         if (role == Qt::DisplayRole)
             return i18nc("@label", "This model can only handle email folders. The current collection holds mimetypes: %1",
-                         collection().contentMimeTypes().join(QLatin1String(",")));
+                         collection().contentMimeTypes().join(QStringLiteral(",")));
         else {
             return QVariant();
         }
     }
 
     Akonadi::Item item = itemForIndex(index);
-    if (!item.hasPayload<MessagePtr>()) {
+    if (!item.hasPayload<KMime::Message::Ptr>()) {
         return QVariant();
     }
-    MessagePtr msg = item.payload<MessagePtr>();
+    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case Collection:

@@ -29,8 +29,6 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    KLocalizedString::setApplicationDomain("pimsettingexporter");
-
     QCommandLineParser parser;
     KAboutData aboutData(QStringLiteral("pimsettingexporterconsole"), i18n("PIM Setting Exporter Console"),
                          QStringLiteral(KDEPIM_VERSION), i18n("PIM Setting Exporter Console"), KAboutLicense::GPL_V2,
@@ -81,7 +79,7 @@ int main(int argc, char *argv[])
         console->setTemplateFileName(templateFile);
     }
     console->start();
-    QObject::connect(console, SIGNAL(finished()), &app, SLOT(quit()));
+    QObject::connect(console, &PimSettingExporterConsole::finished, &app, &QCoreApplication::quit);
 
     return app.exec();
 }

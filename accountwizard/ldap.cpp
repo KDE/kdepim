@@ -18,8 +18,8 @@
 */
 
 #include "ldap.h"
-#include <libkdepim/ldap/ldapclientsearchconfig.h>
-#include <libkdepim/ldap/addhostdialog.h>
+#include <Libkdepim/LdapClientSearchConfig>
+#include <Libkdepim/AddHostDialog>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -98,7 +98,7 @@ void Ldap::create()
     KConfigGroup group = c->group(QStringLiteral("LDAP"));
     bool hasMyServer = false;
     uint selHosts = group.readEntry("NumSelectedHosts", 0);
-    for (uint i = 0 ; i < selHosts && !hasMyServer; ++i) {
+    for (uint i = 0; i < selHosts && !hasMyServer; ++i) {
         if (group.readEntry(QStringLiteral("SelectedHost%1").arg(i), QString()) == host) {
             hasMyServer = true;
             m_entry = i;
@@ -210,7 +210,7 @@ void Ldap::edit()
     KLDAP::LdapClientSearchConfig clientSearchConfig;
     KConfigGroup group = clientSearchConfig.config()->group(QStringLiteral("LDAP"));
     clientSearchConfig.readConfig(server, group, m_entry, true);
-    AddHostDialog dlg(&server, 0);
+    KLDAP::AddHostDialog dlg(&server, 0);
 
     if (dlg.exec() && !server.host().isEmpty()) { //krazy:exclude=crashy
         clientSearchConfig.writeConfig(server, group, m_entry, true);

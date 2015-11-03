@@ -20,10 +20,10 @@
 
 #include "kmsystemtray.h"
 #include "kmmainwidget.h"
-#include "settings/globalsettings.h"
-#include "util/mailutil.h"
-#include "mailcommon/kernel/mailkernel.h"
-#include "mailcommon/folder/foldertreeview.h"
+#include "settings/kmailsettings.h"
+#include "mailcommon/mailutil.h"
+#include "MailCommon/MailKernel"
+#include "MailCommon/FolderTreeView"
 #include <AkonadiCore/NewMailNotifierAttribute>
 
 #include <kiconloader.h>
@@ -40,7 +40,6 @@
 
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/EntityTreeModel>
-#include <AkonadiCore/CollectionModel>
 #include <QFontDatabase>
 #include <AkonadiCore/EntityMimeTypeFilterModel>
 
@@ -63,7 +62,7 @@ KMSystemTray::KMSystemTray(QObject *parent)
     : KStatusNotifierItem(parent),
       mIcon(QIcon::fromTheme(QStringLiteral("mail-unread-new"))),
       mDesktopOfMainWin(0),
-      mMode(GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread),
+      mMode(KMailSettings::EnumSystemTrayPolicy::ShowOnUnread),
       mCount(0),
       mShowUnreadMailCount(true),
       mIconNotificationsEnabled(true),
@@ -88,12 +87,12 @@ KMSystemTray::KMSystemTray(QObject *parent)
     connect(contextMenu(), &QMenu::aboutToShow,
             this, &KMSystemTray::slotContextMenuAboutToShow);
 
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), SLOT(slotCollectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)));
+    connect(kmkernel->folderCollectionMonitor(), &Akonadi::Monitor::collectionStatisticsChanged, this, &KMSystemTray::slotCollectionStatisticsChanged);
 
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), this, SLOT(initListOfCollection()));
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionRemoved(Akonadi::Collection)), this, SLOT(initListOfCollection()));
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), SLOT(initListOfCollection()));
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionUnsubscribed(Akonadi::Collection)), SLOT(initListOfCollection()));
+    connect(kmkernel->folderCollectionMonitor(), &Akonadi::Monitor::collectionAdded, this, &KMSystemTray::initListOfCollection);
+    connect(kmkernel->folderCollectionMonitor(), &Akonadi::Monitor::collectionRemoved, this, &KMSystemTray::initListOfCollection);
+    connect(kmkernel->folderCollectionMonitor(), &Akonadi::Monitor::collectionSubscribed, this, &KMSystemTray::initListOfCollection);
+    connect(kmkernel->folderCollectionMonitor(), &Akonadi::Monitor::collectionUnsubscribed, this, &KMSystemTray::initListOfCollection);
 
     initListOfCollection();
 
@@ -167,10 +166,10 @@ void KMSystemTray::setMode(int newMode)
     mMode = newMode;
 
     switch (mMode) {
-    case GlobalSettings::EnumSystemTrayPolicy::ShowAlways:
+    case KMailSettings::EnumSystemTrayPolicy::ShowAlways:
         setStatus(KStatusNotifierItem::Active);
         break;
-    case GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread:
+    case KMailSettings::EnumSystemTrayPolicy::ShowOnUnread:
         setStatus(mCount > 0 ? KStatusNotifierItem::Active : KStatusNotifierItem::Passive);
         break;
     default:
@@ -267,12 +266,12 @@ void KMSystemTray::slotActivated()
 {
     KMMainWidget *mainWidget = kmkernel->getKMMainWidget();
     if (!mainWidget) {
-        return ;
+        return;
     }
 
     QWidget *mainWin = mainWidget->window();
     if (!mainWin) {
-        return ;
+        return;
     }
 
     KWindowInfo cur = KWindowSystem::windowInfo(mainWin->winId(), NET::WMDesktop);
@@ -328,7 +327,7 @@ void KMSystemTray::fillFoldersMenu(QMenu *menu, const QAbstractItemModel *model,
     const int rowCount = model->rowCount(parentIndex);
     for (int row = 0; row < rowCount; ++row) {
         const QModelIndex index = model->index(row, 0, parentIndex);
-        const Akonadi::Collection collection = model->data(index, Akonadi::CollectionModel::CollectionRole).value<Akonadi::Collection>();
+        const Akonadi::Collection collection = model->data(index, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
         qint64 count = 0;
         if (!excludeFolder(collection)) {
             Akonadi::CollectionStatistics statistics = collection.statistics();
@@ -377,12 +376,12 @@ void KMSystemTray::initListOfCollection()
     mCount = 0;
     const QAbstractItemModel *model = kmkernel->collectionModel();
     if (model->rowCount() == 0) {
-        QTimer::singleShot(1000, this, SLOT(initListOfCollection()));
+        QTimer::singleShot(1000, this, &KMSystemTray::initListOfCollection);
         return;
     }
     unreadMail(model);
 
-    if (mMode == GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread) {
+    if (mMode == KMailSettings::EnumSystemTrayPolicy::ShowOnUnread) {
         if (status() == KStatusNotifierItem::Passive && (mCount > 0)) {
             setStatus(KStatusNotifierItem::Active);
         } else if (status() == KStatusNotifierItem::Active && (mCount == 0)) {
@@ -399,7 +398,7 @@ void KMSystemTray::unreadMail(const QAbstractItemModel *model, const QModelIndex
     const int rowCount = model->rowCount(parentIndex);
     for (int row = 0; row < rowCount; ++row) {
         const QModelIndex index = model->index(row, 0, parentIndex);
-        const Akonadi::Collection collection = model->data(index, Akonadi::CollectionModel::CollectionRole).value<Akonadi::Collection>();
+        const Akonadi::Collection collection = model->data(index, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 
         if (!excludeFolder(collection)) {
 
@@ -434,7 +433,7 @@ void KMSystemTray::slotSelectCollection(QAction *act)
     kmkernel->selectCollectionFromId(id);
     KMMainWidget *mainWidget = kmkernel->getKMMainWidget();
     if (!mainWidget) {
-        return ;
+        return;
     }
     QWidget *mainWin = mainWidget->window();
     if (mainWin && !mainWin->isVisible()) {

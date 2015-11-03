@@ -71,7 +71,7 @@
 #include "commands/checksumverifyfilescommand.h"
 #include "commands/checksumcreatefilescommand.h"
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <gpgme++/key.h>
 
@@ -315,7 +315,7 @@ static const struct {
     { SIGNAL(viewAboutToBeRemoved(QAbstractItemView*)), SLOT(removeView(QAbstractItemView*))             },
     { SIGNAL(currentViewChanged(QAbstractItemView*)),   SLOT(slotCurrentViewChanged(QAbstractItemView*)) },
 };
-static const unsigned int numTabs2Controller = sizeof tabs2controller / sizeof * tabs2controller ;
+static const unsigned int numTabs2Controller = sizeof tabs2controller / sizeof * tabs2controller;
 
 void KeyListController::Private::connectTabWidget()
 {
@@ -323,7 +323,7 @@ void KeyListController::Private::connectTabWidget()
         return;
     }
     kdtools::for_each(tabWidget->views(), boost::bind(&Private::addView, this, _1));
-    for (unsigned int i = 0 ; i < numTabs2Controller ; ++i) {
+    for (unsigned int i = 0; i < numTabs2Controller; ++i) {
         connect(tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot);
     }
 }
@@ -333,7 +333,7 @@ void KeyListController::Private::disconnectTabWidget()
     if (!tabWidget) {
         return;
     }
-    for (unsigned int i = 0 ; i < numTabs2Controller ; ++i) {
+    for (unsigned int i = 0; i < numTabs2Controller; ++i) {
         disconnect(tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot);
     }
     kdtools::for_each(tabWidget->views(), boost::bind(&Private::removeView, this, _1));
@@ -486,7 +486,7 @@ void KeyListController::createActions(KActionCollection *coll)
     make_actions_from_data(action_data, coll);
 
     if (QAction *action = coll->action(QStringLiteral("view_stop_operations"))) {
-        connect(this, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)));
+        connect(this, &KeyListController::commandsExecuting, action, &QAction::setEnabled);
     }
 
     // ### somehow make this better...
@@ -600,7 +600,7 @@ void KeyListController::Private::connectCommand(Command *cmd)
     connect(cmd, SIGNAL(destroyed(QObject*)), q, SLOT(slotDestroyed(QObject*)));
     connect(cmd, SIGNAL(finished()), q, SLOT(slotCommandFinished()));
     //connect( cmd, SIGNAL(canceled()), q, SLOT(slotCommandCanceled()) );
-    connect(cmd, SIGNAL(info(QString,int)), q, SIGNAL(message(QString,int)));
+    connect(cmd, &Command::info, q, &KeyListController::message);
     connect(cmd, SIGNAL(progress(QString,int,int)), q, SLOT(slotProgress(QString,int,int)));
 }
 

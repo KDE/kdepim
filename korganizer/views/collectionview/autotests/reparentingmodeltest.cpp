@@ -31,14 +31,14 @@ class DummyNode : public ReparentingModel::Node
 {
 public:
     DummyNode(ReparentingModel &personModel, const QString &name, const QString &data = QString())
-        : ReparentingModel::Node(personModel),
-          mName(name),
-          mData(data),
-          mUid(name),
-          mParent(QStringLiteral("orphan"))
+        : ReparentingModel::Node(personModel)
+        , mUid(name)
+        , mParent(QStringLiteral("orphan"))
+        , mName(name)
+        , mData(data)
     {}
 
-    virtual ~DummyNode() {};
+    virtual ~DummyNode() {}
 
     bool operator==(const Node &node) const Q_DECL_OVERRIDE
     {
@@ -92,13 +92,15 @@ class ModelSignalSpy : public QObject
     Q_OBJECT
 public:
     explicit ModelSignalSpy(QAbstractItemModel &model)
+        : start(0),
+          end(0)
     {
         connect(&model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)));
         connect(&model, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(onRowsRemoved(QModelIndex,int,int)));
         connect(&model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)));
         connect(&model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onDataChanged(QModelIndex,QModelIndex)));
-        connect(&model, SIGNAL(layoutChanged()), this, SLOT(onLayoutChanged()));
-        connect(&model, SIGNAL(modelReset()), this, SLOT(onModelReset()));
+        connect(&model, &QAbstractItemModel::layoutChanged, this, &ModelSignalSpy::onLayoutChanged);
+        connect(&model, &QAbstractItemModel::modelReset, this, &ModelSignalSpy::onModelReset);
     }
 
     QStringList mSignals;
@@ -142,7 +144,7 @@ public Q_SLOTS:
     }
 };
 
-QModelIndex getIndex(char *string, const QAbstractItemModel &model)
+QModelIndex getIndex(const char *string, const QAbstractItemModel &model)
 {
     QModelIndexList list = model.match(model.index(0, 0), Qt::DisplayRole, QString::fromLatin1(string), 1, Qt::MatchRecursive);
     if (list.isEmpty()) {
@@ -151,7 +153,7 @@ QModelIndex getIndex(char *string, const QAbstractItemModel &model)
     return list.first();
 }
 
-QModelIndexList getIndexList(char *string, const QAbstractItemModel &model)
+QModelIndexList getIndexList(const char *string, const QAbstractItemModel &model)
 {
     return model.match(model.index(0, 0), Qt::DisplayRole, QString::fromLatin1(string), 1, Qt::MatchRecursive);
 }
@@ -691,7 +693,7 @@ void ReparentingModelTest::testInvalidLayoutChanged()
 class DummyNodeManager : public ReparentingModel::NodeManager
 {
 public:
-    DummyNodeManager(ReparentingModel &m) : ReparentingModel::NodeManager(m) {};
+    DummyNodeManager(ReparentingModel &m) : ReparentingModel::NodeManager(m) {}
 private:
     void checkSourceIndex(const QModelIndex &sourceIndex)
     {

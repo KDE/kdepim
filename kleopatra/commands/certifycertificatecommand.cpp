@@ -43,9 +43,9 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/signkeyjob.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/SignKeyJob>
 
 #include <gpgme++/key.h>
 
@@ -300,8 +300,8 @@ void CertifyCertificateCommand::Private::createJob()
         return;
     }
 
-    connect(j, SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(j, &Job::progress,
+            q, &Command::progress);
     connect(j, SIGNAL(result(GpgME::Error)),
             q, SLOT(slotResult(GpgME::Error)));
 

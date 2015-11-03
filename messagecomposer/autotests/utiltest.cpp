@@ -21,7 +21,7 @@
 
 #include <qtest.h>
 
-#include <messagecomposer/utils/util.h>
+#include <MessageComposer/Util>
 using namespace MessageComposer;
 
 QTEST_MAIN(UtilTest)
@@ -30,7 +30,7 @@ void UtilTest::testSelectCharset()
 {
     // Pick a charset that actually works.
     {
-        QString text = QString::fromUtf8("text 123 ăîşţâ");
+        QString text = QStringLiteral("text 123 ăîşţâ");
         QList<QByteArray> charsets;
         charsets << "us-ascii";
         charsets << "iso-8859-1";
@@ -41,7 +41,7 @@ void UtilTest::testSelectCharset()
 
     // Pick as simple a charset as possible.
     {
-        QString text = QString::fromUtf8("plain English text");
+        QString text = QStringLiteral("plain English text");
         QList<QByteArray> charsets;
         charsets << "us-ascii"; // This one works.
         charsets << "iso-8859-1";
@@ -52,7 +52,7 @@ void UtilTest::testSelectCharset()
 
     // Return empty charset if none works.
     {
-        QString text = QString::fromUtf8("text 123 ăîşţâ");
+        QString text = QStringLiteral("text 123 ăîşţâ");
         QList<QByteArray> charsets;
         QByteArray choice = Util::selectCharset(charsets, text);
         QVERIFY(choice.isEmpty());

@@ -46,7 +46,6 @@ public:
 private:
     void doLoadFromGlobalSettings() Q_DECL_OVERRIDE;
     void doLoadOther() Q_DECL_OVERRIDE;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private:
     Ui_MiscMainTab mMMTab;
@@ -66,16 +65,6 @@ private:
 
 private:
     MessageViewer::InvitationSettings *mInvitationUi;
-};
-
-class MiscPageProxyTab : public ConfigModuleTab
-{
-    Q_OBJECT
-public:
-    explicit MiscPageProxyTab(QWidget *parent = Q_NULLPTR);
-    void save() Q_DECL_OVERRIDE;
-private:
-    KCModuleProxy *mProxyModule;
 };
 
 class MiscPageAgentSettingsTab : public ConfigModuleTab
@@ -119,12 +108,10 @@ public:
 
     typedef MiscPageFolderTab FolderTab;
     typedef MiscPageInviteTab InviteTab;
-    typedef MiscPageProxyTab ProxyTab;
 
 private:
     FolderTab *mFolderTab;
     InviteTab *mInviteTab;
-    ProxyTab *mProxyTab;
     MiscPageAgentSettingsTab *mAgentSettingsTab;
     MiscPagePrintingTab *mPrintingTab;
 };

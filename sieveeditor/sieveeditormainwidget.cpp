@@ -22,7 +22,8 @@
 #include "sieveeditorscriptmanagerwidget.h"
 #include "sieveeditorpagewidget.h"
 #include "sieveeditortabwidget.h"
-#include "editor/sieveeditor.h"
+#include "sieveeditoremptytabwidgetlabel.h"
+#include "ksieveui/sieveeditor.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -32,15 +33,26 @@
 #include <KMessageBox>
 
 #include <QSplitter>
+#include <QStackedWidget>
 #include <QTabBar>
 
 SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
+    mStackedWidget = new QStackedWidget(this);
+    mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
+
+    mEditorEmptyLabel = new SieveEditorEmptyTabWidgetLabel;
+
     mTabWidget = new SieveEditorTabWidget;
     connect(mTabWidget, &SieveEditorTabWidget::tabCloseRequestedIndex, this, &SieveEditorMainWidget::slotTabCloseRequested);
     connect(mTabWidget, &SieveEditorTabWidget::tabRemoveAllExclude, this, &SieveEditorMainWidget::slotTabRemoveAllExclude);
-    addWidget(mTabWidget);
+    connect(mTabWidget, &SieveEditorTabWidget::tabCloseAllTab, this, &SieveEditorMainWidget::slotTabCloseAllRequested);
+
+    mStackedWidget->addWidget(mTabWidget);
+    mStackedWidget->addWidget(mEditorEmptyLabel);
+    addWidget(mStackedWidget);
+
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::createScriptPage, this, &SieveEditorMainWidget::slotCreateScriptPage);
     connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::updateButtons, this, &SieveEditorMainWidget::updateButtons);
@@ -53,6 +65,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     splitterSizes << 80 << 20;
     KConfigGroup myGroup(KSharedConfig::openConfig(), "SieveEditorMainWidget");
     setSizes(myGroup.readEntry("mainSplitter", splitterSizes));
+    updateStackedWidget();
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
@@ -75,6 +88,15 @@ QWidget *SieveEditorMainWidget::hasExistingPage(const QUrl &url)
     return Q_NULLPTR;
 }
 
+void SieveEditorMainWidget::updateStackedWidget()
+{
+    if (mTabWidget->count() == 0) {
+        mStackedWidget->setCurrentWidget(mEditorEmptyLabel);
+    } else {
+        mStackedWidget->setCurrentWidget(mTabWidget);
+    }
+}
+
 void SieveEditorMainWidget::slotScriptDeleted(const QUrl &url)
 {
     QWidget *page = hasExistingPage(url);
@@ -82,6 +104,7 @@ void SieveEditorMainWidget::slotScriptDeleted(const QUrl &url)
         mTabWidget->removeTab(mTabWidget->indexOf(page));
         delete page;
     }
+    updateStackedWidget();
 }
 
 void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript)
@@ -104,6 +127,7 @@ void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringL
         if (isNewScript) {
             editor->uploadScript(false, true);
         }
+        updateStackedWidget();
     }
 }
 
@@ -187,6 +211,18 @@ bool SieveEditorMainWidget::isRedoAvailable() const
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
             return page->isRedoAvailable();
+        }
+    }
+    return false;
+}
+
+bool SieveEditorMainWidget::isWordWrap() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->isWordWrap();
         }
     }
     return false;
@@ -479,6 +515,28 @@ void SieveEditorMainWidget::slotZoomOut()
     }
 }
 
+void SieveEditorMainWidget::slotZoomReset()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->zoomReset();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotWordWrap(bool state)
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->wordWrap(state);
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotGeneralPaletteChanged()
 {
     const QPalette pal = palette();
@@ -503,6 +561,14 @@ void SieveEditorMainWidget::slotTabCloseRequested(int index)
         }
         mTabWidget->removeTab(index);
         delete page;
+    }
+    updateStackedWidget();
+}
+
+void SieveEditorMainWidget::slotTabCloseAllRequested()
+{
+    for (int i = mTabWidget->count() - 1; i >= 0; --i) {
+        slotTabCloseRequested(i);
     }
 }
 

@@ -17,7 +17,7 @@
 #include "addarchivemaildialog.h"
 #include "widgets/formatcombobox.h"
 #include "widgets/unitcombobox.h"
-#include "mailcommon/folder/folderrequester.h"
+#include "MailCommon/FolderRequester"
 
 #include <Collection>
 

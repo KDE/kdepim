@@ -21,8 +21,8 @@
  */
 
 #include "noteeditdialog.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "kpimtextedit/richtexteditorwidget.h"
+#include "kpimtextedit/richtexteditor.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -36,8 +36,8 @@
 #include <AkonadiWidgets/CollectionComboBox>
 #include <QPushButton>
 
-#include <incidenceeditor-ng/incidencedialogfactory.h>
-#include <incidenceeditor-ng/incidencedialog.h>
+#include <IncidenceEditorsng/IncidenceDialogFactory>
+#include <IncidenceEditorsng/IncidenceDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -93,9 +93,9 @@ NoteEditDialog::NoteEditDialog(QWidget *parent)
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &NoteEditDialog::slotCollectionChanged);
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &NoteEditDialog::slotCollectionChanged);
 
-    mNoteText = new PimCommon::RichTextEditorWidget(parent);
+    mNoteText = new KPIMTextEdit::RichTextEditorWidget(parent);
     mNoteText->setObjectName(QStringLiteral("notetext"));
-    connect(mNoteText->editor(), &PimCommon::RichTextEditor::textChanged, this, &NoteEditDialog::slotUpdateButtons);
+    connect(mNoteText->editor(), &KPIMTextEdit::RichTextEditor::textChanged, this, &NoteEditDialog::slotUpdateButtons);
 
     //First line
     hbox->addWidget(mNoteTitle);
@@ -189,7 +189,7 @@ void NoteEditDialog::accept()
         note.setText(mNoteText->editor()->toPlainText(), format);
     }
     mItem.setPayload<KMime::Message::Ptr>(note.message());
-    emit createNote(mItem, collection);
+    Q_EMIT createNote(mItem, collection);
 }
 
 void NoteEditDialog::load(const Akonadi::Item &item)

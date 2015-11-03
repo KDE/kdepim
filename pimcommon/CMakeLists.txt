@@ -1,382 +1,103 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(pimcommon)
-include_directories(
-  ${CMAKE_SOURCE_DIR}/libkdepim
-  ${CMAKE_CURRENT_SOURCE_DIR}/util/
-  ${CMAKE_CURRENT_SOURCE_DIR}/shorturl/
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(LIBRARY_NAMELINK)
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
+include(ECMInstallIcons)
+
+set(KF5_VERSION "5.16.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.47")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+set(KIMAP_LIB_VERSION "4.78.0")
+set(KCONTACTS_LIB_VERSION "4.92.0")
+set(KPIMTEXTEDIT_LIB_VERSION "4.88.0")
+
+find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools Network WebKitWidgets)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5IMAP ${KIMAP_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5TextWidgets ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
+
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/pimcommon_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5PimCommonConfigVersion.cmake"
+                        SOVERSION 5
 )
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+find_package(Xsltproc)
+set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
 
+########### Targets ###########
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libpimcommon\")
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
-set(libpimcommon_shorturl_SRCS
-  shorturl/abstractshorturl.cpp
-  shorturl/shorturlwidget.cpp
-  shorturl/engine/tinyurlshorturl.cpp
-  shorturl/engine/googleshorturl.cpp
-  shorturl/shorturlconfigurewidget.cpp
-  shorturl/shorturlutils.cpp
-  shorturl/shorturlconfiguredialog.cpp
-  shorturl/engine/migremeshorturl.cpp
-  shorturl/engine/triopabshorturl.cpp
-  shorturl/engine/ur1cashorturl.cpp
-  shorturl/engine/isgdshorturl.cpp
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5PimCommon")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5PimCommonConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5PimCommonConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-set(libpimcommon_sieve_SRCS
-  sievehighlighter/sievesyntaxhighlighter.cpp
-  sievehighlighter/sievesyntaxhighlighterrules.cpp
-  sievehighlighter/sievesyntaxhighlighterutil.cpp
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5PimCommonConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5PimCommonConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
 
-if( KF5GAPI_FOUND )
-  set(libpimcommon_storageservice_gdrive 
-    storageservice/gdrive/gdrivestorageservice.cpp
-    storageservice/gdrive/gdrivejob.cpp
-  )
+install(EXPORT KF5PimCommonTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5PimCommonTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/pimcommon_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5PimCommonConfigVersion.cmake"
+                        SOVERSION 5
+)
 endif()
 
-
-set(libpimcommon_storageservice_SRCS
-  ${libpimcommon_storageservice_gdrive}
-  storageservice/storageserviceabstract.cpp
-  storageservice/storageservicemanager.cpp
-  storageservice/storageserviceprogressmanager.cpp
-
-  storageservice/job/storageserviceabstractjob.cpp
-
-  storageservice/storageservicejobconfig.cpp
-
-
-  storageservice/dropbox/dropboxstorageservice.cpp
-  storageservice/dropbox/dropboxjob.cpp
-  storageservice/dropbox/dropboxutil.cpp
-
-  storageservice/authdialog/storageauthviewwidget.cpp
-  storageservice/authdialog/storageauthviewdialog.cpp
-  storageservice/authdialog/logindialog.cpp
-  storageservice/authdialog/storageauthwebview.cpp
-
-  storageservice/hubic/hubicstorageservice.cpp
-  storageservice/hubic/hubicjob.cpp
-
-  storageservice/settings/storageservicecombobox.cpp
-  storageservice/settings/addservicestoragedialog.cpp
-  storageservice/settings/storagelistwidgetitem.cpp
-  storageservice/settings/storageservicesettingswidget.cpp
-
-  storageservice/yousendit/yousenditjob.cpp
-  storageservice/yousendit/yousenditstorageservice.cpp
-  storageservice/yousendit/yousenditutil.cpp
-
-  storageservice/webdav/webdavstorageservice.cpp
-  storageservice/webdav/webdavjob.cpp
-  storageservice/webdav/webdavsettingsdialog.cpp
-  storageservice/webdav/protocol/webdav_url_info.cpp
-
-  storageservice/utils/storageserviceutils.cpp
-
-  storageservice/box/boxjob.cpp
-  storageservice/box/boxstorageservice.cpp
-  storageservice/box/boxutil.cpp
-
-  storageservice/dialog/storageservicedownloaddialog.cpp
-  storageservice/dialog/storageservicechecknamedialog.cpp
-  storageservice/dialog/storageserviceconfiguredialog.cpp
-  storageservice/dialog/storageservicedeletedialog.cpp
-  storageservice/dialog/storageservicepropertiesdialog.cpp
-
-  storageservice/widgets/storageserviceconfigurewidget.cpp
-  storageservice/widgets/storageservicetreewidget.cpp
-  storageservice/widgets/storageserviceprogresswidget.cpp
-  storageservice/widgets/storageserviceprogressindicator.cpp
-  storageservice/widgets/storageservicetreewidgetitem.cpp
- 
-  storageservice/settings/storageservicesettings.cpp 
- 
-  storageservice/tests/testsettingsjob.cpp
-)
-
-qt5_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
-
-set(libpimcommon_autocorrection_SRCS
-  autocorrection/autocorrection.cpp
-  autocorrection/autocorrectionwidget.cpp
-  autocorrection/autocorrectionlistwidget.cpp
-  autocorrection/autocorrectiontreewidget.cpp
-  autocorrection/autocorrectionlanguage.cpp
-  autocorrection/import/importlibreofficeautocorrection.cpp
-  autocorrection/import/importkmailautocorrection.cpp
-  autocorrection/import/importabstractautocorrection.cpp
-  autocorrection/widgets/lineeditwithautocorrection.cpp
-  autocorrection/widgets/richtexteditwithautocorrection.cpp
-)
-
-set(libpimcommon_texteditor_SRCS
-  texteditor/plaintexteditor/plaintexteditfindbar.cpp
-  texteditor/plaintexteditor/plaintexteditor.cpp
-  texteditor/plaintexteditor/plaintexteditorwidget.cpp
-  texteditor/plaintexteditor/plaintextsyntaxspellcheckinghighlighter.cpp
-  texteditor/commonwidget/textfindreplacewidget.cpp
-  texteditor/commonwidget/texteditfindbarbase.cpp
-  texteditor/commonwidget/textgotolinewidget.cpp
-  texteditor/commonwidget/textmessageindicator.cpp
-  texteditor/richtexteditor/richtexteditor.cpp
-  texteditor/richtexteditor/richtexteditfindbar.cpp
-  texteditor/richtexteditor/richtexteditorwidget.cpp
-  texteditor/richtexteditor/richtextdecorator.cpp
-)
-
-set(libpimcommon_translator_SRCS
-  translator/translatorutil.cpp
-  translator/translatorwidget.cpp
-  translator/abstracttranslator.cpp
-  translator/translatordebugdialog.cpp
-  #Laurent: disable it we can't use it directly now
-  #translator/babelfishtranslator.cpp
-  translator/googletranslator.cpp
-)
-
-set(libpimcommon_templatewidgets_SRCS
-  templatewidgets/templatelistwidget.cpp
-  templatewidgets/templateeditdialog.cpp
-  templatewidgets/templatemanager.cpp
-)
-
-set(libpimcommon_folderdialog_SRCS
-  folderdialog/selectmulticollectionwidget.cpp
-  folderdialog/selectmulticollectiondialog.cpp
-  folderdialog/checkedcollectionwidget.cpp
-)
-
-set(libpimcommon_acl_SRCS
-  acl/aclentrydialog.cpp
-  acl/aclmanager.cpp
-  acl/aclutils.cpp
-  acl/collectionaclpage.cpp
-  acl/imapaclattribute.cpp
-  acl/collectionaclwidget.cpp
-  acl/acllistview.cpp
-)
-
-
-set(libpimcommon_widgets_SRCS
-  widgets/minimumcombobox.cpp
-  widgets/renamefiledialog.cpp
-  widgets/simplestringlisteditor.cpp
-  widgets/customtextedit.cpp
-  widgets/customtreeview.cpp
-  widgets/customtoolswidget.cpp
-  widgets/configureimmutablewidgetutils.cpp
-  widgets/slidecontainer.cpp
-  widgets/emailaddressrequester.cpp
-  widgets/annotationdialog.cpp
-  widgets/manageaccountwidget.cpp
-  widgets/kactionmenuchangecase.cpp
-  widgets/lineeditwithcompleter.cpp
-  widgets/spellchecklineedit.cpp
-)
-
-set(libtexttospeech_SRCS
-  texttospeech/texttospeech.cpp
-  texttospeech/texttospeechwidget.cpp
-  texttospeech/texttospeechconfigwidget.cpp
-  texttospeech/texttospeechinterface.cpp
-  texttospeech/abstracttexttospeechinterface.cpp
-  texttospeech/abstracttexttospeechconfiginterface.cpp
-  texttospeech/texttospeechconfiginterface.cpp
-  texttospeech/texttospeechconfigdialog.cpp
-  texttospeech/texttospeechlanguagecombobox.cpp
-  texttospeech/texttospeechactions.cpp
-)
-
-set(libpimcommon_baloodebug_SRCS
-  baloodebug/baloodebugdialog.cpp
-  baloodebug/baloodebugwidget.cpp
-  baloodebug/job/baloodebugsearchjob.cpp
-  baloodebug/baloodebugsearchpathcombobox.cpp
-  baloodebug/baloosyntaxhighlighter.cpp
-)
-
-set(libpimcommon_util_SRCS
-  util/createresource.cpp
-  util/pimutil.cpp
-  util/editorutil.cpp
-  util/imapresourcecapabilitiesmanager.cpp
-  util/vcardutil.cpp
-  util/networkutil.cpp
-)
-
-
-set(libpimcommon_temporary_SRCS
-   temporaryfile/attachmenttemporaryfilesdirs.cpp
-)
-
-set(libpimcommon_gravatar_SRCS
-   gravatar/gravatarresolvurljob.cpp
-   gravatar/gravatarcache.cpp
-   gravatar/widgets/gravatardownloadpixmapwidget.cpp
-   gravatar/widgets/gravatardownloadpixmapdialog.cpp 
-)
-
-set(libpimcommon_migrate_SRCS
-   migration/migrateapplicationfiles.cpp  
-   migration/migratefileinfo.cpp
-)
-
-set(libpimcommon_shareserviceurl_SRCS
-   shareserviceurl/shareserviceurlmanager.cpp
-)
-
-set(libpimcommon_webshortcut_SRCS
-   webshortcut/webshortcutmenumanager.cpp
-)
-
-set(libpimcommon_manageserversidesubscription_SRCS
-   manageserversidesubscription/manageserversidesubscriptionjob.cpp
-)
-
-set(libpimcommon_SRCS
-  pimcommon_debug.cpp
-  settings/pimcommonsettings.cpp
-  ${libpimcommon_manageserversidesubscription_SRCS}
-  ${libpimcommon_webshortcut_SRCS}
-  ${libpimcommon_shareserviceurl_SRCS}
-  ${libpimcommon_migrate_SRCS}
-  ${libpimcommon_util_SRCS}
-  ${libpimcommon_texteditor_SRCS}
-  ${libpimcommon_shorturl_SRCS}
-  ${libpimcommon_storageservice_SRCS}
-  ${libpimcommon_autocorrection_SRCS}
-  ${libpimcommon_translator_SRCS}
-  ${libpimcommon_templatewidgets_SRCS}
-  ${libpimcommon_folderdialog_SRCS}
-  ${libpimcommon_acl_SRCS}
-  ${libpimcommon_sieve_SRCS}
-  ${libpimcommon_widgets_SRCS}
-  ${libtexttospeech_SRCS}
-  ${libpimcommon_baloodebug_SRCS}
-  ${libpimcommon_temporary_SRCS}
-  ${libpimcommon_gravatar_SRCS}
-)
-
-ki18n_wrap_ui(libpimcommon_SRCS
-     autocorrection/ui/autocorrectionwidget.ui
-     widgets/ui/manageaccountwidget.ui
-)
-
-macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
-  kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
-  set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt5_add_dbus_interface(libpimcommon_SRCS
-    ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_fileName} ${_className}
-  )
-endmacro()
-
-add_resource_iface(util/imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings imapresourcesettings)
-
-kconfig_add_kcfg_files(libpimcommon_SRCS
-  settings/pimcommonsetting_base.kcfgc
-)
-
-add_library(pimcommon ${libpimcommon_SRCS})
-generate_export_header(pimcommon BASE_NAME pimcommon)
-
-if( KF5GAPI_FOUND )
-  target_link_libraries(pimcommon
-    PUBLIC KF5::GAPIDrive
-  )
-endif()
-
-if ( Qt5TextToSpeech_FOUND ) 
-  target_link_libraries(pimcommon
-    PUBLIC Qt5::TextToSpeech
-  )
-endif()
-
-target_link_libraries(pimcommon
-PUBLIC
-    KF5::Contacts
-    KF5::AkonadiContact
-    KF5::AkonadiCore
-    kdepim
-    KF5::IMAP
-    KF5::AkonadiWidgets
-    Qt5::WebKitWidgets
-PRIVATE
-    KF5::Archive
-    KF5::Codecs
-    KF5::NewStuff
-    KF5::PimTextEdit
-    KF5::SonnetCore
-    KF5::Wallet
-    KF5::DBusAddons
-)
-
-set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS pimcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-if (BUILD_TESTING)
-   add_subdirectory(translator/autotests)
-   add_subdirectory(texteditor/plaintexteditor/autotests)
-   add_subdirectory(texteditor/richtexteditor/autotests)
-   add_subdirectory(texteditor/commonwidget/autotests)
-   add_subdirectory(autocorrection/autotests)
-   add_subdirectory(widgets/autotests)
-   add_subdirectory(texttospeech/autotests)
-   add_subdirectory(baloodebug/autotests)
-   add_subdirectory(baloodebug/tests)
-   add_subdirectory(shorturl/autotests)
-   add_subdirectory(acl/autotests)
-   add_subdirectory(temporaryfile/autotests)
-   add_subdirectory(migration/autotests)
-   add_subdirectory(util/autotests)
-   add_subdirectory(gravatar/autotests)
-   add_subdirectory(shareserviceurl/autotests)
-   add_subdirectory(webshortcut/autotests)
-   add_subdirectory(translator/tests)
-   add_subdirectory(texteditor/plaintexteditor/tests)
-   add_subdirectory(texteditor/richtexteditor/tests)
-   add_subdirectory(widgets/tests)
-   add_subdirectory(shorturl/tests)
-   add_subdirectory(autocorrection/tests)
-   add_subdirectory(folderdialog/tests/)
-   add_subdirectory(storageservice/dropbox/tests)
-   add_subdirectory(storageservice/hubic/tests)
-   add_subdirectory(storageservice/tests)
-   add_subdirectory(storageservice/yousendit/tests)
-   add_subdirectory(storageservice/webdav/tests)
-   add_subdirectory(storageservice/box/tests)
-   add_subdirectory(storageservice/dropbox/icons/)
-   add_subdirectory(texttospeech/tests)
-   add_subdirectory(gravatar/tests)
-endif()
-
-if( LibKGAPI2_FOUND )
-  add_subdirectory(storageservice/gdrive/tests/)
-  add_subdirectory(storageservice/gdrive/icons/)
-endif()
-
-if (Qt5Designer_FOUND)
-    kf5designerplugin_add_plugin(pimcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
-    target_link_libraries(pimcommonwidgets
-        pimcommon
-    )
-    if(NOT WIN32)
-        # Since there are no libraries provided by this module,
-        # there is no point including the build tree in RPath,
-        # and then having to edit it at install time.
-        set_target_properties(pimcommonwidgets PROPERTIES
-            SKIP_BUILD_RPATH TRUE
-            BUILD_WITH_INSTALL_RPATH TRUE
-        )
-    endif()
-
-    install(TARGETS
-        pimcommonwidgets
-        DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
-    )
-endif()
+add_subdirectory(src)
 

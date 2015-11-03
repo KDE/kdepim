@@ -52,12 +52,12 @@
 #include <utils/validation.h>
 #include <utils/filedialog.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/dn.h>
-#include <kleo/oidmap.h>
-#include <kleo/keygenerationjob.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Dn>
+#include <Libkleo/OidMap>
+#include <Libkleo/KeyGenerationJob>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
 
 #include <gpgme++/global.h>
 #include <gpgme++/keygenerationresult.h>
@@ -82,7 +82,7 @@
 
 #include <algorithm>
 #include <KSharedConfig>
-#include <KLocale>
+#include <QLocale>
 
 using namespace Kleo;
 using namespace Kleo::NewCertificateUi;
@@ -193,7 +193,7 @@ protected:
 
     QAbstractButton *button(QWizard::WizardButton button) const
     {
-        return QWizardPage::wizard() ? QWizardPage::wizard()->button(button) : 0 ;
+        return QWizardPage::wizard() ? QWizardPage::wizard()->button(button) : 0;
     }
 
     bool isButtonVisible(QWizard::WizardButton button) const
@@ -345,14 +345,14 @@ public:
     {
         return
             ui.dsaRB->isChecked() ? get_keysize(ui.dsaKeyStrengthCB) :
-            ui.rsaRB->isChecked() ? get_keysize(ui.rsaKeyStrengthCB) : 0 ;
+            ui.rsaRB->isChecked() ? get_keysize(ui.rsaKeyStrengthCB) : 0;
     }
 
     void setKeyType(unsigned int algo)
     {
         QRadioButton *const rb =
             is_rsa(algo) ? ui.rsaRB :
-            is_dsa(algo) ? ui.dsaRB : 0 ;
+            is_dsa(algo) ? ui.dsaRB : 0;
         if (rb) {
             rb->setChecked(true);
         }
@@ -362,7 +362,7 @@ public:
         return
             ui.dsaRB->isChecked() ? GPGME_PK_DSA :
             ui.rsaRB->isChecked() ? GPGME_PK_RSA :
-            0 ;
+            0;
     }
 
     void setSubkeyType(unsigned int algo)
@@ -442,7 +442,7 @@ public:
     }
     QDate expiryDate() const
     {
-        return ui.expiryCB->isChecked() ? ui.expiryDE->date() : QDate() ;
+        return ui.expiryCB->isChecked() ? ui.expiryDE->date() : QDate();
     }
 
 Q_SIGNALS:
@@ -521,7 +521,7 @@ public:
           ui()
     {
         ui.setupUi(this);
-        registerField(QLatin1String("pgp"), ui.pgpCLB);
+        registerField(QStringLiteral("pgp"), ui.pgpCLB);
     }
 
     void setProtocol(Protocol proto)
@@ -540,21 +540,21 @@ public:
     {
         return
             ui.pgpCLB->isChecked()  ? OpenPGP :
-            ui.x509CLB->isChecked() ? CMS : UnknownProtocol ;
+            ui.x509CLB->isChecked() ? CMS : UnknownProtocol;
     }
 
-    /* reimp */ void initializePage()
-    {
-        if (!initialized) {
-            connect(ui.pgpCLB,  SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection);
-            connect(ui.x509CLB, SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection);
+    void initializePage() Q_DECL_OVERRIDE {
+        if (!initialized)
+        {
+            connect(ui.pgpCLB,  &QAbstractButton::clicked, wizard(), &QWizard::next, Qt::QueuedConnection);
+            connect(ui.x509CLB, &QAbstractButton::clicked, wizard(), &QWizard::next, Qt::QueuedConnection);
         }
         initialized = true;
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
-        return protocol() != UnknownProtocol ;
+        return protocol() != UnknownProtocol;
     }
 
 private:
@@ -579,33 +579,31 @@ public:
         ui.setupUi(this);
 
         // set errorLB to have a fixed height of two lines:
-        ui.errorLB->setText(QLatin1String("2<br>1"));
+        ui.errorLB->setText(QStringLiteral("2<br>1"));
         ui.errorLB->setFixedHeight(ui.errorLB->minimumSizeHint().height());
         ui.errorLB->clear();
 
-        connect(ui.resultLE, SIGNAL(textChanged(QString)),
-                SIGNAL(completeChanged()));
+        connect(ui.resultLE, &QLineEdit::textChanged,
+                this, &QWizardPage::completeChanged);
         // The email doesn't necessarily show up in ui.resultLE:
-        connect(ui.emailLE, SIGNAL(textChanged(QString)),
-                SIGNAL(completeChanged()));
-        connect(ui.addEmailToDnCB, SIGNAL(toggled(bool)),
-                SLOT(slotUpdateResultLabel()));
+        connect(ui.emailLE, &QLineEdit::textChanged,
+                this, &QWizardPage::completeChanged);
+        connect(ui.addEmailToDnCB, &QAbstractButton::toggled,
+                this, &EnterDetailsPage::slotUpdateResultLabel);
         registerDialogPropertiesAsFields();
-        registerField(QLatin1String("dn"), ui.resultLE);
-        registerField(QLatin1String("name"), ui.nameLE);
-        registerField(QLatin1String("email"), ui.emailLE);
-        registerField(QLatin1String("comment"), ui.commentLE);
+        registerField(QStringLiteral("dn"), ui.resultLE);
+        registerField(QStringLiteral("name"), ui.nameLE);
+        registerField(QStringLiteral("email"), ui.emailLE);
+        registerField(QStringLiteral("comment"), ui.commentLE);
         updateForm();
     }
 
-    /* reimp */ bool isComplete() const;
-    /* reimp */ void initializePage()
-    {
+    bool isComplete() const Q_DECL_OVERRIDE;
+    void initializePage() Q_DECL_OVERRIDE {
         updateForm();
         dialog.setProtocol(pgp() ? OpenPGP : CMS);
     }
-    /* reimp */ void cleanupPage()
-    {
+    void cleanupPage() Q_DECL_OVERRIDE {
         saveValues();
     }
 
@@ -646,8 +644,7 @@ public:
         setButtonText(QWizard::CommitButton, i18nc("@action", "Create Key"));
     }
 
-    /* reimp */ void initializePage()
-    {
+    void initializePage() Q_DECL_OVERRIDE {
         slotShowDetails();
     }
 
@@ -678,13 +675,12 @@ public:
         ui.setupUi(this);
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !job;
     }
 
-    /* reimp */ void initializePage()
-    {
+    void initializePage() Q_DECL_OVERRIDE {
         startJob();
     }
 
@@ -702,8 +698,8 @@ private:
         connect(j, SIGNAL(result(GpgME::KeyGenerationResult,QByteArray,QString)),
                 this, SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray,QString)));
         if (const Error err = j->start(createGnupgKeyParms()))
-            setField(QLatin1String("error"), i18n("Could not start certificate creation: %1",
-                                                  QString::fromLocal8Bit(err.asString())));
+            setField(QStringLiteral("error"), i18n("Could not start certificate creation: %1",
+                                                   QString::fromLocal8Bit(err.asString())));
         else {
             job = j;
         }
@@ -717,33 +713,33 @@ private Q_SLOTS:
     {
         Q_UNUSED(auditLog);
         if (result.error().code()) {
-            setField(QLatin1String("error"), result.error().isCanceled()
+            setField(QStringLiteral("error"), result.error().isCanceled()
                      ? i18n("Operation canceled.")
                      : i18n("Could not create certificate: %1",
                             QString::fromLocal8Bit(result.error().asString())));
-            setField(QLatin1String("url"), QString());
-            setField(QLatin1String("result"), QString());
+            setField(QStringLiteral("url"), QString());
+            setField(QStringLiteral("result"), QString());
         } else if (pgp()) {
-            setField(QLatin1String("error"), QString());
-            setField(QLatin1String("url"), QString());
-            setField(QLatin1String("result"), i18n("Certificate created successfully.\n"
-                                                   "Fingerprint: %1", QLatin1String(result.fingerprint())));
+            setField(QStringLiteral("error"), QString());
+            setField(QStringLiteral("url"), QString());
+            setField(QStringLiteral("result"), i18n("Certificate created successfully.\n"
+                                                    "Fingerprint: %1", QLatin1String(result.fingerprint())));
         } else {
-            QFile file(tmpDir().absoluteFilePath(QLatin1String("request.p10")));
+            QFile file(tmpDir().absoluteFilePath(QStringLiteral("request.p10")));
 
             if (!file.open(QIODevice::WriteOnly)) {
-                setField(QLatin1String("error"), i18n("Could not write output file %1: %2",
-                                                      file.fileName(), file.errorString()));
-                setField(QLatin1String("url"), QString());
-                setField(QLatin1String("result"), QString());
+                setField(QStringLiteral("error"), i18n("Could not write output file %1: %2",
+                                                       file.fileName(), file.errorString()));
+                setField(QStringLiteral("url"), QString());
+                setField(QStringLiteral("result"), QString());
             } else {
                 file.write(request);
-                setField(QLatin1String("error"), QString());
-                setField(QLatin1String("url"), QUrl::fromLocalFile(file.fileName()).toString());
-                setField(QLatin1String("result"), i18n("Certificate created successfully."));
+                setField(QStringLiteral("error"), QString());
+                setField(QStringLiteral("url"), QUrl::fromLocalFile(file.fileName()).toString());
+                setField(QStringLiteral("result"), i18n("Certificate created successfully."));
             }
         }
-        setField(QLatin1String("fingerprint"), QString::fromLatin1(result.fingerprint()));
+        setField(QStringLiteral("fingerprint"), QString::fromLatin1(result.fingerprint()));
         job = 0;
         Q_EMIT completeChanged();
         QMetaObject::invokeMethod(wizard(), "next", Qt::QueuedConnection);
@@ -767,20 +763,20 @@ public:
     {
         ui.setupUi(this);
         ui.dragQueen->setPixmap(QIcon::fromTheme(QStringLiteral("kleopatra")).pixmap(64, 64));
-        registerField(QLatin1String("error"),  ui.errorTB,   "plainText");
-        registerField(QLatin1String("result"), ui.resultTB,  "plainText");
-        registerField(QLatin1String("url"),    ui.dragQueen, "url");
+        registerField(QStringLiteral("error"),  ui.errorTB,   "plainText");
+        registerField(QStringLiteral("result"), ui.resultTB,  "plainText");
+        registerField(QStringLiteral("url"),    ui.dragQueen, "url");
         // hidden field, since QWizard can't deal with non-widget-backed fields...
         QLineEdit *le = new QLineEdit(this);
         le->hide();
-        registerField(QLatin1String("fingerprint"), le);
+        registerField(QStringLiteral("fingerprint"), le);
     }
 
-    /* reimp */ void initializePage()
-    {
+    void initializePage() Q_DECL_OVERRIDE {
         const bool error = isError();
 
-        if (error) {
+        if (error)
+        {
             setTitle(i18nc("@title", "Key Creation Failed"));
             setSubTitle(i18n("Key pair creation failed. Please find details about the failure below."));
         } else {
@@ -790,24 +786,19 @@ public:
 
         ui.resultTB                 ->setVisible(!error);
         ui.errorTB                  ->setVisible(error);
-        ui.dragQueen                ->setVisible(!error && !pgp());
+        ui.dragQueen                ->setVisible(!error &&!pgp());
         ui.restartWizardPB          ->setVisible(error);
         ui.nextStepsGB              ->setVisible(!error);
         ui.saveRequestToFilePB      ->setVisible(!pgp());
         ui.makeBackupPB             ->setVisible(pgp());
-        ui.createRevocationRequestPB->setVisible(pgp() && false);    // not implemented
+        ui.createRevocationRequestPB->setVisible(pgp() &&false);     // not implemented
 
-#ifdef KDEPIM_MOBILE_UI
-        ui.sendCertificateByEMailPB ->setVisible(false);
-        ui.sendRequestByEMailPB     ->setVisible(false);
-        ui.uploadToKeyserverPB      ->setVisible(false);
-#else
         ui.sendCertificateByEMailPB ->setVisible(pgp());
         ui.sendRequestByEMailPB     ->setVisible(!pgp());
         ui.uploadToKeyserverPB      ->setVisible(pgp());
-#endif
 
-        if (!error && !pgp()) {
+        if (!error && !pgp())
+        {
             if (signingAllowed() && !encryptionAllowed()) {
                 successfullyCreatedSigningCertificate = true;
             } else if (!signingAllowed() && encryptionAllowed()) {
@@ -817,19 +808,18 @@ public:
             }
         }
 
-        ui.createSigningCertificatePB->setVisible(successfullyCreatedEncryptionCertificate && !successfullyCreatedSigningCertificate);
-        ui.createEncryptionCertificatePB->setVisible(successfullyCreatedSigningCertificate && !successfullyCreatedEncryptionCertificate);
+        ui.createSigningCertificatePB->setVisible(successfullyCreatedEncryptionCertificate &&!successfullyCreatedSigningCertificate);
+        ui.createEncryptionCertificatePB->setVisible(successfullyCreatedSigningCertificate &&!successfullyCreatedEncryptionCertificate);
 
         setButtonVisible(QWizard::CancelButton, error);
 
         if (!initialized)
-            connect(ui.restartWizardPB, SIGNAL(clicked()),
-                    wizard(), SLOT(restart()));
+            connect(ui.restartWizardPB, &QAbstractButton::clicked,
+                    wizard(), &QWizard::restart);
         initialized = true;
     }
 
-    /* reimp */ void cleanupPage()
-    {
+    void cleanupPage() Q_DECL_OVERRIDE {
         setButtonVisible(QWizard::CancelButton, true);
     }
 
@@ -838,7 +828,7 @@ public:
         return !ui.errorTB->toPlainText().isEmpty();
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !isError();
     }
@@ -853,7 +843,7 @@ private Q_SLOTS:
     void slotSaveRequestToFile()
     {
         QString fileName = FileDialog::getSaveFileName(this, i18nc("@title", "Save Request"),
-                           QLatin1String("imp"), i18n("PKCS#10 Requests (*.p10)"));
+                           QStringLiteral("imp"), i18n("PKCS#10 Requests (*.p10)"));
         if (fileName.isEmpty()) {
             return;
         }
@@ -933,15 +923,14 @@ private Q_SLOTS:
     {
         qCDebug(KLEOPATRA_LOG) << "to:" << to << "subject:" << subject
                                << "body:" << body << "attachment:" << attachment;
-        // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
 
         // RFC 2368 says body's linebreaks need to be encoded as
         // "%0D%0A", so normalize body to CRLF:
-        body.replace(QLatin1Char('\n'), QStringLiteral("\r\n")).remove(QLatin1String("\r\r"));
+        body.replace(QLatin1Char('\n'), QStringLiteral("\r\n")).remove(QStringLiteral("\r\r"));
 
         QByteArray encoded = "mailto:?to=" + QUrl::toPercentEncoding(to)
                              + "&subject=" + QUrl::toPercentEncoding(subject)
-                             + "&body=" + QUrl::toPercentEncoding(body) ;
+                             + "&body=" + QUrl::toPercentEncoding(body);
         if (!attachment.isEmpty()) {
             encoded += "&attach=" + ol_quote(QUrl::toPercentEncoding(QFileInfo(attachment).absoluteFilePath()));
         }
@@ -954,7 +943,7 @@ private Q_SLOTS:
                                         "<para>If your mail client does not have an attachment, then drag the <application>Kleopatra</application> icon and drop it on the message compose window of your mail client.</para>"
                                         "<para>If that does not work, either, save the request to a file, and then attach that.</para>"),
                                  i18nc("@title", "Sending Mail"),
-                                 QLatin1String("newcertificatewizard-mailto-troubles"));
+                                 QStringLiteral("newcertificatewizard-mailto-troubles"));
     }
 
     void slotUploadCertificateToDirectoryServer()
@@ -1008,11 +997,11 @@ private:
         }
         const bool sign = signingAllowed();
         const bool encr = encryptionAllowed();
-        setField(QLatin1String("signingAllowed"),    !sign);
-        setField(QLatin1String("encryptionAllowed"), !encr);
+        setField(QStringLiteral("signingAllowed"),    !sign);
+        setField(QStringLiteral("encryptionAllowed"), !encr);
         // restart and skip to Overview Page:
         wizard()->restart();
-        for (int i = wizard()->currentId() ; i < NewCertificateWizard::OverviewPageId ; ++i) {
+        for (int i = wizard()->currentId(); i < NewCertificateWizard::OverviewPageId; ++i) {
             wizard()->next();
         }
     }
@@ -1034,7 +1023,7 @@ class NewCertificateWizard::Private
 public:
     explicit Private(NewCertificateWizard *qq)
         : q(qq),
-          tmp(QDir::temp().absoluteFilePath(QLatin1String("kleo-"))),
+          tmp(QDir::temp().absoluteFilePath(QStringLiteral("kleo-"))),
           ui(q)
     {
         q->setWindowTitle(i18nc("@title", "Certificate Creation Wizard"));
@@ -1115,7 +1104,7 @@ static QString attributeLabel(const QString &attr, bool pgp)
     if (attr.isEmpty()) {
         return QString();
     }
-    const QString label = pgp ? pgpLabel(attr) : Kleo::DNAttributeMapper::instance()->name2label(attr) ;
+    const QString label = pgp ? pgpLabel(attr) : Kleo::DNAttributeMapper::instance()->name2label(attr);
     if (!label.isEmpty())
         if (pgp) {
             return label;
@@ -1148,7 +1137,7 @@ static QString attributeFromKey(QString key)
 static const char *oidForAttributeName(const QString &attr)
 {
     QByteArray attrUtf8 = attr.toUtf8();
-    for (unsigned int i = 0 ; i < numOidMaps ; ++i)
+    for (unsigned int i = 0; i < numOidMaps; ++i)
         if (qstricmp(attrUtf8, oidmap[i].name) == 0) {
             return oidmap[i].oid;
         }
@@ -1157,14 +1146,14 @@ static const char *oidForAttributeName(const QString &attr)
 
 QDir WizardPage::tmpDir() const
 {
-    return wizard() ? QDir(wizard()->d->tmp.path()) : QDir::home() ;
+    return wizard() ? QDir(wizard()->d->tmp.path()) : QDir::home();
 }
 
 void EnterDetailsPage::registerDialogPropertiesAsFields()
 {
 
     const QMetaObject *const mo = dialog.metaObject();
-    for (unsigned int i = mo->propertyOffset(), end = i + mo->propertyCount() ; i != end ; ++i) {
+    for (unsigned int i = mo->propertyOffset(), end = i + mo->propertyCount(); i != end; ++i) {
         const QMetaProperty mp = mo->property(i);
         if (mp.isValid()) {
             registerField(QLatin1String(mp.name()), &dialog, mp.name(), SIGNAL(accepted()));
@@ -1302,7 +1291,7 @@ void EnterDetailsPage::updateForm()
         QValidator *validator = 0;
         if (attr == QLatin1String("EMAIL")) {
             row = row_index_of(ui.emailLE, ui.gridLayout);
-            validator = regex.isEmpty() ? Validation::email() : Validation::email(QRegExp(regex)) ;
+            validator = regex.isEmpty() ? Validation::email() : Validation::email(QRegExp(regex));
             if (!pgp()) {
                 ui.addEmailToDnCB->show();
             }
@@ -1311,14 +1300,14 @@ void EnterDetailsPage::updateForm()
                 continue;
             }
             if (pgp()) {
-                validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName(QRegExp(regex)) ;
+                validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName(QRegExp(regex));
             }
             row = row_index_of(ui.nameLE, ui.gridLayout);
         } else if (attr == QLatin1String("COMMENT")) {
             if (!pgp()) {
                 continue;
             }
-            validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment(QRegExp(regex)) ;
+            validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment(QRegExp(regex));
             row = row_index_of(ui.commentLE, ui.gridLayout);
         } else {
             known = false;
@@ -1356,7 +1345,7 @@ void EnterDetailsPage::updateForm()
 QString EnterDetailsPage::cmsDN() const
 {
     DN dn;
-    for (QVector<Line>::const_iterator it = lineList.begin(), end = lineList.end() ; it != end ; ++it) {
+    for (QVector<Line>::const_iterator it = lineList.begin(), end = lineList.end(); it != end; ++it) {
         const QString text = it->edit->text().trimmed();
         if (text.isEmpty()) {
             continue;
@@ -1386,7 +1375,7 @@ static bool has_intermediate_input(const QLineEdit *le)
     QString text = le->text();
     int pos = le->cursorPosition();
     const QValidator *const v = le->validator();
-    return v && v->validate(text, pos) == QValidator::Intermediate ;
+    return v && v->validate(text, pos) == QValidator::Intermediate;
 }
 
 static bool requirementsAreMet(const QVector<Line> &list, QString &error)
@@ -1537,7 +1526,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms(bool details) const
             s     << Row<        >(i18n("Comment:"),           comment());
         }
     } else {
-        s         << Row<        >(i18n("Subject-DN:"),        DN(dn()).dn(QLatin1String(",<br>")));
+        s         << Row<        >(i18n("Subject-DN:"),        DN(dn()).dn(QStringLiteral(",<br>")));
     }
     if (details) {
         s         << Row<        >(i18n("Key Type:"),          QLatin1String(gpgme_pubkey_algo_name(static_cast<gpgme_pubkey_algo_t>(keyType()))));
@@ -1558,7 +1547,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms(bool details) const
         }
     }
     if (pgp() && details && expiryDate().isValid()) {
-        s         << Row<        >(i18n("Valid Until:"),       KLocale::global()->formatDate(expiryDate()));
+        s         << Row<        >(i18n("Valid Until:"),       QLocale().toString(expiryDate()));
     }
     if (!pgp() && details) {
         Q_FOREACH (const QString &email, additionalEMailAddresses()) {
@@ -1576,7 +1565,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms(bool details) const
 
 static QString encode_dns(const QString &dns)
 {
-    return QString::fromLatin1(QUrl::toAce(dns));
+    return QLatin1String(QUrl::toAce(dns));
 }
 
 static QString encode_email(const QString &email)
@@ -1600,13 +1589,13 @@ QString KeyCreationPage::createGnupgKeyParms() const
     if (const unsigned int strength = keyStrength()) {
         s << "key-length:    " << strength                 << endl;
     }
-    s     << "key-usage:     " << keyUsages().join(QLatin1String(" "))    << endl;
+    s     << "key-usage:     " << keyUsages().join(QStringLiteral(" "))    << endl;
     if (const unsigned int subkey = subkeyType()) {
         s << "subkey-type:   " << gpgme_pubkey_algo_name(static_cast<gpgme_pubkey_algo_t>(subkey)) << endl;
         if (const unsigned int strength = subkeyStrength()) {
             s << "subkey-length: " << strength             << endl;
         }
-        s << "subkey-usage:  " << subkeyUsages().join(QLatin1String(" ")) << endl;
+        s << "subkey-usage:  " << subkeyUsages().join(QStringLiteral(" ")) << endl;
     }
     if (pgp() && expiryDate().isValid()) {
         s << "expire-date:   " << expiryDate().toString(Qt::ISODate) << endl;
@@ -1637,7 +1626,7 @@ QString KeyCreationPage::createGnupgKeyParms() const
 static void fill_combobox(QComboBox &cb, const QList<int> &sizes, const QStringList &labels)
 {
     cb.clear();
-    for (int i = 0, end = sizes.size() ; i != end ; ++i) {
+    for (int i = 0, end = sizes.size(); i != end; ++i) {
         cb.addItem(i < labels.size() && !labels[i].trimmed().isEmpty()
                    ? sizes[i] < 0
                    ? i18ncp("%2: some admin-supplied text, %1: key size in bits", "%2 (1 bit; default)", "%2 (%1 bits; default)", -sizes[i], labels[i].trimmed())
@@ -1681,7 +1670,7 @@ void AdvancedSettingsDialog::loadDefaultKeyType()
 
     const KConfigGroup config(KSharedConfig::openConfig(), "CertificateCreationWizard");
 
-    const QString entry = protocol == CMS ? QLatin1String(CMS_KEY_TYPE_ENTRY) : QLatin1String(PGP_KEY_TYPE_ENTRY) ;
+    const QString entry = protocol == CMS ? QLatin1String(CMS_KEY_TYPE_ENTRY) : QLatin1String(PGP_KEY_TYPE_ENTRY);
     const QString keyType = config.readEntry(entry).trimmed().toUpper();
 
     if (protocol == OpenPGP && keyType == QLatin1String("DSA")) {

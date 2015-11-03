@@ -28,14 +28,15 @@ public:
     ~ImportExportProgressIndicatorGui();
 
     void increaseProgressDialog() Q_DECL_OVERRIDE;
-    void createProgressDialog() Q_DECL_OVERRIDE;
+    void createProgressDialog(const QString &title) Q_DECL_OVERRIDE;
 
-    void showInfo(const QString &text) Q_DECL_OVERRIDE;
+    void setProgressDialogLabel(const QString &text) Q_DECL_OVERRIDE;
     bool wasCanceled() const Q_DECL_OVERRIDE;
     int mergeConfigMessageBox(const QString &configName) const Q_DECL_OVERRIDE;
     bool overwriteConfigMessageBox(const QString &configName) const Q_DECL_OVERRIDE;
     bool overwriteDirectoryMessageBox(const QString &directory) const Q_DECL_OVERRIDE;
     void showErrorMessage(const QString &message, const QString &title) Q_DECL_OVERRIDE;
+
 private:
     QProgressDialog *mProgressDialog;
     QWidget *mParentWidget;

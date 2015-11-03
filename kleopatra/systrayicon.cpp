@@ -54,7 +54,7 @@
 #include <QIcon>
 #include <KLocalizedString>
 #include <KAboutApplicationDialog>
-#include <k4aboutdata.h>
+#include <KAboutData>
 #include <KActionMenu>
 #include <QEventLoopLocker>
 
@@ -182,8 +182,8 @@ SysTrayIcon::Private::Private(SysTrayIcon *qq)
     connect(&openCertificateManagerAction, SIGNAL(triggered()), qApp, SLOT(openOrRaiseMainWindow()));
     connect(&configureAction, SIGNAL(triggered()), qApp, SLOT(openOrRaiseConfigDialog()));
     connect(&aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()));
-    connect(&quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()));
-    connect(&updateCardStatusAction, SIGNAL(triggered()), ReaderStatus::instance(), SLOT(updateStatus()));
+    connect(&quitAction, &QAction::triggered, QCoreApplication::instance(), &QCoreApplication::quit);
+    connect(&updateCardStatusAction, &QAction::triggered, ReaderStatus::instance(), &ReaderStatus::updateStatus);
     connect(&setInitialPinAction, SIGNAL(triggered()), q, SLOT(slotSetInitialPin()));
     connect(&learnCertificatesAction, SIGNAL(triggered()), q, SLOT(slotLearnCertificates()));
 

@@ -27,7 +27,7 @@
 #include "alarmdockwindow.h"
 #include "korgacadaptor.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/Collection>
 #include <kdbusconnectionpool.h>
@@ -43,11 +43,6 @@
 #include <KConfigGroup>
 #include <QApplication>
 
-#ifdef Q_OS_MAEMO_5
-#include <KSharedConfig>
-#include <QStandardPaths>
-#endif
-
 #include "koalarmclient_debug.h"
 
 using namespace KCalCore;
@@ -56,7 +51,7 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
     : QObject(parent), mDocker(0), mDialog(0)
 {
     new KOrgacAdaptor(this);
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/ac"), this);
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/ac"), this);
     qCDebug(KOALARMCLIENT_LOG);
 
     if (dockerEnabled()) {
@@ -218,7 +213,6 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
         return;
     }
 
-#if !defined(Q_OS_MAEMO_5)
     if (!mDialog) {
         mDialog = new AlarmDialog(calendar);
         connect(this, &KOAlarmClient::saveAllSignal, mDialog, &AlarmDialog::slotSave);
@@ -231,7 +225,6 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
 
     mDialog->addIncidence(aitem, remindAtDate, displayText);
     mDialog->wakeUp();
-#endif
     saveLastCheckTime();
 }
 

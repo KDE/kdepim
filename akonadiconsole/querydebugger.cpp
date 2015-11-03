@@ -32,14 +32,13 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusArgument>
 #include <QtDBus/QDBusMetaType>
-#include <boost/concept_check.hpp>
 #include <QDateTime>
 
 #include <AkonadiCore/servermanager.h>
 #include <AkonadiWidgets/controlgui.h>
 
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "kpimtextedit/richtexteditorwidget.h"
+#include "kpimtextedit/richtexteditor.h"
 #include <KTextEdit>
 #include <KLocalizedString>
 #include <QFontDatabase>
@@ -212,8 +211,8 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     mDebugger = new org::freedesktop::Akonadi::StorageDebugger(service,
             QStringLiteral("/storageDebug"), QDBusConnection::sessionBus(), this);
 
-    connect(mDebugger, SIGNAL(queryExecuted(double,uint,QString,QMap<QString,QVariant>,int,QList<QList<QVariant> >,QString)),
-            this, SLOT(addQuery(double,uint,QString,QMap<QString,QVariant>,int,QList<QList<QVariant> >,QString)));
+    connect(mDebugger, &OrgFreedesktopAkonadiStorageDebuggerInterface::queryExecuted,
+            this, &QueryDebugger::addQuery);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -222,7 +221,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     QCheckBox *enableCB = new QCheckBox(this);
     enableCB->setText(QStringLiteral("Enable query debugger (slows down server!)"));
     enableCB->setChecked(mDebugger->isSQLDebuggingEnabled());
-    connect(enableCB, SIGNAL(toggled(bool)), mDebugger, SLOT(enableSQLDebugging(bool)));
+    connect(enableCB, &QAbstractButton::toggled, mDebugger, &OrgFreedesktopAkonadiStorageDebuggerInterface::enableSQLDebugging);
     checkBoxLayout->addWidget(enableCB);
 
     mOnlyAggregate = new QCheckBox(this);
@@ -255,7 +254,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
 
     layout->addWidget(queryList);
 
-    mView = new PimCommon::RichTextEditorWidget(this);
+    mView = new KPIMTextEdit::RichTextEditorWidget(this);
     mView->setReadOnly(true);
     mView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     layout->addWidget(mView);
@@ -290,7 +289,7 @@ void QueryDebugger::addQuery(double sequence, uint duration, const QString &quer
     QString q = query;
     const QStringList keys = values.uniqueKeys();
     Q_FOREACH (const QString &key, keys) {
-        int pos = q.indexOf(QLatin1String("?"));
+        int pos = q.indexOf(QStringLiteral("?"));
         const QVariant val = values.value(key);
         q.replace(pos, 1, variantToString(val));
     }
@@ -336,7 +335,7 @@ void QueryDebugger::addQuery(double sequence, uint duration, const QString &quer
         }
     }
 
-    mView->editor()->append(QLatin1String("\n"));
+    mView->editor()->append(QStringLiteral("\n"));
 }
 
 QString QueryDebugger::variantToString(const QVariant &val)

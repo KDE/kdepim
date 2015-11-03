@@ -2,15 +2,13 @@ project(importwizard)
 
 
 include_directories(
-		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
-		    ${CMAKE_SOURCE_DIR}/importwizard/autodetect/
+    ${importwizard_SOURCE_DIR}/autodetect/
 )
 
 
 add_subdirectory(icons)
 add_subdirectory(kconf_update)
 set(importwizard_SRCS
-importwizard_debug.cpp
 importwizardkernel.cpp
 importwizard.cpp
 main.cpp
@@ -88,6 +86,8 @@ ki18n_wrap_ui(importwizard_SRCS
                   ui/manual/manualselectfilterpage.ui
 )
 
+ecm_qt_declare_logging_category(importwizard_SRCS HEADER importwizard_debug.h IDENTIFIER IMPORTWIZARD_LOG CATEGORY_NAME log_importwizard)
+
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kontact-import-wizard.png")
 ecm_add_app_icon(importwizard_SRCS ICONS ${ICONS_SRCS})
 
@@ -97,12 +97,14 @@ target_link_libraries(importwizard
   KF5::AkonadiCore
   KF5::MailTransport
   KF5::DBusAddons
-  mailimporter
-  pimcommon
-  mailcommon
-  kdepim
-  messagecomposer
-  messageviewer
+  KF5::XmlGui
+  KF5::MailImporter
+  KF5::PimCommon
+  KF5::MailCommon
+  KF5::Libkdepim
+  KF5::MessageComposer
+  KF5::MessageViewer
+  KF5::Completion
 )
 
 install(TARGETS importwizard  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

@@ -1,30 +1,23 @@
-
-include_directories(${Boost_INCLUDE_DIRS})
-
 ########### next target ###############
 
 
 
-include_directories(${Boost_INCLUDE_DIR})
+set(kontact_specialdatesplugin_PART_SRCS specialdates_plugin.cpp sdsummarywidget.cpp)
 
-set(kontact_specialdatesplugin_PART_SRCS specialdates_plugin.cpp sdsummarywidget.cpp korganizer_kontactplugins_specialdates_debug.cpp)
+ecm_qt_declare_logging_category(kontact_specialdatesplugin_PART_SRCS HEADER korganizer_kontactplugins_specialdates_debug.h IDENTIFIER KORGANIZER_KONTACTPLUGINS_SPECIALDATES_LOG CATEGORY_NAME log_korganizer_kontactplugins_specialdates)
 
 add_library(kontact_specialdatesplugin MODULE ${kontact_specialdatesplugin_PART_SRCS})
 
 set(_korganizerprivate_lib "korganizerprivate")
 
 target_link_libraries(kontact_specialdatesplugin
-  KF5::AkonadiCalendar
-  
   KF5::Contacts
   KF5::CalendarCore
   KF5::Holidays
   KF5::KontactInterface
   KF5::AkonadiCore
   KF5::AkonadiContact
-  kdepim
-  calendarsupport
-  ${_korganizerprivate_lib}
+  KF5::CalendarSupport
 )
 
 ########### next target ###############

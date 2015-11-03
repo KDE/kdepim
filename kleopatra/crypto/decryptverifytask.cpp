@@ -34,17 +34,17 @@
 
 #include "decryptverifytask.h"
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/verifyopaquejob.h>
-#include <kleo/verifydetachedjob.h>
-#include <kleo/decryptjob.h>
-#include <kleo/decryptverifyjob.h>
-#include <kleo/dn.h>
-#include <kleo/exception.h>
-#include <kleo/stl_util.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/VerifyOpaqueJob>
+#include <Libkleo/VerifyDetachedJob>
+#include <Libkleo/DecryptJob>
+#include <Libkleo/DecryptVerifyJob>
+#include <Libkleo/Dn>
+#include <Libkleo/Exception>
+#include <Libkleo/Stl_Util>
 
 #include <models/keycache.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <utils/detail_p.h>
 #include <utils/input.h>
@@ -65,7 +65,7 @@
 
 #include "kleopatra_debug.h"
 #include <KLocalizedString>
-#include <KLocale>
+#include <QLocale>
 
 #include <QByteArray>
 #include <QDateTime>
@@ -121,12 +121,13 @@ static std::string stripAngleBrackets(const std::string &str)
 static std::string email(const UserID &uid)
 {
 
-    if (uid.parent().protocol() == OpenPGP)
+    if (uid.parent().protocol() == OpenPGP) {
         if (const char *const email = uid.email()) {
             return stripAngleBrackets(email);
         } else {
             return std::string();
         }
+    }
 
     assert(uid.parent().protocol() == CMS);
 
@@ -134,7 +135,7 @@ static std::string email(const UserID &uid)
         if (*id == '<') {
             return stripAngleBrackets(id);
         } else {
-            return DN(id)[QLatin1String("EMAIL")].trimmed().toUtf8().constData();
+            return DN(id)[QStringLiteral("EMAIL")].trimmed().toUtf8().constData();
         }
     else {
         return std::string();
@@ -248,12 +249,12 @@ static QString renderFingerprint(const char *fpr)
     if (!fpr) {
         return QString();
     }
-    return QString::fromLatin1("0x%1").arg(QString::fromLatin1(fpr).toUpper());
+    return QStringLiteral("0x%1").arg(QString::fromLatin1(fpr).toUpper());
 }
 
 static QString renderKeyLink(const QString &fpr, const QString &text)
 {
-    return QString::fromLatin1("<a href=\"key:%1\">%2</a>").arg(fpr, text);
+    return QStringLiteral("<a href=\"key:%1\">%2</a>").arg(fpr, text);
 }
 
 static QString renderKey(const Key &key)
@@ -276,7 +277,7 @@ static QString renderKeyEMailOnlyNameAsFallback(const Key &key)
 
 static QString formatDate(const QDateTime &dt)
 {
-    return KLocale::global()->formatDateTime(dt);
+    return QLocale().toString(dt);
 }
 static QString formatSigningInformation(const Signature &sig, const Key &key)
 {
@@ -315,7 +316,7 @@ static QString formatSigningInformation(const Signature &sig, const Key &key)
 
 static QString strikeOut(const QString &str, bool strike)
 {
-    return QString(strike ? QLatin1String("<s>%1</s>") : QLatin1String("%1")).arg(str.toHtmlEscaped());
+    return QString(strike ? QStringLiteral("<s>%1</s>") : QStringLiteral("%1")).arg(str.toHtmlEscaped());
 }
 
 static QString formatInputOutputLabel(const QString &input, const QString &output, bool inputDeleted, bool outputDeleted)
@@ -401,7 +402,7 @@ static Task::Result::VisualCode codeForVerificationResult(const VerificationResu
         return Task::Result::Danger;
     }
 
-    if (std::count_if(sigs.begin(), sigs.end(), IsGoodOrValid) == sigs.size()) {
+    if ((size_t)std::count_if(sigs.begin(), sigs.end(), IsGoodOrValid) == sigs.size()) {
         return Task::Result::AllGood;
     }
 
@@ -575,7 +576,7 @@ static QString formatDecryptVerifyResultDetails(const DecryptionResult &dr,
     if (IsErrorOrCanceled(dr) || !relevantInDecryptVerifyContext(vr)) {
         return drDetails;
     }
-    return drDetails + (drDetails.isEmpty() ? QString() : QLatin1String("<br/>")) + formatVerificationResultDetails(vr, info, errorString);
+    return drDetails + (drDetails.isEmpty() ? QString() : QStringLiteral("<br/>")) + formatVerificationResultDetails(vr, info, errorString);
 }
 
 } // anon namespace

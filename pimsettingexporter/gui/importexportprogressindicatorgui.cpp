@@ -23,7 +23,7 @@
 
 ImportExportProgressIndicatorGui::ImportExportProgressIndicatorGui(QWidget *parentWidget, QObject *parent)
     : ImportExportProgressIndicatorBase(parent),
-      mProgressDialog(0),
+      mProgressDialog(Q_NULLPTR),
       mParentWidget(parentWidget)
 {
 
@@ -41,19 +41,19 @@ void ImportExportProgressIndicatorGui::increaseProgressDialog()
     }
 }
 
-void ImportExportProgressIndicatorGui::createProgressDialog()
+void ImportExportProgressIndicatorGui::createProgressDialog(const QString &title)
 {
     if (!mProgressDialog) {
-        mProgressDialog = new QProgressDialog(mParentWidget);
+        mProgressDialog = new QProgressDialog(QString(), i18n("Cancel"), 0, mNumberOfStep, mParentWidget);
+        mProgressDialog->setWindowTitle(title);
         mProgressDialog->setWindowModality(Qt::WindowModal);
-        mProgressDialog->setMinimum(0);
-        mProgressDialog->setMaximum(mNumberOfStep);
+        connect(mProgressDialog, &QProgressDialog::canceled, this, &ImportExportProgressIndicatorBase::canceled);
     }
     mProgressDialog->show();
     mProgressDialog->setValue(0);
 }
 
-void ImportExportProgressIndicatorGui::showInfo(const QString &text)
+void ImportExportProgressIndicatorGui::setProgressDialogLabel(const QString &text)
 {
     if (mProgressDialog) {
         mProgressDialog->setLabelText(text);

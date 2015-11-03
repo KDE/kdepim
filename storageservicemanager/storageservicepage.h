@@ -22,9 +22,9 @@
 #define STORAGESERVICEPAGE_H
 
 #include <QWidget>
-#include "pimcommon/storageservice/storageserviceabstract.h"
+#include "PimCommon/StorageServiceAbstract"
 #include "storageservicemanagerutil.h"
-#include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
+#include "PimCommon/StorageServiceTreeWidget"
 
 namespace PimCommon
 {

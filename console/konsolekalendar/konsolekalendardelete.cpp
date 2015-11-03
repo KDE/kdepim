@@ -78,7 +78,7 @@ bool KonsoleKalendarDelete::deleteEvent()
 
             QEventLoop loop;
             Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
-            QObject::connect(calendar.data(), SIGNAL(deleteFinished(bool,QString)), &loop, SLOT(quit()));
+            QObject::connect(calendar.data(), &Akonadi::CalendarBase::deleteFinished, &loop, &QEventLoop::quit);
             calendar->deleteEvent(event);
             loop.exec();
             qCDebug(KONSOLEKALENDAR_LOG) << "Finished deleting";

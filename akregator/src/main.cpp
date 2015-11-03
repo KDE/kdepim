@@ -45,13 +45,13 @@ public:
 
     ~Application() {}
 
-    int activate(const QStringList &args) Q_DECL_OVERRIDE;
+    int activate(const QStringList &args, const QString &workingDir) Q_DECL_OVERRIDE;
 
 private:
     Akregator::MainWindow *mMainWindow;
 };
 
-int Application::activate(const QStringList &args)
+int Application::activate(const QStringList &args, const QString &workingDir)
 {
     if (!isSessionRestored()) {
         QDBusInterface akr(QStringLiteral("org.kde.akregator"), QStringLiteral("/Akregator"), QStringLiteral("org.kde.akregator.part"));
@@ -71,7 +71,7 @@ int Application::activate(const QStringList &args)
 
         akr.call(QStringLiteral("handleCommandLine"), args);
     }
-    return PimUniqueApplication::activate(args);
+    return PimUniqueApplication::activate(args, workingDir);
 }
 
 } // namespace Akregator
@@ -79,6 +79,7 @@ int Application::activate(const QStringList &args)
 int main(int argc, char **argv)
 {
     Akregator::Application app(argc, &argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Akregator::AboutData about;
     app.setAboutData(about);
 

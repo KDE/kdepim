@@ -25,7 +25,7 @@
 
 #include "kcmkmailsummary.h"
 
-#include "pimcommon/folderdialog/checkedcollectionwidget.h"
+#include "PimCommon/CheckedCollectionWidget"
 #include <AkonadiWidgets/ETMViewStateSaver>
 #include <KMime/KMimeMessage>
 
@@ -56,8 +56,8 @@ KCMKMailSummary::KCMKMailSummary(QWidget *parent)
 {
     initGUI();
 
-    connect(mCheckedCollectionWidget->folderTreeView(), SIGNAL(clicked(QModelIndex)),
-            SLOT(modified()));
+    connect(mCheckedCollectionWidget->folderTreeView(), &QAbstractItemView::clicked,
+            this, &KCMKMailSummary::modified);
     connect(mFullPath, &QCheckBox::toggled, this, &KCMKMailSummary::modified);
 
     KAcceleratorManager::manage(this);

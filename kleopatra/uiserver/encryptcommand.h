@@ -46,8 +46,8 @@ public:
     EncryptCommand();
     virtual ~EncryptCommand();
 private:
-    int doStart();
-    void doCanceled();
+    int doStart() Q_DECL_OVERRIDE;
+    void doCanceled() Q_DECL_OVERRIDE;
 public:
     static const char *staticName()
     {

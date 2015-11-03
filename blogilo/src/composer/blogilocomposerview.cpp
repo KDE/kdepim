@@ -18,7 +18,7 @@
 */
 
 #include "blogilocomposerview.h"
-#include "pimcommon/widgets/customtoolswidget.h"
+#include "PimCommon/CustomToolsWidgetng"
 
 #include <KToggleAction>
 
@@ -39,7 +39,7 @@ BlogiloComposerView::~BlogiloComposerView()
 
 }
 
-void BlogiloComposerView::setCustomTools(PimCommon::CustomToolsWidget *customTool)
+void BlogiloComposerView::setCustomTools(PimCommon::CustomToolsWidgetNg *customTool)
 {
     mCustomTools = customTool;
 }
@@ -51,7 +51,7 @@ void BlogiloComposerView::startEditing()
     this -> setFocus();
     QMouseEvent mouseEventPress(QEvent::MouseButtonPress, QPoint(10, 10), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
     QApplication::sendEvent(this, &mouseEventPress);
-    QTimer::singleShot(50, this, SLOT(slotSendMouseReleaseEvent()));
+    QTimer::singleShot(50, this, &BlogiloComposerView::slotSendMouseReleaseEvent);
 }
 
 void BlogiloComposerView::slotSendMouseReleaseEvent()
@@ -65,8 +65,9 @@ void BlogiloComposerView::addExtraAction(QMenu *menu)
 {
     if (mCustomTools) {
         menu->addSeparator();
-        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::TranslatorTool));
-        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::ShortUrlTool));
+        Q_FOREACH (KToggleAction *ta, mCustomTools->actionList()) {
+            menu->addAction(ta);
+        }
     }
 }
 

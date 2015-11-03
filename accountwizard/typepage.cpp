@@ -36,10 +36,6 @@ TypePage::TypePage(KAssistantDialog *parent) :
     m_model(new QStandardItemModel(this))
 {
     ui.setupUi(this);
-#ifdef KDEPIM_MOBILE_UI
-    ui.label->setHidden(true);
-    ui.searchLine->setHidden(true);
-#endif
 
 #ifdef ACCOUNTWIZARD_NO_GHNS
     ui.ghnsButton->hide();

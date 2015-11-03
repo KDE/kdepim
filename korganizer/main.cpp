@@ -35,12 +35,12 @@
 int main(int argc, char **argv)
 {
     KOrganizerApp app(argc, &argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     KOrgMigrateApplication migrate;
     migrate.migrate();
 
     KOrg::AboutData aboutData;
     app.setAboutData(aboutData);
-
 
     QCommandLineParser *cmdArgs = app.cmdArgs();
     korganizer_options(cmdArgs);

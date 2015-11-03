@@ -23,7 +23,7 @@
 
 #include <QDialog>
 class QPushButton;
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class RichTextEditorWidget;
 }
@@ -46,7 +46,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    PimCommon::RichTextEditorWidget *mLog;
+    KPIMTextEdit::RichTextEditorWidget *mLog;
     QPushButton *mUser1Button;
     QPushButton *mUser2Button;
 };

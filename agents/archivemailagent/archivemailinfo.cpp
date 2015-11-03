@@ -104,7 +104,7 @@ QUrl ArchiveMailInfo::realUrl(const QString &folderName, bool &dirExist) const
     const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
     const QString dirPath = dirArchive(dirExist);
 
-    const QString path = dirPath + QLatin1Char('/') + i18nc("Start of the filename for a mail archive file" , "Archive")
+    const QString path = dirPath + QLatin1Char('/') + i18nc("Start of the filename for a mail archive file", "Archive")
                          + QLatin1Char('_') + normalizeFolderName(folderName) + QLatin1Char('_')
                          + QDate::currentDate().toString(Qt::ISODate) + QString::fromLatin1(extensions[mArchiveType]);
     QUrl real(QUrl::fromLocalFile(path));
@@ -121,7 +121,7 @@ QStringList ArchiveMailInfo::listOfArchive(const QString &folderName, bool &dirE
     QDir dir(dirPath);
 
     QStringList nameFilters;
-    nameFilters << i18nc("Start of the filename for a mail archive file" , "Archive") + QLatin1Char('_') +
+    nameFilters << i18nc("Start of the filename for a mail archive file", "Archive") + QLatin1Char('_') +
                 normalizeFolderName(folderName) + QLatin1Char('_') + QLatin1String("*") + QString::fromLatin1(extensions[mArchiveType]);
     const QStringList lst = dir.entryList(nameFilters, QDir::Files | QDir::NoDotAndDotDot, QDir::Time | QDir::Reversed);
     return lst;

@@ -155,7 +155,7 @@ QCsvModel::QCsvModel(QObject *parent)
             this, SLOT(rowCountChanged(int)), Qt::QueuedConnection);
     connect(d->mParser, SIGNAL(dataChanged(QString,int,int)),
             this, SLOT(fieldChanged(QString,int,int)), Qt::QueuedConnection);
-    connect(d->mParser, SIGNAL(ended()), this, SLOT(finishedLoading()));
+    connect(d->mParser, &CsvParser::ended, this, &QCsvModel::finishedLoading);
 }
 
 QCsvModel::~QCsvModel()

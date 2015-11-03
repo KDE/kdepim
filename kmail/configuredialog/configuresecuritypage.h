@@ -88,7 +88,6 @@ public:
 private:
     void doLoadFromGlobalSettings() Q_DECL_OVERRIDE;
     void doLoadOther() Q_DECL_OVERRIDE;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private:
     Ui::ComposerCryptoConfiguration *mWidget;
@@ -112,7 +111,6 @@ private Q_SLOTS:
 private:
     void doLoadFromGlobalSettings() Q_DECL_OVERRIDE;
     void doLoadOther() Q_DECL_OVERRIDE;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private:
     Ui::WarningConfiguration *mWidget;
@@ -133,16 +131,13 @@ private Q_SLOTS:
     void slotUpdateHTTPActions();
 
 private:
-    //virtual void doLoadFromGlobalSettings();
     void doLoadOther() Q_DECL_OVERRIDE;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private:
     Ui::SMimeConfiguration *mWidget;
     Kleo::CryptoConfig *mConfig;
 };
 
-#ifndef KDEPIM_NO_WEBKIT
 class SecurityPageAdBlockTab : public ConfigModuleTab
 {
     Q_OBJECT
@@ -162,7 +157,6 @@ private:
 private:
     MessageViewer::AdBlockSettingWidget *mWidget;
 };
-#endif
 
 class KMAIL_EXPORT SecurityPage : public ConfigModuleWithTabs
 {
@@ -183,9 +177,7 @@ private:
     ComposerCryptoTab *mComposerCryptoTab;
     WarningTab    *mWarningTab;
     SMimeTab      *mSMimeTab;
-#ifndef KDEPIM_NO_WEBKIT
     SecurityPageAdBlockTab *mSAdBlockTab;
-#endif
 };
 
 #endif // CONFIGURESECURITYPAGE_H

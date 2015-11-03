@@ -165,18 +165,17 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
         }
         case MergeContacts::Geo: {
             const Geo geo = addr.geo();
-            const QString str = QStringLiteral("%1-%2").arg(geo.latitude(), geo.longitude());
+            const QString str = QStringLiteral("%1-%2").arg(geo.latitude()).arg(geo.longitude());
             addItem(str);
             break;
         }
         case MergeContacts::Photo:
             //TODO fix when it's an url
             addItem(QString(), QIcon(QPixmap::fromImage(addr.photo().data())));
-            //FIXME add icon ?
             break;
         case MergeContacts::Logo:
+            //TODO fix when it's an url
             addItem(QString(), QIcon(QPixmap::fromImage(addr.logo().data())));
-            //FIXME add icon ?
             break;
         case MergeContacts::Anniversary: {
             QString anniversary;

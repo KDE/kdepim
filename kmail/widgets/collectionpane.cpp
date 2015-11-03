@@ -18,10 +18,10 @@
 
 #include "collectionpane.h"
 #include "kmkernel.h"
-#include "kernel/mailkernel.h"
+#include "mailcommon/mailkernel.h"
 
-#include "foldercollection.h"
-#include "pimcommon/util/pimutil.h"
+#include "MailCommon/FolderCollection"
+#include "PimCommon/PimUtil"
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <Akonadi/KMime/MessageFolderAttribute>
@@ -39,7 +39,7 @@ CollectionPane::~CollectionPane()
 
 void CollectionPane::writeConfig(bool /*restoreSession*/)
 {
-    MessageList::Pane::writeConfig(!GlobalSettings::self()->startSpecificFolderAtStartup());
+    MessageList::Pane::writeConfig(!KMailSettings::self()->startSpecificFolderAtStartup());
 }
 
 MessageList::StorageModel *CollectionPane::createStorageModel(QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent)

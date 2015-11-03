@@ -42,14 +42,14 @@ public:
     ~AbstractSettings();
 
 protected:
-    void addImportInfo(const QString &log);
-    void addImportError(const QString &log);
+    void addImportInfo(const QString &log) Q_DECL_OVERRIDE;
+    void addImportError(const QString &log) Q_DECL_OVERRIDE;
 
     void syncKmailConfig();
 
     QString uniqueIdentityName(const QString &name);
 
-    QString createResource(const QString &resources , const QString &name, const QMap<QString, QVariant> &settings);
+    QString createResource(const QString &resources, const QString &name, const QMap<QString, QVariant> &settings);
 
     KIdentityManagement::Identity *createIdentity(QString &name);
 

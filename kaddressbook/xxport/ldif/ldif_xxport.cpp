@@ -35,14 +35,16 @@
 
 #include "ldif_xxport.h"
 
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include <KContacts/LDIFConverter>
 
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
-#include <KIO/NetAccess>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 
 #include <QFile>
 #include <QTextStream>
@@ -66,7 +68,7 @@ LDIFXXPort::LDIFXXPort(QWidget *parentWidget)
 ContactList LDIFXXPort::importContacts() const
 {
     ContactList contactList;
-    const QString fileName = QFileDialog::getOpenFileName(parentWidget() , QString(),  QDir::homePath(), i18n("LDIF file (%1)", QStringLiteral("*.ldif")));
+    const QString fileName = QFileDialog::getOpenFileName(parentWidget(), QString(),  QDir::homePath(), i18n("LDif Files (*.ldif)"));
     if (fileName.isEmpty()) {
         return contactList;
     }
@@ -95,7 +97,7 @@ ContactList LDIFXXPort::importContacts() const
 bool LDIFXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidget::ExportFields) const
 {
     const QUrl url =
-        QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), QStringLiteral("text/x-ldif"));
+        QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), i18n("LDif Files (*.ldif)"));
     if (url.isEmpty()) {
         return true;
     }
@@ -110,8 +112,10 @@ bool LDIFXXPort::exportContacts(const ContactList &list, VCardExportSelectionWid
 
         doExport(&tmpFile, list);
         tmpFile.flush();
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url);
+        KJobWidgets::setWindow(job, parentWidget());
+        return job->exec();
 
-        return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
     } else {
         QString fileName = url.toLocalFile();
 

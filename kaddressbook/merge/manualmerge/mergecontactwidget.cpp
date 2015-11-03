@@ -55,7 +55,7 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     selectContactWidget->setObjectName(QStringLiteral("selectcontactwidget"));
     QVBoxLayout *vbox = new QVBoxLayout;
     selectContactWidget->setLayout(vbox);
-    QLabel *lab = new QLabel(i18n("Select contacts that you want really to merge:"));
+    QLabel *lab = new QLabel(i18n("Select contacts that you really want to merge:"));
     vbox->addWidget(lab);
     mListWidget = new MergeContactWidgetList;
     mListWidget->setObjectName(QStringLiteral("listcontact"));

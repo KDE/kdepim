@@ -18,20 +18,22 @@
 #ifndef KMCOMPOSEREDITORNG_H
 #define KMCOMPOSEREDITORNG_H
 
-#include "messagecomposer/composer-ng/richtextcomposer.h"
+#include "messagecomposer/richtextcomposerng.h"
 class KMComposeWin;
-
-class KMComposerEditorNg : public MessageComposer::RichTextComposer
+namespace KPIMTextEdit
+{
+class RichTextComposerEmailQuoteHighlighter;
+}
+class KMComposerEditorNg : public MessageComposer::RichTextComposerNg
 {
     Q_OBJECT
 public:
     explicit KMComposerEditorNg(KMComposeWin *win, QWidget *parent);
     ~KMComposerEditorNg();
 
-    //TODO make it virtual.
     QString smartQuote(const QString &msg) Q_DECL_OVERRIDE;
 
-    void setHighlighterColors(MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter) Q_DECL_OVERRIDE;
+    void setHighlighterColors(KPIMTextEdit::RichTextComposerEmailQuoteHighlighter *highlighter) Q_DECL_OVERRIDE;
 
     void showSpellConfigDialog(const QString &configFileName);
 

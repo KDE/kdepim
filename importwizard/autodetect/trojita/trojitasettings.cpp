@@ -140,11 +140,6 @@ void TrojitaSettings::readTransport()
                 }
             }
             mt->setType(MailTransport::Transport::EnumType::SMTP);
-        } else if (smtpMethod == QLatin1String("sendmail")) {
-            mt->setType(MailTransport::Transport::EnumType::Sendmail);
-            if (settings->contains(QStringLiteral("msa.sendmail"))) {
-                mt->setHost(settings->value(QStringLiteral("msa.sendmail")).toString());
-            }
         } else {
             qCWarning(IMPORTWIZARD_LOG) << " smtpMethod unknown " << smtpMethod;
         }

@@ -30,11 +30,11 @@
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/itemfetchscope.h>
 
-#include <calendarviews/agenda/agendaview.h>
-#include <calendarviews/agenda/viewcalendar.h>
-#include <calendarsupport/calendarsingleton.h>
+#include <EventViews/AgendaView>
+#include <EventViews/ViewCalendar>
+#include <CalendarSupport/CalendarSingleton>
 
-#include <freebusymodel/freebusycalendar.h>
+#include <CalendarSupport/FreeBusyCalendar>
 
 #include "korganizer_debug.h"
 #include <KCheckableProxyModel>
@@ -45,24 +45,24 @@
 class FreebusyViewCalendar : public EventViews::ViewCalendar
 {
 public:
-    virtual ~FreebusyViewCalendar() {};
-    virtual bool isValid(const KCalCore::Incidence::Ptr &incidence) const
+    virtual ~FreebusyViewCalendar() {}
+    bool isValid(const KCalCore::Incidence::Ptr &incidence) const Q_DECL_OVERRIDE
     {
         return isValid(incidence->uid());
     }
 
-    virtual bool isValid(const QString &incidenceIdentifier) const
+    bool isValid(const QString &incidenceIdentifier) const Q_DECL_OVERRIDE
     {
         return incidenceIdentifier.startsWith(QStringLiteral("fb-"));
     }
 
-    virtual QString displayName(const KCalCore::Incidence::Ptr &incidence) const
+    QString displayName(const KCalCore::Incidence::Ptr &incidence) const Q_DECL_OVERRIDE
     {
         Q_UNUSED(incidence);
         return i18n("Free/Busy calendar from %1", name);
     }
 
-    virtual QColor resourceColor(const KCalCore::Incidence::Ptr &incidence) const
+    QColor resourceColor(const KCalCore::Incidence::Ptr &incidence) const Q_DECL_OVERRIDE
     {
         bool ok = false;
         int status = incidence->customProperty(QStringLiteral("FREEBUSY").toLatin1(), QStringLiteral("STATUS").toLatin1()).toInt(&ok);
@@ -84,12 +84,12 @@ public:
         }
     }
 
-    virtual QString iconForIncidence(const KCalCore::Incidence::Ptr &incidence) const
+    QString iconForIncidence(const KCalCore::Incidence::Ptr &incidence) const Q_DECL_OVERRIDE
     {
         return QString();
     }
 
-    virtual KCalCore::Calendar::Ptr getCalendar() const
+    KCalCore::Calendar::Ptr getCalendar() const Q_DECL_OVERRIDE
     {
         return mCalendar;
     }

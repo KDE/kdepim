@@ -14,14 +14,15 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_SOURCE_DIR}
-    ${Boost_INCLUDE_DIR}
 )
 
 add_subdirectory(appicons)
 add_subdirectory(pixmaps)
 add_subdirectory(autostart)
 add_subdirectory(kconf_update)
+
+set(libkalarm_common_SRCS)
+ecm_qt_declare_logging_category(libkalarm_common_SRCS HEADER kalarm_debug.h IDENTIFIER KALARM_LOG CATEGORY_NAME log_kalarm)
 
 ########### next target ###############
 set(libkalarm_SRCS
@@ -53,7 +54,7 @@ set(libkalarm_SRCS
 )
 
 set(kalarm_bin_SRCS ${libkalarm_SRCS}
-    kalarm_debug.cpp
+    ${libkalarm_common_SRCS}
     birthdaydlg.cpp
     birthdaymodel.cpp
     main.cpp
@@ -133,7 +134,6 @@ kconfig_add_kcfg_files(kalarm_bin_SRCS GENERATE_MOC kalarmconfig.kcfgc)
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/appicons/*-apps-kalarm.png")
 ecm_add_app_icon(kalarm_bin_SRCS ICONS ${ICONS_SRCS})
 add_executable(kalarm_bin ${kalarm_bin_SRCS})
-add_dependencies(kalarm_bin kalarm_resource_xml kalarmdir_resource_xml)
 add_dependencies(kalarm_bin kmail_xml)
 
 set_target_properties(kalarm_bin PROPERTIES OUTPUT_NAME kalarm)
@@ -151,11 +151,12 @@ KF5::AkonadiMime
 KF5::AkonadiContact
 KF5::Holidays
 KF5::Codecs
-kdepim
+KF5::ConfigCore
+KF5::Libkdepim
 Phonon::phonon4qt5
 KF5::Auth
 KF5::DBusAddons
-pimcommon
+KF5::PimCommon
 )
 
 if (Qt5X11Extras_FOUND)
@@ -177,7 +178,7 @@ install(FILES org.kde.kalarm.kalarm.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACED
 
 ########### KAuth helper ###############
 
-add_executable(kalarm_helper rtcwakeaction.cpp kalarm_debug.cpp)
+add_executable(kalarm_helper rtcwakeaction.cpp ${libkalarm_common_SRCS})
 target_link_libraries(kalarm_helper KF5::Auth KF5::KDELibs4Support)
 install(TARGETS kalarm_helper DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 kauth_install_helper_files(kalarm_helper org.kde.kalarmrtcwake root)

@@ -76,7 +76,7 @@ public:
     BilboPost getPostInfo(int post_id);
 
     QMap<QString, int> listCategoriesName(int blog_id);
-    QList<Category> listCategories(int blog_id);
+    QVector<Category> listCategories(int blog_id);
     QMap<QString, bool> listCategoriesId(int blog_id);
 
     /**

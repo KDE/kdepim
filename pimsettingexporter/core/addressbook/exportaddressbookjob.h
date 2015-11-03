@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ExportAddressbookJob : public AbstractImportExportJob
+class ExportAddressbookJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
@@ -31,9 +31,14 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
+private Q_SLOTS:
+    void slotCheckBackupConfig();
+    void slotCheckBackupResource();
+    void slotWriteNextArchiveResource();
+    void slotAddressbookJobTerminated();
 private:
-    void backupResources();
     void backupConfig();
+    int mIndexIdentifier;
 };
 
 #endif // EXPORTADDRESSBOOKJOB_H

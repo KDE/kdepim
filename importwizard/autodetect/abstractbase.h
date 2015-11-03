@@ -35,7 +35,7 @@ public:
     explicit AbstractBase();
     virtual ~AbstractBase();
 
-    QString createResource(const QString &resources , const QString &name, const QMap<QString, QVariant> &settings);
+    QString createResource(const QString &resources, const QString &name, const QMap<QString, QVariant> &settings);
 
 private Q_SLOTS:
     void slotCreateResourceError(const QString &);

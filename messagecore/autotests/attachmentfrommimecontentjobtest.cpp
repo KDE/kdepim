@@ -20,8 +20,6 @@
 #include "attachmentfrommimecontentjobtest.h"
 #include "qtest_messagecore.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include "messagecore_debug.h"
 #include <qtest.h>
 
@@ -29,7 +27,7 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecore/attachment/attachmentfrommimecontentjob.h>
+#include <MessageCore/AttachmentFromMimeContentJob>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentFromMimeContentJobTest)

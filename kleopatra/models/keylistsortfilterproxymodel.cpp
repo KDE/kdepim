@@ -36,11 +36,11 @@
 
 #include "keylistmodel.h"
 
-#include <kleo/keyfilter.h>
+#include <Libkleo/KeyFilter>
 
 #include <gpgme++/key.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <boost/bind.hpp>
 
@@ -171,7 +171,7 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelI
     // 0. Keep parents of matching children:
     //
     const QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
-    for (int i = 0, end = sourceModel()->rowCount(index) ; i != end ; ++i)
+    for (int i = 0, end = sourceModel()->rowCount(index); i != end; ++i)
         if (filterAcceptsRow(i, index)) {
             return true;
         }
@@ -184,17 +184,14 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelI
     const QModelIndex nameIndex = sourceModel()->index(source_row, PrettyName, source_parent);
     const QString name = nameIndex.data(role).toString();
 
-#ifndef KDEPIM_MOBILE_UI
     const QModelIndex emailIndex = sourceModel()->index(source_row, PrettyEMail, source_parent);
     const QString email = emailIndex.data(role).toString();
-#endif
 
     const QRegExp rx = filterRegExp();
     if (!name.contains(rx))
-#ifndef KDEPIM_MOBILE_UI
-        if (!email.contains(rx))
-#endif
+        if (!email.contains(rx)) {
             return false;
+        }
 
     //
     // 2. Check that key filters match (if any are defined)

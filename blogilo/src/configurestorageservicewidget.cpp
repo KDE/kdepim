@@ -17,9 +17,9 @@
 
 #include "configurestorageservicewidget.h"
 #include "settings.h"
-#include "pimcommon/storageservice/widgets/storageserviceconfigurewidget.h"
-#include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
-#include "pimcommon/storageservice/storageservicemanager.h"
+#include "PimCommon/StorageServiceConfigureWidget"
+#include "PimCommon/StorageServiceSettingsWidget"
+#include "PimCommon/StorageServiceManager"
 
 #include <KLocalizedString>
 

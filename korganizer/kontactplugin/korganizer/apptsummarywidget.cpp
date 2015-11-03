@@ -29,8 +29,8 @@
 
 #include "korganizer/korganizerinterface.h"
 
-#include <calendarsupport/utils.h>
-#include <calendarsupport/calendarsingleton.h>
+#include <CalendarSupport/Utils>
+#include <CalendarSupport/CalendarSingleton>
 
 #include <AkonadiCore/Collection>
 #include <Akonadi/Calendar/IncidenceChanger>
@@ -73,8 +73,8 @@ ApptSummaryWidget::ApptSummaryWidget(KOrganizerPlugin *plugin, QWidget *parent)
 
     mChanger = new Akonadi::IncidenceChanger(parent);
 
-    connect(mCalendar.data(), SIGNAL(calendarChanged()), this, SLOT(updateView()));
-    connect(mPlugin->core(), SIGNAL(dayChanged(QDate)), this, SLOT(updateView()));
+    connect(mCalendar.data(), &Akonadi::ETMCalendar::calendarChanged, this, &ApptSummaryWidget::updateView);
+    connect(mPlugin->core(), &KontactInterface::Core::dayChanged, this, &ApptSummaryWidget::updateView);
 
     // Update Configuration
     configUpdated();

@@ -13,6 +13,7 @@ set(ispdbtest_libs
   KF5::Mime
   Qt5::Test
   Qt5::Xml
+  Qt5::Network
   KF5::I18n
 )
 

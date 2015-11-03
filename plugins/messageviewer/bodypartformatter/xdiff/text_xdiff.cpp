@@ -29,10 +29,10 @@
     your version.
 */
 
-#include <messageviewer/interfaces/bodypartformatter.h>
-#include <messageviewer/interfaces/bodypart.h>
-#include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
+#include <messageviewer/bodypartformatter.h>
+#include <messageviewer/bodypart.h>
+#include <messageviewer/bodyparturlhandler.h>
+#include <messageviewer/webkitparthtmlwriter.h>
 
 #include <kstringhandler.h>
 #include <kiconloader.h>
@@ -53,7 +53,7 @@ namespace
 class Formatter : public MessageViewer::Interface::BodyPartFormatter
 {
 public:
-    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const
+    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
 
         if (!writer) {
@@ -86,7 +86,7 @@ public:
         static const QLatin1String sepStyle("style=\"color: black; font-weight: bold;\"");
         static const QLatin1String chunkStyle("style=\"color: blue;\"");
 
-        QString html = QLatin1String("<br><div align=\"center\">");
+        QString html = QStringLiteral("<br><div align=\"center\">");
         html += QLatin1String("<pre ") + tableStyle + QLatin1Char('>');
 
         const QStringList lines = diff.split(QLatin1Char('\n'));
@@ -126,20 +126,20 @@ public:
 class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 {
 public:
-    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? new Formatter() : 0 ;
+        return idx == 0 ? new Formatter() : 0;
     }
-    const char *type(int idx) const
+    const char *type(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? "text" : 0 ;
+        return idx == 0 ? "text" : 0;
     }
-    const char *subtype(int idx) const
+    const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? "x-diff" : 0 ;
+        return idx == 0 ? "x-diff" : 0;
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const Q_DECL_OVERRIDE
     {
         return 0;
     }

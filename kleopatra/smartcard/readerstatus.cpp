@@ -38,7 +38,7 @@
 #include <utils/kdsignalblocker.h>
 #include <utils/filesystemwatcher.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <gpgme++/context.h>
 #include <gpgme++/assuanresult.h>
@@ -78,7 +78,6 @@ using namespace Kleo::SmartCard;
 using namespace GpgME;
 using namespace boost;
 
-static const unsigned int RETRY_WAIT = 2; // seconds
 static const unsigned int CHECK_INTERVAL = 2000; // msecs
 
 static ReaderStatus *self = 0;
@@ -144,7 +143,7 @@ static QByteArray read_file(const QString &fileName)
 
 static unsigned int parseFileName(const QString &fileName, bool *ok)
 {
-    QRegExp rx(QLatin1String("reader_(\\d+)\\.status"));
+    QRegExp rx(QStringLiteral("reader_(\\d+)\\.status"));
     if (ok) {
         *ok = false;
     }
@@ -419,7 +418,7 @@ static std::vector<CardInfo> update_cardinfo(const QString &gnupgHomePath, share
         qCWarning(KLEOPATRA_LOG) << "gnupg home" << gnupgHomePath << "does not exist!";
     }
 
-    const CardInfo ci = get_card_status(gnupgHome.absoluteFilePath(QLatin1String("reader_0.status")), 0, gpgAgent);
+    const CardInfo ci = get_card_status(gnupgHome.absoluteFilePath(QStringLiteral("reader_0.status")), 0, gpgAgent);
 #ifdef DEBUG_SCREADER
     qCDebug(KLEOPATRA_LOG) << "</update_cardinfo>";
 #endif
@@ -432,7 +431,7 @@ static bool check_event_counter_changed(shared_ptr<Context> &gpg_agent, unsigned
     counter = get_event_counter(gpg_agent);
     if (oldCounter != counter) {
 #ifdef DEBUG_SCREADER
-        qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
+        qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter;
 #endif
         return true;
     } else {
@@ -462,8 +461,8 @@ public:
           m_gnupgHomePath(Kleo::gnupgHomeDirectory()),
           m_transactions(1, updateTransaction)   // force initial scan
     {
-        connect(this, SIGNAL(oneTransactionFinished()),
-                this, SLOT(slotOneTransactionFinished()));
+        connect(this, &ReaderStatusThread::oneTransactionFinished,
+                this, &ReaderStatusThread::slotOneTransactionFinished);
     }
 
     std::vector<CardInfo> cardInfos() const
@@ -520,7 +519,7 @@ public Q_SLOTS:
             return;
         }
 
-        QStringList files = gnupgHome.entryList(QStringList(QLatin1String("reader_*.status")), QDir::Files, QDir::Name);
+        QStringList files = gnupgHome.entryList(QStringList(QStringLiteral("reader_*.status")), QDir::Files, QDir::Name);
         bool *dummy = 0;
         kdtools::sort(files, boost::bind(parseFileName, _1, dummy) < boost::bind(parseFileName, _2, dummy));
 
@@ -563,13 +562,13 @@ private Q_SLOTS:
     }
 
 private:
-    /* reimp */ void run()
-    {
+    void run() Q_DECL_OVERRIDE {
 
         shared_ptr<Context> gpgAgent;
         unsigned int eventCounter = -1;
 
-        while (true) {
+        while (true)
+        {
 
             QByteArray command;
             bool nullSlot;
@@ -623,8 +622,8 @@ private:
                 return;    // quit
             }
 
-            if (nullSlot && command == updateTransaction.command ||
-                    nullSlot && command == checkTransaction.command) {
+            if ((nullSlot && command == updateTransaction.command) ||
+                    (nullSlot && command == checkTransaction.command)) {
 
                 if (nullSlot && command == checkTransaction.command && !check_event_counter_changed(gpgAgent, eventCounter)) {
                     continue;    // early out
@@ -641,7 +640,7 @@ private:
 
                 std::vector<CardInfo>::const_iterator
                 nit = newCardInfos.begin(), nend = newCardInfos.end(),
-                oit = oldCardInfos.begin(), oend = oldCardInfos.end() ;
+                oit = oldCardInfos.begin(), oend = oldCardInfos.end();
 
                 unsigned int idx = 0;
                 bool anyLC = false;
@@ -727,18 +726,18 @@ public:
 
         qRegisterMetaType<Status>("Kleo::SmartCard::ReaderStatus::Status");
 
-        watcher.whitelistFiles(QStringList(QLatin1String("reader_*.status")));
+        watcher.whitelistFiles(QStringList(QStringLiteral("reader_*.status")));
         watcher.addPath(Kleo::gnupgHomeDirectory());
         watcher.setDelay(100);
 
-        connect(this, SIGNAL(cardStatusChanged(uint,Kleo::SmartCard::ReaderStatus::Status)),
-                q, SIGNAL(cardStatusChanged(uint,Kleo::SmartCard::ReaderStatus::Status)));
-        connect(this, SIGNAL(anyCardHasNullPinChanged(bool)),
-                q, SIGNAL(anyCardHasNullPinChanged(bool)));
-        connect(this, SIGNAL(anyCardCanLearnKeysChanged(bool)),
-                q, SIGNAL(anyCardCanLearnKeysChanged(bool)));
+        connect(this, &::ReaderStatusThread::cardStatusChanged,
+                q, &ReaderStatus::cardStatusChanged);
+        connect(this, &::ReaderStatusThread::anyCardHasNullPinChanged,
+                q, &ReaderStatus::anyCardHasNullPinChanged);
+        connect(this, &::ReaderStatusThread::anyCardCanLearnKeysChanged,
+                q, &ReaderStatus::anyCardCanLearnKeysChanged);
 
-        connect(&watcher, SIGNAL(triggered()), this, SLOT(slotReaderStatusFileChanged()));
+        connect(&watcher, &FileSystemWatcher::triggered, this, &::ReaderStatusThread::slotReaderStatusFileChanged);
 
     }
     ~Private()

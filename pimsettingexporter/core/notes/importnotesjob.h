@@ -19,10 +19,9 @@
 #define IMPORTNOTESJOB_H
 
 #include "abstractimportexportjob.h"
-#include "pimsettingexporter_export.h"
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ImportNotesJob : public AbstractImportExportJob
+class ImportNotesJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
@@ -31,6 +30,8 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
+private slots:
+    void slotNextStep() Q_DECL_OVERRIDE;
 private:
     void importKNoteGlobalSettings(const KArchiveFile *kmailsnippet, const QString &kmail2rc, const QString &filename, const QString &prefix);
     void restoreConfig();

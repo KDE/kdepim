@@ -36,14 +36,14 @@
 #include "importcertificatescommand_p.h"
 
 #include <models/keylistsortfilterproxymodel.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <utils/formatting.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/importjob.h>
-#include <kleo/importfromkeyserverjob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/ImportJob>
+#include <Libkleo/ImportFromKeyserverJob>
 
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>
@@ -87,7 +87,7 @@ public:
 
     ~ImportResultProxyModel() {}
 
-    /* reimp */ ImportResultProxyModel *clone() const
+    ImportResultProxyModel *clone() const Q_DECL_OVERRIDE
     {
         // compiler-generated copy ctor is fine!
         return new ImportResultProxyModel(*this);
@@ -100,7 +100,7 @@ public:
     }
 
 protected:
-    /* reimp */ QVariant data(const QModelIndex &index, int role) const
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE
     {
         if (!index.isValid() || role != Qt::ToolTipRole) {
             return AbstractKeyListSortFilterProxyModel::data(index, role);
@@ -124,7 +124,7 @@ protected:
         //
         const QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
         assert(index.isValid());
-        for (int i = 0, end = sourceModel()->rowCount(index) ; i != end ; ++i)
+        for (int i = 0, end = sourceModel()->rowCount(index); i != end; ++i)
             if (filterAcceptsRow(i, index)) {
                 return true;
             }
@@ -145,11 +145,11 @@ private:
         m_importsByFingerprint.clear();
         m_idsByFingerprint.clear();
         m_results = results;
-        for (unsigned int i = 0, end = results.size() ; i != end ; ++i) {
+        for (unsigned int i = 0, end = results.size(); i != end; ++i) {
             const std::vector<Import> imports = results[i].imports();
             m_importsByFingerprint.insert(m_importsByFingerprint.end(), imports.begin(), imports.end());
             const QString &id = ids[i];
-            for (std::vector<Import>::const_iterator it = imports.begin(), end = imports.end() ; it != end ; ++it) {
+            for (std::vector<Import>::const_iterator it = imports.begin(), end = imports.end(); it != end; ++it) {
                 m_idsByFingerprint[it->fingerprint()].insert(id);
             }
         }
@@ -198,7 +198,7 @@ ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
 static QString format_ids(const QStringList &ids)
 {
-    return kdtools::transform_if<QStringList>(ids, Qt::escape, !boost::bind(&QString::isEmpty, _1)).join(QLatin1String("<br>"));
+    return kdtools::transform_if<QStringList>(ids, Qt::escape, !boost::bind(&QString::isEmpty, _1)).join(QStringLiteral("<br>"));
 }
 
 static QString make_tooltip(const QStringList &ids)
@@ -397,7 +397,7 @@ void ImportCertificatesCommand::Private::tryToFinish()
         if (kdtools::all(results, boost::bind(&Error::isCanceled, boost::bind(&ImportResult::error, _1)))) {
             Q_EMIT q->canceled();
         } else
-            for (unsigned int i = 0, end = results.size() ; i != end ; ++i)
+            for (unsigned int i = 0, end = results.size(); i != end; ++i)
                 if (const Error err = results[i].error()) {
                     showError(err, ids[i]);
                 }
@@ -407,13 +407,13 @@ void ImportCertificatesCommand::Private::tryToFinish()
     finished();
 }
 
-static std::auto_ptr<ImportJob> get_import_job(GpgME::Protocol protocol)
+static std::unique_ptr<ImportJob> get_import_job(GpgME::Protocol protocol)
 {
     assert(protocol != UnknownProtocol);
     if (const Kleo::CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol)) {
-        return std::auto_ptr<ImportJob>(backend->importJob());
+        return std::unique_ptr<ImportJob>(backend->importJob());
     } else {
-        return std::auto_ptr<ImportJob>();
+        return std::unique_ptr<ImportJob>();
     }
 }
 
@@ -425,7 +425,7 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
         return;
     }
 
-    std::auto_ptr<ImportJob> job = get_import_job(protocol);
+    std::unique_ptr<ImportJob> job = get_import_job(protocol);
     if (!job.get()) {
         nonWorkingProtocols.push_back(protocol);
         error(i18n("The type of this certificate (%1) is not supported by this Kleopatra installation.",
@@ -437,8 +437,8 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
 
     connect(job.get(), SIGNAL(result(GpgME::ImportResult)),
             q, SLOT(importResult(GpgME::ImportResult)));
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
     const GpgME::Error err = job->start(data);
     if (err.code()) {
         importResult(ImportResult(err), id);
@@ -448,13 +448,13 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
     }
 }
 
-static std::auto_ptr<ImportFromKeyserverJob> get_import_from_keyserver_job(GpgME::Protocol protocol)
+static std::unique_ptr<ImportFromKeyserverJob> get_import_from_keyserver_job(GpgME::Protocol protocol)
 {
     assert(protocol != UnknownProtocol);
     if (const Kleo::CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol)) {
-        return std::auto_ptr<ImportFromKeyserverJob>(backend->importFromKeyserverJob());
+        return std::unique_ptr<ImportFromKeyserverJob>(backend->importFromKeyserverJob());
     } else {
-        return std::auto_ptr<ImportFromKeyserverJob>();
+        return std::unique_ptr<ImportFromKeyserverJob>();
     }
 }
 
@@ -466,7 +466,7 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
         return;
     }
 
-    std::auto_ptr<ImportFromKeyserverJob> job = get_import_from_keyserver_job(protocol);
+    std::unique_ptr<ImportFromKeyserverJob> job = get_import_from_keyserver_job(protocol);
     if (!job.get()) {
         nonWorkingProtocols.push_back(protocol);
         error(i18n("The type of this certificate (%1) is not supported by this Kleopatra installation.",
@@ -478,8 +478,8 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
 
     connect(job.get(), SIGNAL(result(GpgME::ImportResult)),
             q, SLOT(importResult(GpgME::ImportResult)));
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
     const GpgME::Error err = job->start(keys);
     if (err.code()) {
         importResult(ImportResult(err), id);

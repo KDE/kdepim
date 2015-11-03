@@ -1,185 +1,106 @@
+cmake_minimum_required(VERSION 2.8.12)
+
+project(messagecomposer)
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecomposer_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${messagecomposer_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+set(LIBRARY_NAMELINK)
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecomposer\")
+set(KF5_VERSION "5.16.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.47")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+set(KLDAP_LIB_VERSION "4.80.0")
+set(KPIMTEXTEDIT_LIB_VERSION "4.88.0")
+set(KMAILTRANSPORT_LIB_VERSION "4.78.0")
+set(IDENTITYMANAGEMENT_LIB_VERSION "4.80.0")
 
-include_directories(
-    ${Boost_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}/libkdepim
-    ${CMAKE_SOURCE_DIR}/libkleo
-    ${CMAKE_SOURCE_DIR}/messagecore
-    ${CMAKE_SOURCE_DIR}/messageviewer
-    ${CMAKE_SOURCE_DIR}/messageviewer/viewer/
-    ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
-    ${CMAKE_SOURCE_DIR}/messagecomposer/job
-    ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
-    ${CMAKE_SOURCE_DIR}/messagecomposer/composer/
-    ${CMAKE_SOURCE_DIR}/pimcommon/
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5TemplateParser ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageViewer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5SendLater ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5FollowupReminder ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkleo ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(Grantlee5 "5.0" CONFIG REQUIRED)
+find_package(KF5Ldap ${KLDAP_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5IdentityManagement ${IDENTITYMANAGEMENT_LIB_VERSION} CONFIG REQUIRED)
+
+
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECOMPOSER
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageComposerConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+configure_file(src/kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/kdepim-version.h @ONLY)
+########### Targets ###########
 
-if(BUILD_TESTING)
-   add_subdirectory( tests )
-   add_subdirectory( autotests )
-   add_subdirectory( composer-ng/autotests )
-   add_subdirectory( imagescaling/autotests )
-endif()
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5MessageComposer")
 
-set( messagecomposer_job_src
-     job/jobbase.cpp
-     job/contentjobbase.cpp
-     job/attachmentjob.cpp
-     job/singlepartjob.cpp
-     job/multipartjob.cpp
-     job/maintextjob.cpp
-     job/signjob.cpp
-     job/encryptjob.cpp
-     job/signencryptjob.cpp
-     job/transparentjob.cpp
-     job/inserttextfilejob.cpp
-     job/skeletonmessagejob.cpp
-     job/aliasesexpandjob.cpp
-     job/emailaddressresolvejob.cpp
-     job/attachmentfrompublickeyjob.cpp
-     job/distributionlistexpandjob.cpp
-     job/savecontactpreferencejob.cpp
-     job/attachmentvcardfromaddressbookjob.cpp
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5MessageComposerConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageComposerConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-set( messagecomposer_composer_src
-     composer/composer.cpp
-     #composer/kmeditor.cpp
-     composer/signaturecontroller.cpp
-     composer/composerlineedit.cpp
-     composer/composerviewbase.cpp
-     composer/keyresolver.cpp
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageComposerConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageComposerConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
 
-set( messagecomposer_recipient_src
-     recipient/recipientspicker.cpp
-     recipient/recipient.cpp
-     recipient/recipientline.cpp
-     recipient/recipientseditor.cpp
-     recipient/recipientseditorsidewidget.cpp
-     recipient/kwindowpositioner.cpp
-     recipient/distributionlistdialog.cpp
+install(EXPORT KF5MessageComposerTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MessageComposerTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
-set( messagecomposer_imagescaling_src
-     imagescaling/imagescaling.cpp
-     imagescaling/imagescalingwidget.cpp
-     imagescaling/imagescalingutils.cpp
-     imagescaling/imagescalingselectformat.cpp
-)
-
-set( messagecomposer_part_src
-     part/messagepart.cpp
-     part/globalpart.cpp
-     part/infopart.cpp
-     part/textpart.cpp
-)
-
-set( messagecomposer_attachment_src
-     attachment/attachmentcontrollerbase.cpp
-     attachment/attachmentmodel.cpp
-)
-
-set( messagecomposer_helper_src
-     helper/messagehelper.cpp
-     helper/messagefactory.cpp
-)
-
-set( messagecomposer_sender_src
-     sender/akonadisender.cpp
-)
-
-set(messagecomposer_followupreminder_SRCS
-     followupreminder/followupreminderselectdatedialog.cpp
-     followupreminder/followupremindercreatejob.cpp
-)
-
-set(messagecomposer_composerng_SRCS
-     composer-ng/richtextcomposer.cpp
-     composer-ng/richtextcomposercontroler.cpp
-     composer-ng/richtextcomposeractions.cpp
-     composer-ng/klinkdialog.cpp
-     composer-ng/nestedlisthelper.cpp
-     composer-ng/richtextexternalcomposer.cpp
-     composer-ng/richtextcomposerimages.cpp
-     composer-ng/richtextcomposersignatures.cpp
-     composer-ng/richtextcomposeremailquotedecorator.cpp
-     composer-ng/richtextcomposeremailquotehighlighter.cpp
-     composer-ng/inserthtmldialog.cpp
-)
-
-
-set( messagecomposer_src
-     ${messagecomposer_part_src}
-     ${messagecomposer_imagescaling_src}
-     ${messagecomposer_job_src}
-     ${messagecomposer_composer_src}
-     ${messagecomposer_recipient_src}
-     ${messagecomposer_attachment_src}
-     ${messagecomposer_helper_src}
-     ${messagecomposer_sender_src}
-     ${messagecomposer_followupreminder_SRCS}
-     ${messagecomposer_composerng_SRCS}
-     utils/util.cpp
-     messagecomposer_debug.cpp
-     settings/messagecomposersettings.cpp
-)
-
-ki18n_wrap_ui(messagecomposer_src
-     imagescaling/ui/imagescalingwidget.ui
-)
-
-
-if(KDEPIM_ENTERPRISE_BUILD)
-  set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
-  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT true)
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 else()
-  set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
-  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT false)
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECOMPOSER
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageComposerConfigVersion.cmake"
+                        SOVERSION 5
+)
 endif()
 
-configure_file(settings/messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
-
-kconfig_add_kcfg_files(messagecomposer_src
-  settings/messagecomposersettings_base.kcfgc 
-)
-
-add_library( messagecomposer ${messagecomposer_src} )
-generate_export_header(messagecomposer BASE_NAME messagecomposer)
-target_link_libraries(messagecomposer
-PUBLIC
-  KF5::Mime
-  KF5::AkonadiMime
-  KF5::AkonadiCore
-  KF5::MailTransport
-  KF5::PimTextEdit
-  KF5::IdentityManagement
-  messagecore
-  messageviewer
-  templateparser
-  kleo
-  kdepim
-  pimcommon
-  KF5::AkonadiWidgets
-  KF5::CalendarCore
-PRIVATE
-  KF5::KIOCore
-  Grantlee5::TextDocument
-  sendlater
-  followupreminder
-)
-
-set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
-
-install( TARGETS messagecomposer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
-
-if(BUILD_TESTING)
-    add_subdirectory(imagescaling/tests)
-    add_subdirectory(composer-ng/tests)
+add_subdirectory(src)
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+   add_subdirectory(tests)
 endif()
+

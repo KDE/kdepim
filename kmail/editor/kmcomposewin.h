@@ -25,25 +25,24 @@
 
 // KMail includes
 #include "editor/composer.h"
-#include "messagecomposer/recipient/recipientseditor.h"
+#include "MessageComposer/RecipientsEditor"
 
 // Qt includes
 #include <QFont>
 #include <QList>
 
 // LIBKDEPIM includes
-//#include <messagecomposer/composer/kmeditor.h>
-#include "messagecomposer/composer-ng/richtextcomposer.h"
+#include "MessageComposer/RichTextComposerNg"
 
-#include "messagecomposer/sender/messagesender.h"
+#include "MessageComposer/MessageSender"
 
 // KDEPIMLIBS includes
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
 
 // Other includes
-#include "kleo/enum.h"
-#include <composer/composerviewbase.h>
+#include "Libkleo/Enum"
+#include <messagecomposer/composerviewbase.h>
 
 class QUrl;
 
@@ -53,7 +52,6 @@ class QGridLayout;
 class QLabel;
 class QPushButton;
 class QSplitter;
-class KMComposerEditorWidgetNg;
 class KSplitterCollapserButton;
 class CodecAction;
 class KMComposeWin;
@@ -90,6 +88,7 @@ class Identity;
 namespace KPIMTextEdit
 {
 class SelectSpecialCharDialog;
+class RichTextEditorWidget;
 }
 
 namespace KIO
@@ -111,7 +110,7 @@ class FolderRequester;
 namespace PimCommon
 {
 class KActionMenuChangeCase;
-class CustomToolsWidget;
+class CustomToolsWidgetNg;
 class LineEditWithAutoCorrection;
 }
 class KMStorageService;
@@ -239,18 +238,7 @@ public: // kmkernel, kmcommands, callback
 
     void addExtraCustomHeaders(const QMap<QByteArray, QString> &header) Q_DECL_OVERRIDE;
 
-    KToggleAction *translateAction() const
-    {
-        return mTranslateAction;
-    }
-    PimCommon::KActionMenuChangeCase *changeCaseMenu() const
-    {
-        return mChangeCaseMenu;
-    }
-    KToggleAction *generateShortenUrlAction() const
-    {
-        return mGenerateShortenUrl;
-    }
+    PimCommon::KActionMenuChangeCase *changeCaseMenu() const;
 
     void setCurrentIdentity(uint identity) Q_DECL_OVERRIDE;
 
@@ -268,14 +256,14 @@ private:
     void changeModifiedState(bool modified);
 
 public Q_SLOTS: // kmkernel, callback
-    void slotSendNow();
+    void slotSendNow() Q_DECL_OVERRIDE;
     /**
      * Switch wordWrap on/off
      */
     void slotWordWrapToggled(bool) Q_DECL_OVERRIDE;
 
     void slotToggleMarkup();
-    void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
+    void slotTextModeChanged(MessageComposer::RichTextComposerNg::Mode mode);
     void htmlToolBarVisibilityChanged(bool visible);
     void slotSpellcheckDoneClearStatus();
     void autoSaveMessage(bool force = false) Q_DECL_OVERRIDE;
@@ -403,7 +391,7 @@ private Q_SLOTS:
 
     void slotPrintComposeResult(KJob *job);
 
-    void slotSendFailed(const QString &msg , MessageComposer::ComposerViewBase::FailedType type);
+    void slotSendFailed(const QString &msg, MessageComposer::ComposerViewBase::FailedType type);
     void slotSendSuccessful();
 
     /**
@@ -466,6 +454,7 @@ public: // kmcommand
     void ignoreStickyFields() Q_DECL_OVERRIDE;
 
     uint currentIdentity() const;
+    QList<KToggleAction *> customToolsList() const;
 private:
     QUrl insertFile();
     /**
@@ -505,7 +494,7 @@ private:
     /**
      * Apply template to new or unmodified message.
      */
-    void applyTemplate(uint uoid , uint uOldId);
+    void applyTemplate(uint uoid, uint uOldId);
 
     /**
      * Set the quote prefix according to identity.
@@ -630,11 +619,10 @@ private:
     KToggleAction *mSubjectAction;
     KToggleAction *mIdentityAction, *mTransportAction, *mFccAction;
     KToggleAction *mWordWrapAction, *mFixedFontAction, *mAutoSpellCheckingAction;
-    KToggleAction *mDictionaryAction, *mSnippetAction, *mTranslateAction;
+    KToggleAction *mDictionaryAction, *mSnippetAction;
     QAction *mAppendSignature;
     QAction *mPrependSignature;
     QAction *mInsertSignatureAtCursorPosition;
-    KToggleAction *mGenerateShortenUrl;
 
     KToggleAction *markupAction;
 
@@ -663,7 +651,7 @@ private:
     MessageComposer::ComposerViewBase *mComposerBase;
 
     SnippetWidget *mSnippetWidget;
-    PimCommon::CustomToolsWidget *mCustomToolsWidget;
+    PimCommon::CustomToolsWidgetNg *mCustomToolsWidget;
     QPointer<KPIMTextEdit::SelectSpecialCharDialog> mSelectSpecialChar;
     AttachmentMissingWarning *mAttachmentMissing;
     ExternalEditorWarning *mExternalEditorWarning;
@@ -683,7 +671,7 @@ private:
     StatusBarLabelToggledState *mStatusBarLabelSpellCheckingChangeMode;
     PotentialPhishingEmailWarning *mPotentialPhishingEmailWarning;
     KMComposerGlobalAction *mGlobalAction;
-    KMComposerEditorWidgetNg *mRichTextEditorwidget;
+    KPIMTextEdit::RichTextEditorWidget *mRichTextEditorwidget;
 };
 
 #endif

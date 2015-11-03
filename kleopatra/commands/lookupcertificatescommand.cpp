@@ -42,12 +42,12 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/importfromkeyserverjob.h>
-#include <kleo/keylistjob.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/cryptoconfig.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/ImportFromKeyserverJob>
+#include <Libkleo/KeyListJob>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/CryptoConfig>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
@@ -110,12 +110,12 @@ private:
     KeyListJob *createKeyListJob(GpgME::Protocol proto) const
     {
         const CryptoBackend::Protocol *const cbp = CryptoBackendFactory::instance()->protocol(proto);
-        return cbp ? cbp->keyListJob(true) : 0 ;
+        return cbp ? cbp->keyListJob(true) : 0;
     }
     ImportFromKeyserverJob *createImportJob(GpgME::Protocol proto) const
     {
         const CryptoBackend::Protocol *const cbp = CryptoBackendFactory::instance()->protocol(proto);
-        return cbp ? cbp->importFromKeyserverJob() : 0 ;
+        return cbp ? cbp->importFromKeyserverJob() : 0;
     }
     void startKeyListJob(GpgME::Protocol proto, const QString &str);
     bool checkConfig() const;
@@ -400,7 +400,7 @@ void LookupCertificatesCommand::Private::showResult(QWidget *parent, const KeyLi
                                         "of the configured servers is the limiting "
                                         "factor, you have to refine your search.</para>"),
                                  i18nc("@title", "Result Truncated"),
-                                 QLatin1String("lookup-certificates-truncated-result"));
+                                 QStringLiteral("lookup-certificates-truncated-result"));
 }
 
 static bool haveOpenPGPKeyserverConfigured()
@@ -409,7 +409,7 @@ static bool haveOpenPGPKeyserverConfigured()
     if (!config) {
         return false;
     }
-    const Kleo::CryptoConfigEntry *const entry = config->entry(QLatin1String("gpg"), QStringLiteral("Keyserver"), QStringLiteral("keyserver"));
+    const Kleo::CryptoConfigEntry *const entry = config->entry(QStringLiteral("gpg"), QStringLiteral("Keyserver"), QStringLiteral("keyserver"));
     return entry && !entry->stringValue().isEmpty();
 }
 
@@ -419,10 +419,10 @@ static bool haveX509DirectoryServerConfigured()
     if (!config) {
         return false;
     }
-    const Kleo::CryptoConfigEntry *entry = config->entry(QLatin1String("dirmngr"), QStringLiteral("LDAP"), QStringLiteral("LDAP Server"));
+    const Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), QStringLiteral("LDAP"), QStringLiteral("LDAP Server"));
     bool entriesExist = entry && !entry->urlValueList().empty();
-    entry = config->entry(QLatin1String("gpgsm"), QStringLiteral("Configuration"), QStringLiteral("keyserver"));
-    entriesExist |= entry && !entry->stringValueList().empty();
+    entry = config->entry(QStringLiteral("gpgsm"), QStringLiteral("Configuration"), QStringLiteral("keyserver"));
+    entriesExist |= entry && !entry->urlValueList().empty();
     return entriesExist;
 }
 

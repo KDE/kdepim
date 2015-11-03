@@ -131,8 +131,8 @@ private:
             QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
             okButton->setDefault(true);
             okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-            qq->connect(buttonBox, SIGNAL(accepted()), qq, SLOT(accept()));
-            qq->connect(buttonBox, SIGNAL(rejected()), qq, SLOT(reject()));
+            qq->connect(buttonBox, &QDialogButtonBox::accepted, qq, &QDialog::accept);
+            qq->connect(buttonBox, &QDialogButtonBox::rejected, qq, &QDialog::reject);
             mainLayout->addWidget(buttonBox);
 
             assert(inCB->count() == NumPeriods);
@@ -168,7 +168,7 @@ QDate ExpiryDialog::dateOfExpiry() const
     return
         d->ui.inRB->isChecked() ? d->inDate() :
         d->ui.onRB->isChecked() ? d->ui.onCW->selectedDate() :
-        QDate() ;
+        QDate();
 }
 
 void ExpiryDialog::Private::slotInUnitChanged()

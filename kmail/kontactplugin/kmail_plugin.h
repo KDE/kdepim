@@ -42,7 +42,7 @@ public:
     explicit KMailUniqueAppHandler(KontactInterface::Plugin *plugin)
         : KontactInterface::UniqueAppHandler(plugin) {}
     void loadCommandLineOptions(QCommandLineParser *parser) Q_DECL_OVERRIDE;
-    int activate(const QStringList &args) Q_DECL_OVERRIDE;
+    int activate(const QStringList &args, const QString &workingDir) Q_DECL_OVERRIDE;
 };
 
 class KMailPlugin : public KontactInterface::Plugin
@@ -56,7 +56,6 @@ public:
     bool isRunningStandalone() const Q_DECL_OVERRIDE;
     bool createDBUSInterface(const QString &serviceType) Q_DECL_OVERRIDE;
     KontactInterface::Summary *createSummaryWidget(QWidget *parent) Q_DECL_OVERRIDE;
-    QString tipFile() const Q_DECL_OVERRIDE;
     int weight() const Q_DECL_OVERRIDE
     {
         return 200;

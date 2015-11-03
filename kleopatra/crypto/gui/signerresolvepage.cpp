@@ -30,10 +30,6 @@
     your version.
 */
 
-#if !defined(QT_STL)
-#define QT_STL
-#endif
-
 #include <config-kleopatra.h>
 
 #include "signerresolvepage.h"
@@ -235,15 +231,15 @@ namespace
 class ValidatorImpl : public SignerResolvePage::Validator
 {
 public:
-    QString explanation() const
+    QString explanation() const Q_DECL_OVERRIDE
     {
         return QString();
     }
-    bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return true;
     }
-    QString customWindowTitle() const
+    QString customWindowTitle() const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -455,7 +451,7 @@ void SignerResolvePage::Private::updateModeSelectionWidgets()
     signAndEncryptRB->setChecked(signingSelected && encryptionSelected);
     signOnlyRB->setChecked(signingSelected && !encryptionSelected);
     encryptOnlyRB->setChecked(encryptionSelected && !signingSelected);
-    const bool canSignAndEncrypt = !noSigningPossible && !noEncryptionPossible; bothMutable  &&presetProtocols != std::vector<Protocol>(1, CMS);
+    const bool canSignAndEncrypt = !noSigningPossible && !noEncryptionPossible && bothMutable && presetProtocols != std::vector<Protocol>(1, CMS);
     const bool canSignOnly = !encryptionSelected || encryptionMutable;
     const bool canEncryptOnly = !signingSelected || signingMutable;
 

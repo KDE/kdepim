@@ -1,6 +1,5 @@
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/korganizer/interfaces
   ${CMAKE_SOURCE_DIR}/korganizer
 )
 
@@ -9,15 +8,14 @@ include_directories(
 set(korg_picoftheday_PART_SRCS
   configdialog.cpp
   picoftheday.cpp
-  korganizer_picoftheday_plugin_debug.cpp
 )
+
+ecm_qt_declare_logging_category(korg_picoftheday_PART_SRCS HEADER korganizer_picoftheday_plugin_debug.h IDENTIFIER KORGANIZERPICOFTHEDAYPLUGIN_LOG CATEGORY_NAME log_korganizer_picoftheday_plugins)
 
 add_library(korg_picoftheday MODULE ${korg_picoftheday_PART_SRCS})
 
 target_link_libraries(korg_picoftheday
-  eventviews
-  korganizerprivate
-  
+  KF5::EventViews
   KF5::KIOCore
 )
 

@@ -139,7 +139,7 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
             isOpenPGP(classification) ? OpenPGP :
             isCMS(classification)     ? CMS :
             ad /* _needs_ the info */   ? throw Exception(gpg_error(GPG_ERR_CONFLICT), i18n("Cannot determine whether input data is OpenPGP or CMS")) :
-            /* else we don't care */      UnknownProtocol ;
+            /* else we don't care */      UnknownProtocol;
 
         const shared_ptr<Input> input = Input::createFromFile(fileName);
         const shared_ptr<Output> output =
@@ -253,7 +253,7 @@ void DecryptVerifyFilesController::Private::ensureWizardCreated()
         return;
     }
 
-    std::auto_ptr<DecryptVerifyFilesWizard> w(new DecryptVerifyFilesWizard);
+    std::unique_ptr<DecryptVerifyFilesWizard> w(new DecryptVerifyFilesWizard);
     w->setWindowTitle(i18n("Decrypt/Verify Files"));
     w->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -271,7 +271,7 @@ struct FindExtension : std::unary_function<shared_ptr<ArchiveDefinition>, bool> 
     FindExtension(const QString &ext, Protocol proto) : ext(ext), proto(proto) {}
     bool operator()(const shared_ptr<ArchiveDefinition> &ad) const
     {
-        qCDebug(KLEOPATRA_LOG) << "   considering" << (ad ? ad->label() : QLatin1String("<null>")) << "for" << ext;
+        qCDebug(KLEOPATRA_LOG) << "   considering" << (ad ? ad->label() : QStringLiteral("<null>")) << "for" << ext;
         bool result;
         if (proto == UnknownProtocol) {
             result = ad && (ad->extensions(OpenPGP).contains(ext, Qt::CaseInsensitive) || ad->extensions(CMS).contains(ext, Qt::CaseInsensitive));
@@ -293,7 +293,7 @@ shared_ptr<ArchiveDefinition> pick_archive_definition(GpgME::Protocol proto, con
         return shared_ptr<ArchiveDefinition>();
     }
 
-    if (extension.endsWith(QLatin1String(".out"))) {     // added by outputFileName() -> remove
+    if (extension.endsWith(QStringLiteral(".out"))) {     // added by outputFileName() -> remove
         extension.chop(4);
     }
 
@@ -409,7 +409,7 @@ std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTask
     kleo_assert(!useOutDir || outDir.exists());
 
     std::vector<shared_ptr<Task> > tasks;
-    for (unsigned int i = 0, end  = fileNames.size() ; i != end ; ++i)
+    for (unsigned int i = 0, end  = fileNames.size(); i != end; ++i)
         try {
             const QDir fileDir = QFileInfo(fileNames[i]).absoluteDir();
             kleo_assert(fileDir.exists());

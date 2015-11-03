@@ -28,7 +28,7 @@
 
 #include "koeventview.h"
 
-#include <calendarsupport/printing/calprinter.h>
+#include <CalendarSupport/CalPrinter>
 
 /**
   KOAgendaView is the agenda-like view that displays events in a single
@@ -74,12 +74,10 @@ public:
     /* reimp from BaseView */
     void setCalendar(const Akonadi::ETMCalendar::Ptr &cal) Q_DECL_OVERRIDE;
 
-    /** reimpl */
     void setTypeAheadReceiver(QObject *o) Q_DECL_OVERRIDE;
 
     void setChanges(EventViews::EventView::Changes changes) Q_DECL_OVERRIDE;
 
-    /** reimpl */
     void setDateRange(const KDateTime &start, const KDateTime &end,
                       const QDate &preferredMonth = QDate()) Q_DECL_OVERRIDE;
 

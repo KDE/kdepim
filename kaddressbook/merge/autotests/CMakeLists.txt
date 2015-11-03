@@ -1,6 +1,7 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
+include_directories(${CMAKE_BINARY_DIR}/kaddressbook/)
 
 # Convenience macro to add unit tests.
 macro( kaddressbook_merge _source _additional _additionallib)
@@ -17,20 +18,20 @@ kaddressbook_merge(mergecontactstest.cpp "../job/mergecontacts.cpp" "")
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "KF5::AkonadiContact;kaddressbookgrantlee")
-add_akonadi_isolated_test_advanced( mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;kaddressbookgrantlee;KF5::Contacts;KF5::AkonadiContact")
+add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "KF5::AkonadiContact;KF5::KaddressbookGrantlee")
+add_akonadi_isolated_test_advanced( mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;KF5::KaddressbookGrantlee;KF5::Contacts;KF5::AkonadiContact")
 add_akonadi_isolated_test_advanced( searchandmergecontactduplicatecontactdialogtest.cpp "" "kaddressbookprivate")
-add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;kaddressbookgrantlee;KF5::Contacts")
+add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;KF5::KaddressbookGrantlee;KF5::Contacts")
 add_akonadi_isolated_test_advanced( resultduplicatetreewidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
 add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "../../kaddressbook_debug.cpp;../job/searchpotentialduplicatecontactjob.cpp" "KF5::Contacts")
 add_akonadi_isolated_test_advanced( mergecontactselectinformationwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
 add_akonadi_isolated_test_advanced( mergecontactselectlistwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
 
-add_akonadi_isolated_test_advanced( mergecontactselectinformationscrollareatest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;KF5::Contacts;KF5::AkonadiContact;kaddressbookgrantlee")
+add_akonadi_isolated_test_advanced( mergecontactselectinformationscrollareatest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;KF5::Contacts;KF5::AkonadiContact;KF5::KaddressbookGrantlee")
 
 add_akonadi_isolated_test_advanced( mergecontactselectinformationtabwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
 
-add_akonadi_isolated_test_advanced(mergecontactsdialogtest.cpp "../manualmerge/mergecontactsdialog.cpp;../widgets/mergecontacterrorlabel.cpp;../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;KF5::Contacts;KF5::AkonadiContact;kaddressbookgrantlee")
+add_akonadi_isolated_test_advanced(mergecontactsdialogtest.cpp "../manualmerge/mergecontactsdialog.cpp;../widgets/mergecontacterrorlabel.cpp;../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;KF5::Contacts;KF5::AkonadiContact;KF5::KaddressbookGrantlee")
 add_akonadi_isolated_test_advanced(mergecontactwidgetlisttest.cpp "../manualmerge/mergecontactwidgetlist.cpp;" "kaddressbookprivate;KF5::Contacts;KF5::AkonadiContact")
 
 set( kaddressbook_merge_mergecontactloseinformationwarning_source mergecontactloseinformationwarningtest.cpp ../widgets/mergecontactloseinformationwarning.cpp )

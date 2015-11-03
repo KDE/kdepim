@@ -33,18 +33,13 @@
 #include "messagebox.h"
 #include "packedlayout.h"
 #include "preferences.h"
-//#include "resourceconfigdialog.h"
-
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/agentinstancecreatejob.h>
 #include <AkonadiCore/agenttype.h>
 #include <AkonadiCore/entitydisplayattribute.h>
 #include <AkonadiWidgets/collectionpropertiesdialog.h>
 
-#include <kdialog.h>
 #include <KLocalizedString>
-#include <kglobal.h>
-#include <kcombobox.h>
 #include <kactioncollection.h>
 #include <ktoggleaction.h>
 
@@ -56,6 +51,7 @@
 #include <QApplication>
 #include <qinputdialog.h>
 #include <QColorDialog>
+#include <QComboBox>
 #include <QMenu>
 #include "kalarm_debug.h"
 
@@ -78,12 +74,11 @@ ResourceSelector::ResourceSelector(QWidget* parent)
       mActionSetDefault(Q_NULLPTR)
 {
     QBoxLayout* topLayout = new QVBoxLayout(this);
-    topLayout->setMargin(KDialog::spacingHint());   // use spacingHint for the margin
 
     QLabel* label = new QLabel(i18nc("@title:group", "Calendars"), this);
     topLayout->addWidget(label, 0, Qt::AlignHCenter);
 
-    mAlarmType = new KComboBox(this);
+    mAlarmType = new QComboBox(this);
     mAlarmType->addItem(i18nc("@item:inlistbox", "Active Alarms"));
     mAlarmType->addItem(i18nc("@item:inlistbox", "Archived Alarms"));
     mAlarmType->addItem(i18nc("@item:inlistbox", "Alarm Templates"));
@@ -94,18 +89,16 @@ ResourceSelector::ResourceSelector(QWidget* parent)
 
     CollectionFilterCheckListModel* model = new CollectionFilterCheckListModel(this);
     mListView = new CollectionView(model, this);
-    connect(mListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
+    connect(mListView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ResourceSelector::selectionChanged);
     mListView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(mListView, &CollectionView::customContextMenuRequested, this, &ResourceSelector::contextMenuRequested);
     mListView->setWhatsThis(i18nc("@info:whatsthis",
                                   "List of available calendars of the selected type. The checked state shows whether a calendar "
                                  "is enabled (checked) or disabled (unchecked). The default calendar is shown in bold."));
     topLayout->addWidget(mListView, 1);
-    topLayout->addSpacing(KDialog::spacingHint());
 
     PackedLayout* blayout = new PackedLayout(Qt::AlignHCenter);
     blayout->setMargin(0);
-    blayout->setSpacing(KDialog::spacingHint());
     topLayout->addLayout(blayout);
 
     mAddButton    = new QPushButton(i18nc("@action:button", "Add..."), this);
@@ -123,10 +116,10 @@ ResourceSelector::ResourceSelector(QWidget* parent)
     connect(mEditButton, &QPushButton::clicked, this, &ResourceSelector::editResource);
     connect(mDeleteButton, &QPushButton::clicked, this, &ResourceSelector::removeResource);
 
-    connect(AkonadiModel::instance(), SIGNAL(collectionAdded(Akonadi::Collection)),
-                                      SLOT(slotCollectionAdded(Akonadi::Collection)));
+    connect(AkonadiModel::instance(), &AkonadiModel::collectionAdded,
+                                      this, &ResourceSelector::slotCollectionAdded);
 
-    connect(mAlarmType, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &ResourceSelector::alarmTypeSelected);
+    connect(mAlarmType, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &ResourceSelector::alarmTypeSelected);
     QTimer::singleShot(0, this, SLOT(alarmTypeSelected()));
 
     Preferences::connect(SIGNAL(archivedKeepDaysChanged(int)), this, SLOT(archiveDaysChanged(int)));
@@ -163,7 +156,7 @@ void ResourceSelector::alarmTypeSelected()
     mAddButton->setWhatsThis(addTip);
     mAddButton->setToolTip(addTip);
     // WORKAROUND: Switch scroll bars back on after allowing geometry to update ...
-    QTimer::singleShot(0, this, SLOT(reinstateAlarmTypeScrollBars()));
+    QTimer::singleShot(0, this, &ResourceSelector::reinstateAlarmTypeScrollBars);
 
     selectionChanged();   // enable/disable buttons
 }
@@ -577,7 +570,7 @@ void ResourceSelector::showInfo()
         QString calType = AgentManager::self()->instance(id).type().name();
         QString storage = AkonadiModel::instance()->storageType(collection);
         QString location = collection.remoteId();
-        KUrl url(location);
+        QUrl url = QUrl::fromUserInput(location, QString(), QUrl::AssumeLocalFile);
         if (url.isLocalFile())
             location = url.path();
         CalEvent::Types altypes = AkonadiModel::instance()->types(collection);

@@ -29,7 +29,7 @@
 #include "calendarview.h"
 #include "kocore.h"
 #include "impl/korganizerifaceimpl.h"
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <KCalUtils/IncidenceFormatter>
 
@@ -43,7 +43,8 @@
 K_PLUGIN_FACTORY(KOrganizerFactory, registerPlugin<KOrganizerPart>();)
 
 KOrganizerPart::KOrganizerPart(QWidget *parentWidget, QObject *parent, const QVariantList &)
-    : KParts::ReadOnlyPart(parent)
+    : KParts::ReadOnlyPart(parent),
+      mTopLevelWidget(Q_NULLPTR)
 {
     KOrgMigrateApplication migrate;
     migrate.migrate();
@@ -81,7 +82,7 @@ KOrganizerPart::KOrganizerPart(QWidget *parentWidget, QObject *parent, const QVa
     mActionManager->init();
     mActionManager->readSettings();
 
-    setXMLFile(QLatin1String("korganizer_part.rc"), true);
+    setXMLFile(QStringLiteral("korganizer_part.rc"), true);
     mActionManager->loadParts();
     setTitle();
 }

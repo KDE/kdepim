@@ -19,7 +19,7 @@
 */
 
 #include "ispdb.h"
-#include "../accountwizard_debug.h"
+#include "accountwizard_debug.h"
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <KLocalizedString>
@@ -29,6 +29,7 @@
 
 Ispdb::Ispdb(QObject *parent)
     : QObject(parent)
+    , mDefaultIdentity(-1)
     , mServerType(DataBase)
     , mStart(true)
 {
@@ -153,7 +154,7 @@ void Ispdb::parseResult(const QDomDocument &document)
     QDomNodeList l = docElem.elementsByTagName(QStringLiteral("emailProvider"));
 
     if (l.isEmpty()) {
-        emit finished(false);
+        Q_EMIT finished(false);
         return;
     }
 

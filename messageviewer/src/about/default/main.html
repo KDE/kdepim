@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <style type="text/css">
+  /*<![CDATA[*/
+    @import "main.css";
+  /*]]>*/
+
+  {% block style %}
+  {% endblock style %}
+  </style>
+
+  <title>{{ name }}</title>
+</head>
+
+<body>
+  <div id="header">
+    {% icon icon sizeenormous %}
+    <div id="title">
+        <h1>{{ name }}</h1>
+        {{ subtitle }}
+    </div>
+  </div>
+
+  <div id="box">
+    <div id="boxInner">
+      {% block box %}
+      {% endblock box %}
+    </div>
+  </div>
+</body>
+</html>
+
+<!-- vim:set sw=2 et nocindent smartindent: -->

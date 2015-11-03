@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+
+  <kcfgfile name="messagecorerc" />
+  <include>qtextcodec.h</include>
+  <include>QFontDatabase</include>
+  
+  <group name="General">
+    <entry name="dateFormat" type="Int">
+      <default code="true">int( KMime::DateFormatter::Fancy )</default>
+    </entry>
+    <entry name="customDateFormat" type="string">
+    </entry>
+  </group>
+
+  <group name="Fonts">
+    <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
+      <default>true</default>
+    </entry>
+  </group>
+
+  <group name="Reader">
+    <entry name="UseDefaultColors" type="Bool" key="defaultColors">
+      <default>true</default>
+    </entry>
+    <entry name="OverrideCharacterEncoding" type="String"
+    key="encoding">
+      <default></default>
+      <whatsthis>Changing this from its default 'Auto' will force the use of the specified encoding for all emails, regardless of what they specify themselves.</whatsthis>
+    </entry>
+    <entry name="QuotedText3" type="Color">
+      <label>This is the color used in the 3rd level of quoted text</label>
+      <default code="true">MessageCore::Util::quoteLevel3DefaultTextColor()</default>
+    </entry>
+    <entry name="QuotedText2" type="Color">
+      <label>This is the color used in the 2nd level of quoted text</label>
+      <default code="true">MessageCore::Util::quoteLevel2DefaultTextColor()</default>
+    </entry>
+    <entry name="QuotedText1" type="Color">
+      <label>This is the color used in the 1st level of quoted text</label>
+      <default code="true">MessageCore::Util::quoteLevel1DefaultTextColor()</default>
+    </entry>
+    <entry name="MisspelledColor" type="Color">
+      <label>This is the color used to highlight misspelled words</label>
+      <default code="true">MessageCore::Util::misspelledDefaultTextColor()</default>
+    </entry>
+  </group>
+
+  <group name="Composer">
+    <entry name="ReplyPrefixes" key="reply-prefixes" type="StringList"/>
+    <entry name="ForwardPrefixes" key="forward-prefixes" type="StringList"/>
+    <entry name="MaximumAttachmentSize" type="Int">
+        <label>The maximum size in bits that email attachments are allowed to have (-1 for no limit)</label>
+        <default>-1</default>
+    </entry>
+  </group>
+
+</kcfg>

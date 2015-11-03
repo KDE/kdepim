@@ -46,7 +46,7 @@
 
 #include "emailoperationspreferences.h"
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -211,7 +211,7 @@ void SignEMailController::setInputsAndOutputs(const std::vector< shared_ptr<Inpu
     const std::vector<Key> keys = d->wizard->resolvedSigners();
     kleo_assert(!keys.empty());
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<SignEMailTask> task(new SignEMailTask);
         task->setInput(inputs[i]);
@@ -351,7 +351,7 @@ void SignEMailController::Private::ensureWizardCreated()
         return;
     }
 
-    std::auto_ptr<SignEMailWizard> w(new SignEMailWizard);
+    std::unique_ptr<SignEMailWizard> w(new SignEMailWizard);
     w->setAttribute(Qt::WA_DeleteOnClose);
     connect(w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection);
     connect(w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection);

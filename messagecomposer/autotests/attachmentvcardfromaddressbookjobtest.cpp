@@ -19,7 +19,7 @@
 */
 
 #include "attachmentvcardfromaddressbookjobtest.h"
-#include "messagecomposer/job/attachmentvcardfromaddressbookjob.h"
+#include "MessageComposer/AttachmentVcardFromAddressBookJob"
 #include <qtest.h>
 #include <KContacts/Addressee>
 
@@ -48,7 +48,7 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
     Akonadi::Item item(42);
     item.setMimeType(KContacts::Addressee::mimeType());
     KContacts::Addressee address;
-    const QString name = QLatin1String("foo1");
+    const QString name = QStringLiteral("foo1");
     address.setName(name);
     item.setPayload<KContacts::Addressee>(address);
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);

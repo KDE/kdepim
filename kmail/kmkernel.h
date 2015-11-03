@@ -3,21 +3,20 @@
 #ifndef _KMKERNEL_H
 #define _KMKERNEL_H
 
-#include "interfaces/mailinterfaces.h"
+#include "mailcommon/mailinterfaces.h"
 
 #include <QList>
 #include <QObject>
 #include <QPointer>
 #include <QDBusObjectPath>
-#include <Solid/Networking>
 
 #include <qurl.h>
 
 #include "kmail_export.h"
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 #include <AkonadiCore/servermanager.h>
-#include "messageviewer/viewer/viewer.h"
-#include "progresswidget/progressmanager.h"
+#include "messageviewer/viewer.h"
+#include "libkdepim/progressmanager.h"
 
 #define kmkernel KMKernel::self()
 #define kmconfig KMKernel::config()
@@ -121,10 +120,7 @@ public:
 public Q_SLOTS:
 
     Q_SCRIPTABLE void checkMail();
-    Q_SCRIPTABLE void openReader()
-    {
-        openReader(false);
-    }
+    Q_SCRIPTABLE void openReader();
 
     /**
     * Enables/disables systray icon changing when mail arrives.
@@ -171,7 +167,7 @@ public Q_SLOTS:
 
     Q_SCRIPTABLE bool canQueryClose();
 
-    Q_SCRIPTABLE bool handleCommandLine(bool noArgsOpensReader, const QStringList &args);
+    Q_SCRIPTABLE bool handleCommandLine(bool noArgsOpensReader, const QStringList &args, const QString &workingDir);
 
     /**
     * Opens a composer window and prefills it with different
@@ -197,7 +193,7 @@ public Q_SLOTS:
                                   bool hidden,
                                   const QString &messageFile,
                                   const QStringList &attachmentPaths,
-                                  const QStringList &customHeaders , const QString &replyTo = QString(), const QString &inReplyTo = QString());
+                                  const QStringList &customHeaders, const QString &replyTo = QString(), const QString &inReplyTo = QString());
 
     /**
     * Opens a composer window and prefills it with different
@@ -384,24 +380,15 @@ public:
     void action(bool mailto, bool check, const QString &to, const QString &cc,
                 const QString &bcc, const QString &subj, const QString &body,
                 const QUrl &messageFile, const QList<QUrl> &attach,
-                const QStringList &customHeaders , const QString &replyTo, const QString &inReplyTo);
+                const QStringList &customHeaders, const QString &replyTo, const QString &inReplyTo);
 
     //sets online status for akonadi accounts. true for online, false for offline
     void setAccountStatus(bool);
 
-    const QString xmlGuiInstanceName() const
-    {
-        return mXmlGuiInstance;
-    }
-    void setXmlGuiInstanceName(const QString &instance)
-    {
-        mXmlGuiInstance = instance;
-    }
+    const QString xmlGuiInstanceName() const;
+    void setXmlGuiInstanceName(const QString &instance);
 
-    UndoStack *undoStack() const
-    {
-        return the_undoStack;
-    }
+    UndoStack *undoStack() const;
     MessageComposer::MessageSender *msgSender() Q_DECL_OVERRIDE;
 
     void openFilterDialog(bool createDummyFilter = true) Q_DECL_OVERRIDE;
@@ -418,22 +405,10 @@ public:
     /** Expire all folders, used for the gui action */
     void expireAllFoldersNow();
 
-    bool firstStart() const
-    {
-        return the_firstStart;
-    }
-    QString previousVersion() const
-    {
-        return the_previousVersion;
-    }
-    bool shuttingDown() const
-    {
-        return the_shuttingDown;
-    }
-    void setShuttingDown(bool flag)
-    {
-        the_shuttingDown = flag;
-    }
+    bool firstStart() const;
+    QString previousVersion() const;
+    bool shuttingDown() const;
+    void setShuttingDown(bool flag);
 
     /** Returns the full path of the user's local data directory for KMail.
       The path ends with '/'.
@@ -530,7 +505,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void configChanged();
-    void onlineStatusChanged(GlobalSettings::EnumNetworkState::type);
+    void onlineStatusChanged(KMailSettings::EnumNetworkState::type);
     void customTemplatesChanged();
 
     void startCheckMail();
@@ -551,7 +526,7 @@ private Q_SLOTS:
     void slotCollectionRemoved(const Akonadi::Collection &col);
     void slotDeleteIdentity(uint identity);
     void slotInstanceRemoved(const Akonadi::AgentInstance &);
-    void slotSystemNetworkStatusChanged(Solid::Networking::Status);
+    void slotSystemNetworkStatusChanged(bool isOnline);
     void slotCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &set);
 
     void slotCheckAccount(Akonadi::ServerManager::State state);
@@ -605,7 +580,7 @@ private:
     KMMainWin *mWin;
     MailServiceImpl *mMailService;
 
-    Solid::Networking::Status mSystemNetworkStatus;
+    bool mSystemNetworkStatus;
 
     KMail::KMSystemTray *mSystemTray;
     QHash<QString, KPIM::ProgressItem::CryptoStatus> mResourceCryptoSettingCache;

@@ -35,18 +35,18 @@
 #include "keycache.h"
 #include "keycache_p.h"
 
-#include "predicates.h"
+#include "Libkleo/Predicates"
 
 #include "smimevalidationpreferences.h"
 
 #include <utils/filesystemwatcher.h>
 #include <utils/progressmanager.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/dn.h>
-#include <kleo/keylistjob.h>
-#include <kleo/listallkeysjob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/Dn>
+#include <Libkleo/KeyListJob>
+#include <Libkleo/ListAllKeysJob>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -474,7 +474,7 @@ struct ready_for_signing : std::unary_function<Key, bool> {
         return true;
 #else
         return key.hasSecret() &&
-               key.canReallySign() && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
+               key.canReallySign() && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid();
 #endif
 #undef DO
     }
@@ -493,7 +493,7 @@ struct ready_for_encryption : std::unary_function<Key, bool> {
         return true;
 #else
         return
-            key.canEncrypt()    && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
+            key.canEncrypt()    && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid();
 #endif
     }
 #undef DO
@@ -571,8 +571,6 @@ std::vector<Key> KeyCache::findSubjects(std::vector<Key>::const_iterator first, 
 
     return result;
 }
-
-static const unsigned int LIKELY_CHAIN_DEPTH = 3;
 
 std::vector<Key> KeyCache::findIssuers(const Key &key, Options options) const
 {
@@ -668,7 +666,7 @@ static std::string email(const UserID &uid)
 {
     const std::string email = uid.email();
     if (email.empty()) {
-        return DN(uid.id())[QLatin1String("EMAIL")].trimmed().toUtf8().constData();
+        return DN(uid.id())[QStringLiteral("EMAIL")].trimmed().toUtf8().constData();
     }
     if (email[0] == '<' && email[email.size() - 1] == '>') {
         return email.substr(1, email.size() - 2);
@@ -1053,11 +1051,11 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing(const char *backend)
 
     const QString label = protocol == Kleo::CryptoBackendFactory::instance()->smime()
                           ? i18n("Listing X.509 certificates")
-                          : i18n("Listing OpenPGP certificates") ;
+                          : i18n("Listing OpenPGP certificates");
     (void)ProgressManager::createForJob(job, label);
 
-    connect(q, SIGNAL(canceled()),
-            job, SLOT(slotCancel()));
+    connect(q, &RefreshKeysJob::canceled,
+            job, &Job::slotCancel);
 
     const Error error = job->start(true);
 

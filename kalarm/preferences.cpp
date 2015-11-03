@@ -29,9 +29,8 @@
 
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <KHolidays/kholidays/holidays.h>
+#include <KHolidays/HolidayRegion>
 
-#include <kglobal.h>
 #include <KSharedConfig>
 #include <kconfiggroup.h>
 #include <kmessagebox.h>

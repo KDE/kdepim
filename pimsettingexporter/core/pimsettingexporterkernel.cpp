@@ -22,8 +22,8 @@
 
 #include <kalarmcal/kacalendar.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <messagecomposer/sender/akonadisender.h>
-#include <mailcommon/folder/foldercollectionmonitor.h>
+#include <MessageComposer/AkonadiSender>
+#include <MailCommon/FolderCollectionMonitor>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
@@ -45,7 +45,7 @@ PimSettingExporterKernel::PimSettingExporterKernel(QObject *parent)
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_TEMPLATE);
 
     mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
-    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setListFilter(Akonadi::CollectionFetchScope::Enabled);
     mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
@@ -119,13 +119,13 @@ bool PimSettingExporterKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id PimSettingExporterKernel::lastSelectedFolder()
+Akonadi::Collection::Id PimSettingExporterKernel::lastSelectedFolder()
 {
     Q_ASSERT(false);
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

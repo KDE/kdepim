@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AlarmDialog</class>
+ <widget class="QWidget" name="AlarmDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>439</width>
+    <height>315</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Alarms</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>When:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QSpinBox" name="mAlarmOffset">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Set the reminder trigger time</string>
+       </property>
+       <property name="whatsThis">
+        <string>This spinbox allows you to set the reminder trigger time. The time unit is set in the combobox immediately adjacent.</string>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>99999</number>
+       </property>
+       <property name="value">
+        <number>15</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KComboBox" name="mOffsetUnit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Select the reminder trigger time unit</string>
+       </property>
+       <property name="whatsThis">
+        <string>This combobox allows you to set the units for the reminder trigger time. The trigger time value is set in the spinbox immediately adjacent.</string>
+       </property>
+       <property name="autoCompletion">
+        <bool>false</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox alarm offset expressed in minutes">minute(s)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox alarm offset expressed in hours">hour(s)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string comment="@item:inlistbox alarm offset expressed in days">day(s)</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="KComboBox" name="mBeforeAfter">
+       <property name="toolTip">
+        <string>Select the reminder trigger relative to the start or end time</string>
+       </property>
+       <property name="whatsThis">
+        <string>Use this combobox to specify if you want the reminder to trigger before or after the start or end time.</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>before the event starts</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>after the event starts</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>before the event ends</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>after the event ends</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Repeat:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QCheckBox" name="mRepeats">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Set the reminder to repeat</string>
+       </property>
+       <property name="whatsThis">
+        <string>Check this if you want to the reminder to recur on a periodic interval.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="mRepeatCount">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>Select how often the reminder should repeat</string>
+       </property>
+       <property name="whatsThis">
+        <string>Use this selector to choose how many times you want the recurring reminder to repeat.</string>
+       </property>
+       <property name="suffix">
+        <string> time(s)</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="mRepeatInterval">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>Select the time between reminder repeats</string>
+       </property>
+       <property name="whatsThis">
+        <string>Use this selector to choose the time between repeating reminders.</string>
+       </property>
+       <property name="suffix">
+        <string comment="@label:spinbox repeat interval expressed in minutes"> Minute(s)</string>
+       </property>
+       <property name="prefix">
+        <string comment="repeat every X minutes">every </string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>What:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="KComboBox" name="mTypeCombo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text">
+       <string>Display text</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Play sound file</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Run application / script</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Send email</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QStackedWidget" name="mTypeStack">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="DisplayStack">
+      <layout class="QVBoxLayout">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="KTextEdit" name="mDisplayText">
+         <property name="toolTip">
+          <string notr="true">Provide text to display when the reminder triggers</string>
+         </property>
+         <property name="whatsThis">
+          <string>Specify any text you desire to display in the popup notice when the reminder triggers.</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="AudioStack">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="mSoundFileLabel">
+         <property name="text">
+          <string>Audio File:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>mSoundFile</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="KUrlRequester" name="mSoundFile">
+         <property name="toolTip">
+          <string>Specify a file containing a sound to play when the reminder triggers</string>
+         </property>
+         <property name="whatsThis">
+          <string>Use the adjacent file browser to help you find the file you want to use when playing a sound when the reminder triggers.</string>
+         </property>
+         <property name="filter">
+          <string>audio/x-wav audio/x-mp3 application/ogg</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>61</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="ApplicationStack">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="mApplicationLabel">
+         <property name="text">
+          <string>&amp;Application / Script:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mApplication</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="KUrlRequester" name="mApplication">
+         <property name="toolTip">
+          <string>Specify a file containing the application to run when the reminder triggers</string>
+         </property>
+         <property name="whatsThis">
+          <string>Use the adjacent file browser to help you find the file you want to use when running an application when the reminder triggers.</string>
+         </property>
+         <property name="filter">
+          <string>*|All files</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="mAppArgumentsLabel">
+         <property name="text">
+          <string>Ar&amp;guments:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mAppArguments</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="mAppArguments">
+         <property name="toolTip">
+          <string>Specify arguments to pass to the application when the reminder triggers</string>
+         </property>
+         <property name="whatsThis">
+          <string>Enter the application arguments to use when running an application when the reminder triggers.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>16</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="EmailStack">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="mEmailToLabel">
+         <property name="text">
+          <string>&amp;To:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mEmailAddress</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="KPIM::AddresseeLineEdit" name="mEmailAddress">
+         <property name="toolTip">
+          <string>Specify a list of addresses to send email when the reminder triggers.
+If the 'To:' field stays empty the email reminder will be sent to the
+default email configured in Kmail (Settings menu/Configure Kmail/Identities).</string>
+         </property>
+         <property name="whatsThis">
+          <string>Enter a list comma-separated addresses to which an email will be sent when the reminder triggers</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="mEmailTextLabel">
+         <property name="text">
+          <string>&amp;Message:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="buddy">
+          <cstring>mEmailText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="KTextEdit" name="mEmailText">
+         <property name="toolTip">
+          <string>Specify text of an email message to send when the reminder triggers</string>
+         </property>
+         <property name="whatsThis">
+          <string>Enter any text you desire for the email message that will be sent when the alarm triggers.</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPIM::AddresseeLineEdit</class>
+   <extends>KLineEdit</extends>
+   <header>Libkdepim/AddresseeLineEdit</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+  </customwidget>
+ </customwidgets>
+ <includes>
+  <include location="global">Libkdepim/AddresseeLineEdit</include>
+ </includes>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>mTypeCombo</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>mTypeStack</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>147</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>97</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mRepeats</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>mRepeatCount</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>118</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mRepeats</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>mRepeatInterval</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>42</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>284</x>
+     <y>48</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

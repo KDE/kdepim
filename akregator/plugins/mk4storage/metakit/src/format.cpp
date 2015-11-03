@@ -142,7 +142,7 @@ void c4_FormatX::Unmapped()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#if !q4_TINY
+#if !defined(q4_TINY) || !q4_TINY
 /////////////////////////////////////////////////////////////////////////////
 
 class c4_FormatL: public c4_FormatX
@@ -363,7 +363,7 @@ d4_inline bool c4_FormatB::ShouldBeMemo(int length_)const
     // as is, and so do memos which have not been modified
 
     int rows = _memos.GetSize() + 1; // avoids divide by zero
-    return length_ > 10000 || length_ > 100 && length_ > 1000000 / rows;
+    return length_ > 10000 || (length_ > 100 && length_ > 1000000 / rows);
 }
 
 int c4_FormatB::ItemLenOffCol(int index_, t4_i32 &off_, c4_Column *&col_)
@@ -389,7 +389,7 @@ c4_Column *c4_FormatB::GetNthMemoCol(int index_, bool alloc_)
         col = d4_new c4_Column(_data.Persist());
         _memos.SetAt(index_, col);
 
-        if (n > 0)
+        if (n > 0) {
             if (_data.IsDirty()) {
                 c4_Bytes temp;
                 _data.FetchBytes(start, n, temp, true);
@@ -398,6 +398,7 @@ c4_Column *c4_FormatB::GetNthMemoCol(int index_, bool alloc_)
             } else {
                 col->SetLocation(_data.Position() + start, n);
             }
+        }
     }
 
     return col;
@@ -488,7 +489,7 @@ void c4_FormatB::OldDefine(char type_, c4_Persist &pers_)
         if (type_ == 'B') {
             pers_.FetchOldLocation(sizes);
 
-#if !q4_OLD_IS_ALWAYS_V2
+#if !defined(q4_OLD_IS_ALWAYS_V2) || !q4_OLD_IS_ALWAYS_V2
 
             // WARNING - HUGE HACK AHEAD - THIS IS NOT 100% FULLPROOF!
             //
@@ -509,7 +510,7 @@ void c4_FormatB::OldDefine(char type_, c4_Persist &pers_)
                 t4_i32 s1 = sizes.ColSize();
                 t4_i32 s2 = _data.ColSize();
 
-#if !q4_OLD_IS_PRE_V2
+#if !defined(q4_OLD_IS_PRE_V2) || !q4_OLD_IS_PRE_V2
                 // if the size vector is clearly impossible, swap vectors
                 bool fix = c4_ColOfInts::CalcAccessWidth(rows, s1) < 0;
 
@@ -657,7 +658,7 @@ void c4_FormatB::SetOne(int index_, const c4_Bytes &xbuf_, bool ignoreMemos_)
     } else if (n < 0) {
         cp->Shrink(start,  - n);
     } else if (m == 0) {
-        return ;
+        return;
     }
     // no size change and no contents
 
@@ -870,8 +871,8 @@ void c4_FormatB::Commit(c4_SaveContext &ar_)
     // both _sizeCol and _memoCol will be clean again when it has
     // but be careful because dirty flag is only useful if size is nonzero
     if (_recalc && !ar_.Serializing())
-        _recalc = _sizeCol.ColSize() > 0 && _sizeCol.IsDirty() || _memoCol.ColSize()
-                  > 0 && _memoCol.IsDirty();
+        _recalc = (_sizeCol.ColSize() > 0 && _sizeCol.IsDirty()) || (_memoCol.ColSize()
+                  > 0 && _memoCol.IsDirty());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -921,7 +922,7 @@ void c4_FormatS::Set(int index_, const c4_Bytes &buf_)
         d4_assert(buf_.Contents()[m] == 0);
         if (m == 0) {
             SetOne(index_, c4_Bytes()); // don't store data for empty strings
-            return ;
+            return;
         }
     }
 
@@ -945,7 +946,7 @@ void c4_FormatS::Insert(int index_, const c4_Bytes &buf_, int count_)
         d4_assert(buf_.Contents()[m] == 0);
         if (m == 0) {
             c4_FormatB::Insert(index_, c4_Bytes(), count_);
-            return ;
+            return;
         }
     }
 
@@ -1140,7 +1141,7 @@ void c4_FormatV::Replace(int index_, c4_HandlerSeq *seq_)
 
     c4_HandlerSeq *&curr = (c4_HandlerSeq *&)_subSeqs.ElementAt(index_);
     if (seq_ == curr) {
-        return ;
+        return;
     }
 
     if (curr != 0) {
@@ -1313,7 +1314,7 @@ c4_Handler *f4_CreateFormat(const c4_Property &prop_, c4_HandlerSeq &seq_)
     switch (prop_.Type()) {
     case 'I':
         return d4_new c4_FormatX(prop_, seq_);
-#if !q4_TINY
+#if !defined(q4_TINY) || !q4_TINY
     case 'L':
         return d4_new c4_FormatL(prop_, seq_);
     case 'F':
@@ -1341,7 +1342,7 @@ int f4_ClearFormat(char type_)
     switch (type_) {
     case 'I':
         return sizeof(t4_i32);
-#if !q4_TINY
+#if !defined(q4_TINY) || !q4_TINY
     case 'L':
         return sizeof(t4_i64);
     case 'F':
@@ -1365,7 +1366,7 @@ int f4_CompareFormat(char type_, const c4_Bytes &b1_, const c4_Bytes &b2_)
     switch (type_) {
     case 'I':
         return c4_FormatX::DoCompare(b1_, b2_);
-#if !q4_TINY
+#if !defined(q4_TINY) || !q4_TINY
     case 'L':
         return c4_FormatL::DoCompare(b1_, b2_);
     case 'F':

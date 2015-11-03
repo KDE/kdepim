@@ -20,7 +20,7 @@
 
 #include "quicksearchlinetest.h"
 #include <qtest.h>
-#include "messagelist/core/widgets/quicksearchline.h"
+#include "core/widgets/quicksearchline.h"
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>
 #include <KLineEdit>

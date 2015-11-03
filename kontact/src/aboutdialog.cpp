@@ -281,7 +281,7 @@ void AboutDialog::addLicenseText(const KAboutData &about)
     if (about.licenses().isEmpty()) {
         return;
     }
-    QPixmap pixmap = KIconLoader::global()->loadIcon(QLatin1String("help-about"),
+    QPixmap pixmap = KIconLoader::global()->loadIcon(QStringLiteral("help-about"),
                      KIconLoader::Desktop, 48);
 
     const QString title = i18n("%1 License", about.displayName());
@@ -295,7 +295,7 @@ void AboutDialog::addLicenseText(const KAboutData &about)
     QTextBrowser *textBrowser = new QTextBrowser(topFrame);
     QString licenseStr;
     Q_FOREACH (const KAboutLicense &license,  about.licenses()) {
-        licenseStr += QString::fromLatin1("<pre>%1</pre>").arg(license.text());
+        licenseStr += QStringLiteral("<pre>%1</pre>").arg(license.text());
     }
     textBrowser->setHtml(licenseStr);
 

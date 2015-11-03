@@ -68,6 +68,7 @@ QString authTypeToStr(Ispdb::authType authType)
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     KAboutData aboutData(QStringLiteral("ispdb"),
                          i18n("ISPDB Assistant"),
                          QStringLiteral("0.1"),
@@ -89,8 +90,9 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     QString email(QStringLiteral("blablabla@gmail.com"));
-    if (!parser.value(QStringLiteral("email")).isEmpty()) {
-        email = parser.value(QStringLiteral("email"));
+    const QString argEmail = parser.value(QStringLiteral("email"));
+    if (!argEmail.isEmpty()) {
+        email = argEmail;
     }
 
     QEventLoop loop;
@@ -129,5 +131,5 @@ int main(int argc, char **argv)
                                    << "- authentication:" << authTypeToStr(s.authentication);
     }
 
-    return true;
+    return 0;
 }

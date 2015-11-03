@@ -4,8 +4,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${kdepim_SOURCE_DIR}
-  ${kdepim_SOURCE_DIR}/messageviewer
-  ${Boost_INCLUDE_DIRS}
 )
 
 set(etm_usage_SRCS
@@ -37,6 +35,7 @@ set(etm_usage_SRCS
 add_executable(etm_usage ${etm_usage_SRCS})
 
 target_link_libraries(etm_usage
+  KF5::ItemViews
   KF5::KHtml
   KF5::KIOCore
   KF5::AkonadiMime
@@ -45,12 +44,11 @@ target_link_libraries(etm_usage
   KF5::Contacts
   KF5::Mime
   
-  kdepim
-  kleo
-  kpgp
-  messagecore
-  messagelist
-  messageviewer
+  KF5::Libkdepim
+  KF5::Libkleo
+  KF5::MessageCore
+  KF5::MessageList
+  KF5::MessageViewer
 )
 
 install(TARGETS etm_usage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

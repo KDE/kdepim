@@ -55,7 +55,7 @@ public:
 
     bool failed() const
     {
-        return !skipped() && !passed() ;
+        return !skipped() && !passed();
     }
 };
 

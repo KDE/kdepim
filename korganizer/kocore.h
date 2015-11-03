@@ -27,9 +27,9 @@
 #define KORG_KOCORE_H
 
 #include "korganizer_core_export.h"
-#include "korganizer/part.h"
+#include "part.h"
 
-#include <calendarviews/agenda/calendardecoration.h>
+#include <EventViews/CalendarDecoration>
 
 #include <KService>
 

@@ -45,10 +45,10 @@
 
 using namespace Kleo;
 
-static const QString email_rx = QLatin1String("[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?");
+static const QString email_rx = QStringLiteral("[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?");
 // these are modeled after gnupg/g10/keygen.c:ask_user_id:
-static const QString name_rx = QLatin1String("[^0-9<>][^<>@]{4,}");
-static const QString comment_rx = QLatin1String("[^()]*");
+static const QString name_rx = QStringLiteral("[^0-9<>][^<>@]{4,}");
+static const QString comment_rx = QStringLiteral("[^()]*");
 
 namespace
 {
@@ -88,18 +88,18 @@ public:
         const QString domainRestored = QUrl::fromAce(domainEncoded);
         QString encoded = str.left(atIdx) + QLatin1Char('@') + QString::fromLatin1(domainEncoded);
         if (needsDotOrgAdded) {
-            assert(encoded.endsWith(QLatin1String("tmp.org")));
+            assert(encoded.endsWith(QStringLiteral("tmp.org")));
             encoded.chop(7);
         }
         if (needsOrgAdded) {
-            assert(encoded.endsWith(QLatin1String(".org")));
+            assert(encoded.endsWith(QStringLiteral(".org")));
             encoded.chop(3);   // '.' was part of domain before
         }
         qCDebug(KLEOPATRA_LOG) << "\n str           :" << str
                                << "\n domain        :" << domain
                                << "\n domainEncoded :" << domainEncoded
                                << "\n domainRestored:" << domainRestored
-                               << "\n encoded       :" << encoded ;
+                               << "\n encoded       :" << encoded;
         if (domain != domainRestored) {
             return Invalid;
         }
@@ -110,7 +110,7 @@ public:
         // regexValidate (e.g. adding a . after marc in
         // marc@kdab.com, intending to eventually arrive at
         // marc.mutz@kdab.com)
-        int adjustedPos = pos <= atIdx ? pos : encoded.size() ;
+        int adjustedPos = pos <= atIdx ? pos : encoded.size();
         return regexValidate(encoded, adjustedPos);
     }
 

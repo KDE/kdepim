@@ -28,10 +28,10 @@
 #include "koeventpopupmenu.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
-#include <libkdepim/widgets/pimmessagebox.h>
+#include <Libkdepim/PIMMessageBox>
 
 #include <KXMLGUIFactory>
 #include "korganizer_debug.h"
@@ -54,8 +54,8 @@ KOEventView::KOEventView(QWidget *parent)
     //another editor, for each keypress
     //Thus listen to the global focusChanged() signal (seen with Qt 4.6-stable-patched 20091112)
     //  -Frank
-    connect(qobject_cast<QApplication *>(QApplication::instance()), SIGNAL(focusChanged(QWidget*,QWidget*)),
-            this, SLOT(focusChanged(QWidget*,QWidget*)));
+    connect(qobject_cast<QApplication *>(QApplication::instance()), &QApplication::focusChanged,
+            this, &KOEventView::focusChanged);
 }
 
 //---------------------------------------------------------------------------

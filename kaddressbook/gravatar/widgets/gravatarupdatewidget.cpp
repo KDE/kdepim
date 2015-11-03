@@ -21,8 +21,11 @@
 #include <KLocalizedString>
 #include <QLabel>
 #include <QPushButton>
+#include <QCheckBox>
 
 #include <gravatar/gravatarresolvurljob.h>
+
+#include <kio/transferjob.h>
 
 using namespace KABGravatar;
 GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
@@ -31,23 +34,39 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     QGridLayout *mainLayout = new QGridLayout;
     setLayout(mainLayout);
 
+    QHBoxLayout *hboxEmail = new QHBoxLayout;
+
     QLabel *lab = new QLabel(i18n("Email:"));
     lab->setObjectName(QStringLiteral("emaillabel"));
-    mainLayout->addWidget(lab, 0, 0);
+    hboxEmail->addWidget(lab);
 
     mEmailLab = new QLabel;
     mEmailLab->setObjectName(QStringLiteral("email"));
-    mainLayout->addWidget(mEmailLab, 0, 1);
+    hboxEmail->addWidget(mEmailLab);
+    mainLayout->addLayout(hboxEmail, 0, 0);
+
+    mUseHttps = new QCheckBox(i18n("Use HTTPS Protocol"));
+    mUseHttps->setObjectName(QStringLiteral("usehttps"));
+    mainLayout->addWidget(mUseHttps, 1, 0);
+
+    mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
+    mUseLibravatar->setObjectName(QStringLiteral("uselibravatar"));
+    mainLayout->addWidget(mUseLibravatar, 2, 0);
+
+    mFallbackGravatar = new QCheckBox(i18n("Fallback to Gravatar"));
+    mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
+    mainLayout->addWidget(mFallbackGravatar, 3, 0);
+    mFallbackGravatar->setEnabled(false);
 
     mSearchGravatar = new QPushButton(i18n("Search"));
     mSearchGravatar->setEnabled(false);
     mSearchGravatar->setObjectName(QStringLiteral("search"));
-    mainLayout->addWidget(mSearchGravatar, 0, 2);
+    mainLayout->addWidget(mSearchGravatar, 4, 0);
     connect(mSearchGravatar, &QAbstractButton::clicked, this, &GravatarUpdateWidget::slotSearchGravatar);
-
+    connect(mUseLibravatar, &QCheckBox::toggled, mFallbackGravatar, &QCheckBox::setEnabled);
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
-    mainLayout->addWidget(mResultGravatar, 1, 0, 1, 3, Qt::AlignCenter);
+    mainLayout->addWidget(mResultGravatar, 0, 2, 4, 1, Qt::AlignCenter);
 }
 
 GravatarUpdateWidget::~GravatarUpdateWidget()
@@ -64,7 +83,23 @@ void GravatarUpdateWidget::setEmail(const QString &email)
 
 QPixmap GravatarUpdateWidget::pixmap() const
 {
-    return QPixmap();
+    return mPixmap;
+}
+
+void GravatarUpdateWidget::setOriginalUrl(const QString &url)
+{
+    QImage image;
+    QByteArray imageData;
+    KIO::TransferJob *job = KIO::get(url, KIO::NoReload);
+    QObject::connect(job, &KIO::TransferJob::data,
+    [&imageData](KIO::Job *, const QByteArray & data) {
+        imageData.append(data);
+    });
+    if (job->exec()) {
+        if (image.loadFromData(imageData)) {
+            mResultGravatar->setPixmap(QPixmap::fromImage(image));
+        }
+    }
 }
 
 void GravatarUpdateWidget::setOriginalPixmap(const QPixmap &pix)
@@ -83,12 +118,19 @@ void GravatarUpdateWidget::slotSearchGravatar()
 {
     mCurrentUrl.clear();
     if (!mEmail.isEmpty()) {
-        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+        Gravatar::GravatarResolvUrlJob *job = new Gravatar::GravatarResolvUrlJob(this);
         job->setEmail(mEmail);
         if (job->canStart()) {
             job->setUseDefaultPixmap(false);
-            connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
-            connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
+            job->setUseHttps(mUseHttps->isChecked());
+            job->setUseLibravatar(mUseLibravatar->isChecked());
+            job->setFallbackGravatar(mFallbackGravatar->isChecked());
+            connect(job, &Gravatar::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
+            connect(job, &Gravatar::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
+            mSearchGravatar->setEnabled(false);
+            Q_EMIT activateDialogButton(false);
+            mPixmap = QPixmap();
+            mCurrentUrl.clear();
             job->start();
         } else {
             mResultGravatar->setText(i18n("Search is impossible."));
@@ -102,14 +144,19 @@ void GravatarUpdateWidget::slotResolvUrl(const QUrl &url)
     mCurrentUrl = url;
 }
 
-void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job)
+void GravatarUpdateWidget::slotSearchGravatarFinished(Gravatar::GravatarResolvUrlJob *job)
 {
+    bool foundGravatar = false;
     if (job) {
         if (job->hasGravatar()) {
-            mResultGravatar->setPixmap(job->pixmap());
+            mPixmap = job->pixmap();
+            mResultGravatar->setPixmap(mPixmap);
+            foundGravatar = true;
         } else {
             mResultGravatar->setText(i18n("No Gravatar Found."));
         }
     }
+    Q_EMIT activateDialogButton(foundGravatar);
+    mSearchGravatar->setEnabled(true);
 }
 

@@ -72,7 +72,7 @@ public:
     }
     KeyListModelInterface *model() const
     {
-        return view_ ? dynamic_cast<KeyListModelInterface *>(view_->model()) : 0 ;
+        return view_ ? dynamic_cast<KeyListModelInterface *>(view_->model()) : 0;
     }
     KeyListController *controller() const
     {
@@ -86,11 +86,11 @@ public:
     }
     GpgME::Key key() const
     {
-        return keys_.empty() ? model() && !indexes_.empty() ? model()->key(indexes_.front()) : GpgME::Key::null : keys_.front() ;
+        return keys_.empty() ? model() && !indexes_.empty() ? model()->key(indexes_.front()) : GpgME::Key::null : keys_.front();
     }
     std::vector<GpgME::Key> keys() const
     {
-        return keys_.empty() ? model() ? model()->keys(indexes()) : std::vector<GpgME::Key>() : keys_ ;
+        return keys_.empty() ? model() ? model()->keys(indexes()) : std::vector<GpgME::Key>() : keys_;
     }
 
     void finished()

@@ -27,7 +27,7 @@
 #include "prefs.h"
 using namespace Kontact;
 
-#include <libkdepimdbusinterfaces/reminderclient.h>
+#include <KdepimDBusInterfaces/ReminderClient>
 
 #include <KontactInterface/Plugin>
 #include <KontactInterface/UniqueAppHandler>
@@ -46,7 +46,6 @@ using namespace Kontact;
 #include <kdelibs4configmigrator.h>
 using namespace std;
 
-
 static const char version[] = KDEPIM_VERSION;
 
 class KontactApp : public KontactInterface::PimUniqueApplication
@@ -58,12 +57,10 @@ public:
         , mMainWindow(Q_NULLPTR)
         , mSessionRestored(false)
     {
-        KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
     }
     ~KontactApp() {}
 
-    /*reimp*/
-    int activate(const QStringList &arguments) Q_DECL_OVERRIDE;
+    int activate(const QStringList &arguments, const QString &workingDir) Q_DECL_OVERRIDE;
 
     void setMainWindow(MainWindow *window)
     {
@@ -91,11 +88,11 @@ static void listPlugins()
     for (KService::List::ConstIterator it = offers.begin(); it != end; ++it) {
         KService::Ptr service = (*it);
         // skip summary only plugins
-        QVariant var = service->property(QLatin1String("X-KDE-KontactPluginHasPart"));
+        QVariant var = service->property(QStringLiteral("X-KDE-KontactPluginHasPart"));
         if (var.isValid() && var.toBool() == false) {
             continue;
         }
-        cout << service->library().remove(QLatin1String("kontact_")).toLatin1().data() << endl;
+        cout << service->library().remove(QStringLiteral("kontact_")).toLatin1().data() << endl;
     }
 }
 
@@ -113,8 +110,10 @@ static void loadCommandLineOptions(QCommandLineParser *parser)
                           i18n("List all possible modules and exit")));
 }
 
-int KontactApp::activate(const QStringList &args)
+int KontactApp::activate(const QStringList &args, const QString &workingDir)
 {
+    Q_UNUSED(workingDir);
+
     QCommandLineParser parser;
     loadCommandLineOptions(&parser);
     parser.process(args);
@@ -158,6 +157,7 @@ int KontactApp::activate(const QStringList &args)
 int main(int argc, char **argv)
 {
     KontactApp app(argc, &argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("kontact"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kontactrc") << QStringLiteral("kontact_summaryrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("kontactui.rc"));
@@ -187,6 +187,7 @@ int main(int argc, char **argv)
     about.addCredit(i18n("Torgny Nyblom"), i18n("Git Migration"), QStringLiteral("nyblom@kde.org"));
     about.setOrganizationDomain("kde.org");
     app.setAboutData(about);
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact")));
 
     QCommandLineParser *cmdArgs = app.cmdArgs();
     loadCommandLineOptions(cmdArgs);
@@ -217,7 +218,7 @@ int main(int argc, char **argv)
         }
     }
 
-    bool ret = app.exec();
+    int ret = app.exec();
     qDeleteAll(KMainWindow::memberList());
 
     return ret;

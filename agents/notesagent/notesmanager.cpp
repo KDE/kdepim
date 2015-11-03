@@ -17,11 +17,11 @@
 
 #include "notesmanager.h"
 #include "notesharedglobalconfig.h"
-#include "noteshared/network/notesnetworkreceiver.h"
-#include "noteshared/job/createnewnotejob.h"
-#include "noteshared/akonadi/noteschangerecorder.h"
-#include "noteshared/akonadi/notesakonaditreemodel.h"
-#include "noteshared/attributes/notealarmattribute.h"
+#include "NoteShared/NotesNetworkReceiver"
+#include "NoteShared/CreateNewNoteJob"
+#include "NoteShared/NotesChangeRecorder"
+#include "NoteShared/NotesAkonadiTreeModel"
+#include "NoteShared/NoteAlarmAttribute"
 #include "notesagentalarmdialog.h"
 
 #include <AkonadiCore/Session>
@@ -190,7 +190,7 @@ void NotesManager::updateNetworkListener()
 
     if (NoteShared::NoteSharedGlobalConfig::receiveNotes()) {
         // create the socket and start listening for connections
-        mListener = KSocketFactory::listen(QStringLiteral("knotes") , QHostAddress::Any,
+        mListener = KSocketFactory::listen(QStringLiteral("knotes"), QHostAddress::Any,
                                            NoteShared::NoteSharedGlobalConfig::port());
         connect(mListener, &QTcpServer::newConnection, this, &NotesManager::slotAcceptConnection);
     }

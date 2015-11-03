@@ -42,7 +42,7 @@ using namespace Akregator;
 
 FaviconListener::~FaviconListener() {}
 
-class FeedIconManager::Private
+class Q_DECL_HIDDEN FeedIconManager::Private
 {
     FeedIconManager *const q;
 public:
@@ -72,8 +72,8 @@ QString getIconUrl(const QUrl &url)
 
 FeedIconManager::Private::Private(FeedIconManager *qq) : q(qq)
 {
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/FeedIconManager"), q, QDBusConnection::ExportScriptableSlots);
-    m_favIconsModule = new QDBusInterface(QLatin1String("org.kde.kded5"), QStringLiteral("/modules/favicons"), QLatin1String(FAVICONINTERFACE));
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/FeedIconManager"), q, QDBusConnection::ExportScriptableSlots);
+    m_favIconsModule = new QDBusInterface(QStringLiteral("org.kde.kded5"), QStringLiteral("/modules/favicons"), QStringLiteral(FAVICONINTERFACE));
     Q_ASSERT(m_favIconsModule);
     q->connect(m_favIconsModule, SIGNAL(iconChanged(bool,QString,QString)),
                q, SLOT(slotIconChanged(bool,QString,QString)));
@@ -88,7 +88,7 @@ FeedIconManager *FeedIconManager::Private::m_instance = 0;
 
 QString FeedIconManager::Private::iconLocation(const QUrl &url) const
 {
-    QDBusReply<QString> reply = m_favIconsModule->call(QLatin1String("iconForUrl"), url.url());
+    QDBusReply<QString> reply = m_favIconsModule->call(QStringLiteral("iconForUrl"), url.url());
     return reply.isValid() ? reply.value() : QString();
 }
 
@@ -99,7 +99,7 @@ void FeedIconManager::Private::loadIcon(const QString &url_)
     QString iconFile = iconLocation(url);
 
     if (iconFile.isEmpty()) { // cache miss
-        const QDBusReply<void> reply = m_favIconsModule->call(QLatin1String("downloadHostIcon"), url.url());
+        const QDBusReply<void> reply = m_favIconsModule->call(QStringLiteral("downloadHostIcon"), url.url());
         if (!reply.isValid()) {
             qCWarning(AKREGATOR_LOG) << "Couldn't reach favicon service. Request favicon for " << url << " failed";
         }

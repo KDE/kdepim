@@ -34,7 +34,7 @@
 #include <Akonadi/KMime/MessageParts>
 #include <Akonadi/KMime/MessageStatus>
 #include <AkonadiCore/session.h>
-#include <mailcommon/kernel/mailkernel.h>
+#include <MailCommon/MailKernel>
 #include <KLocalizedString>
 #include <QIcon>
 #include "mailfilteragent_debug.h"
@@ -90,7 +90,7 @@ MailFilterAgent::MailFilterAgent(const QString &id)
 
     connect(collectionMonitor, &Akonadi::Monitor::collectionRemoved, this, &MailFilterAgent::mailCollectionRemoved);
 
-    QTimer::singleShot(0, this, SLOT(initializeCollections()));
+    QTimer::singleShot(0, this, &MailFilterAgent::initializeCollections);
 
     qDBusRegisterMetaType<QList<qint64> >();
 
@@ -107,7 +107,7 @@ MailFilterAgent::MailFilterAgent(const QString &id)
                 m_filterLogDialog = new FilterLogDialog(Q_NULLPTR);
                 const QPixmap pixmap = QIcon::fromTheme(QStringLiteral("view-filter")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
                 KNotification *notify = new KNotification(QStringLiteral("mailfilterlogenabled"));
-                notify->setComponentName(componentData().componentName());
+                notify->setComponentName(QApplication::applicationDisplayName());
                 notify->setPixmap(pixmap);
                 notify->setText(i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled"));
                 notify->sendEvent();
@@ -155,7 +155,7 @@ void MailFilterAgent::initialCollectionFetchingDone(KJob *job)
     }
     Q_EMIT status(AgentBase::Idle, i18n("Ready"));
     Q_EMIT percent(100);
-    QTimer::singleShot(2000, this, SLOT(clearMessage()));
+    QTimer::singleShot(2000, this, &MailFilterAgent::clearMessage);
 }
 
 void MailFilterAgent::clearMessage()
@@ -332,8 +332,8 @@ QString MailFilterAgent::printCollectionMonitored()
             if (!printDebugCollection.isEmpty()) {
                 printDebugCollection += QLatin1Char('\n');
             }
-            printDebugCollection += QString::fromLatin1("Collection name: %1\n").arg(collection.name());
-            printDebugCollection += QString::fromLatin1("Collection id: %1\n").arg(collection.id());
+            printDebugCollection += QStringLiteral("Collection name: %1\n").arg(collection.name());
+            printDebugCollection += QStringLiteral("Collection id: %1\n").arg(collection.id());
         }
     }
     return printDebugCollection;

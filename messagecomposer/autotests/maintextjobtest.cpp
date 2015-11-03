@@ -28,13 +28,18 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/maintextjob.h>
-#include <messagecomposer/part/textpart.h>
-#include <messagecomposer/composer-ng/richtextcomposer.h>
-#include <messagecomposer/composer-ng/richtextcomposerimages.h>
-#include <messagecomposer/composer-ng/richtextcomposercontroler.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/MainTextJob>
+#include <MessageComposer/TextPart>
+#include <MessageComposer/RichTextComposerNg>
+#include <KPIMTextEdit/RichTextComposerControler>
+#include <KPIMTextEdit/RichTextComposerImages>
+
+#include <KActionCollection>
+
+//#include <kpimtextedit/textedit.h>
+
 using namespace MessageComposer;
 
 QTEST_MAIN(MainTextJobTest)
@@ -95,7 +100,7 @@ void MainTextJobTest::testCustomCharset()
     QByteArray charset("iso-8859-2");
     composer->globalPart()->setCharsets(QList<QByteArray>() << charset);
     TextPart *textPart = new TextPart;
-    QString data = QString::fromUtf8("şi el o să se-nchidă cu o frunză de pelin");
+    QString data = QStringLiteral("şi el o să se-nchidă cu o frunză de pelin");
     textPart->setWrappedPlainText(data);
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
@@ -133,7 +138,7 @@ void MainTextJobTest::testBadCharset()
     QByteArray charset("us-ascii");   // Cannot handle Romanian chars.
     composer->globalPart()->setCharsets(QList<QByteArray>() << charset);
     TextPart *textPart = new TextPart;
-    QString data = QString::fromUtf8("el a plâns peste ţară cu lacrima limbii noastre");
+    QString data = QStringLiteral("el a plâns peste ţară cu lacrima limbii noastre");
     textPart->setWrappedPlainText(data);
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QSKIP("This tests has been failing for a long time, please someone fix it", SkipSingle);
@@ -164,16 +169,17 @@ void MainTextJobTest::testFallbackCharset()
 void MainTextJobTest::testHtml()
 {
     QLatin1String originalHtml("<html><head></head><body>Test <em>with</em> formatting...<br>The end.</body></html>");
-    KPIMTextEdit::TextEdit editor;
+    MessageComposer::RichTextComposerNg editor;
+    editor.createActions(new KActionCollection(this));
     editor.setTextOrHtml(originalHtml);
-    QVERIFY(editor.isFormattingUsed());
+    QVERIFY(editor.composerControler()->isFormattingUsed());
 
     Composer *composer = new Composer;
     composer->globalPart()->setGuiEnabled(false);
     composer->globalPart()->setFallbackCharsetEnabled(true);
     TextPart *textPart = new TextPart;
     textPart->setWordWrappingEnabled(false);
-    textPart->setCleanPlainText(editor.toCleanPlainText());
+    textPart->setCleanPlainText(editor.composerControler()->toCleanPlainText());
     textPart->setCleanHtml(editor.toCleanHtml());
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
@@ -191,7 +197,7 @@ void MainTextJobTest::testHtml()
             Content *plain = result->contents().at(0);
             QVERIFY(plain->contentType(false));
             QCOMPARE(plain->contentType()->mimeType(), QByteArray("text/plain"));
-            QCOMPARE(QString::fromLatin1(plain->body()), editor.toCleanPlainText());
+            QCOMPARE(QString::fromLatin1(plain->body()), editor.composerControler()->toCleanPlainText());
         }
         // text/html
         {
@@ -206,17 +212,19 @@ void MainTextJobTest::testHtml()
 
 void MainTextJobTest::testHtmlWithImages()
 {
-    MessageComposer::RichTextComposer richTextcomposer;
-    MessageComposer::RichTextComposerControler controler(&richTextcomposer);
+    KActionCollection ac(this);
+    MessageComposer::RichTextComposerNg editor;
+    editor.createActions(new KActionCollection(this));
 
-    KPIMTextEdit::TextEdit editor;
-    QString image1 = KIconLoader::global()->iconPath(QLatin1String("folder-new"), KIconLoader::Small, false);
-    QString image2 = KIconLoader::global()->iconPath(QLatin1String("message"), KIconLoader::Small, false);
+    QString image1 = KIconLoader::global()->iconPath(QStringLiteral("folder-new"), KIconLoader::Small, false);
+    QString image2 = KIconLoader::global()->iconPath(QStringLiteral("message"), KIconLoader::Small, false);
     QString data = QStringLiteral("dust in the wind");
     editor.setTextOrHtml(data);
-    editor.addImage(image1);
-    editor.addImage(image2);
-    MessageComposer::ImageList images = controler.composerImages()->embeddedImages();
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image1));
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image1));
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image2));
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image2));
+    KPIMTextEdit::ImageList images = editor.composerControler()->composerImages()->embeddedImages();
     QCOMPARE(images.count(), 2);
     QString cid1 = images[0]->contentID;
     QString cid2 = images[1]->contentID;
@@ -228,9 +236,9 @@ void MainTextJobTest::testHtmlWithImages()
     composer->globalPart()->setFallbackCharsetEnabled(true);
     TextPart *textPart = new TextPart;
     textPart->setWordWrappingEnabled(false);
-    textPart->setCleanPlainText(editor.toCleanPlainText());
-    textPart->setCleanHtml(editor.toCleanHtml());
-    textPart->setEmbeddedImages(controler.composerImages()->embeddedImages());
+    textPart->setCleanPlainText(editor.composerControler()->toCleanPlainText());
+    textPart->setCleanHtml(editor.composerControler()->toCleanHtml());
+    textPart->setEmbeddedImages(editor.composerControler()->composerImages()->embeddedImages());
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
     Content *result = mjob->content();

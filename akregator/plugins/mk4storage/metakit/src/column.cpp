@@ -15,7 +15,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-#if !HAVE_MEMMOVE && !HAVE_BCOPY
+#if (!defined(HAVE_MEMMOVE) && !defined(HAVE_BCOPY)) || (!HAVE_MEMMOVE && !HAVE_BCOPY)
 // in case we have no library memmove, or one that can't handle overlap
 
 void f4_memmove(void *to_, const void *from_, int n_)
@@ -43,7 +43,7 @@ void f4_memmove(void *to_, const void *from_, int n_)
 c4_Column::c4_Column(c4_Persist *persist_): _position(0), _size(0), _persist
     (persist_), _gap(0), _slack(0), _dirty(false) {}
 
-#if q4_CHECK
+#if defined(q4_CHECK) && q4_CHECK
 
 // debugging version to verify that the internal data is consistent
 void c4_Column::Validate()const
@@ -51,7 +51,7 @@ void c4_Column::Validate()const
     d4_assert(0 <= _slack && _slack < kSegMax);
 
     if (_segments.GetSize() == 0) {
-        return ;
+        return;
     }
     // ok, not initialized
 
@@ -455,7 +455,7 @@ void c4_Column::MoveGapTo(t4_i32 pos_)
         // move the gap up, ie. some bytes down
     {
         MoveGapUp(pos_);
-    } else if (_gap > pos_)
+    } else if (_gap > pos_) {
         // move the gap down, ie. some bytes up
         if (_gap - pos_ > _size - _gap + fSegRest(pos_)) {
             RemoveGap(); // it's faster to get rid of the gap instead
@@ -465,6 +465,7 @@ void c4_Column::MoveGapTo(t4_i32 pos_)
         {
             MoveGapDown(pos_);
         }
+    }
 
     d4_assert(_gap == pos_);
 
@@ -1285,7 +1286,7 @@ void c4_ColOfInts::SetAccessWidth(int bits_)
 
     _currWidth = (1 << l2bp1) >> 1;
 
-    if (l2bp1 > 4 && (_mustFlip || Persist() != 0 && Strategy()._bytesFlipped)) {
+    if (l2bp1 > 4 && (_mustFlip || (Persist() != 0 && Strategy()._bytesFlipped))) {
         l2bp1 += 3;
     }
     // switch to the trailing entries for byte flipping
@@ -1352,7 +1353,7 @@ void c4_ColOfInts::Set(int index_, const c4_Bytes &buf_)
     d4_assert(buf_.Size() == _dataWidth);
 
     if ((this->*_setter)(index_, buf_.Contents())) {
-        return ;
+        return;
     }
 
     d4_assert(buf_.Size() == sizeof(t4_i32));
@@ -1478,7 +1479,7 @@ void c4_ColOfInts::ResizeData(int index_, int count_, bool clear_)
         } else {
             RemoveData(index_ * w,  - count_ * w);
         }
-        return ;
+        return;
     }
 
     d4_assert(_currWidth == 1 || _currWidth == 2 || _currWidth == 4);

@@ -65,9 +65,9 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
     m_bDescription = false;
     m_description.clear();
     m_bLocation = false;
-    m_location = QLatin1String("Default location"); //i18n ?
+    m_location = QStringLiteral("Default location"); //i18n ?
     m_bSummary = false;
-    m_summary = QLatin1String("Default summary"); //i18n?
+    m_summary = QStringLiteral("Default summary"); //i18n?
     m_bFloating = true;
     m_bAllowGui = false;
     m_collectionId = -1;

@@ -59,6 +59,8 @@ public:
 
     void setImportExportProgressIndicator(ImportExportProgressIndicatorBase *importExportProgressIndicator);
 
+    ImportExportProgressIndicatorBase *importExportProgressIndicator() const;
+
 Q_SIGNALS:
     void info(const QString &);
     void error(const QString &);
@@ -70,29 +72,33 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotAllResourceSynchronized();
     void slotSynchronizeInstanceDone(const QString &);
-    void slotSynchronizeInstanceFailed(const QString &instance);
+    void slotSynchronizeInstanceFailed(const QString &instance);    
+    void slotTaskCanceled();
+
+protected:
+    virtual void slotNextStep();
 
 protected:
     void initializeListStep();
     void startSynchronizeResources(const QStringList &listResourceToSync);
-    virtual void nextStep();
     void infoAboutNewResource(const QString &resourceName);
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);
-    void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);
+    void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination, bool isStoredAsZippedArchive = true);
 
     void convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix = false);
     void convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix = true);
     void copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix);
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
-    void backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     void backupConfigFile(const QString &configFileName);
+    void backupUiRcFile(const QString &configFileName, const QString &applicationName);
+    void restoreUiRcFile(const QString &configNameStr, const QString &applicationName);
+
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
     Akonadi::Collection::Id convertPathToId(const QString &path);
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     QStringList restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath, bool overwriteResources = false);
-    bool backupFullDirectory(const QUrl &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
     void restoreConfigFile(const QString &configNameStr);
     bool overwriteDirectoryMessageBox(const QString &directory) const;
@@ -101,9 +107,9 @@ protected:
     KZip *archive() const;
 
     void increaseProgressDialog();
-    void createProgressDialog();
+    void createProgressDialog(const QString &title = QString());
 
-    void showInfo(const QString &text);
+    void setProgressDialogLabel(const QString &text);
 
     QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
     QVector<resourceFiles> mListResourceFile;

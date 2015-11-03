@@ -27,7 +27,7 @@
 class AccountWizard : public QObject
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.akonadi.AccountWizard");
+    Q_PLUGIN_METADATA(IID "org.kde.akonadi.AccountWizard")
 
 public:
     explicit AccountWizard(QObject *parent = Q_NULLPTR);

@@ -39,10 +39,10 @@
 #include <utils/kleo_assert.h>
 #include <utils/auditlog.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/signjob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/SignJob>
 
 #include <gpgme++/signingresult.h>
 #include <gpgme++/key.h>
@@ -103,7 +103,7 @@ public:
     explicit Private(SignEMailTask *qq);
 
 private:
-    std::auto_ptr<Kleo::SignJob> createJob(GpgME::Protocol proto);
+    std::unique_ptr<Kleo::SignJob> createJob(GpgME::Protocol proto);
 
 private:
     void slotResult(const SigningResult &);
@@ -202,7 +202,7 @@ void SignEMailTask::doStart()
 
     d->micAlg.clear();
 
-    std::auto_ptr<Kleo::SignJob> job = d->createJob(protocol());
+    std::unique_ptr<Kleo::SignJob> job = d->createJob(protocol());
     kleo_assert(job.get());
 
     job->start(d->signers,
@@ -219,12 +219,12 @@ void SignEMailTask::cancel()
     }
 }
 
-std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob(GpgME::Protocol proto)
+std::unique_ptr<Kleo::SignJob> SignEMailTask::Private::createJob(GpgME::Protocol proto)
 {
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(proto);
     kleo_assert(backend);
     bool shouldArmor = (proto == OpenPGP || q->asciiArmor()) && !output->binaryOpt();
-    std::auto_ptr<Kleo::SignJob> signJob(backend->signJob(/*armor=*/ shouldArmor, /*textmode=*/false));
+    std::unique_ptr<Kleo::SignJob> signJob(backend->signJob(/*armor=*/ shouldArmor, /*textmode=*/false));
     kleo_assert(signJob.get());
     if (proto == CMS && !q->asciiArmor() && !output->binaryOpt()) {
         signJob->setOutputIsBase64Encoded(true);
@@ -250,12 +250,12 @@ static QString collect_micalgs(const GpgME::SigningResult &result, GpgME::Protoc
                    boost::bind(&QString::toLower, boost::bind(&QString::fromLatin1, boost::bind(&GpgME::CreatedSignature::hashAlgorithmAsString, _1), -1)));
 #endif
     if (proto == GpgME::OpenPGP)
-        for (QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it) {
-            it->prepend(QLatin1String("pgp-"));
+        for (QStringList::iterator it = micalgs.begin(), end = micalgs.end(); it != end; ++it) {
+            it->prepend(QStringLiteral("pgp-"));
         }
     micalgs.sort();
     micalgs.erase(std::unique(micalgs.begin(), micalgs.end()), micalgs.end());
-    return micalgs.join(QLatin1String(","));
+    return micalgs.join(QStringLiteral(","));
 }
 
 void SignEMailTask::Private::slotResult(const SigningResult &result)

@@ -29,26 +29,26 @@
 #include "kmcommands.h"
 #include "kmmainwin.h"
 #include "kmsystemtray.h"
-#include "customtemplatesmenu.h"
-#include "folderselectiondialog.h"
-#include "foldertreewidget.h"
+#include <TemplateParser/CustomTemplatesMenu>
+#include "MailCommon/FolderSelectionDialog"
+#include "MailCommon/FolderTreeWidget"
 #include "util.h"
-#include "util/mailutil.h"
-#include "kernel/mailkernel.h"
+#include "mailcommon/mailutil.h"
+#include "mailcommon/mailkernel.h"
 #include "dialog/archivefolderdialog.h"
-#include "settings/globalsettings.h"
-#include "foldertreeview.h"
+#include "settings/kmailsettings.h"
+#include "MailCommon/FolderTreeView"
 #include "tag/tagactionmanager.h"
 #include "foldershortcutactionmanager.h"
 #include "widgets/collectionpane.h"
 #include "manageshowcollectionproperties.h"
 #include "widgets/kactionmenutransport.h"
 #include "widgets/kactionmenuaccount.h"
-#include "search/searchrule/searchrulestatus.h"
-#include "pimcommon/util/networkutil.h"
-#include "pimcommon/texttospeech/texttospeech.h"
+#include "mailcommon/searchrulestatus.h"
+#include "PimCommon/NetworkUtil"
+#include "kpimtextedit/texttospeech.h"
 #if !defined(NDEBUG)
-#include <ksieveui/debug/sievedebugdialog.h>
+#include <ksieveui/sievedebugdialog.h>
 using KSieveUi::SieveDebugDialog;
 #endif
 
@@ -63,50 +63,48 @@ using KSieveUi::SieveDebugDialog;
 #include "folderarchive/folderarchiveutil.h"
 #include "folderarchive/folderarchivemanager.h"
 
-#include "pimcommon/acl/collectionaclpage.h"
-#include "pimcommon/util/pimutil.h"
-#include "mailcommon/collectionpage/collectiongeneralpage.h"
-#include "mailcommon/collectionpage/collectionexpirypage.h"
-#include "mailcommon/collectionpage/attributes/expirecollectionattribute.h"
-#include "mailcommon/filter/filtermanager.h"
-#include "mailcommon/filter/mailfilter.h"
-#include "mailcommon/widgets/favoritecollectionwidget.h"
-#include "mailcommon/folder/foldertreewidget.h"
-#include "mailcommon/folder/foldertreeview.h"
-#include "mailcommon/mailcommonsettings_base.h"
+#include "PimCommon/CollectionAclPage"
+#include "PimCommon/PimUtil"
+#include "MailCommon/CollectionGeneralPage"
+#include "MailCommon/CollectionExpiryPage"
+#include "MailCommon/ExpireCollectionAttribute"
+#include "MailCommon/FilterManager"
+#include "MailCommon/MailFilter"
+#include "MailCommon/FavoriteCollectionWidget"
+#include "MailCommon/FolderTreeWidget"
+#include "MailCommon/FolderTreeView"
+#include "mailcommonsettings_base.h"
 #include "kmmainwidget.h"
 
 // Other PIM includes
 #include "kdepim-version.h"
 
-#include "messageviewer/utils/autoqpointer.h"
-#include "messageviewer/settings/globalsettings.h"
-#include "messageviewer/viewer/viewer.h"
-#include "messageviewer/viewer/attachmentstrategy.h"
-#include "messageviewer/header/headerstrategy.h"
-#include "messageviewer/header/headerstyle.h"
+
+#include "messageviewer/messageviewersettings.h"
+#include "messageviewer/viewer.h"
+#include "messageviewer/attachmentstrategy.h"
 #ifndef QT_NO_CURSOR
-#include "messageviewer/utils/kcursorsaver.h"
+#include "Libkdepim/KCursorSaver"
 #endif
 
-#include "messagecomposer/sender/messagesender.h"
-#include "messagecomposer/helper/messagehelper.h"
+#include "MessageComposer/MessageSender"
+#include "MessageComposer/MessageHelper"
 
-#include "templateparser/templateparser.h"
+#include "TemplateParser/TemplateParser"
 
-#include "messagecore/settings/globalsettings.h"
-#include "messagecore/misc/mailinglist.h"
-#include "messagecore/helpers/messagehelpers.h"
+#include "MessageCore/MessageCoreSettings"
+#include "MessageCore/MailingList"
+#include "messagecore/messagehelpers.h"
 
 #include "dialog/kmknotify.h"
 #include "widgets/displaymessageformatactionmenu.h"
 
-#include "ksieveui/vacation/vacationmanager.h"
+#include "ksieveui/vacationmanager.h"
 #include "kmlaunchexternalcomponent.h"
 
 // LIBKDEPIM includes
-#include "progresswidget/progressmanager.h"
-#include "misc/broadcaststatus.h"
+#include "libkdepim/progressmanager.h"
+#include "libkdepim/broadcaststatus.h"
 
 // KDEPIMLIBS includes
 #include <AkonadiCore/AgentManager>
@@ -134,7 +132,6 @@ using KSieveUi::SieveDebugDialog;
 #include <AkonadiCore/EntityMimeTypeFilterModel>
 #include <Akonadi/KMime/MessageFlags>
 #include <Akonadi/KMime/RemoveDuplicatesJob>
-#include <kdbusconnectionpool.h>
 #include <AkonadiCore/CachePolicy>
 
 #include <kidentitymanagement/identity.h>
@@ -146,7 +143,7 @@ using KSieveUi::SieveDebugDialog;
 #include <kmime/kmime_header_parsing.h>
 #include <kmime/kmime_message.h>
 #include <ksieveui/managesievescriptsdialog.h>
-#include <ksieveui/util/util.h>
+#include <ksieveui/util.h>
 
 // KDELIBS includes
 #include <kwindowsystem.h>
@@ -154,7 +151,6 @@ using KSieveUi::SieveDebugDialog;
 #include <kactionmenu.h>
 #include <QMenu>
 #include <kacceleratormanager.h>
-#include <kglobalsettings.h>
 #include <kstandardshortcut.h>
 #include <kcharsets.h>
 #include "kmail_debug.h"
@@ -190,7 +186,7 @@ using KSieveUi::SieveDebugDialog;
 #include <KHelpClient>
 #include <QStandardPaths>
 
-#include "pimcommon/manageserversidesubscription/manageserversidesubscriptionjob.h"
+#include "PimCommon/ManageServerSideSubscriptionJob"
 #include <job/removeduplicatemailjob.h>
 #include <job/removecollectionjob.h>
 
@@ -263,19 +259,19 @@ KMMainWidget::KMMainWidget(QWidget *parent, KXMLGUIClient *aGUIClient,
         kmkernel->setAccountStatus(true);
     }
 
-    QTimer::singleShot(0, this, SLOT(slotShowStartupFolder()));
+    QTimer::singleShot(0, this, &KMMainWidget::slotShowStartupFolder);
 
-    connect(kmkernel, SIGNAL(startCheckMail()),
-            this, SLOT(slotStartCheckMail()));
+    connect(kmkernel, &KMKernel::startCheckMail,
+            this, &KMMainWidget::slotStartCheckMail);
 
-    connect(kmkernel, SIGNAL(endCheckMail()),
-            this, SLOT(slotEndCheckMail()));
+    connect(kmkernel, &KMKernel::endCheckMail,
+            this, &KMMainWidget::slotEndCheckMail);
 
-    connect(kmkernel, SIGNAL(configChanged()),
-            this, SLOT(slotConfigChanged()));
+    connect(kmkernel, &KMKernel::configChanged,
+            this, &KMMainWidget::slotConfigChanged);
 
-    connect(kmkernel, SIGNAL(onlineStatusChanged(GlobalSettings::EnumNetworkState::type)),
-            this, SLOT(slotUpdateOnlineStatus(GlobalSettings::EnumNetworkState::type)));
+    connect(kmkernel, &KMKernel::onlineStatusChanged,
+            this, &KMMainWidget::slotUpdateOnlineStatus);
 
     connect(mTagActionManager, &KMail::TagActionManager::tagActionTriggered,
             this, &KMMainWidget::slotUpdateMessageTagList);
@@ -310,11 +306,11 @@ KMMainWidget::KMMainWidget(QWidget *parent, KXMLGUIClient *aGUIClient,
     mVacationScriptIndicator->hide();
     connect(mVacationScriptIndicator, &KMail::VacationScriptIndicatorWidget::clicked, this, &KMMainWidget::slotEditVacation);
     if (KSieveUi::Util::checkOutOfOfficeOnStartup()) {
-        QTimer::singleShot(0, this, SLOT(slotCheckVacation()));
+        QTimer::singleShot(0, this, &KMMainWidget::slotCheckVacation);
     }
 
-    connect(mFolderTreeWidget->folderTreeView()->model(), SIGNAL(modelReset()),
-            this, SLOT(restoreCollectionFolderViewConfig()));
+    connect(mFolderTreeWidget->folderTreeView()->model(), &QAbstractItemModel::modelReset,
+            this, &KMMainWidget::restoreCollectionFolderViewConfig);
     restoreCollectionFolderViewConfig();
 
     if (kmkernel->firstStart()) {
@@ -357,8 +353,8 @@ void KMMainWidget::restoreCollectionFolderViewConfig()
     }
 
     if (id == -1) {
-        if (GlobalSettings::self()->startSpecificFolderAtStartup()) {
-            Akonadi::Collection::Id startupFolder = GlobalSettings::self()->startupFolder();
+        if (KMailSettings::self()->startSpecificFolderAtStartup()) {
+            Akonadi::Collection::Id startupFolder = KMailSettings::self()->startupFolder();
             if (startupFolder > 0) {
                 saver->restoreCurrentItem(QStringLiteral("c%1").arg(startupFolder));
             }
@@ -421,9 +417,9 @@ void KMMainWidget::slotEndCheckMail()
 void KMMainWidget::slotUpdateActionsAfterMailChecking()
 {
     const bool sendOnAll =
-        GlobalSettings::self()->sendOnCheck() == GlobalSettings::EnumSendOnCheck::SendOnAllChecks;
+        KMailSettings::self()->sendOnCheck() == KMailSettings::EnumSendOnCheck::SendOnAllChecks;
     const bool sendOnManual =
-        GlobalSettings::self()->sendOnCheck() == GlobalSettings::EnumSendOnCheck::SendOnManualChecks;
+        KMailSettings::self()->sendOnCheck() == KMailSettings::EnumSendOnCheck::SendOnManualChecks;
     if (!kmkernel->isOffline() && (sendOnAll || sendOnManual)) {
         slotSendQueued();
     }
@@ -467,17 +463,17 @@ void KMMainWidget::folderSelected(const Akonadi::Collection &col)
         mPreSelectionMode = MessageList::Core::PreSelectFirstUnreadCentered;
     } else {
         // use the default action
-        switch (GlobalSettings::self()->actionEnterFolder()) {
-        case GlobalSettings::EnumActionEnterFolder::SelectFirstUnread:
+        switch (KMailSettings::self()->actionEnterFolder()) {
+        case KMailSettings::EnumActionEnterFolder::SelectFirstUnread:
             mPreSelectionMode = MessageList::Core::PreSelectFirstUnreadCentered;
             break;
-        case GlobalSettings::EnumActionEnterFolder::SelectLastSelected:
+        case KMailSettings::EnumActionEnterFolder::SelectLastSelected:
             mPreSelectionMode = MessageList::Core::PreSelectLastSelected;
             break;
-        case GlobalSettings::EnumActionEnterFolder::SelectNewest:
+        case KMailSettings::EnumActionEnterFolder::SelectNewest:
             mPreSelectionMode = MessageList::Core::PreSelectNewestCentered;
             break;
-        case GlobalSettings::EnumActionEnterFolder::SelectOldest:
+        case KMailSettings::EnumActionEnterFolder::SelectOldest:
             mPreSelectionMode = MessageList::Core::PreSelectOldestCentered;
             break;
         default:
@@ -488,7 +484,7 @@ void KMMainWidget::folderSelected(const Akonadi::Collection &col)
 
     mGoToFirstUnreadMessageInSelectedFolder = false;
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
 
     if (mMsgView) {
@@ -522,13 +518,13 @@ void KMMainWidget::folderSelected(const Akonadi::Collection &col)
     // The message pane uses the selection model of the folder view to load the correct aggregation model and theme
     //  settings. At this point the selection model hasn't been updated yet to the user's new choice, so it would load
     //  the old folder settings instead.
-    QTimer::singleShot(0, this, SLOT(slotShowSelectedFolderInPane()));
+    QTimer::singleShot(0, this, &KMMainWidget::slotShowSelectedFolderInPane);
 }
 
 void KMMainWidget::slotShowSelectedFolderInPane()
 {
     if (mCurrentFolder && mCurrentFolder->collection().isValid()) {
-        mMessagePane->setCurrentFolder(mCurrentFolder->collection(), false , mPreSelectionMode);
+        mMessagePane->setCurrentFolder(mCurrentFolder->collection(), false, mPreSelectionMode);
     }
 }
 
@@ -543,15 +539,15 @@ void KMMainWidget::clearViewer()
 //-----------------------------------------------------------------------------
 void KMMainWidget::readPreConfig()
 {
-    mLongFolderList = GlobalSettings::self()->folderList() == GlobalSettings::EnumFolderList::longlist;
-    mReaderWindowActive = GlobalSettings::self()->readerWindowMode() != GlobalSettings::EnumReaderWindowMode::hide;
-    mReaderWindowBelow = GlobalSettings::self()->readerWindowMode() == GlobalSettings::EnumReaderWindowMode::below;
+    mLongFolderList = KMailSettings::self()->folderList() == KMailSettings::EnumFolderList::longlist;
+    mReaderWindowActive = KMailSettings::self()->readerWindowMode() != KMailSettings::EnumReaderWindowMode::hide;
+    mReaderWindowBelow = KMailSettings::self()->readerWindowMode() == KMailSettings::EnumReaderWindowMode::below;
 
-    mHtmlGlobalSetting = MessageViewer::GlobalSettings::self()->htmlMail();
-    mHtmlLoadExtGlobalSetting = MessageViewer::GlobalSettings::self()->htmlLoadExternal();
+    mHtmlGlobalSetting = MessageViewer::MessageViewerSettings::self()->htmlMail();
+    mHtmlLoadExtGlobalSetting = MessageViewer::MessageViewerSettings::self()->htmlLoadExternal();
 
     mEnableFavoriteFolderView = (MailCommon::MailCommonSettings::self()->favoriteCollectionViewMode() != MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::HiddenMode);
-    mEnableFolderQuickSearch = GlobalSettings::self()->enableFolderQuickSearch();
+    mEnableFolderQuickSearch = KMailSettings::self()->enableFolderQuickSearch();
     readFolderConfig();
     updateHtmlMenuEntry();
     if (mMsgView) {
@@ -619,7 +615,6 @@ void KMMainWidget::layoutSplitters()
     // The folder view is both the folder tree and the favorite folder view, if
     // enabled
 
-    const bool opaqueResize = KGlobalSettings::opaqueResize();
     const bool readerWindowAtSide = !mReaderWindowBelow && mReaderWindowActive;
     const bool readerWindowBelow = mReaderWindowBelow && mReaderWindowActive;
 
@@ -629,7 +624,6 @@ void KMMainWidget::layoutSplitters()
     QWidget *folderTreeWidget = mSearchAndTree;
     if (mFavoriteCollectionsView) {
         mFolderViewSplitter = new QSplitter(Qt::Vertical);
-        mFolderViewSplitter->setOpaqueResize(opaqueResize);
         //mFolderViewSplitter->setChildrenCollapsible( false );
         mFolderViewSplitter->addWidget(mFavoriteCollectionsView);
         mFavoriteCollectionsView->setParent(mFolderViewSplitter);
@@ -685,10 +679,8 @@ void KMMainWidget::layoutSplitters()
     // Set splitter properties
     //
     mSplitter1->setObjectName(QStringLiteral("splitter1"));
-    mSplitter1->setOpaqueResize(opaqueResize);
     //mSplitter1->setChildrenCollapsible( false );
     mSplitter2->setObjectName(QStringLiteral("splitter2"));
-    mSplitter2->setOpaqueResize(opaqueResize);
     //mSplitter2->setChildrenCollapsible( false );
 
     //
@@ -718,12 +710,12 @@ void KMMainWidget::layoutSplitters()
     QList<int> splitter1Sizes;
     QList<int> splitter2Sizes;
 
-    const int folderViewWidth = GlobalSettings::self()->folderViewWidth();
-    int ftHeight = GlobalSettings::self()->folderTreeHeight();
-    int headerHeight = GlobalSettings::self()->searchAndHeaderHeight();
-    const int messageViewerWidth = GlobalSettings::self()->readerWindowWidth();
-    int headerWidth = GlobalSettings::self()->searchAndHeaderWidth();
-    int messageViewerHeight = GlobalSettings::self()->readerWindowHeight();
+    const int folderViewWidth = KMailSettings::self()->folderViewWidth();
+    int ftHeight = KMailSettings::self()->folderTreeHeight();
+    int headerHeight = KMailSettings::self()->searchAndHeaderHeight();
+    const int messageViewerWidth = KMailSettings::self()->readerWindowWidth();
+    int headerWidth = KMailSettings::self()->searchAndHeaderWidth();
+    int messageViewerHeight = KMailSettings::self()->readerWindowHeight();
 
     int ffvHeight = mFolderViewSplitter ? MailCommon::MailCommonSettings::self()->favoriteCollectionViewHeight() : 0;
 
@@ -853,7 +845,7 @@ void KMMainWidget::readConfig()
         if (!mStartupDone) {
             // check mail on startup
             // do it after building the kmmainwin, so that the progressdialog is available
-            QTimer::singleShot(0, this, SLOT(slotCheckMailOnStartup()));
+            QTimer::singleShot(0, this, &KMMainWidget::slotCheckMailOnStartup);
         }
     }
 
@@ -887,19 +879,19 @@ void KMMainWidget::writeConfig(bool force)
             headersHeight = height() / 2;
         }
 
-        GlobalSettings::self()->setSearchAndHeaderHeight(headersHeight);
-        GlobalSettings::self()->setSearchAndHeaderWidth(mMessagePane->width());
+        KMailSettings::self()->setSearchAndHeaderHeight(headersHeight);
+        KMailSettings::self()->setSearchAndHeaderWidth(mMessagePane->width());
         if (mFavoriteCollectionsView) {
             MailCommon::MailCommonSettings::self()->setFavoriteCollectionViewHeight(mFavoriteCollectionsView->height());
-            GlobalSettings::self()->setFolderTreeHeight(mFolderTreeWidget->height());
+            KMailSettings::self()->setFolderTreeHeight(mFolderTreeWidget->height());
             if (!mLongFolderList) {
-                GlobalSettings::self()->setFolderViewHeight(mFolderViewSplitter->height());
+                KMailSettings::self()->setFolderViewHeight(mFolderViewSplitter->height());
             }
         } else if (!mLongFolderList && mFolderTreeWidget) {
-            GlobalSettings::self()->setFolderTreeHeight(mFolderTreeWidget->height());
+            KMailSettings::self()->setFolderTreeHeight(mFolderTreeWidget->height());
         }
         if (mFolderTreeWidget) {
-            GlobalSettings::self()->setFolderViewWidth(mFolderTreeWidget->width());
+            KMailSettings::self()->setFolderViewWidth(mFolderTreeWidget->width());
             KSharedConfig::Ptr config = KMKernel::self()->config();
             KConfigGroup group(config, "CollectionFolderView");
 
@@ -911,7 +903,7 @@ void KMMainWidget::writeConfig(bool force)
             //Work around from startup folder
             group.deleteEntry("Selection");
 #if 0
-            if (!GlobalSettings::self()->startSpecificFolderAtStartup()) {
+            if (!KMailSettings::self()->startSpecificFolderAtStartup()) {
                 group.deleteEntry("Current");
             }
 #endif
@@ -920,10 +912,10 @@ void KMMainWidget::writeConfig(bool force)
 
         if (mMsgView) {
             if (!mReaderWindowBelow) {
-                GlobalSettings::self()->setReaderWindowWidth(mMsgView->width());
+                KMailSettings::self()->setReaderWindowWidth(mMsgView->width());
             }
             mMsgView->viewer()->writeConfig(force);
-            GlobalSettings::self()->setReaderWindowHeight(mMsgView->height());
+            KMailSettings::self()->setReaderWindowHeight(mMsgView->height());
         }
     }
 }
@@ -935,6 +927,16 @@ void KMMainWidget::writeReaderConfig()
             mMsgView->viewer()->writeConfig();
         }
     }
+}
+
+KMReaderWin *KMMainWidget::messageView() const
+{
+    return mMsgView;
+}
+
+CollectionPane *KMMainWidget::messageListPane() const
+{
+    return mMessagePane;
 }
 
 //-----------------------------------------------------------------------------
@@ -978,7 +980,7 @@ void KMMainWidget::createWidgets()
     connect(mFolderTreeWidget->folderTreeView(), &FolderTreeView::prefereCreateNewTab, this, &KMMainWidget::slotCreateNewTab);
 
     mFolderTreeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    mMessagePane = new CollectionPane(!GlobalSettings::self()->startSpecificFolderAtStartup(), KMKernel::self()->entityTreeModel(),
+    mMessagePane = new CollectionPane(!KMailSettings::self()->startSpecificFolderAtStartup(), KMKernel::self()->entityTreeModel(),
                                       mFolderTreeWidget->folderTreeView()->selectionModel(),
                                       this);
     connect(KMKernel::self()->entityTreeModel(), &Akonadi::EntityTreeModel::collectionFetched, this, &KMMainWidget::slotCollectionFetched);
@@ -994,8 +996,8 @@ void KMMainWidget::createWidgets()
     connect(mMessagePane, &MessageList::Pane::messageStatusChangeRequest,
             this, &KMMainWidget::slotMessageStatusChangeRequest);
 
-    connect(mMessagePane, SIGNAL(statusMessage(QString)),
-            BroadcastStatus::instance(), SLOT(setStatusMsg(QString)));
+    connect(mMessagePane, &MessageList::Pane::statusMessage,
+            BroadcastStatus::instance(), &KPIM::BroadcastStatus::setStatusMsg);
 
     //
     // Create the reader window
@@ -1035,7 +1037,7 @@ void KMMainWidget::createWidgets()
 
     vboxlayout->addWidget(mFolderTreeWidget);
 
-    if (!GlobalSettings::self()->enableFolderQuickSearch()) {
+    if (!KMailSettings::self()->enableFolderQuickSearch()) {
         mFolderTreeWidget->filterFolderLineEdit()->hide();
     }
     //
@@ -1119,29 +1121,29 @@ void KMMainWidget::createWidgets()
     }
 
     mAkonadiStandardActionManager->interceptAction(Akonadi::StandardActionManager::CollectionProperties);
-    connect(mAkonadiStandardActionManager->action(Akonadi::StandardActionManager::CollectionProperties), SIGNAL(triggered(bool)), mManageShowCollectionProperties, SLOT(slotCollectionProperties()));
+    connect(mAkonadiStandardActionManager->action(Akonadi::StandardActionManager::CollectionProperties), &QAction::triggered, mManageShowCollectionProperties, &ManageShowCollectionProperties::slotCollectionProperties);
 
     //
     // Create all kinds of actions
     //
     mAkonadiStandardActionManager->action(Akonadi::StandardMailActionManager::RemoveDuplicates)->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Asterisk));
     mAkonadiStandardActionManager->interceptAction(Akonadi::StandardMailActionManager::RemoveDuplicates);
-    connect(mAkonadiStandardActionManager->action(Akonadi::StandardMailActionManager::RemoveDuplicates), SIGNAL(triggered(bool)), this, SLOT(slotRemoveDuplicates()));
+    connect(mAkonadiStandardActionManager->action(Akonadi::StandardMailActionManager::RemoveDuplicates), &QAction::triggered, this, &KMMainWidget::slotRemoveDuplicates);
 
     {
         mCollectionProperties = mAkonadiStandardActionManager->action(Akonadi::StandardActionManager::CollectionProperties);
     }
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionRemoved(Akonadi::Collection)),
-            SLOT(slotCollectionRemoved(Akonadi::Collection)));
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
-            SLOT(slotItemAdded(Akonadi::Item,Akonadi::Collection)));
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(itemRemoved(Akonadi::Item)),
-            SLOT(slotItemRemoved(Akonadi::Item)));
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-            SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
+    connect(kmkernel->folderCollectionMonitor(), &Monitor::collectionRemoved,
+            this, &KMMainWidget::slotCollectionRemoved);
+    connect(kmkernel->folderCollectionMonitor(), &Monitor::itemAdded,
+            this, &KMMainWidget::slotItemAdded);
+    connect(kmkernel->folderCollectionMonitor(), &Monitor::itemRemoved,
+            this, &KMMainWidget::slotItemRemoved);
+    connect(kmkernel->folderCollectionMonitor(), &Monitor::itemMoved,
+            this, &KMMainWidget::slotItemMoved);
     connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
 
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), SLOT(slotCollectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)));
+    connect(kmkernel->folderCollectionMonitor(), &Monitor::collectionStatisticsChanged, this, &KMMainWidget::slotCollectionStatisticsChanged);
 
 }
 
@@ -1155,8 +1157,8 @@ void KMMainWidget::updateMoveAction(const Akonadi::CollectionStatistics &statist
 void KMMainWidget::updateMoveAction(bool hasUnreadMails, bool hasMails)
 {
     const bool enable_goto_unread = hasUnreadMails
-                                    || (GlobalSettings::self()->loopOnGotoUnread() == GlobalSettings::EnumLoopOnGotoUnread::LoopInAllFolders)
-                                    || (GlobalSettings::self()->loopOnGotoUnread() == GlobalSettings::EnumLoopOnGotoUnread::LoopInAllMarkedFolders);
+                                    || (KMailSettings::self()->loopOnGotoUnread() == KMailSettings::EnumLoopOnGotoUnread::LoopInAllFolders)
+                                    || (KMailSettings::self()->loopOnGotoUnread() == KMailSettings::EnumLoopOnGotoUnread::LoopInAllMarkedFolders);
     actionCollection()->action(QStringLiteral("go_next_message"))->setEnabled(hasMails);
     actionCollection()->action(QStringLiteral("go_next_unread_message"))->setEnabled(enable_goto_unread);
     actionCollection()->action(QStringLiteral("go_prev_message"))->setEnabled(hasMails);
@@ -1452,7 +1454,7 @@ void KMMainWidget::slotExpireFolder()
         return;
     }
 
-    if (GlobalSettings::self()->warnBeforeExpire()) {
+    if (KMailSettings::self()->warnBeforeExpire()) {
         const QString message = i18n("<qt>Are you sure you want to expire the folder <b>%1</b>?</qt>",
                                      mCurrentFolder->name().toHtmlEscaped());
         if (KMessageBox::warningContinueCancel(this, message, i18n("Expire Folder"),
@@ -1478,7 +1480,7 @@ void KMMainWidget::slotEmptyFolder()
         return;
     }
     const bool isTrash = CommonKernel->folderIsTrash(mCurrentFolder->collection());
-    if (GlobalSettings::self()->confirmBeforeEmpty()) {
+    if (KMailSettings::self()->confirmBeforeEmpty()) {
         const QString title = (isTrash) ? i18n("Empty Trash") : i18n("Move to Trash");
         const QString text = (isTrash) ?
                              i18n("Are you sure you want to empty the trash folder?") :
@@ -1491,7 +1493,7 @@ void KMMainWidget::slotEmptyFolder()
         }
     }
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     slotMarkAll();
     if (isTrash) {
@@ -1544,7 +1546,7 @@ void KMMainWidget::slotRemoveFolder()
     }
 
     RemoveCollectionJob *job = new RemoveCollectionJob(this);
-    connect(job, SIGNAL(clearCurrentFolder()), this, SLOT(slotClearCurrentFolder()));
+    connect(job, &RemoveCollectionJob::clearCurrentFolder, this, &KMMainWidget::slotClearCurrentFolder);
     job->setMainWidget(this);
     job->setCurrentFolder(mCurrentFolder->collection());
     job->start();
@@ -1558,7 +1560,7 @@ void KMMainWidget::slotClearCurrentFolder()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotExpireAll()
 {
-    if (GlobalSettings::self()->warnBeforeExpire()) {
+    if (KMailSettings::self()->warnBeforeExpire()) {
         const int ret = KMessageBox::warningContinueCancel(KMainWindow::memberList().first(),
                         i18n("Are you sure you want to expire all old messages?"),
                         i18n("Expire Old Messages?"), KGuiItem(i18n("Expire")));
@@ -1582,7 +1584,7 @@ void KMMainWidget::slotOverrideHtmlLoadExt()
                      i18n("Security Warning"),
                      KGuiItem(i18n("Load External References")),
                      KStandardGuiItem::cancel(),
-                     QLatin1String("OverrideHtmlLoadExtWarning"), Q_NULLPTR);
+                     QStringLiteral("OverrideHtmlLoadExtWarning"), Q_NULLPTR);
         if (result == KMessageBox::Cancel) {
             mPreferHtmlLoadExtAction->setChecked(false);
             return;
@@ -1669,7 +1671,7 @@ void KMMainWidget::moveMessageSelected(MessageList::Core::MessageItemSetReferenc
 {
     Akonadi::Item::List selectMsg  = mMessagePane->itemListFromPersistentSet(ref);
     // If this is a deletion, ask for confirmation
-    if (!dest.isValid() && confirmOnDeletion) {
+    if (confirmOnDeletion) {
         int ret = KMessageBox::warningContinueCancel(
                       this,
                       i18np(
@@ -1682,7 +1684,7 @@ void KMMainWidget::moveMessageSelected(MessageList::Core::MessageItemSetReferenc
                       selectMsg.count() > 1 ? i18n("Delete Messages") : i18n("Delete Message"),
                       KStandardGuiItem::del(),
                       KStandardGuiItem::cancel(),
-                      QLatin1String("NoConfirmDelete")
+                      QStringLiteral("NoConfirmDelete")
                   );
         if (ret == KMessageBox::Cancel) {
             mMessagePane->deletePersistentSet(ref);
@@ -1693,8 +1695,8 @@ void KMMainWidget::moveMessageSelected(MessageList::Core::MessageItemSetReferenc
     // And stuff them into a KMMoveCommand :)
     KMMoveCommand *command = new KMMoveCommand(dest, selectMsg, ref);
     QObject::connect(
-        command, SIGNAL(moveDone(KMMoveCommand*)),
-        this, SLOT(slotMoveMessagesCompleted(KMMoveCommand*))
+        command, &KMMoveCommand::moveDone,
+        this, &KMMainWidget::slotMoveMessagesCompleted
     );
     command->start();
 
@@ -1735,6 +1737,11 @@ void KMMainWidget::slotMoveMessagesCompleted(KMMoveCommand *command)
         }
     }
     // The command will autodelete itself and will also kill the set.
+}
+
+void KMMainWidget::slotDeleteMessages()
+{
+    slotDeleteMsg(true);
 }
 
 void KMMainWidget::slotDeleteMsg(bool confirmDelete)
@@ -1806,8 +1813,8 @@ void KMMainWidget::copyMessageSelected(const Akonadi::Item::List &selectMsg, con
     // And stuff them into a KMCopyCommand :)
     KMCommand *command = new KMCopyCommand(dest, selectMsg);
     QObject::connect(
-        command, SIGNAL(completed(KMCommand*)),
-        this, SLOT(slotCopyMessagesCompleted(KMCommand*))
+        command, &KMCommand::completed,
+        this, &KMMainWidget::slotCopyMessagesCompleted
     );
     command->start();
     BroadcastStatus::instance()->setStatusMsg(i18n("Copying messages..."));
@@ -2200,7 +2207,7 @@ void KMMainWidget::slotFetchItemsForFolderDone(KJob *job)
 void KMMainWidget::applyFilters(const Akonadi::Item::List &selectedMessages)
 {
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
 
     MailCommon::FilterManager::instance()->filter(selectedMessages);
@@ -2296,7 +2303,7 @@ void KMMainWidget::slotOnlineStatus()
 {
     // KMKernel will Q_EMIT a signal when we toggle the network state that is caught by
     // KMMainWidget::slotUpdateOnlineStatus to update our GUI
-    if (GlobalSettings::self()->networkState() == GlobalSettings::EnumNetworkState::Online) {
+    if (KMailSettings::self()->networkState() == KMailSettings::EnumNetworkState::Online) {
         // if online; then toggle and set it offline.
         kmkernel->stopNetworkJobs();
     } else {
@@ -2305,13 +2312,13 @@ void KMMainWidget::slotOnlineStatus()
     }
 }
 
-void KMMainWidget::slotUpdateOnlineStatus(GlobalSettings::EnumNetworkState::type)
+void KMMainWidget::slotUpdateOnlineStatus(KMailSettings::EnumNetworkState::type)
 {
     if (!mAkonadiStandardActionManager) {
         return;
     }
     QAction *action = mAkonadiStandardActionManager->action(Akonadi::StandardActionManager::ToggleWorkOffline);
-    if (GlobalSettings::self()->networkState() == GlobalSettings::EnumNetworkState::Online) {
+    if (KMailSettings::self()->networkState() == KMailSettings::EnumNetworkState::Online) {
         action->setText(i18n("Work Offline"));
         action->setIcon(QIcon::fromTheme(QStringLiteral("user-offline")));
     } else {
@@ -2491,14 +2498,13 @@ void KMMainWidget::slotSelectNextUnreadMessage()
                 MessageList::Core::MessageTypeUnreadOnly,
                 MessageList::Core::ClearExistingSelection,
                 true,  // center item
-                /*GlobalSettings::self()->loopOnGotoUnread() == GlobalSettings::EnumLoopOnGotoUnread::LoopInCurrentFolder*/
-                GlobalSettings::self()->loopOnGotoUnread() != GlobalSettings::EnumLoopOnGotoUnread::DontLoop
+                KMailSettings::self()->loopOnGotoUnread() != KMailSettings::EnumLoopOnGotoUnread::DontLoop
             )) {
         // no next unread message was found in the current folder
-        if ((GlobalSettings::self()->loopOnGotoUnread() ==
-                GlobalSettings::EnumLoopOnGotoUnread::LoopInAllFolders) ||
-                (GlobalSettings::self()->loopOnGotoUnread() ==
-                 GlobalSettings::EnumLoopOnGotoUnread::LoopInAllMarkedFolders)) {
+        if ((KMailSettings::self()->loopOnGotoUnread() ==
+                KMailSettings::EnumLoopOnGotoUnread::LoopInAllFolders) ||
+                (KMailSettings::self()->loopOnGotoUnread() ==
+                 KMailSettings::EnumLoopOnGotoUnread::LoopInAllMarkedFolders)) {
             mGoToFirstUnreadMessageInSelectedFolder = true;
             mFolderTreeWidget->folderTreeView()->selectNextUnreadFolder(true);
             mGoToFirstUnreadMessageInSelectedFolder = false;
@@ -2529,13 +2535,13 @@ void KMMainWidget::slotSelectPreviousUnreadMessage()
                 MessageList::Core::MessageTypeUnreadOnly,
                 MessageList::Core::ClearExistingSelection,
                 true,  // center item
-                GlobalSettings::self()->loopOnGotoUnread() == GlobalSettings::EnumLoopOnGotoUnread::LoopInCurrentFolder
+                KMailSettings::self()->loopOnGotoUnread() == KMailSettings::EnumLoopOnGotoUnread::LoopInCurrentFolder
             )) {
         // no next unread message was found in the current folder
-        if ((GlobalSettings::self()->loopOnGotoUnread() ==
-                GlobalSettings::EnumLoopOnGotoUnread::LoopInAllFolders) ||
-                (GlobalSettings::self()->loopOnGotoUnread() ==
-                 GlobalSettings::EnumLoopOnGotoUnread::LoopInAllMarkedFolders)) {
+        if ((KMailSettings::self()->loopOnGotoUnread() ==
+                KMailSettings::EnumLoopOnGotoUnread::LoopInAllFolders) ||
+                (KMailSettings::self()->loopOnGotoUnread() ==
+                 KMailSettings::EnumLoopOnGotoUnread::LoopInAllMarkedFolders)) {
             mGoToFirstUnreadMessageInSelectedFolder = true;
             mFolderTreeWidget->folderTreeView()->selectPrevUnreadFolder();
             mGoToFirstUnreadMessageInSelectedFolder = false;
@@ -2570,8 +2576,8 @@ void KMMainWidget::slotMessageActivated(const Akonadi::Item &msg)
 
     // Try to fetch the mail, even in offline mode, it might be cached
     KMFetchMessageCommand *cmd = new KMFetchMessageCommand(this, msg);
-    connect(cmd, SIGNAL(completed(KMCommand*)),
-            this, SLOT(slotItemsFetchedForActivation(KMCommand*)));
+    connect(cmd, &KMCommand::completed,
+            this, &KMMainWidget::slotItemsFetchedForActivation);
     cmd->start();
 }
 
@@ -2588,7 +2594,7 @@ void KMMainWidget::slotItemsFetchedForActivation(KMCommand *command)
 
     KMReaderMainWin *win = new KMReaderMainWin(mFolderDisplayFormatPreference, mFolderHtmlLoadExtPreference);
     const bool useFixedFont = mMsgView ? mMsgView->isFixedFont() :
-                              MessageViewer::GlobalSettings::self()->useFixedFont();
+                              MessageViewer::MessageViewerSettings::self()->useFixedFont();
     win->setUseFixedFont(useFixedFont);
 
     const Akonadi::Collection parentCollection = MailCommon::Util::parentCollectionFromItem(msg);
@@ -2620,7 +2626,7 @@ void KMMainWidget::slotMarkAll()
     updateMessageActions();
 }
 
-void KMMainWidget::slotMessagePopup(const Akonadi::Item &msg , const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint)
+void KMMainWidget::slotMessagePopup(const Akonadi::Item &msg, const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint)
 {
     updateMessageMenu();
 
@@ -2659,7 +2665,7 @@ void KMMainWidget::slotContactSearchJobForMessagePopupDone(KJob *job)
     showMessagePopup(msg, url, imageUrl, aPoint, contactAlreadyExists, uniqueContactFound);
 }
 
-void KMMainWidget::showMessagePopup(const Akonadi::Item &msg , const QUrl &url, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound)
+void KMMainWidget::showMessagePopup(const Akonadi::Item &msg, const QUrl &url, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound)
 {
     QMenu *menu = new QMenu;
 
@@ -2728,8 +2734,8 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item &msg , const QUrl &url, 
         menu->addSeparator();
         mMsgActions->addWebShortcutsMenu(menu, selectedText);
         menu->addSeparator();
-        menu->addAction(mMsgView->translateAction());
-        if (PimCommon::TextToSpeech::self()->isReady()) {
+        menu->addActions(mMsgView->viewerPluginActionList(MessageViewer::ViewerPluginInterface::NeedSelection));
+        if (KPIMTextEdit::TextToSpeech::self()->isReady()) {
             menu->addSeparator();
             menu->addAction(mMsgView->speakTextAction());
         }
@@ -2794,9 +2800,7 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item &msg , const QUrl &url, 
         menu->addSeparator();
 
         if (mMsgView) {
-            menu->addAction(mMsgView->createTodoAction());
-            menu->addAction(mMsgView->createEventAction());
-            menu->addAction(mMsgView->createNoteAction());
+            menu->addActions(mMsgView->viewerPluginActionList(MessageViewer::ViewerPluginInterface::NeedMessage));
             menu->addSeparator();
             menu->addAction(mMsgView->saveMessageDisplayFormatAction());
             menu->addAction(mMsgView->resetMessageDisplayFormatAction());
@@ -2836,7 +2840,7 @@ void KMMainWidget::setupActions()
 
     mOpenRecentAction = KStandardAction::openRecent(this, SLOT(slotOpenRecentMsg(QUrl)),
                         actionCollection());
-    KConfigGroup grp = mConfig->group(QLatin1String("Recent Files"));
+    KConfigGroup grp = mConfig->group(QStringLiteral("Recent Files"));
     mOpenRecentAction->loadEntries(grp);
 
     {
@@ -2877,7 +2881,7 @@ void KMMainWidget::setupActions()
     mSendActionMenu->setText(i18n("Send Queued Messages Via"));
     actionCollection()->addAction(QStringLiteral("send_queued_via"), mSendActionMenu);
 
-    connect(mSendActionMenu, SIGNAL(transportSelected(MailTransport::Transport*)), SLOT(slotSendQueuedVia(MailTransport::Transport*)));
+    connect(mSendActionMenu, &KActionMenuTransport::transportSelected, this, &KMMainWidget::slotSendQueuedVia);
 
     //----- Tools menu
     if (parent()->inherits("KMMainWin")) {
@@ -2989,7 +2993,7 @@ void KMMainWidget::setupActions()
     * as a part, though. */
     mDeleteAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18nc("@action Hard delete, bypassing trash", "&Delete"), this);
     actionCollection()->addAction(QStringLiteral("delete"), mDeleteAction);
-    connect(mDeleteAction, SIGNAL(triggered(bool)), SLOT(slotDeleteMsg()));
+    connect(mDeleteAction, &QAction::triggered, this, &KMMainWidget::slotDeleteMessages);
     actionCollection()->setDefaultShortcut(mDeleteAction, QKeySequence(Qt::SHIFT + Qt::Key_Delete));
 
     mTrashThreadAction = new QAction(i18n("M&ove Thread to Trash"), this);
@@ -3001,7 +3005,8 @@ void KMMainWidget::setupActions()
 
     mDeleteThreadAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete T&hread"), this);
     actionCollection()->addAction(QStringLiteral("delete_thread"), mDeleteThreadAction);
-    connect(mDeleteThreadAction, SIGNAL(triggered(bool)), SLOT(slotDeleteThread()));
+    //Don't use new connect api.
+    connect(mDeleteThreadAction, SIGNAL(triggered(bool)), this, SLOT(slotDeleteThread()));
     actionCollection()->setDefaultShortcut(mDeleteThreadAction, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Delete));
 
     mSearchMessages = new QAction(QIcon::fromTheme(QStringLiteral("edit-find-mail")), i18n("&Find Messages..."), this);
@@ -3107,17 +3112,17 @@ void KMMainWidget::setupActions()
                                     actionCollection());
     mTemplateMenu->setDelayed(true);
     actionCollection()->addAction(QStringLiteral("new_from_template"), mTemplateMenu);
-    connect(mTemplateMenu->menu(), SIGNAL(aboutToShow()), this,
-            SLOT(slotShowNewFromTemplate()));
-    connect(mTemplateMenu->menu(), SIGNAL(triggered(QAction*)), this,
-            SLOT(slotNewFromTemplate(QAction*)));
+    connect(mTemplateMenu->menu(), &QMenu::aboutToShow, this,
+            &KMMainWidget::slotShowNewFromTemplate);
+    connect(mTemplateMenu->menu(), &QMenu::triggered, this,
+            &KMMainWidget::slotNewFromTemplate);
 
     mMessageNewList = new QAction(QIcon::fromTheme(QStringLiteral("mail-message-new-list")),
                                   i18n("New Message t&o Mailing-List..."),
                                   this);
     actionCollection()->addAction(QStringLiteral("post_message"),  mMessageNewList);
-    connect(mMessageNewList, SIGNAL(triggered(bool)),
-            SLOT(slotPostToML()));
+    connect(mMessageNewList, &QAction::triggered,
+            this, &KMMainWidget::slotPostToML);
     actionCollection()->setDefaultShortcut(mMessageNewList, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_N));
 
     mSendAgainAction = new QAction(i18n("Send A&gain..."), this);
@@ -3127,8 +3132,8 @@ void KMMainWidget::setupActions()
     //----- Create filter actions
     mFilterMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("view-filter")), i18n("&Create Filter"), this);
     actionCollection()->addAction(QStringLiteral("create_filter"), mFilterMenu);
-    connect(mFilterMenu, SIGNAL(triggered(bool)), this,
-            SLOT(slotFilter()));
+    connect(mFilterMenu, &QAction::triggered, this,
+            &KMMainWidget::slotFilter);
     {
         QAction *action = new QAction(i18n("Filter on &Subject..."), this);
         actionCollection()->addAction(QStringLiteral("subject_filter"), action);
@@ -3216,8 +3221,8 @@ void KMMainWidget::setupActions()
     mApplyAllFiltersAction =
         new QAction(QIcon::fromTheme(QStringLiteral("view-filter")), i18n("Appl&y All Filters"), this);
     actionCollection()->addAction(QStringLiteral("apply_filters"), mApplyAllFiltersAction);
-    connect(mApplyAllFiltersAction, SIGNAL(triggered(bool)),
-            SLOT(slotApplyFilters()));
+    connect(mApplyAllFiltersAction, &QAction::triggered,
+            this, &KMMainWidget::slotApplyFilters);
     actionCollection()->setDefaultShortcut(mApplyAllFiltersAction, QKeySequence(Qt::CTRL + Qt::Key_J));
 
     mApplyFilterActionsMenu = new KActionMenu(i18n("A&pply Filter"), this);
@@ -3360,7 +3365,7 @@ void KMMainWidget::setupActions()
         QAction *action = new QAction(QIcon::fromTheme(QStringLiteral("configure")), i18n("&Configure KMail..."), this);
         action->setMenuRole(QAction::PreferencesRole);   // this one should move to the application menu on OS X
         actionCollection()->addAction(QStringLiteral("kmail_configure_kmail"), action);
-        connect(action, SIGNAL(triggered(bool)), kmkernel, SLOT(slotShowConfigurationDialog()));
+        connect(action, &QAction::triggered, kmkernel, &KMKernel::slotShowConfigurationDialog);
     }
 
     {
@@ -3404,14 +3409,12 @@ void KMMainWidget::setupActions()
 
     actionCollection()->addAction(KStandardAction::Undo,  QStringLiteral("kmail_undo"), this, SLOT(slotUndo()));
 
-    KStandardAction::tipOfDay(mLaunchExternalComponent, SLOT(slotShowTip()), actionCollection());
-
     menutimer = new QTimer(this);
     menutimer->setObjectName(QStringLiteral("menutimer"));
     menutimer->setSingleShot(true);
     connect(menutimer, &QTimer::timeout, this, &KMMainWidget::updateMessageActionsDelayed);
     connect(kmkernel->undoStack(),
-            SIGNAL(undoStackChanged()), this, SLOT(slotUpdateUndo()));
+            &KMail::UndoStack::undoStackChanged, this, &KMMainWidget::slotUpdateUndo);
 
     updateMessageActions();
     updateFolderMenu();
@@ -3436,15 +3439,15 @@ void KMMainWidget::setupActions()
     {
         QAction *action = new QAction(i18n("Abort Current Operation"), this);
         actionCollection()->addAction(QStringLiteral("cancel"), action);
-        connect(action, SIGNAL(triggered(bool)),
-                ProgressManager::instance(), SLOT(slotAbortAll()));
+        connect(action, &QAction::triggered,
+                ProgressManager::instance(), &KPIM::ProgressManager::slotAbortAll);
         actionCollection()->setDefaultShortcut(action, QKeySequence(Qt::Key_Escape));
     }
     {
         QAction *action = new QAction(i18n("Focus on Next Folder"), this);
         actionCollection()->addAction(QStringLiteral("inc_current_folder"), action);
-        connect(action, SIGNAL(triggered(bool)),
-                mFolderTreeWidget->folderTreeView(), SLOT(slotFocusNextFolder()));
+        connect(action, &QAction::triggered,
+                mFolderTreeWidget->folderTreeView(), &FolderTreeView::slotFocusNextFolder);
         actionCollection()->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_Right));
     }
     {
@@ -3623,7 +3626,7 @@ void KMMainWidget::slotExpandAllThreads()
 {
     // TODO: Make this asynchronous ? (if there is enough demand)
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     mMessagePane->setAllThreadsExpanded(true);
 }
@@ -3632,7 +3635,7 @@ void KMMainWidget::slotCollapseAllThreads()
 {
     // TODO: Make this asynchronous ? (if there is enough demand)
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     mMessagePane->setAllThreadsExpanded(false);
 }
@@ -3731,7 +3734,7 @@ void KMMainWidget::updateMessageActionsDelayed()
     // does the selection identify a single thread ?
     bool thread_actions = mass_actions && allSelectedBelongToSameThread && mMessagePane->isThreaded();
     // can we apply flags to the selected messages ?
-    bool flags_available = GlobalSettings::self()->allowLocalFlags() || !(mCurrentFolder &&  mCurrentFolder->isValid() ? readOnly : true);
+    bool flags_available = KMailSettings::self()->allowLocalFlags() || !(mCurrentFolder &&  mCurrentFolder->isValid() ? readOnly : true);
 
     mThreadStatusMenu->setEnabled(thread_actions);
     // these need to be handled individually, the user might have them
@@ -3813,8 +3816,8 @@ void KMMainWidget::updateMessageActionsDelayed()
     if (mCurrentFolder && FolderArchive::FolderArchiveUtil::resourceSupportArchiving(mCurrentFolder->collection().resource())) {
         actionList << mArchiveAction;
     }
-    mGUIClient->unplugActionList(QLatin1String("messagelist_actionlist"));
-    mGUIClient->plugActionList(QLatin1String("messagelist_actionlist"), actionList);
+    mGUIClient->unplugActionList(QStringLiteral("messagelist_actionlist"));
+    mGUIClient->plugActionList(QStringLiteral("messagelist_actionlist"), actionList);
     mSendAgainAction->setEnabled(statusSendAgain);
 
     mSaveAsAction->setEnabled(mass_actions);
@@ -3833,7 +3836,7 @@ void KMMainWidget::updateMessageActionsDelayed()
     const bool newPostToMailingList = mCurrentFolder && mCurrentFolder->isMailingListEnabled();
     mMessageNewList->setEnabled(newPostToMailingList);
 
-    slotUpdateOnlineStatus(static_cast<GlobalSettingsBase::EnumNetworkState::type>(GlobalSettings::self()->networkState()));
+    slotUpdateOnlineStatus(static_cast<GlobalSettingsBase::EnumNetworkState::type>(KMailSettings::self()->networkState()));
     if (action(QStringLiteral("kmail_undo"))) {
         action(QStringLiteral("kmail_undo"))->setEnabled(kmkernel->undoStack()->size() > 0);
     }
@@ -3868,8 +3871,8 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
         if (mCollectionProperties->isEnabled()) {
             collectionProperties << mCollectionProperties;
         }
-        mGUIClient->unplugActionList(QLatin1String("akonadi_collection_collectionproperties_actionlist"));
-        mGUIClient->plugActionList(QLatin1String("akonadi_collection_collectionproperties_actionlist"), collectionProperties);
+        mGUIClient->unplugActionList(QStringLiteral("akonadi_collection_collectionproperties_actionlist"));
+        mGUIClient->plugActionList(QStringLiteral("akonadi_collection_collectionproperties_actionlist"), collectionProperties);
 
     }
 
@@ -3898,8 +3901,8 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
         if (mEnableFavoriteFolderView && actionAddToFavoriteCollections->isEnabled()) {
             addToFavorite << actionAddToFavoriteCollections;
         }
-        mGUIClient->unplugActionList(QLatin1String("akonadi_collection_add_to_favorites_actionlist"));
-        mGUIClient->plugActionList(QLatin1String("akonadi_collection_add_to_favorites_actionlist"), addToFavorite);
+        mGUIClient->unplugActionList(QStringLiteral("akonadi_collection_add_to_favorites_actionlist"));
+        mGUIClient->plugActionList(QStringLiteral("akonadi_collection_add_to_favorites_actionlist"), addToFavorite);
     }
 
     QList< QAction * > syncActionList;
@@ -3911,8 +3914,8 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
     if (actionSync && actionSync->isEnabled()) {
         syncActionList << actionSync;
     }
-    mGUIClient->unplugActionList(QLatin1String("akonadi_collection_sync_actionlist"));
-    mGUIClient->plugActionList(QLatin1String("akonadi_collection_sync_actionlist"), syncActionList);
+    mGUIClient->unplugActionList(QStringLiteral("akonadi_collection_sync_actionlist"));
+    mGUIClient->plugActionList(QStringLiteral("akonadi_collection_sync_actionlist"), syncActionList);
 
     QList< QAction * > actionList;
 
@@ -3930,8 +3933,8 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
     if (action && action->isEnabled()) {
         actionList << action;
     }
-    mGUIClient->unplugActionList(QLatin1String("akonadi_collection_move_copy_menu_actionlist"));
-    mGUIClient->plugActionList(QLatin1String("akonadi_collection_move_copy_menu_actionlist"), actionList);
+    mGUIClient->unplugActionList(QStringLiteral("akonadi_collection_move_copy_menu_actionlist"));
+    mGUIClient->plugActionList(QStringLiteral("akonadi_collection_move_copy_menu_actionlist"), actionList);
 
 }
 
@@ -3964,7 +3967,7 @@ void KMMainWidget::updateHtmlMenuEntry()
 void KMMainWidget::updateFolderMenu()
 {
     if (!CommonKernel->outboxCollectionFolder().isValid()) {
-        QTimer::singleShot(1000, this, SLOT(updateFolderMenu()));
+        QTimer::singleShot(1000, this, &KMMainWidget::updateFolderMenu);
         return;
     }
 
@@ -3986,8 +3989,8 @@ void KMMainWidget::updateFolderMenu()
     //   if ( mCurrentFolder && mCurrentFolder->collection().id() != CommonKernel->trashCollectionFolder().id() ) {
     //     actionlist << mTrashAction;
     //   }
-    mGUIClient->unplugActionList(QLatin1String("outbox_folder_actionlist"));
-    mGUIClient->plugActionList(QLatin1String("outbox_folder_actionlist"), actionlist);
+    mGUIClient->unplugActionList(QStringLiteral("outbox_folder_actionlist"));
+    mGUIClient->plugActionList(QStringLiteral("outbox_folder_actionlist"), actionlist);
     actionlist.clear();
 
     const bool isASearchFolder = mCurrentFolder && mCurrentFolder->collection().resource() == QLatin1String("akonadi_search_resource");
@@ -4028,8 +4031,8 @@ void KMMainWidget::updateFolderMenu()
         }
     }
 
-    mGUIClient->unplugActionList(QLatin1String("collectionview_actionlist"));
-    mGUIClient->plugActionList(QLatin1String("collectionview_actionlist"), actionlist);
+    mGUIClient->unplugActionList(QStringLiteral("collectionview_actionlist"));
+    mGUIClient->plugActionList(QStringLiteral("collectionview_actionlist"), actionlist);
 
 }
 
@@ -4053,8 +4056,8 @@ void KMMainWidget::slotIntro()
 
 void KMMainWidget::slotShowStartupFolder()
 {
-    connect(MailCommon::FilterManager::instance(), SIGNAL(filtersChanged()),
-            this, SLOT(initializeFilterActions()));
+    connect(MailCommon::FilterManager::instance(), &FilterManager::filtersChanged,
+            this, &KMMainWidget::initializeFilterActions);
     // Plug various action lists. This can't be done in the constructor, as that is called before
     // the main window or Kontact calls createGUI().
     // This function however is called with a single shot timer.
@@ -4065,8 +4068,8 @@ void KMMainWidget::slotShowStartupFolder()
 
     QString newFeaturesMD5 = KMReaderWin::newFeaturesMD5();
     if (kmkernel->firstStart() ||
-            GlobalSettings::self()->previousNewFeaturesMD5() != newFeaturesMD5) {
-        GlobalSettings::self()->setPreviousNewFeaturesMD5(newFeaturesMD5);
+            KMailSettings::self()->previousNewFeaturesMD5() != newFeaturesMD5) {
+        KMailSettings::self()->setPreviousNewFeaturesMD5(newFeaturesMD5);
         slotIntro();
         return;
     }
@@ -4078,8 +4081,8 @@ void KMMainWidget::checkAkonadiServerManagerState()
     if (state == Akonadi::ServerManager::Running) {
         initializeFilterActions();
     } else {
-        connect(Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-                SLOT(slotServerStateChanged(Akonadi::ServerManager::State)));
+        connect(Akonadi::ServerManager::self(), &ServerManager::stateChanged,
+                this, &KMMainWidget::slotServerStateChanged);
     }
 }
 
@@ -4116,12 +4119,12 @@ void KMMainWidget::clearFilterActions()
 {
     if (!mFilterTBarActions.isEmpty())
         if (mGUIClient->factory()) {
-            mGUIClient->unplugActionList(QLatin1String("toolbar_filter_actions"));
+            mGUIClient->unplugActionList(QStringLiteral("toolbar_filter_actions"));
         }
 
     if (!mFilterMenuActions.isEmpty())
         if (mGUIClient->factory()) {
-            mGUIClient->unplugActionList(QLatin1String("menu_filter_actions"));
+            mGUIClient->unplugActionList(QStringLiteral("menu_filter_actions"));
         }
 
     foreach (QAction *a, mFilterMenuActions) {
@@ -4166,8 +4169,8 @@ void KMMainWidget::initializeFilterActions()
             actionCollection()->setShortcutsConfigurable(filterAction, false);
             actionCollection()->addAction(normalizedName,
                                           filterAction);
-            connect(filterAction, SIGNAL(triggered(bool)),
-                    filterCommand, SLOT(start()));
+            connect(filterAction, &QAction::triggered,
+                    filterCommand, &KMMetaFilterActionCommand::start);
             actionCollection()->setDefaultShortcut(filterAction, filter->shortcut());
             if (!addedSeparator) {
                 QAction *a = mApplyFilterActionsMenu->menu()->addSeparator();
@@ -4182,11 +4185,11 @@ void KMMainWidget::initializeFilterActions()
         }
     }
     if (!mFilterMenuActions.isEmpty() && mGUIClient->factory()) {
-        mGUIClient->plugActionList(QLatin1String("menu_filter_actions"), mFilterMenuActions);
+        mGUIClient->plugActionList(QStringLiteral("menu_filter_actions"), mFilterMenuActions);
     }
     if (!mFilterTBarActions.isEmpty() && mGUIClient->factory()) {
         mFilterTBarActions.prepend(mToolbarActionSeparator);
-        mGUIClient->plugActionList(QLatin1String("toolbar_filter_actions"), mFilterTBarActions);
+        mGUIClient->plugActionList(QStringLiteral("toolbar_filter_actions"), mFilterTBarActions);
     }
 
     // Our filters have changed, now enable/disable them
@@ -4221,7 +4224,7 @@ QString KMMainWidget::overrideEncoding() const
     if (mMsgView) {
         return mMsgView->overrideEncoding();
     } else {
-        return MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+        return MessageCore::MessageCoreSettings::self()->overrideCharacterEncoding();
     }
 }
 
@@ -4320,14 +4323,14 @@ void KMMainWidget::slotMessageSelected(const Akonadi::Item &item)
             mShowBusySplashTimer = new QTimer(this);
             mShowBusySplashTimer->setSingleShot(true);
             connect(mShowBusySplashTimer, &QTimer::timeout, this, &KMMainWidget::slotShowBusySplash);
-            mShowBusySplashTimer->start(GlobalSettings::self()->folderLoadingTimeout());   //TODO: check if we need a different timeout setting for this
+            mShowBusySplashTimer->start(1000);
 
             Akonadi::ItemFetchJob *itemFetchJob = MessageViewer::Viewer::createFetchJob(item);
             if (mCurrentFolder) {
                 const QString resource = mCurrentFolder->collection().resource();
                 itemFetchJob->setProperty("_resource", QVariant::fromValue(resource));
-                connect(itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
-                        SLOT(itemsReceived(Akonadi::Item::List)));
+                connect(itemFetchJob, &ItemFetchJob::itemsReceived,
+                        this, &KMMainWidget::itemsReceived);
                 connect(itemFetchJob, &Akonadi::ItemFetchJob::result, this, &KMMainWidget::itemsFetchDone);
             }
         }
@@ -4352,8 +4355,8 @@ void KMMainWidget::itemsReceived(const Akonadi::Item::List &list)
         if (mMessagePane->currentItem() != item) {
             // The user has selected another email already, so don't render this one.
             // Mark it as read, though, if the user settings say so.
-            if (MessageViewer::GlobalSettings::self()->delayedMarkAsRead() &&
-                    MessageViewer::GlobalSettings::self()->delayedMarkTime() == 0) {
+            if (MessageViewer::MessageViewerSettings::self()->delayedMarkAsRead() &&
+                    MessageViewer::MessageViewerSettings::self()->delayedMarkTime() == 0) {
                 item.setFlag(Akonadi::MessageFlags::Seen);
                 Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item, this);
                 modifyJob->disableRevisionCheck();
@@ -4394,7 +4397,9 @@ void KMMainWidget::itemsFetchDone(KJob *job)
             if (kmkernel->isOffline()) {
                 showOfflinePage();
             } else {
-                showResourceOfflinePage();
+                if (mMsgView) {
+                    showResourceOfflinePage();
+                }
             }
         } else {
             // Some other error
@@ -4459,7 +4464,7 @@ void KMMainWidget::slotOpenRecentMsg(const QUrl &url)
 void KMMainWidget::addRecentFile(const QUrl &mUrl)
 {
     mOpenRecentAction->addUrl(mUrl);
-    KConfigGroup grp = mConfig->group(QLatin1String("Recent Files"));
+    KConfigGroup grp = mConfig->group(QStringLiteral("Recent Files"));
     mOpenRecentAction->saveEntries(grp);
     grp.sync();
 }
@@ -4495,7 +4500,7 @@ void KMMainWidget::slotChangeDisplayMessageFormat(MessageViewer::Viewer::Display
                            i18n("Security Warning"),
                            KGuiItem(i18n("Use HTML")),
                            KStandardGuiItem::cancel(),
-                           QLatin1String("OverrideHtmlWarning"), Q_NULLPTR);
+                           QStringLiteral("OverrideHtmlWarning"), Q_NULLPTR);
         if (result == KMessageBox::Cancel) {
             mDisplayMessageFormatMenu->setDisplayMessageFormat(MessageViewer::Viewer::Text);
             return;

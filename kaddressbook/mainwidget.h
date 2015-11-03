@@ -23,11 +23,12 @@
 
 #include "kaddressbook_export.h"
 #include <AkonadiCore/Item>
+#include <QItemSelection>
 #include <QWidget>
 
 namespace GrantleeTheme
 {
-class GrantleeThemeManager;
+class ThemeManager;
 }
 class QAction;
 namespace Akonadi
@@ -114,6 +115,8 @@ private Q_SLOTS:
     void slotServerSideSubscription();
     void slotCurrentCollectionChanged(const Akonadi::Collection &col);
     void slotCheckGravatar();
+    void slotModifyContactFinished(KJob *job);
+    void slotSelectionChanged();
 private:
     const Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
     void initGrantleeThemeName();
@@ -163,10 +166,13 @@ private:
     KXMLGUIClient *mXmlGuiClient;
     KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
     KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
-    GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
+    GrantleeTheme::ThemeManager *mGrantleeThemeManager;
     Akonadi::EntityTreeModel *entityTreeModel() const;
     QAction *mQuickSearchAction;
     QAction *mServerSideSubscription;
+    QAction *mSearchGravatarAction;
+    QAction *mSendVcardAction;
+    QAction *mSendEmailAction;
 };
 
 #endif

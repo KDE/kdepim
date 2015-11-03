@@ -26,7 +26,7 @@
 
 using namespace KOrg;
 
-class BaseView::Private
+class Q_DECL_HIDDEN BaseView::Private
 {
     BaseView *const q;
 
@@ -80,6 +80,16 @@ CalendarSupport::CalPrinterBase::PrintType BaseView::printType() const
 Akonadi::ETMCalendar::Ptr BaseView::calendar()
 {
     return d->calendar;
+}
+
+QDateTime BaseView::selectionStart()
+{
+    return QDateTime();
+}
+
+QDateTime BaseView::selectionEnd()
+{
+    return QDateTime();
 }
 
 bool BaseView::isEventView()

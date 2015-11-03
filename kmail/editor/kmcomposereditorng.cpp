@@ -20,20 +20,20 @@
 #include "kmkernel.h"
 #include "util.h"
 #include "kmail_debug.h"
+#include "pimcommon/kactionmenuchangecase.h"
 
 #include <qmenu.h>
-#include <QDebug>
 #include <KToggleAction>
 #include <QMimeData>
 #include <QCheckBox>
-#include "widgets/kactionmenuchangecase.h"
-#include <KPIMTextEdit/EMailQuoteHighlighter>
-#include "messagecore/settings/globalsettings.h"
+#include <QLabel>
+#include "MessageCore/MessageCoreSettings"
 #include <Sonnet/ConfigDialog>
-#include <composer-ng/richtextcomposeremailquotehighlighter.h>
+#include <KPIMTextEdit/RichTextComposerEmailQuoteHighlighter>
+#include <sonnet/dictionarycombobox.h>
 
 KMComposerEditorNg::KMComposerEditorNg(KMComposeWin *win, QWidget *parent)
-    : MessageComposer::RichTextComposer(parent),
+    : MessageComposer::RichTextComposerNg(parent),
       mComposerWin(win)
 {
     setSpellCheckingConfigFileName(QStringLiteral("kmail2rc"));
@@ -55,8 +55,9 @@ void KMComposerEditorNg::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
         menu->addAction(mComposerWin->changeCaseMenu());
     }
     menu->addSeparator();
-    menu->addAction(mComposerWin->translateAction());
-    menu->addAction(mComposerWin->generateShortenUrlAction());
+    Q_FOREACH (KToggleAction *ta, mComposerWin->customToolsList()) {
+        menu->addAction(ta);
+    }
 }
 
 bool KMComposerEditorNg::canInsertFromMimeData(const QMimeData *source) const
@@ -71,7 +72,7 @@ bool KMComposerEditorNg::canInsertFromMimeData(const QMimeData *source) const
         return true;
     }
 
-    return MessageComposer::RichTextComposer::canInsertFromMimeData(source);
+    return MessageComposer::RichTextComposerNg::canInsertFromMimeData(source);
 }
 
 void KMComposerEditorNg::insertFromMimeData(const QMimeData *source)
@@ -82,22 +83,22 @@ void KMComposerEditorNg::insertFromMimeData(const QMimeData *source)
     }
 
     if (!mComposerWin->insertFromMimeData(source, false)) {
-        MessageComposer::RichTextComposer::insertFromMimeData(source);
+        MessageComposer::RichTextComposerNg::insertFromMimeData(source);
     }
 }
 
-void KMComposerEditorNg::setHighlighterColors(MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter)
+void KMComposerEditorNg::setHighlighterColors(KPIMTextEdit::RichTextComposerEmailQuoteHighlighter *highlighter)
 {
-    QColor color1 = KMail::Util::quoteL1Color();
-    QColor color2 = KMail::Util::quoteL2Color();
-    QColor color3 = KMail::Util::quoteL3Color();
-    QColor misspelled = KMail::Util::misspelledColor();
+    QColor color1 = MessageCore::Util::quoteLevel1DefaultTextColor();
+    QColor color2 = MessageCore::Util::quoteLevel2DefaultTextColor();
+    QColor color3 = MessageCore::Util::quoteLevel3DefaultTextColor();
+    QColor misspelled = MessageCore::Util::misspelledDefaultTextColor();
 
-    if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
-        color1 = MessageCore::GlobalSettings::self()->quotedText1();
-        color2 = MessageCore::GlobalSettings::self()->quotedText2();
-        color3 = MessageCore::GlobalSettings::self()->quotedText3();
-        misspelled = MessageCore::GlobalSettings::self()->misspelledColor();
+    if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
+        color1 = MessageCore::MessageCoreSettings::self()->quotedText1();
+        color2 = MessageCore::MessageCoreSettings::self()->quotedText2();
+        color3 = MessageCore::MessageCoreSettings::self()->quotedText3();
+        misspelled = MessageCore::MessageCoreSettings::self()->misspelledColor();
     }
 
     highlighter->setQuoteColor(Qt::black /* ignored anyway */,
@@ -123,6 +124,19 @@ void KMComposerEditorNg::showSpellConfigDialog(const QString &configFileName)
     } else {
         qCWarning(KMAIL_LOG) << "Could not find any checkbox named 'm_checkerEnabledByDefaultCB'. Sonnet::ConfigDialog must have changed!";
     }
+    QLabel *textLabel = dialog.findChild<QLabel *>(QStringLiteral("textLabel1"));
+    if (textLabel) {
+        textLabel->hide();
+    } else {
+        qCWarning(KMAIL_LOG) << "Could not find any label named 'textLabel'. Sonnet::ConfigDialog must have changed!";
+    }
+    Sonnet::DictionaryComboBox *dictionaryComboBox = dialog.findChild<Sonnet::DictionaryComboBox *>(QStringLiteral("m_langCombo"));
+    if (dictionaryComboBox) {
+        dictionaryComboBox->hide();
+    } else {
+        qCWarning(KMAIL_LOG) << "Could not find any Sonnet::DictionaryComboBox named 'dictionaryComboBox'. Sonnet::ConfigDialog must have changed!";
+    }
+
     if (dialog.exec()) {
         setSpellCheckingLanguage(dialog.language());
     }

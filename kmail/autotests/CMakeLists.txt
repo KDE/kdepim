@@ -10,7 +10,7 @@ set( kmail_displaymenu_source displaymessageformatactionmenutest.cpp ../widgets/
 add_executable( displaymessageformatactionmenutest ${kmail_displaymenu_source} )
 add_test( displaymessageformatactionmenutest displaymessageformatactionmenutest )
 ecm_mark_as_test(kmail-displaymessageformatactionmenutest)
-target_link_libraries( displaymessageformatactionmenutest Qt5::Test  messageviewer)
+target_link_libraries( displaymessageformatactionmenutest Qt5::Test  KF5::MessageViewer)
 
 set( kmail_identityaddvcarddialog_source identityaddvcarddialogtest.cpp ../identity/identityaddvcarddialog.cpp )
 add_executable( identityaddvcarddialogtest  ${kmail_identityaddvcarddialog_source})
@@ -26,14 +26,14 @@ target_link_libraries( statusbarlabeltoggledstatetest Qt5::Test KF5::KIOWidgets 
 set( kmail_createfollowupreminderonexistingmessagejobtest_source createfollowupreminderonexistingmessagejobtest.cpp ../job/createfollowupreminderonexistingmessagejob.cpp  ../kmail_debug.cpp)
 add_executable( createfollowupreminderonexistingmessagejobtest ${kmail_createfollowupreminderonexistingmessagejobtest_source})
 ecm_mark_as_test(kmail_createfollowupreminderonexistingmessagejobtest)
-target_link_libraries( createfollowupreminderonexistingmessagejobtest Qt5::Test Qt5::Widgets KF5::AkonadiCore KF5::CalendarCore KF5::Mime followupreminder messagecomposer)
+target_link_libraries( createfollowupreminderonexistingmessagejobtest Qt5::Test Qt5::Widgets KF5::AkonadiCore KF5::CalendarCore KF5::Mime KF5::FollowupReminder KF5::MessageComposer)
 
 
 set( kmail_cryptostateindicatorwidgettest_source cryptostateindicatorwidgettest.cpp ../editor/widgets/cryptostateindicatorwidget.cpp)
 add_executable( cryptostateindicatorwidgettest ${kmail_cryptostateindicatorwidgettest_source})
 add_test(cryptostateindicatorwidgettest cryptostateindicatorwidgettest)
 ecm_mark_as_test(cryptostateindicatorwidgettest)
-target_link_libraries( cryptostateindicatorwidgettest Qt5::Test  messagecore)
+target_link_libraries( cryptostateindicatorwidgettest Qt5::Test  KF5::MessageCore Qt5::Widgets KF5::ConfigWidgets KF5::I18n)
 
 
 set( kmail_kactionmenutransporttest_source kactionmenutransporttest.cpp ../widgets/kactionmenutransport.cpp)
@@ -59,5 +59,5 @@ target_link_libraries( configureagentitemtest Qt5::Test Qt5::Widgets KF5::ItemVi
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-add_akonadi_isolated_test_advanced( tagselectdialogtest.cpp  "../tag/tagselectdialog.cpp;../kmail_debug.cpp" "${KDEPIMLIBS_AKONADI_LIBS};kmailprivate;mailcommon")
+add_akonadi_isolated_test_advanced( tagselectdialogtest.cpp  "../tag/tagselectdialog.cpp;../kmail_debug.cpp" "${KDEPIMLIBS_AKONADI_LIBS};kmailprivate;KF5::MailCommon;KF5::Libkdepim;KF5::ItemViews;KF5::TemplateParser;KF5::XmlGui;KF5::Completion")
 

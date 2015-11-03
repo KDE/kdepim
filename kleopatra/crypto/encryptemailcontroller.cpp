@@ -43,8 +43,8 @@
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include "emailoperationspreferences.h"
 
@@ -198,7 +198,7 @@ void EncryptEMailController::setInputsAndOutputs(const std::vector< shared_ptr<I
     const std::vector<Key> keys = d->wizard->resolvedCertificates();
     kleo_assert(!keys.empty());
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<EncryptEMailTask> task(new EncryptEMailTask);
         task->setInput(inputs[i]);
@@ -319,7 +319,7 @@ void EncryptEMailController::Private::ensureWizardCreated() const
         return;
     }
 
-    std::auto_ptr<EncryptEMailWizard> w(new EncryptEMailWizard);
+    std::unique_ptr<EncryptEMailWizard> w(new EncryptEMailWizard);
     w->setAttribute(Qt::WA_DeleteOnClose);
     Kleo::EMailOperationsPreferences prefs;
     w->setQuickMode(prefs.quickEncryptEMail());

@@ -45,7 +45,7 @@
 
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <gpgme++/key.h>
 
@@ -101,17 +101,17 @@ SignEncryptWizard::Private::Private(SignEncryptWizard *qq)
 void SignEncryptWizard::onNext(int currentId)
 {
     if (currentId == ResolveRecipientsPage) {
-        QTimer::singleShot(0, this, SIGNAL(recipientsResolved()));
+        QTimer::singleShot(0, this, &SignEncryptWizard::recipientsResolved);
     }
     if (currentId == ResolveSignerPage) {
         //FIXME: Sign&Encrypt is only supported by OpenPGP. Remove this when we support this for CMS, too
         if (encryptionSelected() && signingSelected()) {
             setPresetProtocol(OpenPGP);
         }
-        QTimer::singleShot(0, this, SIGNAL(signersResolved()));
+        QTimer::singleShot(0, this, &SignEncryptWizard::signersResolved);
     }
     if (currentId == ObjectsPage) {
-        QTimer::singleShot(0, this, SIGNAL(objectsResolved()));
+        QTimer::singleShot(0, this, &SignEncryptWizard::objectsResolved);
     }
 }
 

@@ -55,7 +55,8 @@ public:
           mFetchProfileIdTimer(Q_NULLPTR),
           mFetchBlogIdTimer(Q_NULLPTR),
           mFetchAPITimer(Q_NULLPTR),
-          wait(Q_NULLPTR)
+          wait(Q_NULLPTR),
+          okButton(Q_NULLPTR)
     {}
     Ui::AddEditBlogBase ui;
     QTabWidget *mainW;
@@ -91,17 +92,17 @@ AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = Q_NULLPTR;
 
-    connect(d->ui.txtId, &KLineEdit::textChanged, this, &AddEditBlog::enableOkButton);
-    connect(d->ui.txtUrl, &KLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
+    connect(d->ui.txtId, &QLineEdit::textChanged, this, &AddEditBlog::enableOkButton);
+    connect(d->ui.txtUrl, &QLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
     connect(d->ui.txtUser, &QLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
-    connect(d->ui.txtPass, &KLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
+    connect(d->ui.txtPass, &QLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
     connect(d->ui.btnAutoConf, &QPushButton::clicked, this, &AddEditBlog::autoConfigure);
     connect(d->ui.btnFetch, &QPushButton::clicked, this, &AddEditBlog::fetchBlogId);
-    connect(d->ui.comboApi, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &AddEditBlog::slotComboApiChanged);
-    connect(d->ui.txtUrl, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.comboApi, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &AddEditBlog::slotComboApiChanged);
+    connect(d->ui.txtUrl, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
     connect(d->ui.txtUser, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
-    connect(d->ui.txtPass, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
-    connect(d->ui.txtId, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.txtPass, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.txtId, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
 
     if (blog_id > -1) {
         setWindowTitle(i18n("Edit blog settings"));
@@ -147,7 +148,7 @@ void AddEditBlog::autoConfigure()
 {
     qCDebug(BLOGILO_LOG);
     if (d->ui.txtUrl->text().isEmpty() || d->ui.txtUser->text().isEmpty() || d->ui.txtPass->text().isEmpty()) {
-        qCDebug(BLOGILO_LOG) << "Username, Password or Url doesn't set!";
+        qCDebug(BLOGILO_LOG) << "Username, Password or URL not set!";
         KMessageBox::sorry(this, i18n("You have to set the username, password and URL of your blog or website."),
                            i18n("Incomplete fields"));
         return;
@@ -186,7 +187,7 @@ void AddEditBlog::autoConfigure()
         return;
     }
     qCDebug(BLOGILO_LOG) << "Trying to guess API type by Homepage contents";
-    KIO::StoredTransferJob *httpGetJob = KIO::storedGet(d->ui.txtUrl->text() , KIO::NoReload, KIO::HideProgressInfo);
+    KIO::StoredTransferJob *httpGetJob = KIO::storedGet(d->ui.txtUrl->text(), KIO::NoReload, KIO::HideProgressInfo);
     connect(httpGetJob, &KIO::StoredTransferJob::result, this, &AddEditBlog::gotHtml);
     d->mFetchAPITimer = new QTimer(this);
     d->mFetchAPITimer->setSingleShot(true);
@@ -224,7 +225,7 @@ void AddEditBlog::gotHtml(KJob *job)
         qCDebug(BLOGILO_LOG) << " rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\" matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex(0);
-        d->ui.txtUrl->setText(QLatin1String("http://www.liverjournal.com/interface/blogger/"));
+        d->ui.txtUrl->setText(QStringLiteral("http://www.liverjournal.com/interface/blogger/"));
         d->ui.txtId->setText(d->ui.txtUser->text());
         hideWaitWidget();
         return;
@@ -364,7 +365,7 @@ void AddEditBlog::handleFetchError(KBlog::Blog::ErrorType type, const QString &e
     KMessageBox::detailedError(this, i18n("Fetching BlogID Failed.\nPlease check your Internet connection."), errorMsg);
 }
 
-void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
+void AddEditBlog::fetchedBlogId(const QList< QMap < QString, QString > > &list)
 {
     if (d->mFetchBlogIdTimer) {
         d->mFetchBlogIdTimer->deleteLater();
@@ -383,7 +384,7 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
         int i = 0;
         blogsList->setColumnCount(4);
         QStringList headers;
-        headers << i18n("Title") << i18n("Url");
+        headers << i18n("Title") << i18n("URL");
 
         blogsList->setHorizontalHeaderLabels(headers);
         blogsList->setColumnHidden(2, true);

@@ -21,6 +21,7 @@
 #include <QDir>
 #include <QProcess>
 #include <QTest>
+#include <QTcpSocket>
 
 #include "../autoconfigkolabldap.h"
 
@@ -47,15 +48,17 @@ class AutoconfLdapTest : public QObject
 public:
     AutoconfigKolabLdap *execIspdb(const QString &file)
     {
-        QDir dir(QStringLiteral(AUTOCONFIG_DATA_DIR));
-        QString furl = QStringLiteral("file://%1/%2");
+        const QString filePath = QStringLiteral(AUTOCONFIG_DATA_DIR) + QLatin1Char('/') + file;
+        [](const QString & file) {
+            QVERIFY(QFile(file).exists());
+        }(filePath);
 
         QEventLoop loop;
         TAutoconfLdap *ispdb = new TAutoconfLdap();
 
         connect(ispdb, &AutoconfigKolabLdap::finished, &loop, &QEventLoop::quit);
 
-        QUrl url(furl.arg(dir.path()).arg(file));
+        const QUrl url = QUrl::fromLocalFile(filePath);
         ispdb->setEmail(QStringLiteral("john.doe@example.com"));
         ispdb->expectedUrls.append(url);
         ispdb->startJob(url);
@@ -81,6 +84,13 @@ public:
         QCOMPARE(test.pageSize, expected.pageSize);
         QCOMPARE(test.timeLimit, expected.timeLimit);
         QCOMPARE(test.sizeLimit, expected.sizeLimit);
+    }
+
+    bool checkServerReady() const
+    {
+        QTcpSocket socket;
+        socket.connectToHost(QStringLiteral("localhost"), 8000);
+        return socket.waitForConnected(5000);
     }
 
 private Q_SLOTS:
@@ -152,8 +162,8 @@ private Q_SLOTS:
 
     void testLdapLogin()
     {
-        QDir dir(QStringLiteral(AUTOCONFIG_DATA_DIR));
-        QString furl = QStringLiteral("file://%1/ldap.xml");
+        const QString filePath = QStringLiteral(AUTOCONFIG_DATA_DIR) + QStringLiteral("/ldap.xml");
+        QVERIFY(QFile(filePath).exists());
 
         QEventLoop loop;
         TAutoconfLdap *ispdb = new TAutoconfLdap();
@@ -173,7 +183,7 @@ private Q_SLOTS:
         ispdb->expectedUrls.append(expected3);
         ispdb->replace[expected] = QStringLiteral("http://localhost:8000/401");
         ispdb->replace[expected2] = QStringLiteral("http://localhost:8000/500");
-        ispdb->replace[expected3] = furl.arg(dir.path());
+        ispdb->replace[expected3] = QUrl::fromLocalFile(filePath);
         ispdb->start();
         loop.exec();
         QCOMPARE(ispdb->expectedUrls.count(), 0);
@@ -186,11 +196,15 @@ private Q_SLOTS:
 
     void initTestCase()
     {
-        QDir dir(QStringLiteral(CURRENT_SOURCE_DIR));
-        QString furl = QStringLiteral("%1/errorserver.py");
-        process.start(QStringLiteral("python"), QStringList() << furl.arg(dir.path()));
+        const QString filePath = QStringLiteral(CURRENT_SOURCE_DIR "/errorserver.py");
+        QVERIFY(QFile(filePath).exists());
+
+        process.start(QStringLiteral("python"), QStringList() << filePath);
         process.waitForStarted();
         QCOMPARE(process.state(), QProcess::Running);
+
+        // Wait for the server to start listening
+        QTRY_VERIFY(checkServerReady());
     }
 
     void cleanupTestCase()

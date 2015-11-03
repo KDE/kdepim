@@ -21,8 +21,8 @@
 #ifndef SOUNDDLG_H
 #define SOUNDDLG_H
 
-#include <kurl.h>
-#include <kdialog.h>
+#include <QUrl>
+#include <QDialog>
 #include <QString>
 
 class QPushButton;
@@ -35,6 +35,8 @@ class CheckBox;
 class SpinBox;
 class Slider;
 class LineEdit;
+class QDialogButtonBox;
+class QAbstractButton;
 
 
 class SoundWidget : public QWidget
@@ -48,7 +50,7 @@ class SoundWidget : public QWidget
         bool           isReadOnly() const    { return mReadOnly; }
         void           setAllowEmptyFile()   { mEmptyFileAllowed = true; }
         QString        fileName() const;
-        bool           file(KUrl&, bool showErrorMessage = true) const;
+        bool           file(QUrl&, bool showErrorMessage = true) const;
         void           getVolume(float& volume, float& fadeVolume, int& fadeSeconds) const;
         int            repeatPause() const;   // -1 if none, else seconds between repeats
         QString        defaultDir() const    { return mDefaultDir; }
@@ -84,7 +86,7 @@ class SoundWidget : public QWidget
         SpinBox*             mFadeTime;
         QWidget*             mFadeVolumeBox;
         Slider*              mFadeSlider;
-        mutable KUrl         mUrl;
+        mutable QUrl         mUrl;
         mutable QString      mValidatedFile;
         Phonon::MediaObject* mPlayer;
         bool                 mReadOnly;
@@ -92,7 +94,7 @@ class SoundWidget : public QWidget
 };
 
 
-class SoundDlg : public KDialog
+class SoundDlg : public QDialog
 {
         Q_OBJECT
     public:
@@ -100,7 +102,7 @@ class SoundDlg : public KDialog
                  const QString& caption, QWidget* parent);
         void           setReadOnly(bool);
         bool           isReadOnly() const    { return mReadOnly; }
-        KUrl           getFile() const;
+        QUrl           getFile() const;
         void           getVolume(float& volume, float& fadeVolume, int& fadeSeconds) const
                                              { mSoundWidget->getVolume(volume, fadeVolume, fadeSeconds); }
         int            repeatPause() const   { return mSoundWidget->repeatPause(); }
@@ -110,10 +112,11 @@ class SoundDlg : public KDialog
         void           resizeEvent(QResizeEvent*) Q_DECL_OVERRIDE;
 
     protected Q_SLOTS:
-        void           slotButtonClicked(int button) Q_DECL_OVERRIDE;
+        void           slotButtonClicked(QAbstractButton *button);
 
     private:
         SoundWidget*   mSoundWidget;
+        QDialogButtonBox *mButtonBox;
         bool           mReadOnly;
 };
 

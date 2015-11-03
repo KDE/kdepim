@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+find_dependency(KF5Akonadi "@KDEPIMLIBS_LIB_VERSION@")
+find_dependency(KF5AkonadiMime "@KDEPIMLIBS_LIB_VERSION@")
+find_dependency(KF5MessageComposer "@KDEPIM_LIB_VERSION@")
+find_dependency(KF5PimCommon "@KDEPIM_LIB_VERSION@")
+
+include("${CMAKE_CURRENT_LIST_DIR}/KF5MailCommonTargets.cmake")

@@ -30,7 +30,7 @@ namespace Akonadi
 class ContactEditor;
 }
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -50,7 +50,7 @@ private Q_SLOTS:
 
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    PimCommon::PlainTextEditorWidget *mDefaultTemplate;
+    KPIMTextEdit::PlainTextEditorWidget *mDefaultTemplate;
     Akonadi::ContactEditor *mDefaultContact;
 };
 

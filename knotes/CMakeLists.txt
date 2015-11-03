@@ -49,11 +49,19 @@ configure_file(settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR
 set( libknotesprivate_kcfg_lib_SRCS settings/knotesglobalconfig.kcfgc )
 
 kconfig_add_kcfg_files(libknotesprivate_kcfg_lib_SRCS ${libknotesprivate_kcfg_lib_SRCS})
+ecm_qt_declare_logging_category(libknotesprivate_lib_SRCS HEADER knotes_debug.h IDENTIFIER KNOTES_LOG CATEGORY_NAME log_knotes)
 
 add_library(knotesprivate ${libknotesprivate_lib_SRCS} ${libknotesprivate_kcfg_lib_SRCS} )
 generate_export_header(knotesprivate BASE_NAME knotes)
 
-target_link_libraries(knotesprivate kdepim KF5::KIOCore pimcommon KF5::KCMUtils Grantlee5::Templates KF5::NewStuff noteshared KF5::AkonadiSearchPIM KF5::AkonadiNotes)
+target_link_libraries(knotesprivate
+PUBLIC
+  KF5::IconThemes
+PRIVATE
+  KF5::PimCommon
+  KF5::KCMUtils Grantlee5::Templates KF5::NewStuff KF5::WindowSystem Qt5::PrintSupport KF5::KDELibs4Support KF5::NoteShared KF5::AkonadiSearchPIM KF5::AkonadiNotes KF5::PimTextEdit
+)
+
 set_target_properties(knotesprivate
   PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
@@ -82,13 +90,19 @@ ecm_add_app_icon(knotes_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(knotes ${knotes_SRCS})
 
-target_link_libraries(knotes knotesprivate pimcommon KF5::DNSSD
-                             KF5::KontactInterface noteshared
+target_link_libraries(knotes 
+   knotesprivate
+   KF5::KCMUtils
+   KF5::PimCommon
+   KF5::DNSSD
+   KF5::KontactInterface
+   KF5::NoteShared
   KF5::AkonadiCore
   KF5::Mime
   KF5::GlobalAccel
-  
-  )
+  KF5::KDELibs4Support
+  KF5::AkonadiSearchDebug
+)
 if (Qt5X11Extras_FOUND)
   target_link_libraries(knotes Qt5::X11Extras ${X11_LIBRARIES})
 endif()
@@ -100,7 +114,7 @@ set(kcm_knotes_PART_SRCS configdialog/knoteconfigdialog.cpp configdialog/knotedi
 
 add_library(kcm_knote MODULE ${kcm_knotes_PART_SRCS} )
 
-target_link_libraries(kcm_knote knotesprivate KF5::AkonadiCore  KF5::KCMUtils KF5::NewStuff noteshared KF5::AkonadiNotes pimcommon)
+target_link_libraries(kcm_knote knotesprivate KF5::AkonadiCore  KF5::KCMUtils KF5::NewStuff KF5::WindowSystem KF5::NoteShared KF5::AkonadiNotes KF5::PimCommon)
 
 install(TARGETS kcm_knote DESTINATION ${KDE_INSTALL_PLUGINDIR})
 

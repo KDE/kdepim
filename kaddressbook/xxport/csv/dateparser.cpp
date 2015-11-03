@@ -37,14 +37,14 @@ QDateTime DateParser::parse(const QString &dateStr) const
     for (int i = 0; i < mPattern.length(); ++i) {
         if (mPattern[ i ] == QLatin1Char('y')) {   // 19YY
             if (currPos + 1 < dateStr.length()) {
-                year = 1900 + dateStr.mid(currPos, 2).toInt();
+                year = 1900 + dateStr.midRef(currPos, 2).toInt();
                 currPos += 2;
             } else {
                 return QDateTime();
             }
         } else if (mPattern[ i ] == QLatin1Char('Y')) {   // YYYY
             if (currPos + 3 < dateStr.length()) {
-                year = dateStr.mid(currPos, 4).toInt();
+                year = dateStr.midRef(currPos, 4).toInt();
                 currPos += 4;
             } else {
                 return QDateTime();
@@ -53,7 +53,7 @@ QDateTime DateParser::parse(const QString &dateStr) const
             if (currPos + 1 < dateStr.length()) {
                 if (dateStr[ currPos ].isDigit()) {
                     if (dateStr[ currPos + 1 ].isDigit()) {
-                        month = dateStr.mid(currPos, 2).toInt();
+                        month = dateStr.midRef(currPos, 2).toInt();
                         currPos += 2;
                         continue;
                     }
@@ -61,7 +61,7 @@ QDateTime DateParser::parse(const QString &dateStr) const
             }
             if (currPos < dateStr.length()) {
                 if (dateStr[ currPos ].isDigit()) {
-                    month = dateStr.mid(currPos, 1).toInt();
+                    month = dateStr.midRef(currPos, 1).toInt();
                     currPos++;
                     continue;
                 }
@@ -70,7 +70,7 @@ QDateTime DateParser::parse(const QString &dateStr) const
             return QDateTime();
         } else if (mPattern[ i ] == QLatin1Char('M')) {   // 0M or MM
             if (currPos + 1 < dateStr.length()) {
-                month = dateStr.mid(currPos, 2).toInt();
+                month = dateStr.midRef(currPos, 2).toInt();
                 currPos += 2;
             } else {
                 return QDateTime();
@@ -79,7 +79,7 @@ QDateTime DateParser::parse(const QString &dateStr) const
             if (currPos + 1 < dateStr.length()) {
                 if (dateStr[ currPos ].isDigit()) {
                     if (dateStr[ currPos + 1 ].isDigit()) {
-                        day = dateStr.mid(currPos, 2).toInt();
+                        day = dateStr.midRef(currPos, 2).toInt();
                         currPos += 2;
                         continue;
                     }
@@ -87,7 +87,7 @@ QDateTime DateParser::parse(const QString &dateStr) const
             }
             if (currPos < dateStr.length()) {
                 if (dateStr[ currPos ].isDigit()) {
-                    day = dateStr.mid(currPos, 1).toInt();
+                    day = dateStr.midRef(currPos, 1).toInt();
                     currPos++;
                     continue;
                 }
@@ -96,28 +96,28 @@ QDateTime DateParser::parse(const QString &dateStr) const
             return QDateTime();
         } else if (mPattern[ i ] == QLatin1Char('D')) {   // 0D or DD
             if (currPos + 1 < dateStr.length()) {
-                day = dateStr.mid(currPos, 2).toInt();
+                day = dateStr.midRef(currPos, 2).toInt();
                 currPos += 2;
             } else {
                 return QDateTime();
             }
         } else if (mPattern[ i ] == QLatin1Char('H')) {   // 0H or HH
             if (currPos + 1 < dateStr.length()) {
-                hour = dateStr.mid(currPos, 2).toInt();
+                hour = dateStr.midRef(currPos, 2).toInt();
                 currPos += 2;
             } else {
                 return QDateTime();
             }
         } else if (mPattern[ i ] == QLatin1Char('I')) {   // 0I or II
             if (currPos + 1 < dateStr.length()) {
-                minute = dateStr.mid(currPos, 2).toInt();
+                minute = dateStr.midRef(currPos, 2).toInt();
                 currPos += 2;
             } else {
                 return QDateTime();
             }
         } else if (mPattern[ i ] == QLatin1Char('S')) {   // 0S or SS
             if (currPos + 1 < dateStr.length()) {
-                second = dateStr.mid(currPos, 2).toInt();
+                second = dateStr.midRef(currPos, 2).toInt();
                 currPos += 2;
             } else {
                 return QDateTime();

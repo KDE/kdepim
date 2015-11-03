@@ -27,13 +27,13 @@
     your version.
 */
 
-#include <messageviewer/interfaces/bodypartformatter.h>
-#include <messageviewer/interfaces/bodypart.h>
-#include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/interfaces/htmlwriter.h>
-#include <messageviewer/viewer/nodehelper.h>
-#include <messagecore/utils/stringutil.h>
-#include <messageviewer/utils/util.h>
+#include <messageviewer/bodypartformatter.h>
+#include <messageviewer/bodypart.h>
+#include <messageviewer/bodyparturlhandler.h>
+#include <messageviewer/htmlwriter.h>
+#include <messageviewer/nodehelper.h>
+#include <MessageCore/StringUtil>
+#include <MessageViewer/MessageViewerUtil>
 
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>
@@ -61,7 +61,7 @@ namespace
 class Formatter : public MessageViewer::Interface::BodyPartFormatter
 {
 public:
-    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const
+    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
 
         if (!writer) {
@@ -193,15 +193,15 @@ public:
 class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 {
 public:
-    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? new Formatter() : 0 ;
+        return idx == 0 ? new Formatter() : 0;
     }
-    const char *type(int idx) const
+    const char *type(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? "application" : 0 ;
+        return idx == 0 ? "application" : 0;
     }
-    const char *subtype(int idx) const
+    const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0) {
             return "ms-tnef";
@@ -212,7 +212,7 @@ public:
         }
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const Q_DECL_OVERRIDE
     {
         return 0;
     }

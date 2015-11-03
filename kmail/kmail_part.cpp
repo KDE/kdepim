@@ -44,7 +44,7 @@
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/entitydisplayattribute.h>
 #include <AkonadiCore/changerecorder.h>
-#include "foldertreeview.h"
+#include "MailCommon/FolderTreeView"
 #include "tag/tagactionmanager.h"
 #include "foldershortcutactionmanager.h"
 #include "kmmigrateapplication.h"
@@ -87,7 +87,6 @@ KMailPart::KMailPart(QWidget *parentWidget, QObject *parent, const QVariantList 
     canvas->setFocusPolicy(Qt::ClickFocus);
     canvas->setObjectName(QStringLiteral("canvas"));
     setWidget(canvas);
-    KIconLoader::global()->addAppDir(QStringLiteral("libkdepim"));
     mainWidget = new KMMainWidget(canvas, this, actionCollection(),
                                   KSharedConfig::openConfig());
     mainWidget->setObjectName(QStringLiteral("partmainwidget"));
@@ -146,5 +145,10 @@ void KMailPart::exit()
 QWidget *KMailPart::parentWidget() const
 {
     return mParentWidget;
+}
+
+void KMailPart::save()
+{
+    /*TODO*/
 }
 #include "kmail_part.moc"

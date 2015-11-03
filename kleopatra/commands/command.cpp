@@ -227,14 +227,15 @@ void Command::addTemporaryView(const QString &title, AbstractKeyListSortFilterPr
 
 void Command::applyWindowID(QWidget *w) const
 {
-    if (w)
-        if (d->parentWId)
+    if (w) {
+        if (d->parentWId) {
             if (QWidget *pw = QWidget::find(d->parentWId)) {
                 w->setParent(pw, w->windowFlags());
             } else {
                 KWindowSystem::setMainWindow(w, d->parentWId);
             }
-        else {
+        } else {
             w->setParent(d->parentWidgetOrView(), w->windowFlags());
         }
+    }
 }

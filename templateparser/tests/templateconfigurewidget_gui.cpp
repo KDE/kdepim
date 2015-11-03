@@ -16,7 +16,7 @@
 */
 
 #include "templateconfigurewidget_gui.h"
-#include "templateparser/templatesconfiguration.h"
+#include "templatesconfiguration.h"
 
 #include <KLocalizedString>
 #include <QApplication>

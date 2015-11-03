@@ -21,8 +21,8 @@
 #ifndef STORAGESERVICETREEWIDGET_H
 #define STORAGESERVICETREEWIDGET_H
 
-#include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
-#include "pimcommon/storageservice/storageserviceabstract.h"
+#include "PimCommon/StorageServiceTreeWidget"
+#include "PimCommon/StorageServiceAbstract"
 class QEvent;
 class StorageServiceTreeWidget : public PimCommon::StorageServiceTreeWidget
 {

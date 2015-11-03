@@ -1,6 +1,5 @@
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/korganizer/interfaces
   ${CMAKE_SOURCE_DIR}/korganizer
 )
 
@@ -13,10 +12,7 @@ set(korg_thisdayinhistory_PART_SRCS
 add_library(korg_thisdayinhistory MODULE ${korg_thisdayinhistory_PART_SRCS})
 
 target_link_libraries(korg_thisdayinhistory
-  eventviews
-  korganizerprivate
-  
-  
+  KF5::EventViews
 )
 
 install(TARGETS

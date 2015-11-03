@@ -29,29 +29,27 @@
 #include <QDebug>
 #include <qtest.h>
 
-#include <kleo/enum.h>
+#include <Libkleo/Enum>
 
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/composer/composerviewbase.h>
-#include <messagecomposer/composer-ng/richtextcomposer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/part/infopart.h>
-#include <messagecomposer/part/textpart.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/ComposerViewBase>
+#include <MessageComposer/RichTextComposerNg>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/InfoPart>
+#include <MessageComposer/TextPart>
 #include <attachment/attachmentmodel.h>
 #include <attachment/attachmentcontrollerbase.h>
-#include <recipientseditor.h>
 using namespace MessageComposer;
 
-#include <messagecore/attachment/attachmentpart.h>
-#include <messagecore/helpers/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <MessageCore/AttachmentPart>
+#include <MessageCore/NodeHelper>
+#include <setupenv.h>
 
-#include <messageviewer/viewer/objecttreeparser.h>
+#include <MessageViewer/ObjectTreeParser>
 
-#include <boost/shared_ptr.hpp>
 using MessageCore::AttachmentPart;
 
 #include <gpgme++/key.h>
@@ -62,7 +60,7 @@ QTEST_MAIN(CryptoComposerTest)
 
 void CryptoComposerTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageComposer::Test::setupEnv();
 }
 
 Q_DECLARE_METATYPE(Headers::contentEncoding)
@@ -103,8 +101,8 @@ void CryptoComposerTest::testOpenPGPMime()
     delete composer;
     composer = Q_NULLPTR;
 
-    //qDebug()<< "message:" << message.get()->encodedContent();
-    ComposerTestUtil::verify(sign, encrypt, message.get(), data.toUtf8(),
+    //qDebug()<< "message:" << message.data()->encodedContent();
+    ComposerTestUtil::verify(sign, encrypt, message.data(), data.toUtf8(),
                              Kleo::OpenPGPMIMEFormat, cte);
 
     QCOMPARE(message->from()->asUnicodeString(), QString::fromLocal8Bit("me@me.me"));
@@ -147,25 +145,25 @@ void CryptoComposerTest::testEncryptSameAttachments()
     delete composer;
     composer = Q_NULLPTR;
 
-    //qDebug()<< "message:" << message.get()->encodedContent();
-    ComposerTestUtil::verifyEncryption(message.get(), data.toUtf8(),
-                                       (Kleo::CryptoMessageFormat) format , true);
+    //qDebug()<< "message:" << message.data()->encodedContent();
+    ComposerTestUtil::verifyEncryption(message.data(), data.toUtf8(),
+                                       (Kleo::CryptoMessageFormat) format, true);
 
     QCOMPARE(message->from()->asUnicodeString(), QString::fromLocal8Bit("me@me.me"));
     QCOMPARE(message->to()->asUnicodeString(), QString::fromLocal8Bit("you@you.you"));
 
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
-    MessageCore::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
+    MessageComposer::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
     testSource.setAllowDecryption(true);
     MessageViewer::NodeHelper *nh = new MessageViewer::NodeHelper;
     MessageViewer::ObjectTreeParser otp(&testSource, nh);
     MessageViewer::ProcessResult pResult(nh);
 
-    otp.parseObjectTree(message.get());
+    otp.parseObjectTree(message.data());
     KMime::Message::Ptr  unencrypted = nh->unencryptedMessage(message);
 
-    KMime::Content *testAttachment = MessageViewer::ObjectTreeParser::findType(unencrypted.get() , "x-some", "x-type", true, true);
+    KMime::Content *testAttachment = MessageViewer::ObjectTreeParser::findType(unencrypted.data(), "x-some", "x-type", true, true);
 
     QCOMPARE(testAttachment->body(), QString::fromLatin1("abc").toUtf8());
     QCOMPARE(testAttachment->contentDisposition()->filename(), QString::fromLatin1("anattachment.txt"));
@@ -183,7 +181,7 @@ void CryptoComposerTest::testEditEncryptAttachments()
 {
     QFETCH(int, format);
     Composer *composer = new Composer;
-    QString data(QString::fromLatin1("All happy families are alike; each unhappy family is unhappy in its own way."));
+    QString data(QStringLiteral("All happy families are alike; each unhappy family is unhappy in its own way."));
     fillComposerData(composer, data);
     fillComposerCryptoData(composer);
 
@@ -211,11 +209,9 @@ void CryptoComposerTest::testEditEncryptAttachments()
     ComposerViewBase view(this, 0);
     AttachmentModel model(this);
     AttachmentControllerBase controller(&model, 0, 0);
-    RecipientsEditor recipientEditor;
-    MessageComposer::RichTextComposer editor;
+    MessageComposer::RichTextComposerNg editor;
     view.setAttachmentModel(&model);
     view.setAttachmentController(&controller);
-    view.setRecipientsEditor(&recipientEditor);
     view.setEditor(&editor);
 
     // Let's load the email to the viewer
@@ -241,14 +237,14 @@ void CryptoComposerTest::testEditEncryptAndLateAttachments()
 {
     QFETCH(int, format);
     Composer *composer = new Composer;
-    QString data(QString::fromLatin1("All happy families are alike; each unhappy family is unhappy in its own way."));
+    QString data(QStringLiteral("All happy families are alike; each unhappy family is unhappy in its own way."));
     fillComposerData(composer, data);
     fillComposerCryptoData(composer);
 
     AttachmentPart::Ptr attachment = AttachmentPart::Ptr(new AttachmentPart);
-    const QString fileName = QLatin1String("anattachment.txt");
+    const QString fileName = QStringLiteral("anattachment.txt");
     const QByteArray fileData = "abc";
-    const QString fileName2 = QLatin1String("nonencrypt.txt");
+    const QString fileName2 = QStringLiteral("nonencrypt.txt");
     const QByteArray fileData2 = "readable";
     attachment->setData(fileData);
     attachment->setMimeType("x-some/x-type");
@@ -279,17 +275,15 @@ void CryptoComposerTest::testEditEncryptAndLateAttachments()
     ComposerViewBase view(this, 0);
     AttachmentModel model(this);
     AttachmentControllerBase controller(&model, 0, 0);
-    RecipientsEditor recipientEditor;
-    MessageComposer::RichTextComposer editor;
+    MessageComposer::RichTextComposerNg editor;
     view.setAttachmentModel(&model);
     view.setAttachmentController(&controller);
-    view.setRecipientsEditor(&recipientEditor);
     view.setEditor(&editor);
 
     // Let's load the email to the viewer
     view.setMessage(message, true);
 
-    QModelIndex index = model.index(0, 0);
+    //QModelIndex index = model.index(0, 0);
     QCOMPARE(editor.toPlainText(), data);
     QCOMPARE(model.rowCount(), 2);
     AttachmentPart::Ptr part = model.attachments()[0];
@@ -335,7 +329,7 @@ void CryptoComposerTest::testSignEncryptLateAttachments()
     composer = Q_NULLPTR;
 
     // as we have an additional attachment, just ignore it when checking for sign/encrypt
-    KMime::Content *b = MessageCore::NodeHelper::firstChild(message.get());
+    KMime::Content *b = MessageCore::NodeHelper::firstChild(message.data());
     ComposerTestUtil::verifySignatureAndEncryption(b, data.toUtf8(),
             (Kleo::CryptoMessageFormat) format, true);
 
@@ -365,7 +359,7 @@ void CryptoComposerTest::testBCCEncrypt()
     fillComposerData(composer, data);
     composer->infoPart()->setBcc(QStringList(QString::fromLatin1("bcc@bcc.org")));
 
-    std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
+    std::vector<GpgME::Key> keys = MessageComposer::Test::getKeys();
 
     QStringList primRecipients;
     primRecipients << QString::fromLocal8Bit("you@you.you");
@@ -395,13 +389,13 @@ void CryptoComposerTest::testBCCEncrypt()
     delete composer;
     composer = Q_NULLPTR;
 
-    ComposerTestUtil::verifySignatureAndEncryption(primMessage.get(), data.toUtf8(),
+    ComposerTestUtil::verifySignatureAndEncryption(primMessage.data(), data.toUtf8(),
             (Kleo::CryptoMessageFormat) format);
 
     QCOMPARE(primMessage->from()->asUnicodeString(), QString::fromLocal8Bit("me@me.me"));
     QCOMPARE(primMessage->to()->asUnicodeString(), QString::fromLocal8Bit("you@you.you"));
 
-    ComposerTestUtil::verifySignatureAndEncryption(secMessage.get(), data.toUtf8(),
+    ComposerTestUtil::verifySignatureAndEncryption(secMessage.data(), data.toUtf8(),
             (Kleo::CryptoMessageFormat) format);
 
     QCOMPARE(secMessage->from()->asUnicodeString(), QString::fromLocal8Bit("me@me.me"));
@@ -449,7 +443,7 @@ void CryptoComposerTest::testOpenPGPInline()
         data += QString::fromLatin1("\n");
     }
     qDebug() << "message:" << message->encodedContent();
-    ComposerTestUtil::verify(sign, encrypt, message.get(), data.toUtf8(),
+    ComposerTestUtil::verify(sign, encrypt, message.data(), data.toUtf8(),
                              Kleo::InlineOpenPGPFormat, cte);
 
     QCOMPARE(message->from()->asUnicodeString(), QString::fromLocal8Bit("me@me.me"));
@@ -514,7 +508,7 @@ void CryptoComposerTest::testCTEquPr_data()
     QTest::newRow("CTEquPr:Encrypt") << data << false << true << Headers::CE7Bit;
     QTest::newRow("CTEquPr:SignEncrypt") << data << true << true << Headers::CE7Bit;
 
-    data = QString::fromUtf8("All happy families are alike;\n\n\n\neach unhappy family is unhappy in its own way.\n--\n hallloasdfasdfsadfsdf asdf sadfasdf sdf sdf sdf sadfasdf sdaf daf sdf asdf sadf asdf asdf [ä]");
+    data = QStringLiteral("All happy families are alike;\n\n\n\neach unhappy family is unhappy in its own way.\n--\n hallloasdfasdfsadfsdf asdf sadfasdf sdf sdf sdf sadfasdf sdaf daf sdf asdf sadf asdf asdf [ä]");
     QTest::newRow("CTEquPr:Sign:Newline") << data << true << false << Headers::CEquPr;
     QTest::newRow("CTEquPr:Encrypt:Newline") << data << false << true << Headers::CE7Bit;
     QTest::newRow("CTEquPr:SignEncrypt:Newline") << data << true << true << Headers::CE7Bit;
@@ -535,7 +529,7 @@ void CryptoComposerTest::testCTEbase64_data()
     QTest::addColumn<bool>("encrypt");
     QTest::addColumn<Headers::contentEncoding>("cte");
 
-    QString data(QString::fromUtf8("[ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää]"));
+    QString data(QStringLiteral("[ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää]"));
     QTest::newRow("CTEbase64:Sign") << data << true << false << Headers::CEbase64;
     QTest::newRow("CTEbase64:Encrypt") << data << false << true << Headers::CE7Bit;
     QTest::newRow("CTEbase64:SignEncrypt") << data << true << true << Headers::CE7Bit;
@@ -560,7 +554,7 @@ void CryptoComposerTest::fillComposerData(Composer *composer, QString data)
 
 void CryptoComposerTest::fillComposerCryptoData(Composer *composer)
 {
-    std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
+    std::vector<GpgME::Key> keys = MessageComposer::Test::getKeys();
 
     qDebug() << "got num of keys:" << keys.size();
 
@@ -584,7 +578,7 @@ void CryptoComposerTest::runSMIMETest(bool sign, bool enc, bool opaque)
     fillComposerData(composer, data);
     composer->infoPart()->setFrom(QString::fromLatin1("test@example.com"));
 
-    std::vector<GpgME::Key> keys = MessageCore::Test::getKeys(true);
+    std::vector<GpgME::Key> keys = MessageComposer::Test::getKeys(true);
     QStringList recipients;
     recipients << QString::fromLocal8Bit("you@you.you");
     QList<QPair<QStringList, std::vector<GpgME::Key> > > encKeys;
@@ -611,7 +605,7 @@ void CryptoComposerTest::runSMIMETest(bool sign, bool enc, bool opaque)
 
         qDebug() << "message:" << message->encodedContent();
 
-        ComposerTestUtil::verify(sign, enc, message.get(), data.toUtf8(),  f, cte);
+        ComposerTestUtil::verify(sign, enc, message.data(), data.toUtf8(),  f, cte);
 
         QCOMPARE(message->from()->asUnicodeString(), QString::fromLocal8Bit("test@example.com"));
         QCOMPARE(message->to()->asUnicodeString(), QString::fromLocal8Bit("you@you.you"));

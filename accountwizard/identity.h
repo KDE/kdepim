@@ -36,8 +36,8 @@ class Identity : public SetupObject
 public:
     explicit Identity(QObject *parent = Q_NULLPTR);
     ~Identity();
-    void create();
-    void destroy();
+    void create() Q_DECL_OVERRIDE;
+    void destroy() Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     Q_SCRIPTABLE void setIdentityName(const QString &name);

@@ -5,9 +5,9 @@
  */
 #include "mailreaderview.h"
 #include "settings.h"
-#include "messageviewer/viewer/viewer.h"
-#include "messageviewer/viewer/attachmentstrategy.h"
-#include <messageviewer/settings/globalsettings.h>
+#include "viewer/viewer.h"
+#include "viewer/attachmentstrategy.h"
+#include <settings/messageviewersettings.h>
 #include <KXmlGuiWindow>
 #include <KConfigDialog>
 
@@ -15,10 +15,10 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>
-#include <KUrl>
+#include <QUrl>
 
 #include <AkonadiCore/item.h>
-#include "messagelist/core/settings.h"
+#include "messagelistsettings.h"
 #include "ui_prefs_messagelist.h"
 
 mailreaderView::mailreaderView(QWidget *parent)
@@ -31,8 +31,8 @@ mailreaderView::mailreaderView(QWidget *parent)
     setLayout(layout);
     setAutoFillBackground(true);
     displayAboutPage();
-    connect(m_readerWin, SIGNAL(urlClicked(Akonadi::Item,KUrl)), this,
-            SLOT(urlClicked(Akonadi::Item,KUrl)));
+    connect(m_readerWin, SIGNAL(urlClicked(Akonadi::Item,QUrl)), this,
+            SLOT(urlClicked(Akonadi::Item,QUrl)));
 }
 
 mailreaderView::~mailreaderView()
@@ -80,7 +80,7 @@ void mailreaderView::displayAboutPage()
     m_readerWin->displaySplashPage(info.toString());
 }
 
-void mailreaderView::urlClicked(const Akonadi::Item &item , const KUrl &url)
+void mailreaderView::urlClicked(const Akonadi::Item &item, const QUrl &url)
 {
     Q_UNUSED(item);
     //TODO "Handle click"
@@ -92,7 +92,7 @@ void mailreaderView::slotConfigure()
     if (KConfigDialog::showDialog(QLatin1String("mailviewersettings"))) {
         return;
     }
-    KConfigDialog *dialog = new KConfigDialog(this, QLatin1String("mailviewersettings"), MessageViewer::GlobalSettings::self());
+    KConfigDialog *dialog = new KConfigDialog(this, QLatin1String("mailviewersettings"), MessageViewer::MessageViewerSettings::self());
     QWidget *widget = m_readerWin->configWidget();
     dialog->addPage(widget, i18n("Viewer"), QLatin1String("kmail"));
 
@@ -100,7 +100,7 @@ void mailreaderView::slotConfigure()
     Ui::MessageListConfig ui;
     ui.setupUi(messageListConfig);
     dialog->addPage(messageListConfig,
-                    MessageList::Core::Settings::self(),
+                    MessageList::MessageListSettings::self(),
                     i18n("Message List"),
                     QLatin1String("kmail"));
 

@@ -81,8 +81,6 @@ protected Q_SLOTS:
     void slotNewClicked();
     void slotSyncClicked();
     void slotQuit();
-    void slotShowTip();
-    void slotShowTipOnStart();
     void slotNewToolbarConfig();
     void slotShowIntroduction();
     void showAboutDialog();
@@ -106,12 +104,11 @@ private:
     void addPlugin(KontactInterface::Plugin *plugin);
     void partLoaded(KontactInterface::Plugin *plugin, KParts::ReadOnlyPart *part) Q_DECL_OVERRIDE;
     void setupActions();
-    void showTip(bool);
     bool queryClose() Q_DECL_OVERRIDE;
     void readProperties(const KConfigGroup &config) Q_DECL_OVERRIDE;
     void saveProperties(KConfigGroup &config) Q_DECL_OVERRIDE;
-    void paintAboutScreen(const QString &msg);
-    static QString introductionString();
+    void paintAboutScreen(const QString &templateName, const QVariantHash &data);
+    static QVariantHash introductionData();
     KToolBar *findToolBar(const char *name);
 
 private Q_SLOTS:

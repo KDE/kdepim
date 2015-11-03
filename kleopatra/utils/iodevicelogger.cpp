@@ -49,9 +49,9 @@ public:
     explicit Private(const shared_ptr<QIODevice> &io_, IODeviceLogger *qq) : q(qq), io(io_), writeLog(), readLog()
     {
         assert(io);
-        connect(io.get(), SIGNAL(aboutToClose()), q, SIGNAL(aboutToClose()));
-        connect(io.get(), SIGNAL(bytesWritten(qint64)), q, SIGNAL(bytesWritten(qint64)));
-        connect(io.get(), SIGNAL(readyRead()), q, SIGNAL(readyRead()));
+        connect(io.get(), &QIODevice::aboutToClose, q, &QIODevice::aboutToClose);
+        connect(io.get(), &QIODevice::bytesWritten, q, &QIODevice::bytesWritten);
+        connect(io.get(), &QIODevice::readyRead, q, &QIODevice::readyRead);
         q->setOpenMode(io->openMode());
     }
 

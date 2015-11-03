@@ -11,19 +11,19 @@ set(mboximporter_SRCS
   mboximportkernel.cpp
 )
 
-ki18n_wrap_ui(mboximporter_SRCS 
-                  ui/mboximportwidget.ui
+ki18n_wrap_ui(mboximporter_SRCS
+              ui/mboximportwidget.ui
 )
-
-include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${CMAKE_SOURCE_DIR}/messagecomposer)
 
 add_executable(mboximporter ${mboximporter_SRCS})
 
 target_link_libraries(mboximporter
+PRIVATE
   KF5::AkonadiCore
   KF5::IdentityManagement
-  mailimporter
-  mailcommon
+  KF5::MailImporter
+  KF5::MailCommon
+  KF5::Completion
 )
 
 install(TARGETS mboximporter  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

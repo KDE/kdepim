@@ -69,7 +69,7 @@ static QString contactsToHtml(const KContacts::Addressee::List &contacts)
         }
 
         // start a new page after every second table
-        const QString pageBreak = ((counter % 2) ? QLatin1String("page-break-after: always;") : QString());
+        const QString pageBreak = ((counter % 2) ? QStringLiteral("page-break-after: always;") : QString());
 
         content += QLatin1String("  <table style=\"border-width: 0px; ") + pageBreak + QLatin1String("\" width=\"100%\">\n");
         content += QLatin1String("   <tr>\n");
@@ -112,7 +112,7 @@ static QString contactsToHtml(const KContacts::Addressee::List &contacts)
 MikesStyle::MikesStyle(PrintingWizard *parent)
     : PrintStyle(parent)
 {
-    setPreview(QLatin1String("mike-style.png"));
+    setPreview(QStringLiteral("mike-style.png"));
     setPreferredSortOptions(ContactFields::FormattedName, Qt::AscendingOrder);
 }
 

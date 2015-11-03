@@ -121,7 +121,7 @@ void XXPortManager::import(const ContactList &contacts)
     QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog(mParentWidget);
     dlg->setMimeTypeFilter(mimeTypes);
     dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
-    dlg->setCaption(i18n("Select Address Book"));
+    dlg->setWindowTitle(i18n("Select Address Book"));
     dlg->setDescription(
         i18n("Select the address book the imported contact(s) shall be saved in:"));
     dlg->setDefaultCollection(mDefaultAddressBook);

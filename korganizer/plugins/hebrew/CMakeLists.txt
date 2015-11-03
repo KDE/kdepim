@@ -1,6 +1,5 @@
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/korganizer/interfaces
   ${CMAKE_SOURCE_DIR}/korganizer
 )
 
@@ -17,10 +16,7 @@ set(korg_hebrew_PART_SRCS
 add_library(korg_hebrew MODULE ${korg_hebrew_PART_SRCS})
 
 target_link_libraries(korg_hebrew
-  eventviews
-  korganizerprivate
-  
-  
+  KF5::EventViews
 )
 
 install(TARGETS

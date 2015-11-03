@@ -37,10 +37,10 @@
 #include <QIcon>
 #include <KIconLoader>
 #include <kmime/kmime_message.h>
-#include <mailcommon/filter/filterimporterexporter.h>
-#include <mailcommon/filter/filterlog.h>
-#include <mailcommon/filter/mailfilter.h>
-#include <mailcommon/util/mailutil.h>
+#include <MailCommon/FilterImporterExporter>
+#include <MailCommon/FilterLog>
+#include <MailCommon/MailFilter>
+#include <MailCommon/MailUtil>
 
 #include <QTimer>
 
@@ -353,7 +353,7 @@ void FilterManager::mailCollectionRemoved(const Akonadi::Collection &collection)
 {
     QList<MailCommon::MailFilter *>::const_iterator end(d->mFilters.constEnd());
     for (QList<MailCommon::MailFilter *>::const_iterator it = d->mFilters.constBegin();
-            it != end ; ++it) {
+            it != end; ++it) {
         (*it)->folderRemoved(collection, Akonadi::Collection());
     }
 }
@@ -496,7 +496,7 @@ bool FilterManager::process(const QList< MailFilter * > &mailFilters, const Akon
     const bool applyOnOutbound = ((set & Outbound) || (set & BeforeOutbound));
 
     for (QList<MailCommon::MailFilter *>::const_iterator it = mailFilters.constBegin();
-            !stopIt && it != end ; ++it) {
+            !stopIt && it != end; ++it) {
         if ((*it)->isEnabled()) {
 
             const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
@@ -546,8 +546,8 @@ QString FilterManager::createUniqueName(const QString &name) const
                 found = true;
                 ++counter;
                 uniqueName = name;
-                uniqueName += QString::fromLatin1(" (") + QString::number(counter)
-                              + QString::fromLatin1(")");
+                uniqueName += QLatin1String(" (") + QString::number(counter)
+                              + QLatin1String(")");
                 break;
             }
         }
@@ -561,7 +561,7 @@ MailCommon::SearchRule::RequiredPart FilterManager::requiredPart(const QString &
     if (id.isEmpty()) {
         return d->mRequiredPartsBasedOnAll;
     }
-    return d->mRequiredParts.contains(id) ? d->mRequiredParts[id] : SearchRule::Envelope ;
+    return d->mRequiredParts.contains(id) ? d->mRequiredParts[id] : SearchRule::Envelope;
 }
 
 #ifndef NDEBUG

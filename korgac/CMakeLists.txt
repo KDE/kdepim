@@ -4,13 +4,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"korgac\")
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-# enable exception handling
-
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}/calendarsupport
-  ${CMAKE_BINARY_DIR}/calendarsupport
-)
 
 add_subdirectory(pixmaps)
 
@@ -22,8 +15,9 @@ endif()
 
 set(korgac_SRCS
   koalarmclient.cpp
-  koalarmclient_debug.cpp
 )
+
+ecm_qt_declare_logging_category(korgac_SRCS HEADER koalarmclient_debug.h IDENTIFIER KOALARMCLIENT_LOG CATEGORY_NAME log_koalarmclient)
 
 set(korgac_SRCS ${korgac_SRCS} korgacmain.cpp)
 
@@ -44,9 +38,6 @@ qt5_add_dbus_adaptor(korgac_SRCS org.kde.korganizer.KOrgac.xml koalarmclient.h
   KOAlarmClient
 )
 
-if(RUNTIME_PLUGINS_STATIC)
-  add_definitions(-DSERIALIZER_PLUGIN_STATIC)
-endif()
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmaps/*-apps-korgac.png")
 ecm_add_app_icon(korgac_SRCS ICONS ${ICONS_SRCS})
@@ -67,8 +58,8 @@ endif()
 target_link_libraries(korgac
   KF5::AkonadiCalendar
   KF5::AkonadiMime
-  calendarsupport
-  incidenceeditorsng
+  KF5::CalendarSupport
+  KF5::IncidenceEditorsng
   KF5::AkonadiCore
   KF5::CalendarCore
   KF5::CalendarUtils
@@ -78,10 +69,6 @@ target_link_libraries(korgac
   KF5::DBusAddons
   Phonon::phonon4qt5
 )
-
-if(RUNTIME_PLUGINS_STATIC)
-  target_link_libraries(korgac akonadi_serializer_kcalcore)
-endif()
 
 install(TARGETS
     korgac ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}

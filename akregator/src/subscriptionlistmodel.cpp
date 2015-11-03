@@ -84,20 +84,20 @@ Akregator::SubscriptionListModel::SubscriptionListModel(const QSharedPointer<con
     if (!m_feedList) {
         return;
     }
-    connect(m_feedList.data(), SIGNAL(signalNodeAdded(Akregator::TreeNode*)),
-            this, SLOT(subscriptionAdded(Akregator::TreeNode*)));
-    connect(m_feedList.data(), SIGNAL(signalAboutToRemoveNode(Akregator::TreeNode*)),
-            this, SLOT(aboutToRemoveSubscription(Akregator::TreeNode*)));
-    connect(m_feedList.data(), SIGNAL(signalNodeRemoved(Akregator::TreeNode*)),
-            this, SLOT(subscriptionRemoved(Akregator::TreeNode*)));
-    connect(m_feedList.data(), SIGNAL(signalNodeChanged(Akregator::TreeNode*)),
-            this, SLOT(subscriptionChanged(Akregator::TreeNode*)));
-    connect(m_feedList.data(), SIGNAL(fetchStarted(Akregator::Feed*)),
-            this, SLOT(fetchStarted(Akregator::Feed*)));
-    connect(m_feedList.data(), SIGNAL(fetched(Akregator::Feed*)),
-            this, SLOT(fetched(Akregator::Feed*)));
-    connect(m_feedList.data(), SIGNAL(fetchAborted(Akregator::Feed*)),
-            this, SLOT(fetchAborted(Akregator::Feed*)));
+    connect(m_feedList.data(), &FeedList::signalNodeAdded,
+            this, &SubscriptionListModel::subscriptionAdded);
+    connect(m_feedList.data(), &FeedList::signalAboutToRemoveNode,
+            this, &SubscriptionListModel::aboutToRemoveSubscription);
+    connect(m_feedList.data(), &FeedList::signalNodeRemoved,
+            this, &SubscriptionListModel::subscriptionRemoved);
+    connect(m_feedList.data(), &FeedList::signalNodeChanged,
+            this, &SubscriptionListModel::subscriptionChanged);
+    connect(m_feedList.data(), &FeedList::fetchStarted,
+            this, &SubscriptionListModel::fetchStarted);
+    connect(m_feedList.data(), &FeedList::fetched,
+            this, &SubscriptionListModel::fetched);
+    connect(m_feedList.data(), &FeedList::fetchAborted,
+            this, &SubscriptionListModel::fetchAborted);
 }
 
 int Akregator::SubscriptionListModel::columnCount(const QModelIndex &) const
@@ -241,7 +241,7 @@ QModelIndex Akregator::SubscriptionListModel::parent(const QModelIndex &index) c
 QModelIndex Akregator::SubscriptionListModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
-        return (row == 0 && m_feedList) ? createIndex(row, column , m_feedList->allFeedsFolder()->id()) : QModelIndex();
+        return (row == 0 && m_feedList) ? createIndex(row, column, m_feedList->allFeedsFolder()->id()) : QModelIndex();
     }
 
     const Akregator::TreeNode *const parentNode = nodeForIndex(parent, m_feedList.data());

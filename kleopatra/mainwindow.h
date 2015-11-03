@@ -33,10 +33,6 @@
 #ifndef __KLEOPATRA_MAINWINDOW_H__
 #define __KLEOPATRA_MAINWINDOW_H__
 
-#ifdef KDEPIM_MOBILE_UI
-# include "mainwindow_mobile.h"
-#else
-# include "mainwindow_desktop.h"
-#endif
+#include "mainwindow_desktop.h"
 
 #endif /* __KLEOPATRA_MAINWINDOW_H__ */

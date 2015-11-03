@@ -19,8 +19,10 @@
 
 #include "kmail_export.h"
 #include "configuredialog_p.h"
-#include "tag.h"
+#include "MailCommon/Tag"
 #include <QListWidgetItem>
+
+#include <AkonadiCore/TagFetchJob>
 
 class QPushButton;
 class QCheckBox;
@@ -30,12 +32,14 @@ class ColorListBox;
 class QButtonGroup;
 class QGroupBox;
 class QSpinBox;
-class KButtonGroup;
 class KLineEdit;
 class QModelIndex;
 namespace MessageViewer
 {
 class ConfigureWidget;
+}
+namespace Gravatar
+{
 class GravatarConfigWidget;
 }
 
@@ -71,7 +75,6 @@ private Q_SLOTS:
     void slotFontSelectorChanged(int);
 
 private:
-    //virtual void doLoadFromGlobalSettings();
     void doLoadOther() Q_DECL_OVERRIDE;
     void updateFontSelector();
     void doResetToDefaultsOther() Q_DECL_OVERRIDE;
@@ -94,7 +97,6 @@ public:
     void save() Q_DECL_OVERRIDE;
 
 private:
-    //virtual void doLoadFromGlobalSettings();
     void doLoadOther() Q_DECL_OVERRIDE;
     void doResetToDefaultsOther() Q_DECL_OVERRIDE;
     void loadColor(bool loadFromConfig);
@@ -116,9 +118,7 @@ public:
     void save() Q_DECL_OVERRIDE;
 
 private:
-    //virtual void doLoadFromGlobalSettings();
     void doLoadOther() Q_DECL_OVERRIDE;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private: // data
     QButtonGroup  *mFolderListGroup;
@@ -154,7 +154,8 @@ private: // data
     QCheckBox    *mTabsHaveCloseButton;
     MessageList::Utils::AggregationComboBox *mAggregationComboBox;
     MessageList::Utils::ThemeComboBox *mThemeComboBox;
-    KButtonGroup *mDateDisplay;
+    QButtonGroup *mDateDisplay;
+    QGroupBox    *mDateDisplayBox;
     KLineEdit    *mCustomDateFormatEdit;
     QString       mCustomDateWhatsThis;
 
@@ -181,7 +182,7 @@ private:
 private: // data
     QCheckBox *mCloseAfterReplyOrForwardCheck;
     MessageViewer::ConfigureWidget *mViewerSettings;
-    MessageViewer::GravatarConfigWidget *mGravatarConfigWidget;
+    Gravatar::GravatarConfigWidget *mGravatarConfigWidget;
 };
 
 class AppearancePageSystemTrayTab : public ConfigModuleTab
@@ -200,7 +201,8 @@ private:
 private: // data
     QCheckBox    *mSystemTrayCheck;
     QCheckBox    *mSystemTrayShowUnreadMail;
-    KButtonGroup *mSystemTrayGroup;
+    QButtonGroup *mSystemTrayGroup;
+    QGroupBox    *mSystemTrayGroupBox;
 };
 
 class TagListWidgetItem : public QListWidgetItem

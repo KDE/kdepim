@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ImportBlogiloJob : public AbstractImportExportJob
+class ImportBlogiloJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
@@ -30,6 +30,9 @@ public:
     ~ImportBlogiloJob();
 
     void start() Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void slotNextStep() Q_DECL_OVERRIDE;
 
 private:
     void restoreConfig();

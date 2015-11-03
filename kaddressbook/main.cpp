@@ -39,13 +39,13 @@ public:
           mMainWindow(Q_NULLPTR)
     {
     }
-    int activate(const QStringList &arguments) Q_DECL_OVERRIDE;
+    int activate(const QStringList &arguments, const QString &) Q_DECL_OVERRIDE;
 
 private:
     MainWindow *mMainWindow;
 };
 
-int KAddressBookApplication::activate(const QStringList &arguments)
+int KAddressBookApplication::activate(const QStringList &arguments, const QString &)
 {
     if (!mMainWindow) {
         mMainWindow = new MainWindow;
@@ -58,10 +58,12 @@ int KAddressBookApplication::activate(const QStringList &arguments)
 int main(int argc, char **argv)
 {
     KAddressBookApplication app(argc, &argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     KLocalizedString::setApplicationDomain("kaddressbook");
 
     AboutData about;
     app.setAboutData(about);
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("kaddressbook")));
     QCommandLineParser *cmdArgs = app.cmdArgs();
     kaddressbook_options(cmdArgs);
 

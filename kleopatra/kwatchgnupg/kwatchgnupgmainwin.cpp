@@ -37,8 +37,8 @@
 #include "kwatchgnupg.h"
 #include "tray.h"
 
-#include "libkleo/kleo/cryptobackendfactory.h"
-#include "libkleo/kleo/cryptoconfig.h"
+#include "Libkleo/CryptoBackendFactory"
+#include "Libkleo/CryptoConfig"
 
 #include "utils/kdlogtextwidget.h"
 
@@ -76,14 +76,15 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow(QWidget *parent)
     connect(mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)));
 
-    connect(mWatcher, SIGNAL(readyReadStandardOutput()),
-            this, SLOT(slotReadStdout()));
+    connect(mWatcher, &QProcess::readyReadStandardOutput,
+            this, &KWatchGnuPGMainWindow::slotReadStdout);
 
     slotReadConfig();
     mSysTray = new KWatchGnuPGTray(this);
-    mSysTray->show();
-    connect(mSysTray, SIGNAL(quitSelected()),
-            this, SLOT(slotQuit()));
+    QAction *act = mSysTray->action(QStringLiteral("quit"));
+    if (act) {
+        connect(act, &QAction::triggered, this, &KWatchGnuPGMainWindow::slotQuit);
+    }
 
     setAutoSaveSettings();
 }
@@ -172,14 +173,14 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
         Kleo::CryptoConfigComponent *comp = cconfig->component(*it);
         Q_ASSERT(comp);
         // Look for log-file entry in Debug group
-        Kleo::CryptoConfigGroup *group = comp->group(QLatin1String("Debug"));
+        Kleo::CryptoConfigGroup *group = comp->group(QStringLiteral("Debug"));
         if (group) {
-            Kleo::CryptoConfigEntry *entry = group->entry(QLatin1String("log-file"));
+            Kleo::CryptoConfigEntry *entry = group->entry(QStringLiteral("log-file"));
             if (entry) {
-                entry->setStringValue(QString::fromLatin1("socket://") + config.readEntry("Socket", WATCHGNUPGSOCKET));
-                logclients << QString::fromLatin1("%1 (%2)").arg(*it).arg(comp->description());
+                entry->setStringValue(QLatin1String("socket://") + config.readEntry("Socket", WATCHGNUPGSOCKET));
+                logclients << QStringLiteral("%1 (%2)").arg(*it).arg(comp->description());
             }
-            entry = group->entry(QLatin1String("debug-level"));
+            entry = group->entry(QStringLiteral("debug-level"));
             if (entry) {
                 entry->setStringValue(config.readEntry("LogLevel", "basic"));
             }

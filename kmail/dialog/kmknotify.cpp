@@ -78,7 +78,7 @@ KMKnotify::KMKnotify(QWidget *parent)
     mainLayout->addWidget(buttonBox);
     connect(m_comboNotify, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &KMKnotify::slotComboChanged);
     connect(okButton, &QPushButton::clicked, this, &KMKnotify::slotOk);
-    connect(m_notifyWidget, &KNotifyConfigWidget::changed, this , &KMKnotify::slotConfigChanged);
+    connect(m_notifyWidget, &KNotifyConfigWidget::changed, this, &KMKnotify::slotConfigChanged);
     initCombobox();
     readConfig();
 }
@@ -138,7 +138,7 @@ void KMKnotify::initCombobox()
                 KConfigGroup globalConfig(&config, QStringLiteral("Global"));
                 const QString icon = globalConfig.readEntry(QStringLiteral("IconName"), QStringLiteral("misc"));
                 const QString description = globalConfig.readEntry(QStringLiteral("Comment"), appname);
-                m_comboNotify->addItem(SmallIcon(icon), description, appname);
+                m_comboNotify->addItem(QIcon::fromTheme(icon), description, appname);
             }
         }
     }

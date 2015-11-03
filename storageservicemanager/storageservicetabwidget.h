@@ -22,8 +22,8 @@
 #define STORAGESERVICETABWIDGET_H
 
 #include <QTabWidget>
-#include "pimcommon/storageservice/storageserviceabstract.h"
-#include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
+#include "PimCommon/StorageServiceAbstract"
+#include "PimCommon/StorageServiceTreeWidget"
 class StorageServicePage;
 class StorageServiceTabWidget : public QTabWidget
 {

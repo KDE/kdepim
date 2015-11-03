@@ -34,13 +34,24 @@ public:
     QPixmap pixmap() const;
     void setOriginalPixmap(const QPixmap &pix);
 
+    void setOriginalUrl(const QString &url);
+
+    QUrl resolvedUrl() const;
+
+    bool saveUrl() const;
 private Q_SLOTS:
     void slotAccepted();
+    void slotSaveImage();
+    void slotSaveUrl();
 
+    void slotActivateButton(bool state);
 private:
     void readConfig();
     void writeConfig();
     GravatarUpdateWidget *mGravatarUpdateWidget;
+    QPushButton *mSaveImageButton;
+    QPushButton *mSaveUrlButton;
+    bool mSaveUrl;
 };
 }
 #endif // GRAVATARUPDATEDIALOG_H

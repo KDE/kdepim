@@ -1,0 +1,24 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=MessageViewerHeaderStyle/Plugin
+X-KDE-Library=messageviewer_allheaderstyleplugin
+Name=All Header Style
+Name[ca]=Tots els estils de capçalera
+Name[en_GB]=All Header Style
+Name[es]=Todos los estilos de encabezado
+Name[it]=Stile con tutte le intestazioni
+Name[nl]=Stijl met alle headers
+Name[pl]=Pełne nagłówki
+Name[pt]=Estilo com Todos os Cabeçalhos
+Name[pt_BR]=Estilo com todos os cabeçalhos
+Name[sk]=Všetky štýly hlavičiek
+Name[sl]=Slog z vsemi glavami
+Name[sr]=потпуни стил заглавља
+Name[sr@ijekavian]=потпуни стил заглавља
+Name[sr@ijekavianlatin]=potpuni stil zaglavlja
+Name[sr@latin]=potpuni stil zaglavlja
+Name[sv]=Stil med alla rubriker
+Name[tr]=Tüm Başlık Biçemi
+Name[uk]=Стиль усіх заголовків
+Name[x-test]=xxAll Header Stylexx
+X-KDE-MessageViewer-Header-Order=6

@@ -16,7 +16,8 @@
 */
 
 #include "exportaddressbookjob.h"
-#include "messageviewer/utils/kcursorsaver.h"
+#include "exportresourcearchivejob.h"
+
 
 #include <AkonadiCore/AgentManager>
 
@@ -26,32 +27,43 @@
 #include <KConfigGroup>
 #include <KZip>
 
-#include <QWidget>
+
 #include <QDir>
 #include <QStandardPaths>
+#include <QTimer>
 
 ExportAddressbookJob::ExportAddressbookJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep),
+      mIndexIdentifier(0)
 {
 }
 
 ExportAddressbookJob::~ExportAddressbookJob()
 {
-
 }
 
 void ExportAddressbookJob::start()
 {
     Q_EMIT title(i18n("Start export KAddressBook settings..."));
-    mArchiveDirectory = archive()->directory();
+    createProgressDialog(i18n("Export KAddressBook settings"));
     if (mTypeSelected & Utils::Resources) {
-        backupResources();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
+    } else if (mTypeSelected & Utils::Config) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else {
+        Q_EMIT jobFinished();
     }
+}
+
+void ExportAddressbookJob::slotCheckBackupResource()
+{
+    setProgressDialogLabel(i18n("Backing up resources..."));
+    increaseProgressDialog();
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+void ExportAddressbookJob::slotCheckBackupConfig()
+{
     if (mTypeSelected & Utils::Config) {
         backupConfig();
         increaseProgressDialog();
@@ -63,53 +75,62 @@ void ExportAddressbookJob::start()
     Q_EMIT jobFinished();
 }
 
-void ExportAddressbookJob::backupResources()
+void ExportAddressbookJob::slotAddressbookJobTerminated()
 {
-    showInfo(i18n("Backing up resources..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
+    }
+    mIndexIdentifier++;
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+void ExportAddressbookJob::slotWriteNextArchiveResource()
+{
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
-    foreach (const Akonadi::AgentInstance &agent, list) {
+    if (mIndexIdentifier < list.count()) {
+        Akonadi::AgentInstance agent = list.at(mIndexIdentifier);
         const QString identifier = agent.identifier();
         if (identifier.contains(QStringLiteral("akonadi_vcarddir_resource_")) || identifier.contains(QStringLiteral("akonadi_contacts_resource_"))) {
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
-            QUrl url = Utils::resourcePath(agent, QStringLiteral("$HOME/.local/share/contacts/"));
-            if (!mAgentPaths.contains(url.path())) {
-                mAgentPaths << url.path();
+            QString url = Utils::resourcePath(agent, QStringLiteral("$HOME/.local/share/contacts/"));
+            if (!mAgentPaths.contains(url)) {
+                mAgentPaths << url;
                 if (!url.isEmpty()) {
-                    const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("addressbook.zip"));
-                    if (fileAdded) {
-                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                        if (!errorStr.isEmpty()) {
-                            Q_EMIT error(errorStr);
-                        }
-                        url = Utils::akonadiAgentConfigPath(identifier);
-                        if (!url.isEmpty()) {
-                            const QString filename = url.fileName();
-                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                            if (fileAdded) {
-                                Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                            } else {
-                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                            }
-                        }
-                    }
+                    ExportResourceArchiveJob *resourceJob = new ExportResourceArchiveJob(this);
+                    resourceJob->setArchivePath(archivePath);
+                    resourceJob->setUrl(url);
+                    resourceJob->setIdentifier(identifier);
+                    resourceJob->setArchive(archive());
+                    resourceJob->setArchiveName(QStringLiteral("addressbook.zip"));
+                    connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportAddressbookJob::error);
+                    connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportAddressbookJob::info);
+                    connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportAddressbookJob::slotAddressbookJobTerminated);
+                    resourceJob->start();
                 }
+            } else {
+                QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
             }
         } else if (identifier.contains(QStringLiteral("akonadi_vcard_resource_"))) {
             backupResourceFile(agent, Utils::addressbookPath());
+            QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
+        } else {
+            QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
         }
+    } else {
+        Q_EMIT info(i18n("Resources backup done."));
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
     }
-    Q_EMIT info(i18n("Resources backup done."));
 }
 
 void ExportAddressbookJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    setProgressDialogLabel(i18n("Backing up config..."));
 
-    const QString kaddressbookStr(QLatin1String("kaddressbookrc"));
+
+    const QString kaddressbookStr(QStringLiteral("kaddressbookrc"));
     const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;
     if (QFile(kaddressbookrc).exists()) {
         KSharedConfigPtr kaddressbook = KSharedConfig::openConfig(kaddressbookrc);
@@ -119,17 +140,17 @@ void ExportAddressbookJob::backupConfig()
 
         KConfig *kaddressBookConfig = kaddressbook->copyTo(tmp.fileName());
 
-        const QString collectionViewCheckStateStr(QLatin1String("CollectionViewCheckState"));
+        const QString collectionViewCheckStateStr(QStringLiteral("CollectionViewCheckState"));
         if (kaddressBookConfig->hasGroup(collectionViewCheckStateStr)) {
             KConfigGroup group = kaddressBookConfig->group(collectionViewCheckStateStr);
-            const QString selectionKey(QLatin1String("Selection"));
+            const QString selectionKey(QStringLiteral("Selection"));
             Utils::convertCollectionListToRealPath(group, selectionKey);
         }
 
-        const QString collectionViewStateStr(QLatin1String("CollectionViewState"));
+        const QString collectionViewStateStr(QStringLiteral("CollectionViewState"));
         if (kaddressBookConfig->hasGroup(collectionViewStateStr)) {
             KConfigGroup group = kaddressBookConfig->group(collectionViewStateStr);
-            QString currentKey(QLatin1String("Current"));
+            QString currentKey(QStringLiteral("Current"));
             Utils::convertCollectionToRealPath(group, currentKey);
 
             currentKey = QStringLiteral("Expansion");
@@ -142,6 +163,7 @@ void ExportAddressbookJob::backupConfig()
         backupFile(tmp.fileName(), Utils::configsPath(), kaddressbookStr);
         delete kaddressBookConfig;
     }
+    backupUiRcFile(QStringLiteral("kaddressbookui.rc"), QStringLiteral("kaddressbook"));
     Q_EMIT info(i18n("Config backup done."));
 }
 

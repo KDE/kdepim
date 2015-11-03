@@ -24,7 +24,6 @@
 #include <QTimer>
 
 #include <qicon.h>
-#include <KGlobal>
 #include <KConfigGroup>
 #include <KConfig>
 

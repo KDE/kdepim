@@ -17,7 +17,7 @@
 
 #include "notesagentsettingsdialog.h"
 
-#include "noteshared/config/notenetworkconfig.h"
+#include "noteshared/notenetworkconfig.h"
 
 #include "kdepim-version.h"
 #include <QMenu>

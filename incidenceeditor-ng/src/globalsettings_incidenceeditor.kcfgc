@@ -1,0 +1,13 @@
+# Code generation options for kconfig_compiler
+File=incidenceeditor.kcfg
+ClassName=IncidenceEditorSettingsBase
+NameSpace=IncidenceEditorNG
+Singleton=false
+Mutators=true
+MemberVariables=public
+GlobalEnums=true
+ItemAccessors=true
+SetUserTexts=true
+Visibility=
+TranslationDomain=libincidenceeditors
+TranslationSystem=kde

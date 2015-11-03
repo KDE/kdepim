@@ -56,7 +56,7 @@ private:
     void init();
 
 private:
-    /* reimp */ void run();
+    void run() Q_DECL_OVERRIDE;
 
 private:
     QMutex mutex;

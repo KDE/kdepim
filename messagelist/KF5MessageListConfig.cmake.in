@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+find_dependency(KF5Akonadi "@KDEPIMLIBS_LIB_VERSION@")
+find_dependency(KF5Mime "@KMIME_LIB_VERSION@")
+find_dependency(KF5AkonadiMime "@KDEPIMLIBS_LIB_VERSION@")
+
+
+include("${CMAKE_CURRENT_LIST_DIR}/KF5MessageListTargets.cmake")

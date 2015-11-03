@@ -22,7 +22,7 @@
 #ifndef KORG_PLUGINS_HEBREW_HEBREW_H
 #define KORG_PLUGINS_HEBREW_HEBREW_H
 
-#include <calendarviews/agenda/calendardecoration.h>
+#include <EventViews/CalendarDecoration>
 
 using namespace EventViews::CalendarDecoration;
 
@@ -46,7 +46,7 @@ private:
 class HebrewFactory : public DecorationFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.korganizer.Hebrew");
+    Q_PLUGIN_METADATA(IID "org.kde.korganizer.Hebrew")
 public:
     Decoration *createPluginFactory() Q_DECL_OVERRIDE {
         return new Hebrew;

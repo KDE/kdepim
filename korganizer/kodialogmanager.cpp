@@ -29,13 +29,13 @@
 #include "prefs/koprefs.h"
 #include "dialog/searchdialog.h"
 
-#include <calendarsupport/archivedialog.h>
-#include <calendarsupport/categoryconfig.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/ArchiveDialog>
+#include <CalendarSupport/CategoryConfig>
+#include <CalendarSupport/Utils>
 
-#include <incidenceeditor-ng/categoryeditdialog.h>
-#include <incidenceeditor-ng/incidencedialog.h>
-#include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <IncidenceEditorsng/CategoryEditDialog>
+#include <IncidenceEditorsng/IncidenceDialog>
+#include <IncidenceEditorsng/IncidenceDialogFactory>
 
 #include <AkonadiCore/Item>
 #include <AkonadiWidgets/TagManagementDialog>
@@ -138,7 +138,7 @@ void KODialogManager::showArchiveDialog()
         mArchiveDialog =
             new CalendarSupport::ArchiveDialog(mMainView->calendar(), mMainView->incidenceChanger());
         connect(mArchiveDialog, SIGNAL(eventsDeleted()), mMainView, SLOT(updateView()));
-        connect(mArchiveDialog, SIGNAL(autoArchivingSettingsModified()), mMainView, SLOT(slotAutoArchivingSettingsModified()));
+        connect(mArchiveDialog, &CalendarSupport::ArchiveDialog::autoArchivingSettingsModified, mMainView, &CalendarView::slotAutoArchivingSettingsModified);
     }
     mArchiveDialog->show();
     mArchiveDialog->raise();
@@ -152,8 +152,8 @@ void KODialogManager::showFilterEditDialog(QList<KCalCore::CalFilter *> *filters
     createCategoryEditor();
     if (!mFilterEditDialog) {
         mFilterEditDialog = new FilterEditDialog(filters, mMainView);
-        connect(mFilterEditDialog, SIGNAL(filterChanged()), mMainView, SLOT(updateFilter()));
-        connect(mFilterEditDialog, SIGNAL(editCategories()), mCategoryEditDialog, SLOT(show()));
+        connect(mFilterEditDialog, &FilterEditDialog::filterChanged, mMainView, &CalendarView::updateFilter);
+        connect(mFilterEditDialog, &FilterEditDialog::editCategories, mCategoryEditDialog.data(), &QWidget::show);
 #if 0
         connect(mCategoryEditDialog, SIGNAL(categoryConfigChanged()),
                 mFilterEditDialog, SLOT(updateCategoryConfig()));

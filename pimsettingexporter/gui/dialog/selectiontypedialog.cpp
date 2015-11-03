@@ -25,6 +25,7 @@
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QCheckBox>
 
 SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     : QDialog(parent)
@@ -44,6 +45,9 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout(mainWidget);
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
+
+    mUseTemplateByDefault = new QCheckBox(i18n("Use this template by default"));
+    mainLayout->addWidget(mUseTemplateByDefault);
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *selectAll = new QPushButton(i18n("Select All"));
@@ -71,6 +75,7 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
+    saveDefaultTemplate();
     writeConfig();
 }
 
@@ -87,6 +92,7 @@ void SelectionTypeDialog::readConfig()
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
     }
+    loadDefaultTemplate();
 }
 
 QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeDialog::storedType() const
@@ -119,4 +125,16 @@ void SelectionTypeDialog::slotSaveAsTemplate()
 void SelectionTypeDialog::slotLoadTemplate()
 {
     mSelectionTreeWidget->loadTemplate();
+}
+
+void SelectionTypeDialog::saveDefaultTemplate()
+{
+    if (mUseTemplateByDefault->isChecked()) {
+        mSelectionTreeWidget->saveAsDefaultTemplate();
+    }
+}
+
+void SelectionTypeDialog::loadDefaultTemplate()
+{
+    mSelectionTreeWidget->loadDefaultTemplate();
 }

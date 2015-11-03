@@ -46,8 +46,8 @@
 #include <utils/kleo_assert.h>
 #include <utils/archivedefinition.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -224,7 +224,7 @@ void SignEncryptFilesController::setOperationMode(unsigned int mode)
 {
     Private::assertValidOperation(mode);
     if (contains_dir(d->files)) {
-        mode = mode & ~ArchiveMask | ArchiveForced;
+        mode = (mode & ~ArchiveMask) | ArchiveForced;
     }
     d->operation = mode;
     d->updateWizardMode();
@@ -309,13 +309,13 @@ void SignEncryptFilesController::start()
 
 static const char *extension(bool pgp, bool sign, bool encrypt, bool ascii, bool detached)
 {
-    unsigned int cls = pgp ? Class::OpenPGP : Class::CMS ;
+    unsigned int cls = pgp ? Class::OpenPGP : Class::CMS;
     if (encrypt) {
         cls |= Class::CipherText;
     } else if (sign) {
-        cls |= detached ? Class::DetachedSignature : Class::OpaqueSignature ;
+        cls |= detached ? Class::DetachedSignature : Class::OpaqueSignature;
     }
-    cls |= ascii ? Class::Ascii : Class::Binary ;
+    cls |= ascii ? Class::Ascii : Class::Binary;
     if (const char *const ext = outputFileExtension(cls)) {
         return ext;
     } else {
@@ -370,7 +370,7 @@ createArchiveSignEncryptTaskForFiles(const QStringList &files, const QString &ou
 
     kleo_assert(ad);
 
-    const Protocol proto = pgp ? OpenPGP : CMS ;
+    const Protocol proto = pgp ? OpenPGP : CMS;
 
     task->setInputFileNames(files);
     task->setInput(ad->createInputFromPackCommand(proto, files));
@@ -615,7 +615,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated()
         return;
     }
 
-    std::auto_ptr<NewSignEncryptFilesWizard> w(new NewSignEncryptFilesWizard);
+    std::unique_ptr<NewSignEncryptFilesWizard> w(new NewSignEncryptFilesWizard);
     w->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(w.get(), SIGNAL(operationPrepared()), q, SLOT(slotWizardOperationPrepared()), Qt::QueuedConnection);

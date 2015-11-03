@@ -25,7 +25,7 @@
 
 #include "attachmentview.h"
 
-#include "messagecomposer/attachment/attachmentmodel.h"
+#include "MessageComposer/AttachmentModel"
 #include "kmkernel.h"
 
 #include <QContextMenuEvent>
@@ -41,8 +41,7 @@
 #include <QIcon>
 #include <KLocalizedString>
 
-#include <messagecore/attachment/attachmentpart.h>
-#include <boost/shared_ptr.hpp>
+#include <MessageCore/AttachmentPart>
 #include <KFormat>
 using MessageCore::AttachmentPart;
 

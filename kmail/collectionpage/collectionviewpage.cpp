@@ -18,7 +18,7 @@
 
 #include "collectionviewpage.h"
 #include "kmkernel.h"
-#include "kernel/mailkernel.h"
+#include "mailcommon/mailkernel.h"
 
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/entitydisplayattribute.h>
@@ -35,12 +35,12 @@
 #include <KIconButton>
 #include <KConfigGroup>
 
-#include "messagelist/utils/aggregationcombobox.h"
-#include "messagelist/utils/aggregationconfigbutton.h"
-#include "messagelist/utils/themecombobox.h"
-#include "messagelist/utils/themeconfigbutton.h"
+#include "messagelist/aggregationcombobox.h"
+#include "messagelist/aggregationconfigbutton.h"
+#include "messagelist/themecombobox.h"
+#include "messagelist/themeconfigbutton.h"
 
-#include "foldercollection.h"
+#include "MailCommon/FolderCollection"
 
 using namespace MailCommon;
 
@@ -268,10 +268,10 @@ void CollectionViewPage::save(Akonadi::Collection &col)
     const int currentIndex = mShowSenderReceiverComboBox->currentIndex();
     if (mShowSenderReceiverValue != currentIndex) {
         if (currentIndex == 1) {
-            Akonadi::MessageFolderAttribute *messageFolder  = col.attribute<Akonadi::MessageFolderAttribute>(Akonadi::Entity::AddIfMissing);
+            Akonadi::MessageFolderAttribute *messageFolder  = col.attribute<Akonadi::MessageFolderAttribute>(Akonadi::Collection::AddIfMissing);
             messageFolder->setOutboundFolder(false);
         } else if (currentIndex == 2) {
-            Akonadi::MessageFolderAttribute *messageFolder  = col.attribute<Akonadi::MessageFolderAttribute>(Akonadi::Entity::AddIfMissing);
+            Akonadi::MessageFolderAttribute *messageFolder  = col.attribute<Akonadi::MessageFolderAttribute>(Akonadi::Collection::AddIfMissing);
             messageFolder->setOutboundFolder(true);
         } else {
             col.removeAttribute<Akonadi::MessageFolderAttribute>();

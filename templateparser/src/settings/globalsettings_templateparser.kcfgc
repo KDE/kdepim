@@ -1,0 +1,11 @@
+File=templateparser.kcfg
+ClassName=TemplateParserSettings
+NameSpace=TemplateParser
+Visibility=TEMPLATEPARSER_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=templateparser_export.h,templateparser/defaulttemplates.h
+TranslationDomain=libtemplateparser
+TranslationSystem=kde

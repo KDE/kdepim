@@ -23,11 +23,13 @@
 
 #include <QSplitter>
 #include <QUrl>
-#include "ksieveui/editor/sieveeditorwidget.h"
+#include "ksieveui/sieveeditorwidget.h"
 class QTabWidget;
+class QStackedWidget;
 class SieveEditorTabWidget;
 class SieveEditorScriptManagerWidget;
 class SieveEditorPageWidget;
+class SieveEditorEmptyTabWidgetLabel;
 class SieveEditorMainWidget : public QSplitter
 {
     Q_OBJECT
@@ -49,6 +51,7 @@ public:
     KSieveUi::SieveEditorWidget::EditorMode pageMode() const;
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
+    bool isWordWrap() const;
 
     bool hasSelection() const;
     QString currentHelpTitle() const;
@@ -77,6 +80,8 @@ public Q_SLOTS:
     void slotReverseCase();
     void slotZoomIn();
     void slotZoomOut();
+    void slotZoomReset();
+    void slotWordWrap(bool);
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
@@ -97,13 +102,16 @@ private Q_SLOTS:
     void slotUndo();
     void slotRedo();
     void slotSelectAll();
+    void slotTabCloseAllRequested();
 private:
+    void updateStackedWidget();
     QWidget *hasExistingPage(const QUrl &url);
     QColor mModifiedScriptColor;
     QColor mScriptColor;
     SieveEditorTabWidget *mTabWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
-
+    QStackedWidget *mStackedWidget;
+    SieveEditorEmptyTabWidgetLabel *mEditorEmptyLabel;
 };
 
 #endif // SIEVEEDITORMAINWIDGET_H

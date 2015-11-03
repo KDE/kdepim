@@ -68,7 +68,7 @@ public:
 
     AbstractKeyListModel *model() const
     {
-        return m_isHierarchical ? hierarchicalModel() : flatModel() ;
+        return m_isHierarchical ? hierarchicalModel() : flatModel();
     }
 
     AbstractKeyListModel *flatModel() const

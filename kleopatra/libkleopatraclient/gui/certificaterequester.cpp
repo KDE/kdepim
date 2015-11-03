@@ -58,11 +58,11 @@ public:
 private:
     void updateLineEdit()
     {
-        ui.lineEdit.setText(selectedCertificates.join(QLatin1String(" ")));
+        ui.lineEdit.setText(selectedCertificates.join(QStringLiteral(" ")));
     }
     void createCommand()
     {
-        std::auto_ptr<SelectCertificateCommand> cmd(new SelectCertificateCommand);
+        std::unique_ptr<SelectCertificateCommand> cmd(new SelectCertificateCommand);
 
         cmd->setMultipleCertificatesAllowed(multipleCertificatesAllowed);
         cmd->setOnlySigningCertificatesAllowed(onlySigningCertificatesAllowed);
@@ -234,7 +234,7 @@ void CertificateRequester::setSelectedCertificate(const QString &cert)
 
 QString CertificateRequester::selectedCertificate() const
 {
-    return d->selectedCertificates.empty() ? QString() : d->selectedCertificates.front() ;
+    return d->selectedCertificates.empty() ? QString() : d->selectedCertificates.front();
 }
 
 void CertificateRequester::Private::slotButtonClicked()

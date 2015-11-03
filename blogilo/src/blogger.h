@@ -197,7 +197,7 @@ Q_SIGNALS:
     void authenticated(const QMap<QString, QString> &authData);
 
 private:
-    Q_DECLARE_PRIVATE(Blogger);
+    Q_DECLARE_PRIVATE(Blogger)
 
     Q_PRIVATE_SLOT(d_func(), void _k_onAuthenticateFinished(KGAPI2::Job *))
     Q_PRIVATE_SLOT(d_func(), void _k_onListBlogsFinished(KGAPI2::Job *))

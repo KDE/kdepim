@@ -1,116 +1,90 @@
-project(messagelist)
+cmake_minimum_required(VERSION 2.8.12)
+
+project(MessageList)
 
 
-add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageList_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(LIBRARY_NAMELINK)
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
-option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading" FALSE)
-configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messagelist.h)
 
-include_directories(
-  ${Boost_INCLUDE_DIRS}
-  ${BALOO_INCLUDE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/messagecore
-  ${CMAKE_SOURCE_DIR}/pimcommon
-  )
+set(KF5_VERSION "5.16.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.47")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
 
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiSearch "5.0.42" CONFIG REQUIRED)
+set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libmessagelist\")
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGELIST
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagelist_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageListConfigVersion.cmake"
+                        SOVERSION 5
+)
 
-add_subdirectory(pics)
+########### Targets ###########
+
+#add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5MessageList")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5MessageListConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageListConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageListConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageListConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5MessageListTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MessageListTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/messagelist_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGELIST
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagelist_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MailImporterConfigVersion.cmake"
+                        SOVERSION 5
+)
+endif()
+
+add_subdirectory(src)
 if (BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
-
-set(libmessagelist_SRCS
-  core/aggregation.cpp
-  core/delegate.cpp
-  core/filter.cpp
-  core/item.cpp
-  core/groupheaderitem.cpp
-  core/manager.cpp
-  core/messageitem.cpp
-  core/messageitemsetmanager.cpp
-  core/model.cpp
-  core/modelinvariantindex.cpp
-  core/modelinvariantrowmapper.cpp
-  core/optionset.cpp
-  core/theme.cpp
-  core/themedelegate.cpp
-  core/storagemodelbase.cpp
-  core/sortorder.cpp
-  core/view.cpp
-  core/widgetbase.cpp
-  core/widgets/quicksearchline.cpp
-  core/widgets/quicksearchwarning.cpp
-
-  utils/aggregationcombobox.cpp
-  utils/aggregationconfigbutton.cpp
-  utils/aggregationeditor.cpp
-  utils/comboboxutils.cpp
-  utils/configureaggregationsdialog.cpp
-  utils/configurethemesdialog.cpp
-  utils/optionseteditor.cpp
-  utils/themecombobox.cpp
-  utils/themeconfigbutton.cpp
-  utils/themeeditor.cpp
-
-  messagelist_debug.cpp
-  pane.cpp
-  storagemodel.cpp
-  widget.cpp
-  messagelistutil.cpp
-)
-
-set(libmessagelist_core_HEADERS
-  core/enums.h
-  core/item.h
-  core/messageitem.h
-  core/model.h
-  core/modelinvariantindex.h
-  core/modelinvariantrowmapper.h
-  ${CMAKE_CURRENT_BINARY_DIR}/core/settings.h
-  core/storagemodelbase.h
-  core/view.h
-  core/widgetbase.h
-)
-
-set(libmessagelist_utils_HEADERS
-  utils/aggregationcombobox.h
-  utils/aggregationconfigbutton.h
-  utils/configureaggregationsdialog.h
-  utils/configurethemesdialog.h
-  utils/themecombobox.h
-  utils/themeconfigbutton.h
-)
-
-set(libmessagelist_HEADERS
-  pane.h
-  storagemodel.h
-  widget.h
-)
-
-kconfig_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
-  core/settings.kcfgc
-)
-
-add_library(messagelist ${libmessagelist_SRCS})
-generate_export_header(messagelist BASE_NAME messagelist)
-target_link_libraries(messagelist
-  
-  KF5::KIOCore
-  KF5::AkonadiCore
-  KF5::AkonadiMime
-  KF5::Mime
-  KF5::AkonadiSearchPIM
-  messagecore
-  pimcommon
-)
-
-set_target_properties(messagelist PROPERTIES
-  VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_SOVERSION}
-)
-
-install(TARGETS messagelist ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

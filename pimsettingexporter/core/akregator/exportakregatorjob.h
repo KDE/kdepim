@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ExportAkregatorJob : public AbstractImportExportJob
+class ExportAkregatorJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
@@ -31,9 +31,9 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
-private:
-    void backupConfig();
-    void backupData();
+private Q_SLOTS:
+    void slotCheckBackupConfig();
+    void slotCheckBackupData();
 };
 
 #endif // EXPORTAKREGATORJOB_H

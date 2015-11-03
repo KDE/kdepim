@@ -243,7 +243,7 @@ void ContactFields::setValue(Field field, const QString &value, KContacts::Addre
         url.setUrl(QUrl(value));
         contact.setUrl(url);
     }
-        break;
+    break;
     case ContactFields::Organization:
         contact.setOrganization(value);
         break;

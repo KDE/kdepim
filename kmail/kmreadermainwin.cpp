@@ -46,27 +46,27 @@
 #include <QMenuBar>
 #include <qmenu.h>
 #include "kmmainwidget.h"
-#include "messageviewer/viewer/csshelper.h"
-#include "customtemplatesmenu.h"
+#include "MessageViewer/CSSHelper"
+#include <TemplateParser/CustomTemplatesMenu>
 #include "messageactions.h"
 #include "util.h"
-#include "kernel/mailkernel.h"
-#include "foldercollection.h"
+#include "mailcommon/mailkernel.h"
+#include "MailCommon/FolderCollection"
 
 #include <KActionCollection>
 #include <Akonadi/Contact/ContactSearchJob>
 #include <KEmailAddress>
 #include <kmime/kmime_message.h>
 
-#include <messageviewer/viewer/viewer.h>
+#include <messageviewer/viewer.h>
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/itemcopyjob.h>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/itemmovejob.h>
 #include <Akonadi/KMime/MessageFlags>
-#include "pimcommon/texttospeech/texttospeech.h"
-#include "messagecore/helpers/messagehelpers.h"
-#include <util/mailutil.h>
+#include "kpimtextedit/texttospeech.h"
+#include "messagecore/messagehelpers.h"
+#include <mailcommon/mailutil.h>
 
 using namespace MailCommon;
 
@@ -108,9 +108,9 @@ void KMReaderMainWin::initKMReaderMainWin()
     applyMainWindowSettings(KMKernel::self()->config()->group("Separate Reader Window"));
     if (! mReaderWin->message().isValid()) {
         menuBar()->hide();
-        toolBar(QLatin1String("mainToolBar"))->hide();
+        toolBar(QStringLiteral("mainToolBar"))->hide();
     }
-    connect(kmkernel, SIGNAL(configChanged()), this, SLOT(slotConfigChanged()));
+    connect(kmkernel, &KMKernel::configChanged, this, &KMReaderMainWin::slotConfigChanged);
     connect(mReaderWin, SIGNAL(showStatusBarMessage(QString)), statusBar(), SLOT(showMessage(QString)));
 }
 
@@ -150,7 +150,7 @@ void KMReaderMainWin::showMessage(const QString &encoding, const Akonadi::Item &
     mTrashAction->setEnabled(canChange);
 
     menuBar()->show();
-    toolBar(QLatin1String("mainToolBar"))->show();
+    toolBar(QStringLiteral("mainToolBar"))->show();
 }
 
 void KMReaderMainWin::showMessage(const QString &encoding, KMime::Message::Ptr message)
@@ -175,12 +175,12 @@ void KMReaderMainWin::showMessage(const QString &encoding, KMime::Message::Ptr m
     mTrashAction->setEnabled(false);
 
     menuBar()->show();
-    toolBar(QLatin1String("mainToolBar"))->show();
+    toolBar(QStringLiteral("mainToolBar"))->show();
 }
 
 void KMReaderMainWin::slotReplyOrForwardFinished()
 {
-    if (GlobalSettings::self()->closeAfterReplyOrForward()) {
+    if (KMailSettings::self()->closeAfterReplyOrForward()) {
         close();
     }
 }
@@ -374,7 +374,7 @@ QAction *KMReaderMainWin::moveActionMenu(QMenu *menu)
         KActionMenu *action = new KActionMenu(menu);
         action->setText(i18n("Move Message To..."));
         mainwin->standardMailActionManager()->standardActionManager()->createActionFolderMenu(action->menu(), Akonadi::StandardActionManager::MoveItemToMenu);
-        connect(action->menu(), SIGNAL(triggered(QAction*)), SLOT(slotMoveItem(QAction*)));
+        connect(action->menu(), &QMenu::triggered, this, &KMReaderMainWin::slotMoveItem);
 
         return action;
     }
@@ -396,14 +396,14 @@ void KMReaderMainWin::copyOrMoveItem(const Akonadi::Collection &collection, bool
     if (mMsg.isValid()) {
         if (move) {
             Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(mMsg, collection, this);
-            connect(job, SIGNAL(result(KJob*)), this, SLOT(slotCopyMoveResult(KJob*)));
+            connect(job, &KJob::result, this, &KMReaderMainWin::slotCopyMoveResult);
         } else {
             Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob(mMsg, collection, this);
-            connect(job, SIGNAL(result(KJob*)), this, SLOT(slotCopyMoveResult(KJob*)));
+            connect(job, &KJob::result, this, &KMReaderMainWin::slotCopyMoveResult);
         }
     } else {
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(mMsg, collection, this);
-        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotCopyMoveResult(KJob*)));
+        connect(job, &KJob::result, this, &KMReaderMainWin::slotCopyMoveResult);
     }
 }
 
@@ -423,7 +423,7 @@ void KMReaderMainWin::slotCopyMoveResult(KJob *job)
     }
 }
 
-void KMReaderMainWin::slotMessagePopup(const Akonadi::Item &aMsg , const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint)
+void KMReaderMainWin::slotMessagePopup(const Akonadi::Item &aMsg, const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint)
 {
     mMsg = aMsg;
 
@@ -463,7 +463,7 @@ void KMReaderMainWin::slotContactSearchJobForMessagePopupDone(KJob *job)
     showMessagePopup(msg, url, imageUrl, aPoint, contactAlreadyExists, uniqueContactFound);
 }
 
-void KMReaderMainWin::showMessagePopup(const Akonadi::Item &msg , const QUrl &url, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound)
+void KMReaderMainWin::showMessagePopup(const Akonadi::Item &msg, const QUrl &url, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound)
 {
     QMenu *menu = Q_NULLPTR;
 
@@ -546,8 +546,8 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item &msg , const QUrl &ur
         menu->addSeparator();
         mMsgActions->addWebShortcutsMenu(menu, selectedText);
         menu->addSeparator();
-        menu->addAction(mReaderWin->translateAction());
-        if (PimCommon::TextToSpeech::self()->isReady()) {
+        menu->addActions(mReaderWin->viewerPluginActionList(MessageViewer::ViewerPluginInterface::NeedSelection));
+        if (KPIMTextEdit::TextToSpeech::self()->isReady()) {
             menu->addSeparator();
             menu->addAction(mReaderWin->speakTextAction());
         }
@@ -608,8 +608,7 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item &msg , const QUrl &ur
             menu->addAction(mSaveAtmAction);
             if (msg.isValid()) {
                 menu->addSeparator();
-                menu->addAction(mReaderWin->createTodoAction());
-                menu->addAction(mReaderWin->createEventAction());
+                menu->addActions(mReaderWin->viewerPluginActionList(MessageViewer::ViewerPluginInterface::NeedMessage));
                 menu->addSeparator();
                 menu->addAction(mReaderWin->saveMessageDisplayFormatAction());
                 menu->addAction(mReaderWin->resetMessageDisplayFormatAction());
@@ -675,7 +674,7 @@ void KMReaderMainWin::slotEditToolbars()
 
 void KMReaderMainWin::slotUpdateToolbars()
 {
-    createGUI(QLatin1String("kmreadermainwin.rc"));
+    createGUI(QStringLiteral("kmreadermainwin.rc"));
     applyMainWindowSettings(KConfigGroup(KMKernel::self()->config(), "ReaderWindow"));
 }
 

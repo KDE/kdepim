@@ -4,24 +4,16 @@ add_subdirectory( kconf_update )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_mailfilter_agent\")
 
-include_directories(
-  ${Boost_INCLUDE_DIR}
-)
-
-
-
 set(akonadi_mailfilter_agent_SRCS
   dummykernel.cpp
   filterlogdialog.cpp
   filtermanager.cpp
   mailfilteragent.cpp
-  mailfilteragent_debug.cpp
 )
 
 qt5_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)
 
-#kconfig_add_kcfg_files(akonadi_mailfilter_agent_SRCS settings.kcfgc)
-#ki18n_wrap_ui(akonadi_mailfilter_agent_SRCS configdialog.ui)
+ecm_qt_declare_logging_category(akonadi_mailfilter_agent_SRCS HEADER mailfilteragent_debug.h IDENTIFIER MAILFILTERAGENT_LOG CATEGORY_NAME log_mailfilteragent)
 
 add_executable(akonadi_mailfilter_agent ${akonadi_mailfilter_agent_SRCS})
 
@@ -33,16 +25,19 @@ endif ()
 
 
 target_link_libraries(akonadi_mailfilter_agent
-  mailcommon
-  messagecore
-  messagecomposer
-  pimcommon
+  KF5::MailCommon
+  KF5::MessageComposer
+  KF5::PimCommon
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::AkonadiAgentBase
   KF5::Mime
   KF5::IdentityManagement
   KF5::DBusAddons
+  KF5::Notifications
+  KF5::WindowSystem
+  KF5::IconThemes
+  KF5::Libkdepim
 )
 
 install(TARGETS akonadi_mailfilter_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

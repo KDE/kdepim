@@ -1,7 +1,7 @@
 /*
  *  kamail.cpp  -  email functions
  *  Program:  kalarm
- *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2015 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,14 +41,16 @@
 #include <KEmailAddress>
 #include <K4AboutData>
 #include <KLocale>
-#include <KUrl>
 #include <KLocalizedString>
 #include <kfileitem.h>
-#include <kio/netaccess.h>
+#include <KIO/StatJob>
+#include <KJobWidgets>
 #include <kemailsettings.h>
 #include <kcodecs.h>
 #include <kcharsets.h>
+#include <kshell.h>
 
+#include <QUrl>
 #include <QFile>
 #include <QHostInfo>
 #include <QList>
@@ -148,36 +150,82 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
     qCDebug(KALARM_LOG) << "To:" << jobdata.event.emailAddresses(QStringLiteral(","))
                   << endl << "Subject:" << jobdata.event.emailSubject();
 
+    KMime::Message::Ptr message = KMime::Message::Ptr(new KMime::Message);
+
     MailTransport::TransportManager* manager = MailTransport::TransportManager::self();
     MailTransport::Transport* transport = Q_NULLPTR;
     if (Preferences::emailClient() == Preferences::sendmail)
     {
         qCDebug(KALARM_LOG) << "Sending via sendmail";
-        const QList<MailTransport::Transport*> transports = manager->transports();
-        for (int i = 0, count = transports.count();  i < count;  ++i)
+        QStringList paths;
+        paths << QStringLiteral("/sbin") << QStringLiteral("/usr/sbin") << QStringLiteral("/usr/lib");
+        QString command = QStandardPaths::findExecutable(QStringLiteral("sendmail"), paths);
+        if (!command.isNull())
         {
-            if (transports[i]->type() == MailTransport::Transport::EnumType::Sendmail)
+            command += QStringLiteral(" -f ");
+            command += extractEmailAndNormalize(jobdata.from);
+            command += QStringLiteral(" -oi -t ");
+            initHeaders(*message, jobdata);
+        }
+        else
+        {
+            command = QStandardPaths::findExecutable(QStringLiteral("mail"), paths);
+            if (command.isNull())
             {
-                // Use the first sendmail transport found
-                transport = transports[i];
-                break;
+                qCCritical(KALARM_LOG) << "sendmail not found";
+                errmsgs = errors(xi18nc("@info", "<command>%1</command> not found", QStringLiteral("sendmail"))); // give up
+                return -1;
             }
+
+            command += QStringLiteral(" -s ");
+            command += KShell::quoteArg(jobdata.event.emailSubject());
+
+            if (!jobdata.bcc.isEmpty())
+            {
+                command += QStringLiteral(" -b ");
+                command += extractEmailAndNormalize(jobdata.bcc);
+            }
+
+            command += QLatin1Char(' ');
+            command += jobdata.event.emailPureAddresses(QStringLiteral(" ")); // locally provided, okay
         }
-        if (!transport)
+        // Add the body and attachments to the message.
+        // (Sendmail requires attachments to have already been included in the message.)
+        err = appendBodyAttachments(*message, jobdata);
+        if (!err.isNull())
         {
-            QStringList paths;
-            paths << QStringLiteral("/sbin") << QStringLiteral("/usr/sbin") << QStringLiteral("/usr/lib");
-            QString command = QStandardPaths::findExecutable(QStringLiteral("sendmail"), paths);
-            transport = manager->createTransport();
-            transport->setName(QStringLiteral("sendmail"));
-            transport->setType(MailTransport::Transport::EnumType::Sendmail);
-            transport->setHost(command);
-            transport->setRequiresAuthentication(false);
-            transport->setStorePassword(false);
-            manager->addTransport(transport);
-            transport->save();
-            qCDebug(KALARM_LOG) << "Creating sendmail transport, id=" << transport->id();
+            qCCritical(KALARM_LOG) << "Error compiling message:" << err;
+            errmsgs = errors(err);
+            return -1;
         }
+
+        // Execute the send command
+        FILE* fd = ::popen(command.toLocal8Bit(), "w");
+        if (!fd)
+        {
+            qCCritical(KALARM_LOG) << "Unable to open a pipe to " << command;
+            errmsgs = errors();
+            return -1;
+        }
+        message->assemble();
+        QByteArray encoded = message->encodedContent();
+        fwrite(encoded, encoded.length(), 1, fd);
+        pclose(fd);
+
+#ifdef KMAIL_SUPPORTED
+        if (Preferences::emailCopyToKMail())
+        {
+            // Create a copy of the sent email in KMail's 'sent-mail' folder,
+            // or if there was a send error, in KMail's 'outbox' folder.
+            err = addToKMailFolder(jobdata, "sent-mail", true);
+            if (!err.isNull())
+                errmsgs += errors(err, COPY_ERROR);    // not a fatal error - continue
+        }
+#endif
+
+        if (jobdata.allowNotify)
+            notifyQueued(jobdata.event);
+        return 1;
     }
     else
     {
@@ -190,39 +238,38 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
             errmsgs = errors(xi18nc("@info", "No mail transport configured for email identity <resource>%1</resource>", identity.identityName()));
             return -1;
         }
-    }
-    qCDebug(KALARM_LOG) << "Using transport" << transport->name() << ", id=" << transport->id();
+        qCDebug(KALARM_LOG) << "Using transport" << transport->name() << ", id=" << transport->id();
 
-    KMime::Message::Ptr message = KMime::Message::Ptr(new KMime::Message);
-    initHeaders(*message, jobdata);
-    err = appendBodyAttachments(*message, jobdata);
-    if (!err.isNull())
-    {
-        qCCritical(KALARM_LOG) << "Error compiling message:" << err;
-        errmsgs = errors(err);
-        return -1;
-    }
+        initHeaders(*message, jobdata);
+        err = appendBodyAttachments(*message, jobdata);
+        if (!err.isNull())
+        {
+            qCCritical(KALARM_LOG) << "Error compiling message:" << err;
+            errmsgs = errors(err);
+            return -1;
+        }
 
-    MailTransport::MessageQueueJob* mailjob = new MailTransport::MessageQueueJob(kapp);
-    mailjob->setMessage(message);
-    mailjob->transportAttribute().setTransportId(transport->id());
-    // MessageQueueJob email addresses must be pure, i.e. without display name. Note
-    // that display names are included in the actual headers set up by initHeaders().
-    mailjob->addressAttribute().setFrom(extractEmailAndNormalize(jobdata.from));
-    mailjob->addressAttribute().setTo(extractEmailsAndNormalize(jobdata.event.emailAddresses(QStringLiteral(","))));
-    if (!jobdata.bcc.isEmpty())
-        mailjob->addressAttribute().setBcc(extractEmailsAndNormalize(jobdata.bcc));
-    MailTransport::SentBehaviourAttribute::SentBehaviour sentAction =
-                         (Preferences::emailClient() == Preferences::kmail || Preferences::emailCopyToKMail())
-                         ? MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection : MailTransport::SentBehaviourAttribute::Delete;
-    mailjob->sentBehaviourAttribute().setSentBehaviour(sentAction);
-    mJobs.enqueue(mailjob);
-    mJobData.enqueue(jobdata);
-    if (mJobs.count() == 1)
-    {
-        // There are no jobs already active or queued, so send now
-        connect(mailjob, SIGNAL(result(KJob*)), instance(), SLOT(slotEmailSent(KJob*)));
-        mailjob->start();
+        MailTransport::MessageQueueJob* mailjob = new MailTransport::MessageQueueJob(kapp);
+        mailjob->setMessage(message);
+        mailjob->transportAttribute().setTransportId(transport->id());
+        // MessageQueueJob email addresses must be pure, i.e. without display name. Note
+        // that display names are included in the actual headers set up by initHeaders().
+        mailjob->addressAttribute().setFrom(extractEmailAndNormalize(jobdata.from));
+        mailjob->addressAttribute().setTo(extractEmailsAndNormalize(jobdata.event.emailAddresses(QStringLiteral(","))));
+        if (!jobdata.bcc.isEmpty())
+            mailjob->addressAttribute().setBcc(extractEmailsAndNormalize(jobdata.bcc));
+        MailTransport::SentBehaviourAttribute::SentBehaviour sentAction =
+                             (Preferences::emailClient() == Preferences::kmail || Preferences::emailCopyToKMail())
+                             ? MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection : MailTransport::SentBehaviourAttribute::Delete;
+        mailjob->sentBehaviourAttribute().setSentBehaviour(sentAction);
+        mJobs.enqueue(mailjob);
+        mJobData.enqueue(jobdata);
+        if (mJobs.count() == 1)
+        {
+            // There are no jobs already active or queued, so send now
+            connect(mailjob, &KJob::result, instance(), &KAMail::slotEmailSent);
+            mailjob->start();
+        }
     }
     return 0;
 }
@@ -262,7 +309,7 @@ void KAMail::slotEmailSent(KJob* job)
     if (!mJobs.isEmpty())
     {
         // Send the next queued email
-        connect(mJobs.head(), SIGNAL(result(KJob*)), instance(), SLOT(slotEmailSent(KJob*)));
+        connect(mJobs.head(), &KJob::result, instance(), &KAMail::slotEmailSent);
         mJobs.head()->start();
     }
 }
@@ -322,7 +369,7 @@ QString KAMail::appendBodyAttachments(KMime::Message& message, JobData& data)
         message.contentType()->setMimeType("text/plain");
         message.contentType()->setCharset("utf-8");
         message.fromUnicodeString(data.event.message());
-        QList<KMime::Headers::contentEncoding> encodings = KMime::encodingsForData(message.body());
+        auto encodings = KMime::encodingsForData(message.body());
         encodings.removeAll(KMime::Headers::CE8Bit);  // not handled by KMime
         message.contentTransferEncoding()->setEncoding(encodings[0]);
         message.assemble();
@@ -340,7 +387,7 @@ QString KAMail::appendBodyAttachments(KMime::Message& message, JobData& data)
             content->contentType()->setMimeType("text/plain");
             content->contentType()->setCharset("utf-8");
             content->fromUnicodeString(data.event.message());
-            QList<KMime::Headers::contentEncoding> encodings = KMime::encodingsForData(content->body());
+            auto encodings = KMime::encodingsForData(content->body());
             encodings.removeAll(KMime::Headers::CE8Bit);  // not handled by KMime
             content->contentTransferEncoding()->setEncoding(encodings[0]);
             content->assemble();
@@ -351,43 +398,47 @@ QString KAMail::appendBodyAttachments(KMime::Message& message, JobData& data)
         for (QStringList::Iterator at = attachments.begin();  at != attachments.end();  ++at)
         {
             QString attachment = QString::fromLatin1((*at).toLocal8Bit());
-            KUrl url(attachment);
+            QUrl url = QUrl::fromUserInput(attachment, QString(), QUrl::AssumeLocalFile);
             QString attachError = xi18nc("@info", "Error attaching file: <filename>%1</filename>", attachment);
-            url.cleanPath();
-            KIO::UDSEntry uds;
-            if (!KIO::NetAccess::stat(url, uds, MainWindow::mainMainWindow()))
-            {
-                qCCritical(KALARM_LOG) << "Not found:" << attachment;
-                return xi18nc("@info", "Attachment not found: <filename>%1</filename>", attachment);
-            }
-            KFileItem fi(uds, url);
-            if (fi.isDir()  ||  !fi.isReadable())
-            {
-                qCCritical(KALARM_LOG) << "Not file/not readable:" << attachment;
-                return attachError;
-            }
-
-            // Read the file contents
-            QString tmpFile;
-            if (!KIO::NetAccess::download(url, tmpFile, MainWindow::mainMainWindow()))
-            {
-                qCCritical(KALARM_LOG) << "Load failure:" << attachment;
-                return attachError;
-            }
-            QFile file(tmpFile);
-            if (!file.open(QIODevice::ReadOnly))
-            {
-                qCDebug(KALARM_LOG) << "tmp load error:" << attachment;
-                return attachError;
-            }
-            qint64 size = file.size();
-            QByteArray contents = file.readAll();
-            file.close();
+            QByteArray contents;
             bool atterror = false;
-            if (contents.size() < size)
-            {
-                qCDebug(KALARM_LOG) << "Read error:" << attachment;
-                atterror = true;
+            if (!url.isLocalFile()) {
+                KIO::UDSEntry uds;
+                auto statJob = KIO::stat(url, KIO::StatJob::SourceSide, 2);
+                KJobWidgets::setWindow(statJob, MainWindow::mainMainWindow());
+                if (!statJob->exec())
+                {
+                    qCCritical(KALARM_LOG) << "Not found:" << attachment;
+                    return xi18nc("@info", "Attachment not found: <filename>%1</filename>", attachment);
+                }
+                KFileItem fi(statJob->statResult(), url);
+                if (fi.isDir()  ||  !fi.isReadable())
+                {
+                    qCCritical(KALARM_LOG) << "Not file/not readable:" << attachment;
+                    return attachError;
+                }
+
+                // Read the file contents
+                auto downloadJob = KIO::storedGet(url.url());
+                KJobWidgets::setWindow(downloadJob, MainWindow::mainMainWindow());
+                if (!downloadJob->exec())
+                {
+                    qCCritical(KALARM_LOG) << "Load failure:" << attachment;
+                    return attachError;
+                }
+                contents = downloadJob->data();
+                if (static_cast<unsigned>(contents.size()) < fi.size())
+                {
+                    qCDebug(KALARM_LOG) << "Read error:" << attachment;
+                    atterror = true;
+                }
+            } else {
+                QFile f(url.toLocalFile());
+                if (!f.open(QIODevice::ReadOnly)) {
+                    qCCritical(KALARM_LOG) << "Load failure:" << attachment;
+                    return attachError;
+                }
+                contents = f.readAll();
             }
 
             QByteArray coded = KCodecs::base64Encode(contents, true);
@@ -395,14 +446,15 @@ QString KAMail::appendBodyAttachments(KMime::Message& message, JobData& data)
             content->setBody(coded + "\n\n");
 
             // Set the content type
-            KMimeType::Ptr type = KMimeType::findByUrl(url);
-            KMime::Headers::ContentType* ctype = new KMime::Headers::ContentType(content);
-            ctype->fromUnicodeString(type->name(), autoDetectCharset(type->name()));
+            QMimeDatabase mimeDb;
+            QString typeName = mimeDb.mimeTypeForUrl(url).name();
+            KMime::Headers::ContentType* ctype = new KMime::Headers::ContentType;
+            ctype->fromUnicodeString(typeName, autoDetectCharset(typeName));
             ctype->setName(attachment, "local");
             content->setHeader(ctype);
 
             // Set the encoding
-            KMime::Headers::ContentTransferEncoding* cte = new KMime::Headers::ContentTransferEncoding(content);
+            KMime::Headers::ContentTransferEncoding* cte = new KMime::Headers::ContentTransferEncoding;
             cte->setEncoding(KMime::Headers::CEbase64);
             cte->setDecoded(false);
             content->setHeader(cte);
@@ -529,7 +581,6 @@ int KAMail::checkAddress(QString& address)
 */
 QString KAMail::convertAttachments(const QString& items, QStringList& list)
 {
-    KUrl url;
     list.clear();
     int length = items.length();
     for (int next = 0;  next < length;  )
@@ -558,23 +609,23 @@ QString KAMail::convertAttachments(const QString& items, QStringList& list)
 
 /******************************************************************************
 * Check for the existence of the attachment file.
-* If non-null, '*url' receives the KUrl of the attachment.
+* If non-null, '*url' receives the QUrl of the attachment.
 * Reply = 1 if attachment exists
 *       = 0 if null name
 *       = -1 if doesn't exist.
 */
-int KAMail::checkAttachment(QString& attachment, KUrl* url)
+int KAMail::checkAttachment(QString& attachment, QUrl* url)
 {
     attachment = attachment.trimmed();
     if (attachment.isEmpty())
     {
         if (url)
-            *url = KUrl();
+            *url = QUrl();
         return 0;
     }
     // Check that the file exists
-    KUrl u(attachment);
-    u.cleanPath();
+    QUrl u = QUrl::fromUserInput(attachment, QString(), QUrl::AssumeLocalFile);
+    u.setPath(QDir::cleanPath(u.path()));
     if (url)
         *url = u;
     return checkAttachment(u) ? 1 : -1;
@@ -583,12 +634,14 @@ int KAMail::checkAttachment(QString& attachment, KUrl* url)
 /******************************************************************************
 * Check for the existence of the attachment file.
 */
-bool KAMail::checkAttachment(const KUrl& url)
+bool KAMail::checkAttachment(const QUrl& url)
 {
-    KIO::UDSEntry uds;
-    if (!KIO::NetAccess::stat(url, uds, MainWindow::mainMainWindow()))
+    auto statJob = KIO::stat(url);
+    KJobWidgets::setWindow(statJob, MainWindow::mainMainWindow());
+    if (!statJob->exec()) {
         return false;       // doesn't exist
-    KFileItem fi(uds, url);
+    }
+    KFileItem fi(statJob->statResult(), url);
     if (fi.isDir()  ||  !fi.isReadable())
         return false;
     return true;
@@ -604,10 +657,13 @@ QStringList KAMail::errors(const QString& err, ErrType prefix)
     {
         case SEND_FAIL:  error1 = i18nc("@info", "Failed to send email");  break;
         case SEND_ERROR:  error1 = i18nc("@info", "Error sending email");  break;
+#ifdef KMAIL_SUPPORTED
+        case COPY_ERROR:  error1 = i18nc("@info", "Error copying sent email to <application>KMail</application> <resource>%1</resource> folder", i18n_sent_mail());  break;
+#endif
     }
     if (err.isEmpty())
         return QStringList(error1);
-    QStringList errs(QString::fromLatin1("%1:").arg(error1));
+    QStringList errs(QStringLiteral("%1:").arg(error1));
     errs += err;
     return errs;
 }
@@ -617,11 +673,9 @@ QStringList KAMail::errors(const QString& err, ErrType prefix)
 */
 QString KAMail::getMailBody(quint32 serialNumber)
 {
+//TODO: Need to use Akonadi instead
     QList<QVariant> args;
     args << serialNumber << (int)0;
-#ifdef __GNUC__
-#warning Set correct DBus interface/object for kmail
-#endif
     QDBusInterface iface(KMAIL_DBUS_SERVICE, QString(), QStringLiteral("KMailIface"));
     QDBusReply<QString> reply = iface.callWithArgumentList(QDBus::Block, QStringLiteral("getDecodedBodyPart"), args);
     if (!reply.isValid())

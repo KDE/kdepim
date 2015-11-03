@@ -21,7 +21,6 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
-//krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "toolbox.h"
 #include "dbman.h"
@@ -36,14 +35,15 @@
 #include <QMenu>
 #include <QIcon>
 #include <QAction>
-#include <KToolInvocation>
 #include <QClipboard>
 #include <QTimer>
+#include <QPointer>
+#include <QTimeZone>
 #include <qstatusbar.h>
+#include <QDesktopServices>
 #include "blogilo_debug.h"
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
-#include <kdatetime.h>
 
 class Toolbox::Private
 {
@@ -85,7 +85,7 @@ Toolbox::Toolbox(QWidget *parent)
     lstEntriesList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(lstEntriesList, &QListWidget::customContextMenuRequested, this, &Toolbox::requestEntriesListContextMenu);
 
-    QTimer::singleShot(1000, this, SLOT(reloadLocalPosts()));
+    QTimer::singleShot(1000, this, &Toolbox::reloadLocalPosts);
 }
 
 Toolbox::~Toolbox()
@@ -182,11 +182,11 @@ void Toolbox::slotLoadCategoryListFromDB(int blog_id)
         return;
     }
     clearCatList();
-    QList<Category> listCategories;
+    QVector<Category> listCategories;
     listCategories = DBMan::self()->listCategories(blog_id);
 
-    QList<Category>::const_iterator i;
-    QList<Category>::const_iterator endIt = listCategories.constEnd();
+    QVector<Category>::const_iterator i;
+    QVector<Category>::const_iterator endIt = listCategories.constEnd();
     for (i = listCategories.constBegin(); i != endIt; ++i) {
         CatCheckBox *cb = new CatCheckBox(i->name, this);
         cb->setCategory(*i);
@@ -277,22 +277,20 @@ void Toolbox::getFieldsValue(BilboPost *currentPost)
     currentPost->setModifyTimeStamp(chkOptionsTime->isChecked());
     if (currentPost->status() == KBlog::BlogPost::New) {
         if (chkOptionsTime->isChecked()) {
-            currentPost->setModificationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
-            currentPost->setCreationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
+            currentPost->setModificationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
+            currentPost->setCreationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
         } else {
-            currentPost->setCreationDateTime(KDateTime::currentLocalDateTime());
-            currentPost->setModificationDateTime(KDateTime::currentLocalDateTime());
+            currentPost->setCreationDateTime(QDateTime::currentDateTime());
+            currentPost->setModificationDateTime(QDateTime::currentDateTime());
         }
     } else {
-        currentPost->setCreationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
-        currentPost->setModificationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
+        currentPost->setCreationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
+        currentPost->setModificationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
     }
-    if (currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc()) {
+    if (currentPost->creationDateTime().timeZone() == QTimeZone("UTC") || currentPost->modificationDateTime().timeZone() == QTimeZone("UTC")) {
         qCDebug(BLOGILO_LOG) << "creationDateTime was UTC!";
-        currentPost->setCreationDateTime(KDateTime(currentPost->creationDateTime().dateTime(),
-                                         KDateTime::LocalZone));
-        currentPost->setModificationDateTime(KDateTime(currentPost->modificationDateTime().dateTime(),
-                                             KDateTime::LocalZone));
+        currentPost->setCreationDateTime(currentPost->creationDateTime().toLocalTime());
+        currentPost->setModificationDateTime(currentPost->modificationDateTime().toLocalTime());
     }
     currentPost->setSlug(txtSlug->text());
     currentPost->setPrivate((comboOptionsStatus->currentIndex() == 1) ? true : false);
@@ -322,10 +320,10 @@ void Toolbox::setFieldsValue(BilboPost *post)
     chkOptionsComments->setChecked(post->isCommentAllowed());
     chkOptionsTrackback->setChecked(post->isTrackBackAllowed());
     chkOptionsTime->setChecked(post->isModifyTimeStamp());
-    if (post->creationDateTime().isUtc() || post->modificationDateTime().isUtc()) {
+    if (post->creationDateTime().timeZone() == QTimeZone("UTC") || post->modificationDateTime().timeZone() == QTimeZone("UTC")) {
         qCDebug(BLOGILO_LOG) << "creationDateTime was UTC!";
-        post->setCreationDateTime(KDateTime(post->creationDateTime().dateTime(), KDateTime::LocalZone));
-        post->setModificationDateTime(KDateTime(post->modificationDateTime().dateTime(), KDateTime::LocalZone));
+        post->setCreationDateTime(post->creationDateTime().toLocalTime());
+        post->setModificationDateTime(post->modificationDateTime().toLocalTime());
     }
     optionsTime->setTime(post->creationDateTime().time());
     optionsDate->setDate(post->creationDateTime().date());
@@ -333,9 +331,9 @@ void Toolbox::setFieldsValue(BilboPost *post)
     txtSummary->setPlainText(post->summary());
 }
 
-QList< Category > Toolbox::selectedCategories() const
+QVector<Category> Toolbox::selectedCategories() const
 {
-    QList<Category> list;
+    QVector<Category> list;
     const int count = d->listCategoryCheckBoxes.count();
     for (int i = 0; i < count; ++i) {
         if (d->listCategoryCheckBoxes.at(i)->isChecked()) {
@@ -370,8 +368,8 @@ void Toolbox::setSelectedCategories(const QStringList &list)
 
 QStringList Toolbox::currentTags()
 {
-    QStringList t = txtCatTags->text().split(QRegExp(QString::fromUtf8(",|،")), QString::SkipEmptyParts);
-    for (int i = 0; i < t.count() ; ++i) {
+    QStringList t = txtCatTags->text().split(QRegExp(QStringLiteral(",|،")), QString::SkipEmptyParts);
+    for (int i = 0; i < t.count(); ++i) {
         t[i] = t[i].trimmed();
     }
     return t;
@@ -481,7 +479,7 @@ void Toolbox::clearEntries()
     if (DBMan::self()->clearPosts(d->mCurrentBlogId)) {
         lstEntriesList->clear();
     } else {
-        KMessageBox::detailedSorry(this, i18n("Cannot clear the list of entries.") , DBMan::self()->lastErrorText());
+        KMessageBox::detailedSorry(this, i18n("Cannot clear the list of entries."), DBMan::self()->lastErrorText());
     }
 }
 
@@ -520,15 +518,15 @@ void Toolbox::openPostInBrowser()
         return;
     }
     BilboPost post = DBMan::self()->getPostInfo(lstEntriesList->currentItem()->data(BlogEntryID).toInt());
-    QString url;
+    QUrl url;
     if (!post.permaLink().isEmpty()) {
-        url = post.permaLink().toDisplayString(QUrl::PreferLocalFile);
+        url = post.permaLink().url();
     } else if (!post.link().isEmpty()) {
-        url = post.link().toDisplayString(QUrl::PreferLocalFile);
+        url = post.link().url();
     } else {
-        url = DBMan::self()->blogList().value(d->mCurrentBlogId)->blogUrl();
+        url = QUrl(DBMan::self()->blogList().value(d->mCurrentBlogId)->blogUrl());
     }
-    KToolInvocation::invokeBrowser(url);
+    QDesktopServices::openUrl(url);
 }
 
 void Toolbox::copyPostTitle()

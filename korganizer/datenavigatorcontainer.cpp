@@ -27,7 +27,7 @@
 */
 
 #include "datenavigatorcontainer.h"
-#include "../widgets/kdatenavigator.h"
+#include "widgets/kdatenavigator.h"
 #include "kodaymatrix.h"
 #include "koglobals.h"
 #include "widgets/navigatorbar.h"
@@ -230,7 +230,7 @@ void DateNavigatorContainer::resizeEvent(QResizeEvent *)
     qCDebug(KORGANIZER_LOG) << "  SIZEHINT:" << sizeHint();
     qCDebug(KORGANIZER_LOG) << "  MINIMUM SIZE:" << minimumSize();
 #endif
-    QTimer::singleShot(0, this, SLOT(resizeAllContents()));
+    QTimer::singleShot(0, this, &DateNavigatorContainer::resizeAllContents);
 }
 
 void DateNavigatorContainer::resizeAllContents()

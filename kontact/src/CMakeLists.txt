@@ -13,8 +13,8 @@ set(kontactprivate_LIB_SRCS
   iconsidepane.cpp
   aboutdialog.cpp
   kontactconfiguredialog.cpp
-  kontact_debug.cpp
 )
+ecm_qt_declare_logging_category(kontactprivate_LIB_SRCS HEADER kontact_debug.h IDENTIFIER KONTACT_LOG CATEGORY_NAME log_kontact)
 
 kconfig_add_kcfg_files(kontactprivate_LIB_SRCS prefs.kcfgc)
 
@@ -22,11 +22,16 @@ add_library(kontactprivate ${kontactprivate_LIB_SRCS})
 generate_export_header(kontactprivate BASE_NAME kontact)
 
 target_link_libraries(kontactprivate
+PUBLIC
+  KF5::KIOWidgets
+  KF5::WindowSystem
+  KF5::KontactInterface
+  KF5::IconThemes
+PRIVATE
   KF5::KCMUtils
   KF5::WebKit
-  KF5::KontactInterface
-  kdepim
-  kdepimdbusinterfaces
+  KF5::Libkdepim
+  KF5::GrantleeTheme
 )
 
 set_target_properties(kontactprivate PROPERTIES
@@ -48,10 +53,8 @@ add_executable(kontact_bin ${kontact_bin_SRCS})
 set_target_properties(kontact_bin PROPERTIES OUTPUT_NAME kontact)
 
 target_link_libraries(kontact_bin
-  KF5::WebKit
   KF5::Service
-  KF5::KontactInterface
-  kdepimdbusinterfaces
+  KF5::KdepimDBusInterfaces
   kontactprivate
 )
 
@@ -65,7 +68,7 @@ add_library(kcm_kontact MODULE ${kcm_kontact_PART_SRCS})
 
 target_link_libraries(kcm_kontact
   KF5::KCMUtils
-  kdepim
+  KF5::Libkdepim
   kontactprivate
 )
 

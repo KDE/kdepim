@@ -18,37 +18,22 @@
 
 #include "kmstartup.h"
 
-#include "kmkernel.h" //control center
-
-#include <KLocalizedString>
-
-#include <kglobal.h>
 #include <kiconloader.h>
-
-#undef Status // stupid X headers
 
 namespace KMail
 {
 
-
 void insertLibraryCataloguesAndIcons()
 {
     static const char *const catalogs[] = {
-        "libkdepim",
         "libkleopatra",
-        "libkpgp",
         "libmessagelist",
-        "libmessageviewer",
-        "libmessagecore",
-        "libmessagecomposer",
-        "libpimcommon",
-        "libmailcommon",
-        "libkpimtextedit"
+        "libmessageviewer"
     };
 
     KIconLoader *il = KIconLoader::global();
     unsigned int catalogSize = (sizeof catalogs / sizeof * catalogs);
-    for (unsigned int i = 0 ; i < catalogSize ; ++i) {
+    for (unsigned int i = 0; i < catalogSize; ++i) {
         il->addAppDir(QLatin1String(catalogs[i]));
     }
 

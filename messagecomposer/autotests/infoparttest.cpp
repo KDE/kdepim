@@ -16,7 +16,7 @@
 */
 
 #include "infoparttest.h"
-#include "../part/infopart.h"
+#include "../src/part/infopart.h"
 #include <qtest.h>
 InfoPartTest::InfoPartTest(QObject *parent)
     : QObject(parent)

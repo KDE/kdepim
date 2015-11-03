@@ -18,30 +18,31 @@
 
 #include "messageactions.h"
 
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 #include "kmreaderwin.h"
 #include "kmkernel.h"
-#include "kernel/mailkernel.h"
+#include "mailcommon/mailkernel.h"
 #include "kmmainwidget.h"
 #include "util.h"
 #include "kmcommands.h"
-#include "customtemplatesmenu.h"
+#include <TemplateParser/CustomTemplatesMenu>
 
-#include "pimcommon/widgets/annotationdialog.h"
-#include "pimcommon/webshortcut/webshortcutmenumanager.h"
-#include "messagecore/settings/globalsettings.h"
-#include "messagecore/misc/mailinglist.h"
-#include "messagecore/helpers/messagehelpers.h"
-#include "messageviewer/viewer/csshelper.h"
-#include "messageviewer/settings/globalsettings.h"
+#include "PimCommon/AnnotationDialog"
+#include "MessageCore/MessageCoreSettings"
+#include "MessageCore/MailingList"
+#include "messagecore/messagehelpers.h"
+#include "MessageViewer/CSSHelper"
+#include "messageviewer/messageviewersettings.h"
+#include "messageviewer/headerstyleplugin.h"
 
 #include <AkonadiCore/itemfetchjob.h>
 #include <Akonadi/KMime/MessageParts>
 #include <AkonadiCore/ChangeRecorder>
 #include <QAction>
-#include "pimcommon/baloodebug/baloodebugdialog.h"
+#include <AkonadiSearch/Debug/akonadisearchdebugdialog.h>
+#include <KIO/KUriFilterSearchProviderActions>
 
-#include "followupreminder/followupreminderselectdatedialog.h"
+#include "messagecomposer/followupreminderselectdatedialog.h"
 #include "job/createfollowupreminderonexistingmessagejob.h"
 
 #include <AkonadiCore/ItemFetchJob>
@@ -52,18 +53,15 @@
 #include <KXMLGUIClient>
 #include <KRun>
 #include <QMenu>
-#include <KUriFilterData>
-#include <KToolInvocation>
 #include <KUriFilter>
 #include <KStringHandler>
-#include <KPrintPreview>
 #include <QIcon>
 
 #include <QVariant>
 #include <qwidget.h>
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/entityannotationsattribute.h>
-#include <util/mailutil.h>
+#include <mailcommon/mailutil.h>
 
 using namespace KMail;
 
@@ -77,7 +75,7 @@ MessageActions::MessageActions(KActionCollection *ac, QWidget *parent)
       mAddFollowupReminderAction(Q_NULLPTR),
       mDebugBalooAction(Q_NULLPTR)
 {
-    mWebShortcutMenuManager = new PimCommon::WebShortcutMenuManager(this);
+    mWebShortcutMenuManager = new KIO::KUriFilterSearchProviderActions(this);
     mReplyActionMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("mail-reply-sender")), i18nc("Message->", "&Reply"), this);
     ac->addAction(QStringLiteral("message_reply_menu"), mReplyActionMenu);
     connect(mReplyActionMenu, &KActionMenu::triggered, this, &MessageActions::slotReplyToMsg);
@@ -146,9 +144,7 @@ MessageActions::MessageActions(KActionCollection *ac, QWidget *parent)
     connect(mAnnotateAction, &QAction::triggered, this, &MessageActions::annotateMessage);
 
     mPrintAction = KStandardAction::print(this, SLOT(slotPrintMsg()), ac);
-    if (KPrintPreview::isAvailable()) {
-        mPrintPreviewAction = KStandardAction::printPreview(this, SLOT(slotPrintPreviewMsg()), ac);
-    }
+    mPrintPreviewAction = KStandardAction::printPreview(this, SLOT(slotPrintPreviewMsg()), ac);
 
     mForwardActionMenu  = new KActionMenu(QIcon::fromTheme(QStringLiteral("mail-forward")), i18nc("Message->", "&Forward"), this);
     ac->addAction(QStringLiteral("message_forward"), mForwardActionMenu);
@@ -185,8 +181,8 @@ MessageActions::MessageActions(KActionCollection *ac, QWidget *parent)
     ac->addAction(QStringLiteral("mailing_list"), mMailingListActionMenu);
     mMailingListActionMenu->setEnabled(false);
 
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemModified(Akonadi::Item,QSet<QByteArray>)));
-    connect(kmkernel->folderCollectionMonitor(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
+    connect(kmkernel->folderCollectionMonitor(), &Akonadi::Monitor::itemChanged, this, &MessageActions::slotItemModified);
+    connect(kmkernel->folderCollectionMonitor(), &Akonadi::Monitor::itemRemoved, this, &MessageActions::slotItemRemoved);
 
     mCustomTemplatesMenu = new TemplateParser::CustomTemplatesMenu(parent, ac);
 
@@ -203,11 +199,11 @@ MessageActions::MessageActions(KActionCollection *ac, QWidget *parent)
 
     //Don't translate it. Shown only when we set env variable KDEPIM_BALOO_DEBUG
     mDebugBalooAction = new QAction(QStringLiteral("Debug Baloo..."), this);
-    connect(mDebugBalooAction, SIGNAL(triggered(bool)), this, SLOT(slotDebugBaloo()));
+    connect(mDebugBalooAction, &QAction::triggered, this, &MessageActions::slotDebugBaloo);
 
     mAddFollowupReminderAction = new QAction(i18n("Add Followup Reminder..."), this);
     ac->addAction(QStringLiteral("message_followup_reminder"), mAddFollowupReminderAction);
-    connect(mAddFollowupReminderAction, SIGNAL(triggered(bool)), this, SLOT(slotAddFollowupReminder()));
+    connect(mAddFollowupReminderAction, &QAction::triggered, this, &MessageActions::slotAddFollowupReminder);
 
     updateActions();
 }
@@ -240,6 +236,71 @@ void MessageActions::setCurrentMessage(const Akonadi::Item &msg, const Akonadi::
     }
 
     updateActions();
+}
+
+KActionMenu *MessageActions::replyMenu() const
+{
+    return mReplyActionMenu;
+}
+
+QAction *MessageActions::replyListAction() const
+{
+    return mReplyListAction;
+}
+
+QAction *MessageActions::forwardInlineAction() const
+{
+    return mForwardInlineAction;
+}
+
+QAction *MessageActions::forwardAttachedAction() const
+{
+    return mForwardAttachedAction;
+}
+
+QAction *MessageActions::redirectAction() const
+{
+    return mRedirectAction;
+}
+
+KActionMenu *MessageActions::messageStatusMenu() const
+{
+    return mStatusMenu;
+}
+
+KActionMenu *MessageActions::forwardMenu() const
+{
+    return mForwardActionMenu;
+}
+
+QAction *MessageActions::editAction() const
+{
+    return mEditAction;
+}
+
+QAction *MessageActions::annotateAction() const
+{
+    return mAnnotateAction;
+}
+
+QAction *MessageActions::printAction() const
+{
+    return mPrintAction;
+}
+
+QAction *MessageActions::printPreviewAction() const
+{
+    return mPrintPreviewAction;
+}
+
+QAction *MessageActions::listFilterAction() const
+{
+    return mListFilterAction;
+}
+
+KActionMenu *MessageActions::mailingListActionMenu() const
+{
+    return mMailingListActionMenu;
 }
 
 void MessageActions::slotItemRemoved(const Akonadi::Item &item)
@@ -429,7 +490,7 @@ void MessageActions::setupForwardActions(KActionCollection *ac)
     mForwardActionMenu->removeAction(mForwardInlineAction);
     mForwardActionMenu->removeAction(mForwardAttachedAction);
 
-    if (GlobalSettings::self()->forwardingInlineByDefault()) {
+    if (KMailSettings::self()->forwardingInlineByDefault()) {
         mForwardActionMenu->insertAction(mRedirectAction, mForwardInlineAction);
         mForwardActionMenu->insertAction(mRedirectAction, mForwardAttachedAction);
         ac->setDefaultShortcut(mForwardInlineAction, QKeySequence(Qt::Key_F));
@@ -450,7 +511,7 @@ void MessageActions::setupForwardingActionsList(KXMLGUIClient *guiClient)
 {
     QList<QAction *> forwardActionList;
     guiClient->unplugActionList(QStringLiteral("forward_action_list"));
-    if (GlobalSettings::self()->forwardingInlineByDefault()) {
+    if (KMailSettings::self()->forwardingInlineByDefault()) {
         forwardActionList.append(mForwardInlineAction);
         forwardActionList.append(mForwardAttachedAction);
     } else {
@@ -512,18 +573,18 @@ void MessageActions::printMessage(bool preview)
 {
     bool result = false;
     if (mMessageView) {
-        if (MessageViewer::GlobalSettings::self()->printSelectedText()) {
+        if (MessageViewer::MessageViewerSettings::self()->printSelectedText()) {
             result = mMessageView->printSelectedText(preview);
         }
     }
     if (!result) {
-        const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
-        const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+        const bool useFixedFont = MessageViewer::MessageViewerSettings::self()->useFixedFont();
+        const QString overrideEncoding = MessageCore::MessageCoreSettings::self()->overrideCharacterEncoding();
 
         const Akonadi::Item message = mCurrentItem;
         KMPrintCommand *command =
             new KMPrintCommand(mParent, message,
-                               mMessageView->viewer()->headerStyle(), mMessageView->viewer()->headerStrategy(),
+                               mMessageView->viewer()->headerStylePlugin(),
                                mMessageView->viewer()->displayFormatMessageOverwrite(), mMessageView->viewer()->htmlLoadExternal(),
                                useFixedFont, overrideEncoding);
         command->setPrintPreview(preview);
@@ -571,7 +632,7 @@ void MessageActions::addMailingListAction(const QString &item, const QUrl &url)
         protocol = i18n("web");
     }
     // item is a mailing list url description passed from the updateActions method above.
-    QAction *act = new QAction(i18nc("%1 is a 'Contact Owner' or similar action. %2 is a protocol normally web or email though could be irc/ftp or other url variant", "%1 (%2)",  item, protocol) , this);
+    QAction *act = new QAction(i18nc("%1 is a 'Contact Owner' or similar action. %2 is a protocol normally web or email though could be irc/ftp or other url variant", "%1 (%2)",  item, protocol), this);
     mMailListActionList.append(act);
     const QVariant v(url);
     act->setData(v);
@@ -616,7 +677,17 @@ void MessageActions::annotateMessage()
 void MessageActions::addWebShortcutsMenu(QMenu *menu, const QString &text)
 {
     mWebShortcutMenuManager->setSelectedText(text);
-    mWebShortcutMenuManager->addWebShortcutsMenu(menu);
+    mWebShortcutMenuManager->addWebShortcutsToMenu(menu);
+}
+
+QAction *MessageActions::debugBalooAction() const
+{
+    return mDebugBalooAction;
+}
+
+QAction *MessageActions::addFollowupReminderAction() const
+{
+    return mAddFollowupReminderAction;
 }
 
 void MessageActions::slotDebugBaloo()
@@ -624,10 +695,10 @@ void MessageActions::slotDebugBaloo()
     if (!mCurrentItem.isValid()) {
         return;
     }
-    QPointer<PimCommon::BalooDebugDialog> dlg = new PimCommon::BalooDebugDialog;
+    QPointer<Akonadi::Search::AkonadiSearchDebugDialog> dlg = new Akonadi::Search::AkonadiSearchDebugDialog;
     dlg->setAkonadiId(mCurrentItem.id());
     dlg->setAttribute(Qt::WA_DeleteOnClose);
-    dlg->setSearchType(PimCommon::BalooDebugSearchPathComboBox::Emails);
+    dlg->setSearchType(Akonadi::Search::AkonadiSearchDebugSearchPathComboBox::Emails);
     dlg->doSearch();
     dlg->show();
 }

@@ -20,9 +20,9 @@
 
 #include "knoteedit.h"
 #include "notes/knote.h"
-#include "noteshared/editor/noteeditorutils.h"
-#include "pimcommon/util/editorutil.h"
-#include "pimcommon/widgets/kactionmenuchangecase.h"
+#include "NoteShared/NoteEditorUtils"
+#include "KPIMTextEdit/EditorUtil"
+#include "PimCommon/KActionMenuChangeCase"
 #include "knotesglobalconfig.h"
 
 #include <QAction>
@@ -43,8 +43,8 @@
 
 static const short ICON_SIZE = 10;
 
-KNoteEdit::KNoteEdit(const QString &configFile, KActionCollection *actions, QWidget *parent)
-    : PimCommon::CustomTextEdit(configFile, parent),
+KNoteEdit::KNoteEdit(KActionCollection *actions, QWidget *parent)
+    : KTextEdit(parent),
       m_note(0),
       m_actions(actions)
 {
@@ -232,34 +232,34 @@ void KNoteEdit::setNote(KNote *_note)
 void KNoteEdit::slotReverseCase()
 {
     QTextCursor cursor = textCursor();
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     editorUtil.reverseCase(cursor);
 }
 
 void KNoteEdit::slotSentenceCase()
 {
     QTextCursor cursor = textCursor();
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     editorUtil.sentenceCase(cursor);
 }
 
 void KNoteEdit::slotUpperCase()
 {
     QTextCursor cursor = textCursor();
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     editorUtil.upperCase(cursor);
 }
 
 void KNoteEdit::slotLowerCase()
 {
     QTextCursor cursor = textCursor();
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     editorUtil.lowerCase(cursor);
 }
 
 QMenu *KNoteEdit::mousePopupMenu()
 {
-    QMenu *popup = PimCommon::CustomTextEdit::mousePopupMenu();
+    QMenu *popup = KTextEdit::mousePopupMenu();
     if (popup) {
         QTextCursor cursor = textCursor();
         if (!isReadOnly()) {
@@ -384,7 +384,7 @@ void KNoteEdit::slotTextColor()
     if (m_note) {
         m_note->setBlockSave(true);
     }
-    QColor c = QColorDialog::getColor(textColor(), this) ;
+    QColor c = QColorDialog::getColor(textColor(), this);
     if (c.isValid()) {
         setTextColor(c);
     }

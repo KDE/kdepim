@@ -32,7 +32,7 @@ using namespace MessageComposer;
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData(QLatin1String("testcomposerlineedit"), i18n("ComposerLineEdit"), QStringLiteral("1.0"));
+    KAboutData aboutData(QStringLiteral("testcomposerlineedit"), i18n("ComposerLineEdit"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("composerlineedit test app"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

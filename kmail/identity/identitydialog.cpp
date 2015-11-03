@@ -34,43 +34,39 @@
 #include "identityeditvcarddialog.h"
 #include "identityaddvcarddialog.h"
 
-#include "messagecomposer/settings/messagecomposersettings.h"
+#include "MessageComposer/MessageComposerSettings"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 
 // other KMail headers:
-#ifndef KDEPIM_MOBILE_UI
 #include "xfaceconfigurator.h"
-#endif
-#include "pimcommon/widgets/simplestringlisteditor.h"
-#include "folderrequester.h"
+#include <KEditListWidget>
+#include "mailcommon/folderrequester.h"
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 #include "kmkernel.h"
 #endif
 
-#include "kernel/mailkernel.h"
+#include "mailcommon/mailkernel.h"
 
 #include "job/addressvalidationjob.h"
-#include "kleo_util.h"
-#include "utils/stringutil.h"
-#ifndef KDEPIM_MOBILE_UI
-#include "templatesconfiguration.h"
-#endif
+#include "MessageComposer/Kleo_Util"
+#include "MessageCore/StringUtil"
+#include "TemplateParser/TemplatesConfiguration"
 #include "templatesconfiguration_kfg.h"
 // other kdepim headers:
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/signatureconfigurator.h>
 
-#include "pimcommon/autocorrection/autocorrectionlanguage.h"
+#include "PimCommon/AutoCorrectionLanguage"
 
-#include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
+#include <Libkdepim/AddresseeLineEdit>
 // libkleopatra:
-#include "libkleo/ui/keyrequester.h"
-#include "kleo/cryptobackendfactory.h"
+#include "Libkleo/KeyRequester"
+#include "Libkleo/CryptoBackendFactory"
 
 #include <KEmailAddress>
-#include <libkdepim/misc/emailvalidator.h>
+#include <Libkdepim/EmailValidator>
 #include <MailTransport/mailtransport/transport.h>
 #include <MailTransport/mailtransport/transportmanager.h>
 #include <MailTransport/mailtransport/transportcombobox.h>
@@ -126,12 +122,8 @@ IdentityDialog::IdentityDialog(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
-#ifndef KDEPIM_MOBILE_UI
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
     connect(buttonBox->button(QDialogButtonBox::Help), &QPushButton::clicked, this, &IdentityDialog::slotHelp);
-#else
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-#endif
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -219,7 +211,7 @@ IdentityDialog::IdentityDialog(QWidget *parent)
 
     // "Email Aliases" string text edit and label:
     ++row;
-    mAliasEdit = new PimCommon::SimpleStringListEditor(tab);
+    mAliasEdit = new KEditListWidget(tab);
     glay->addWidget(mAliasEdit, row, 1);
     label = new QLabel(i18n("Email a&liases:"), tab);
     label->setBuddy(mAliasEdit);
@@ -544,7 +536,6 @@ IdentityDialog::IdentityDialog(QWidget *parent)
     mCustom = new QCheckBox(i18n("&Use custom message templates for this identity"), tab);
     tlay->addWidget(mCustom, Qt::AlignLeft);
 
-#ifndef KDEPIM_MOBILE_UI
     mWidget = new TemplateParser::TemplatesConfiguration(tab, QStringLiteral("identity-templates"));
     mWidget->setEnabled(false);
 
@@ -554,23 +545,16 @@ IdentityDialog::IdentityDialog(QWidget *parent)
     tlay->addWidget(mWidget->helpLabel(), Qt::AlignRight);
 
     vlay->addWidget(mWidget);
-#endif
 
     QHBoxLayout *btns = new QHBoxLayout();
     mCopyGlobal = new QPushButton(i18n("&Copy Global Templates"), tab);
     mCopyGlobal->setEnabled(false);
     btns->addWidget(mCopyGlobal);
     vlay->addLayout(btns);
-#ifndef KDEPIM_MOBILE_UI
     connect(mCustom, &QCheckBox::toggled, mWidget, &TemplateParser::TemplatesConfiguration::setEnabled);
-#endif
     connect(mCustom, &QCheckBox::toggled, mCopyGlobal, &QPushButton::setEnabled);
     connect(mCopyGlobal, &QPushButton::clicked, this, &IdentityDialog::slotCopyGlobal);
-#ifdef KDEPIM_MOBILE_UI
-    tab->hide(); // not yet mobile ready
-#else
     mTabWidget->addTab(tab, i18n("Templates"));
-#endif
 
     //
     // Tab Widget: Signature
@@ -582,13 +566,11 @@ IdentityDialog::IdentityDialog(QWidget *parent)
     // Tab Widget: Picture
     //
 
-#ifndef KDEPIM_MOBILE_UI
     mXFaceConfigurator = new XFaceConfigurator(mTabWidget);
     mTabWidget->addTab(mXFaceConfigurator, i18n("Picture"));
-#endif
 
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
-    resize(GlobalSettings::self()->identityDialogSize());
+    resize(KMailSettings::self()->identityDialogSize());
 #endif
     mNameEdit->setFocus();
 
@@ -598,13 +580,13 @@ IdentityDialog::IdentityDialog(QWidget *parent)
 IdentityDialog::~IdentityDialog()
 {
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
-    GlobalSettings::self()->setIdentityDialogSize(size());
+    KMailSettings::self()->setIdentityDialogSize(size());
 #endif
 }
 
 void IdentityDialog::slotHelp()
 {
-    KHelpClient::invokeHelp(QLatin1String("configure-identity"), QStringLiteral("kmail"));
+    KHelpClient::invokeHelp(QStringLiteral("configure-identity"), QStringLiteral("kmail"));
 }
 
 void IdentityDialog::slotAboutToShow(int index)
@@ -623,9 +605,7 @@ void IdentityDialog::slotAboutToShow(int index)
 
 void IdentityDialog::slotCopyGlobal()
 {
-#ifndef KDEPIM_MOBILE_UI
     mWidget->loadFromGlobal();
-#endif
 }
 
 namespace
@@ -644,7 +624,7 @@ bool DoesntMatchEMailAddress::operator()(const GpgME::Key &key) const
 {
     const std::vector<GpgME::UserID> uids = key.userIDs();
     std::vector<GpgME::UserID>::const_iterator end = uids.end();
-    for (std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != end ; ++it)
+    for (std::vector<GpgME::UserID>::const_iterator it = uids.begin(); it != end; ++it)
         if (checkForEmail(it->email() ? it->email() : it->id())) {
             return false;
         }
@@ -678,7 +658,7 @@ void IdentityDialog::slotRefreshDefaultDomainName()
 
 void IdentityDialog::slotAccepted()
 {
-    const QStringList aliases = mAliasEdit->stringList();
+    const QStringList aliases = mAliasEdit->items();
     foreach (const QString &alias, aliases) {
         if (!KEmailAddress::isValidSimpleAddress(alias)) {
             const QString errorMsg(KEmailAddress::simpleEmailAddressErrorMsg());
@@ -762,7 +742,7 @@ void IdentityDialog::slotDelayedButtonClicked(KJob *job)
                                                i18n("Email Address Not Found in Key/Certificates"),
                                                KStandardGuiItem::cont(),
                                                KStandardGuiItem::cancel(),
-                                               QLatin1String("warn_email_not_in_certificate"))
+                                               QStringLiteral("warn_email_not_in_certificate"))
                 != KMessageBox::Continue) {
             return;
         }
@@ -771,7 +751,7 @@ void IdentityDialog::slotDelayedButtonClicked(KJob *job)
     if (mSignatureConfigurator->isSignatureEnabled() &&
             mSignatureConfigurator->signatureType() == Signature::FromFile) {
         QUrl url(mSignatureConfigurator->fileURL());
-        KFileItem signatureFile(KFileItem::Unknown, KFileItem::Unknown, url);
+        KFileItem signatureFile(url);
         if (!signatureFile.isFile() || !signatureFile.isReadable() || !signatureFile.isLocalFile()) {
             KMessageBox::error(this, i18n("The signature file is not valid"));
             return;
@@ -802,7 +782,7 @@ void IdentityDialog::setIdentity(KIdentityManagement::Identity &ident)
     mNameEdit->setText(ident.fullName());
     mOrganizationEdit->setText(ident.organization());
     mEmailEdit->setText(ident.primaryEmailAddress());
-    mAliasEdit->setStringList(ident.emailAliases());
+    mAliasEdit->insertStringList(ident.emailAliases());
 
     // "Cryptography" tab:
     mPGPSigningKeyRequester->setFingerprint(QLatin1String(ident.pgpSigningKey()));
@@ -887,21 +867,17 @@ void IdentityDialog::setIdentity(KIdentityManagement::Identity &ident)
     mDefaultDomainEdit->setText(defaultDomainName);
 
     // "Templates" tab:
-#ifndef KDEPIM_MOBILE_UI
     uint identity = ident.uoid();
     QString iid = TemplateParser::TemplatesConfiguration::configIdString(identity);
     TemplateParser::Templates t(iid);
     mCustom->setChecked(t.useCustomTemplates());
     mWidget->loadFromIdentity(identity);
-#endif
 
     // "Signature" tab:
     mSignatureConfigurator->setImageLocation(ident);
     mSignatureConfigurator->setSignature(ident.signature());
-#ifndef KDEPIM_MOBILE_UI
     mXFaceConfigurator->setXFace(ident.xface());
     mXFaceConfigurator->setXFaceEnabled(ident.isXFaceEnabled());
-#endif
 }
 
 void IdentityDialog::updateIdentity(KIdentityManagement::Identity &ident)
@@ -911,7 +887,7 @@ void IdentityDialog::updateIdentity(KIdentityManagement::Identity &ident)
     ident.setOrganization(mOrganizationEdit->text());
     QString email = mEmailEdit->text();
     ident.setPrimaryEmailAddress(email);
-    ident.setEmailAliases(mAliasEdit->stringList());
+    ident.setEmailAliases(mAliasEdit->items());
     // "Cryptography" tab:
     ident.setPGPSigningKey(mPGPSigningKeyRequester->fingerprint().toLatin1());
     ident.setPGPEncryptionKey(mPGPEncryptionKeyRequester->fingerprint().toLatin1());
@@ -931,8 +907,8 @@ void IdentityDialog::updateIdentity(KIdentityManagement::Identity &ident)
     Akonadi::Collection collection = mFccCombo->collection();
     if (collection.isValid()) {
         ident.setFcc(QString::number(collection.id()));
-        Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing);
-        attribute->setIconName(QLatin1String("mail-folder-sent"));
+        Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Collection::AddIfMissing);
+        attribute->setIconName(QStringLiteral("mail-folder-sent"));
         new Akonadi::CollectionModifyJob(collection);
     } else {
         ident.setFcc(QString());
@@ -941,8 +917,8 @@ void IdentityDialog::updateIdentity(KIdentityManagement::Identity &ident)
     collection = mDraftsCombo->collection();
     if (collection.isValid()) {
         ident.setDrafts(QString::number(collection.id()));
-        Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing);
-        attribute->setIconName(QLatin1String("document-properties"));
+        Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Collection::AddIfMissing);
+        attribute->setIconName(QStringLiteral("document-properties"));
         new Akonadi::CollectionModifyJob(collection);
     } else {
         ident.setDrafts(QString());
@@ -951,8 +927,8 @@ void IdentityDialog::updateIdentity(KIdentityManagement::Identity &ident)
     collection = mTemplatesCombo->collection();
     if (collection.isValid()) {
         ident.setTemplates(QString::number(collection.id()));
-        Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing);
-        attribute->setIconName(QLatin1String("document-new"));
+        Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Collection::AddIfMissing);
+        attribute->setIconName(QStringLiteral("document-new"));
         new Akonadi::CollectionModifyJob(collection);
     } else {
         ident.setTemplates(QString());
@@ -965,7 +941,6 @@ void IdentityDialog::updateIdentity(KIdentityManagement::Identity &ident)
     ident.setDefaultDomainName(mDefaultDomainEdit->text());
 
     // "Templates" tab:
-#ifndef KDEPIM_MOBILE_UI
     uint identity = ident.uoid();
     QString iid = TemplateParser::TemplatesConfiguration::configIdString(identity);
     TemplateParser::Templates t(iid);
@@ -973,14 +948,11 @@ void IdentityDialog::updateIdentity(KIdentityManagement::Identity &ident)
     t.setUseCustomTemplates(mCustom->isChecked());
     t.save();
     mWidget->saveToIdentity(identity);
-#endif
 
     // "Signature" tab:
     ident.setSignature(mSignatureConfigurator->signature());
-#ifndef KDEPIM_MOBILE_UI
     ident.setXFace(mXFaceConfigurator->xface());
     ident.setXFaceEnabled(mXFaceConfigurator->isXFaceEnabled());
-#endif
 
 }
 void IdentityDialog::slotEditVcard()

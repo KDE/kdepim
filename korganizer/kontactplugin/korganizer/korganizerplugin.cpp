@@ -27,7 +27,7 @@
 #include "calendarinterface.h"
 #include "korg_uniqueapp.h"
 
-#include <libkdepim/misc/maillistdrag.h>
+#include <Libkdepim/MaillistDrag>
 
 #include <KContacts/VCardDrag>
 
@@ -58,7 +58,6 @@ KOrganizerPlugin::KOrganizerPlugin(KontactInterface::Core *core, const QVariantL
 {
     setComponentName(QStringLiteral("korganizer"), QStringLiteral("korganizer"));
     KIconLoader::global()->addAppDir(QStringLiteral("korganizer"));
-    KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
 
     QAction *action  =
         new QAction(QIcon::fromTheme(QStringLiteral("appointment-new")),
@@ -114,12 +113,6 @@ KParts::ReadOnlyPart *KOrganizerPlugin::createPart()
         QStringLiteral("org.kde.korganizer"), QStringLiteral("/Calendar"), QDBusConnection::sessionBus(), this);
 
     return part;
-}
-
-QString KOrganizerPlugin::tipFile() const
-{
-    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("korganizer/tips"));
-    return file;
 }
 
 QStringList KOrganizerPlugin::invisibleToolbarActions() const

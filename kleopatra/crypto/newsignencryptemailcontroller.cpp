@@ -48,8 +48,8 @@
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include <gpgme++/key.h>
 
@@ -184,10 +184,10 @@ static bool has_partial_match(bool sign, bool encrypt, Protocol proto, const std
 
 static bool has_perfect_overall_match(bool sign, bool encrypt, const std::vector<Sender> &senders, const std::vector<Recipient> &recipients, Protocol presetProtocol)
 {
-    return presetProtocol == OpenPGP   &&   has_perfect_match(sign, encrypt, OpenPGP, senders, recipients)
-           || presetProtocol == CMS       &&   has_perfect_match(sign, encrypt, CMS,     senders, recipients)
-           || has_perfect_match(sign, encrypt, OpenPGP, senders, recipients)   &&   !has_partial_match(sign, encrypt, CMS,     senders, recipients)
-           || has_perfect_match(sign, encrypt, CMS,     senders, recipients)   &&   !has_partial_match(sign, encrypt, OpenPGP, senders, recipients) ;
+    return (presetProtocol == OpenPGP   &&   has_perfect_match(sign, encrypt, OpenPGP, senders, recipients))
+           || (presetProtocol == CMS    &&   has_perfect_match(sign, encrypt, CMS,     senders, recipients))
+           || (has_perfect_match(sign, encrypt, OpenPGP, senders, recipients)   &&   !has_partial_match(sign, encrypt, CMS,     senders, recipients))
+           || (has_perfect_match(sign, encrypt, CMS,     senders, recipients)   &&   !has_partial_match(sign, encrypt, OpenPGP, senders, recipients));
 }
 
 static bool has_conflict(bool sign, bool encrypt, const std::vector<Sender> &senders, const std::vector<Recipient> &recipients, Protocol presetProtocol)
@@ -433,7 +433,7 @@ void NewSignEncryptEMailController::startEncryption(const std::vector< shared_pt
 
     kleo_assert(!d->recipients.empty());
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<EncryptEMailTask> task(new EncryptEMailTask);
 
@@ -482,7 +482,7 @@ void NewSignEncryptEMailController::startSigning(const std::vector< shared_ptr<I
     kleo_assert(!d->signers.empty());
     kleo_assert(kdtools::none_of(d->signers, mem_fn(&Key::isNull)));
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<SignEMailTask> task(new SignEMailTask);
 

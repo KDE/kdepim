@@ -21,7 +21,7 @@
 #include "sieveeditorconfiguredialog.h"
 #include "serversievelistwidget.h"
 #include "sieveeditorconfigureserverwidget.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
 #include "sieveeditorglobalconfig.h"
 
 #include <KLocalizedString>

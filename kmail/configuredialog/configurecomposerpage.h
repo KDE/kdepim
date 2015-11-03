@@ -21,7 +21,6 @@
 #include "kmail_export.h"
 #include <config-enterprise.h>
 #include "configuredialog_p.h"
-#include "ui_customtemplates_base.h"
 class QCheckBox;
 class QSpinBox;
 class QSpinBox;
@@ -172,7 +171,6 @@ private Q_SLOTS:
     void slotVerifyCharset(QString &);
 
 private:
-    //virtual void doLoadFromGlobalSettings();
     void doLoadOther() Q_DECL_OVERRIDE;
     void doResetToDefaultsOther() Q_DECL_OVERRIDE;
 
@@ -198,7 +196,6 @@ private Q_SLOTS:
     void slotRemoveMimeHeader();
 
 private:
-    //virtual void doLoadFromGlobalSettings();
     void doLoadOther() Q_DECL_OVERRIDE;
     void doResetToDefaultsOther() Q_DECL_OVERRIDE;
 
@@ -227,7 +224,6 @@ private Q_SLOTS:
 
 private:
     void doLoadFromGlobalSettings() Q_DECL_OVERRIDE;
-    //FIXME virtual void doResetToDefaultsOther();
 
 private:
     QCheckBox   *mOutlookCompatibleCheck;

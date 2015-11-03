@@ -16,15 +16,15 @@
 */
 
 #include "configuremiscpage.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include "configureagentswidget.h"
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 
-#include <mailcommon/folder/folderrequester.h>
-#include "messageviewer/widgets/invitationsettings.h"
-#include "messageviewer/widgets/printingsettings.h"
-#include "messageviewer/settings/globalsettings.h"
+#include <MailCommon/FolderRequester>
+#include "MessageViewer/InvitationSettings"
+#include "MessageViewer/PrintingSettings"
+#include "messageviewer/messageviewersettings.h"
 
 #include <KCModuleProxy>
 #include <KCModuleInfo>
@@ -46,9 +46,6 @@ MiscPage::MiscPage(QWidget *parent)
 
     mInviteTab = new InviteTab();
     addTab(mInviteTab, i18n("Invitations"));
-
-    mProxyTab = new ProxyTab();
-    addTab(mProxyTab, i18n("Proxy"));
 
     mAgentSettingsTab = new MiscPageAgentSettingsTab();
     addTab(mAgentSettingsTab, i18n("Plugins Settings"));
@@ -74,7 +71,7 @@ MiscPageFolderTab::MiscPageFolderTab(QWidget *parent)
     layout->addWidget(mOnStartupOpenFolder);
 
     mMMTab.mExcludeImportantFromExpiry->setWhatsThis(
-        i18n(GlobalSettings::self()->excludeImportantMailFromExpiryItem()->whatsThis().toUtf8()));
+        i18n(KMailSettings::self()->excludeImportantMailFromExpiryItem()->whatsThis().toUtf8()));
 
     connect(mMMTab.mEmptyFolderConfirmCheck, &QCheckBox::stateChanged, this, &MiscPageFolderTab::slotEmitChanged);
     connect(mMMTab.mExcludeImportantFromExpiry, &QCheckBox::stateChanged, this, &MiscPageFolderTab::slotEmitChanged);
@@ -82,7 +79,7 @@ MiscPageFolderTab::MiscPageFolderTab(QWidget *parent)
     connect(mMMTab.mActionEnterFolder, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &MiscPageFolderTab::slotEmitChanged);
     connect(mMMTab.mDelayedMarkTime, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &MiscPageFolderTab::slotEmitChanged);
     connect(mMMTab.mDelayedMarkAsRead, &QAbstractButton::toggled, mMMTab.mDelayedMarkTime, &QWidget::setEnabled);
-    connect(mMMTab.mDelayedMarkAsRead, &QAbstractButton::toggled, this , &ConfigModuleTab::slotEmitChanged);
+    connect(mMMTab.mDelayedMarkAsRead, &QAbstractButton::toggled, this, &ConfigModuleTab::slotEmitChanged);
     connect(mMMTab.mShowPopupAfterDnD, &QCheckBox::stateChanged, this, &MiscPageFolderTab::slotEmitChanged);
     connect(mOnStartupOpenFolder, &MailCommon::FolderRequester::folderChanged, this, &MiscPageFolderTab::slotEmitChanged);
     connect(mMMTab.mEmptyTrashCheck, &QCheckBox::stateChanged, this, &MiscPageFolderTab::slotEmitChanged);
@@ -92,46 +89,46 @@ MiscPageFolderTab::MiscPageFolderTab(QWidget *parent)
 
 void MiscPage::FolderTab::doLoadFromGlobalSettings()
 {
-    loadWidget(mMMTab.mExcludeImportantFromExpiry, GlobalSettings::self()->excludeImportantMailFromExpiryItem());
+    loadWidget(mMMTab.mExcludeImportantFromExpiry, KMailSettings::self()->excludeImportantMailFromExpiryItem());
     // default = "Loop in current folder"
-    loadWidget(mMMTab.mLoopOnGotoUnread, GlobalSettings::self()->loopOnGotoUnreadItem());
-    loadWidget(mMMTab.mActionEnterFolder, GlobalSettings::self()->actionEnterFolderItem());
-    loadWidget(mMMTab.mDelayedMarkAsRead, MessageViewer::GlobalSettings::self()->delayedMarkAsReadItem());
-    loadWidget(mMMTab.mDelayedMarkTime, MessageViewer::GlobalSettings::self()->delayedMarkTimeItem());
-    loadWidget(mMMTab.mShowPopupAfterDnD, GlobalSettings::self()->showPopupAfterDnDItem());
-    loadWidget(mMMTab.mStartUpFolderCheck, GlobalSettings::self()->startSpecificFolderAtStartupItem());
-    mOnStartupOpenFolder->setEnabled(GlobalSettings::self()->startSpecificFolderAtStartup());
+    loadWidget(mMMTab.mLoopOnGotoUnread, KMailSettings::self()->loopOnGotoUnreadItem());
+    loadWidget(mMMTab.mActionEnterFolder, KMailSettings::self()->actionEnterFolderItem());
+    loadWidget(mMMTab.mDelayedMarkAsRead, MessageViewer::MessageViewerSettings::self()->delayedMarkAsReadItem());
+    loadWidget(mMMTab.mDelayedMarkTime, MessageViewer::MessageViewerSettings::self()->delayedMarkTimeItem());
+    loadWidget(mMMTab.mShowPopupAfterDnD, KMailSettings::self()->showPopupAfterDnDItem());
+    loadWidget(mMMTab.mStartUpFolderCheck, KMailSettings::self()->startSpecificFolderAtStartupItem());
+    mOnStartupOpenFolder->setEnabled(KMailSettings::self()->startSpecificFolderAtStartup());
     doLoadOther();
 }
 
 void MiscPage::FolderTab::doLoadOther()
 {
-    loadWidget(mMMTab.mEmptyTrashCheck, GlobalSettings::self()->emptyTrashOnExitItem());
-    mOnStartupOpenFolder->setCollection(Akonadi::Collection(GlobalSettings::self()->startupFolder()));
-    loadWidget(mMMTab.mEmptyFolderConfirmCheck, GlobalSettings::self()->confirmBeforeEmptyItem());
+    loadWidget(mMMTab.mEmptyTrashCheck, KMailSettings::self()->emptyTrashOnExitItem());
+    mOnStartupOpenFolder->setCollection(Akonadi::Collection(KMailSettings::self()->startupFolder()));
+    loadWidget(mMMTab.mEmptyFolderConfirmCheck, KMailSettings::self()->confirmBeforeEmptyItem());
 }
 
 void MiscPage::FolderTab::save()
 {
-    saveCheckBox(mMMTab.mEmptyTrashCheck, GlobalSettings::self()->emptyTrashOnExitItem());
-    saveCheckBox(mMMTab.mEmptyFolderConfirmCheck, GlobalSettings::self()->confirmBeforeEmptyItem());
-    saveComboBox(mMMTab.mActionEnterFolder, GlobalSettings::self()->actionEnterFolderItem());
-    GlobalSettings::self()->setStartupFolder(mOnStartupOpenFolder->collection().id());
+    saveCheckBox(mMMTab.mEmptyTrashCheck, KMailSettings::self()->emptyTrashOnExitItem());
+    saveCheckBox(mMMTab.mEmptyFolderConfirmCheck, KMailSettings::self()->confirmBeforeEmptyItem());
+    saveComboBox(mMMTab.mActionEnterFolder, KMailSettings::self()->actionEnterFolderItem());
+    KMailSettings::self()->setStartupFolder(mOnStartupOpenFolder->collection().id());
 
-    saveCheckBox(mMMTab.mDelayedMarkAsRead, MessageViewer::GlobalSettings::self()->delayedMarkAsReadItem());
-    saveSpinBox(mMMTab.mDelayedMarkTime, MessageViewer::GlobalSettings::self()->delayedMarkTimeItem());
-    saveComboBox(mMMTab.mLoopOnGotoUnread, GlobalSettings::self()->loopOnGotoUnreadItem());
+    saveCheckBox(mMMTab.mDelayedMarkAsRead, MessageViewer::MessageViewerSettings::self()->delayedMarkAsReadItem());
+    saveSpinBox(mMMTab.mDelayedMarkTime, MessageViewer::MessageViewerSettings::self()->delayedMarkTimeItem());
+    saveComboBox(mMMTab.mLoopOnGotoUnread, KMailSettings::self()->loopOnGotoUnreadItem());
 
-    saveCheckBox(mMMTab.mExcludeImportantFromExpiry, GlobalSettings::self()->excludeImportantMailFromExpiryItem());
-    saveCheckBox(mMMTab.mShowPopupAfterDnD, GlobalSettings::self()->showPopupAfterDnDItem());
-    saveCheckBox(mMMTab.mStartUpFolderCheck, GlobalSettings::self()->startSpecificFolderAtStartupItem());
+    saveCheckBox(mMMTab.mExcludeImportantFromExpiry, KMailSettings::self()->excludeImportantMailFromExpiryItem());
+    saveCheckBox(mMMTab.mShowPopupAfterDnD, KMailSettings::self()->showPopupAfterDnDItem());
+    saveCheckBox(mMMTab.mStartUpFolderCheck, KMailSettings::self()->startSpecificFolderAtStartupItem());
 }
 
 MiscPageAgentSettingsTab::MiscPageAgentSettingsTab(QWidget *parent)
     : ConfigModuleTab(parent)
 {
     QHBoxLayout *l = new QHBoxLayout(this);
-    l->setContentsMargins(0 , 0, 0, 0);
+    l->setContentsMargins(0, 0, 0, 0);
     mConfigureAgent = new ConfigureAgentsWidget;
     l->addWidget(mConfigureAgent);
 
@@ -163,7 +160,7 @@ MiscPageInviteTab::MiscPageInviteTab(QWidget *parent)
 {
     mInvitationUi = new MessageViewer::InvitationSettings(this);
     QHBoxLayout *l = new QHBoxLayout(this);
-    l->setContentsMargins(0 , 0, 0, 0);
+    l->setContentsMargins(0, 0, 0, 0);
     l->addWidget(mInvitationUi);
     connect(mInvitationUi, &MessageViewer::InvitationSettings::changed, this, &MiscPageInviteTab::slotEmitChanged);
 }
@@ -183,27 +180,12 @@ void MiscPage::InviteTab::doResetToDefaultsOther()
     mInvitationUi->doResetToDefaultsOther();
 }
 
-MiscPageProxyTab::MiscPageProxyTab(QWidget *parent)
-    : ConfigModuleTab(parent)
-{
-    KCModuleInfo proxyInfo(QStringLiteral("proxy.desktop"));
-    mProxyModule = new KCModuleProxy(proxyInfo, parent);
-    QHBoxLayout *l = new QHBoxLayout(this);
-    l->addWidget(mProxyModule);
-    connect(mProxyModule, SIGNAL(changed(bool)), this, SLOT(slotEmitChanged()));
-}
-
-void MiscPage::ProxyTab::save()
-{
-    mProxyModule->save();
-}
-
 MiscPagePrintingTab::MiscPagePrintingTab(QWidget *parent)
     : ConfigModuleTab(parent)
 {
     mPrintingUi = new MessageViewer::PrintingSettings(this);
     QHBoxLayout *l = new QHBoxLayout(this);
-    l->setContentsMargins(0 , 0, 0, 0);
+    l->setContentsMargins(0, 0, 0, 0);
     l->addWidget(mPrintingUi);
     connect(mPrintingUi, &MessageViewer::PrintingSettings::changed, this, &MiscPagePrintingTab::slotEmitChanged);
 }

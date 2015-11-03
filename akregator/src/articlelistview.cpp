@@ -32,7 +32,7 @@
 
 #include <utils/filtercolumnsproxymodel.h>
 
-#include <KDateTime>
+#include <QDateTime>
 #include <QIcon>
 #include <KLocalizedString>
 #include <QUrl>
@@ -154,8 +154,8 @@ void ArticleListView::setArticleModel(ArticleModel *model)
     proxy2->setSortRole(ArticleModel::SortRole);
     proxy2->setSourceModel(m_proxy);
 
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            m_proxy, SLOT(invalidate()));
+    connect(model, &QAbstractItemModel::rowsInserted,
+            m_proxy.data(), &QSortFilterProxyModel::invalidate);
 
     FilterColumnsProxyModel *const columnsProxy = new FilterColumnsProxyModel(model);
     columnsProxy->setSortRole(ArticleModel::SortRole);
@@ -291,7 +291,7 @@ void ArticleListView::setFeedMode()
 static int maxDateColumnWidth(const QFontMetrics &fm)
 {
     int width = 0;
-    KDateTime date(KDateTime::currentLocalDate(), QTime(23, 59));
+    QDateTime date(QDate::currentDate(), QTime(23, 59));
     for (int x = 0; x < 10; x++, date = date.addDays(-1)) {
         QString txt = QLatin1Char(' ') + KLocale::global()->formatDateTime(date, KLocale::FancyShortDate) + QLatin1Char(' ');
         width = qMax(width, fm.width(txt));

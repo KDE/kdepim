@@ -21,7 +21,7 @@
 #ifndef SIEVEEDITORMANAGESIEVEWIDGET_H
 #define SIEVEEDITORMANAGESIEVEWIDGET_H
 
-#include "widgets/managesievewidget.h"
+#include "ksieveui/managesievewidget.h"
 
 class SieveEditorManageSieveWidget : public KSieveUi::ManageSieveWidget
 {

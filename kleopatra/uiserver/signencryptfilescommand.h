@@ -64,11 +64,11 @@ protected:
 private:
     virtual unsigned int operation() const
     {
-        return SignAllowed | EncryptAllowed ;
+        return SignAllowed | EncryptAllowed;
     }
 private:
-    int doStart();
-    void doCanceled();
+    int doStart() Q_DECL_OVERRIDE;
+    void doCanceled() Q_DECL_OVERRIDE;
 public:
     static const char *staticName()
     {
@@ -96,7 +96,7 @@ public:
     {
         return "ENCRYPT_FILES";
     }
-    /* reimp */ unsigned int operation() const
+    unsigned int operation() const Q_DECL_OVERRIDE
     {
         return SignAllowed | EncryptForced;
     }
@@ -109,7 +109,7 @@ public:
     {
         return "SIGN_FILES";
     }
-    /* reimp */ unsigned int operation() const
+    unsigned int operation() const Q_DECL_OVERRIDE
     {
         return SignForced | EncryptAllowed;
     }

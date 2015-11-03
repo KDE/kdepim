@@ -19,7 +19,7 @@
 #define THEMETEMPLATEWIDGET_H
 
 #include <QWidget>
-#include "pimcommon/templatewidgets/templatelistwidget.h"
+#include "PimCommon/TemplateListWidget"
 
 class ThemeTemplateListWidget : public PimCommon::TemplateListWidget
 {
@@ -28,7 +28,7 @@ public:
     explicit ThemeTemplateListWidget(const QString &configName, QWidget *parent = Q_NULLPTR);
     ~ThemeTemplateListWidget();
 
-    QVector<PimCommon::defaultTemplate> defaultTemplates();
+    QVector<PimCommon::defaultTemplate> defaultTemplates() Q_DECL_OVERRIDE;
 };
 
 class ThemeTemplateWidget : public QWidget

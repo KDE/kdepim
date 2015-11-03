@@ -1,0 +1,11 @@
+File=messagecore.kcfg
+ClassName=MessageCoreSettingsBase
+NameSpace=MessageCore
+Visibility=MESSAGECORE_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=messagecoreutil.h,messagecore_export.h,kmime/kmime_dateformatter.h,kcolorscheme.h
+TranslationDomain=libmessagecore
+TranslationSystem=kde

@@ -30,7 +30,7 @@
 
 #include "kdepim-version.h"
 
-#include <libkdepim/misc/maillistdrag.h>
+#include <Libkdepim/MaillistDrag>
 using namespace KPIM;
 using namespace KCalUtils;
 using namespace KCalCore;
@@ -87,14 +87,6 @@ bool KNotesPlugin::isRunningStandalone() const
     return mUniqueAppWatcher->isRunningStandalone();
 }
 
-QString KNotesPlugin::tipFile() const
-{
-    // TODO: tips file
-    //QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "knotes/tips");
-    QString file;
-    return file;
-}
-
 KParts::ReadOnlyPart *KNotesPlugin::createPart()
 {
     return new KNotesPart(this);
@@ -109,7 +101,7 @@ const KAboutData KNotesPlugin::aboutData()
 {
     KAboutData aboutData = KAboutData(QStringLiteral("knotes"),
                                       xi18nc("@title", "KNotes"),
-                                      QLatin1String(KDEPIM_VERSION),
+                                      QStringLiteral(KDEPIM_VERSION),
                                       xi18nc("@title", "Popup Notes"),
                                       KAboutLicense::GPL_V2,
                                       xi18nc("@info:credit", "Copyright © 2003–2014 Kontact authors"));
@@ -232,13 +224,13 @@ void KNotesUniqueAppHandler::loadCommandLineOptions(QCommandLineParser *parser)
     knotesOptions(parser);
 }
 
-int KNotesUniqueAppHandler::activate(const QStringList &args)
+int KNotesUniqueAppHandler::activate(const QStringList &args, const QString &workingDir)
 {
-    qCDebug(KNOTES_KONTACT_PLUGIN_LOG) ;
+    qCDebug(KNOTES_KONTACT_PLUGIN_LOG);
     // Ensure part is loaded
     (void)plugin()->part();
 
-    return KontactInterface::UniqueAppHandler::activate(args);
+    return KontactInterface::UniqueAppHandler::activate(args, workingDir);
 }
 
 #include "knotes_plugin.moc"

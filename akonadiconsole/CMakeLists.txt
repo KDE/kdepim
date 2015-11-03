@@ -2,7 +2,6 @@ project(akonadiconsole)
 
 include_directories(
   ${AKONADI_INCLUDE_DIR}
-  ${Boost_INCLUDE_DIR}
 )
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
@@ -14,7 +13,6 @@ add_subdirectory(icons)
 add_subdirectory(kconf_update)
 
 set(akonadiconsole_bin_SRCS
-  akonadiconsole_debug.cpp
   agentwidget.cpp
   agentconfigdialog.cpp
   agentconfigmodel.cpp
@@ -37,7 +35,6 @@ set(akonadiconsole_bin_SRCS
   monitoritem.cpp
   notificationmodel.cpp
   notificationmonitor.cpp
-  rawsocketconsole.cpp
   searchdialog.cpp
   searchwidget.cpp
   querydebugger.cpp
@@ -46,6 +43,8 @@ set(akonadiconsole_bin_SRCS
   jobtrackermodel.cpp
   tagpropertiesdialog.cpp
 )
+
+ecm_qt_declare_logging_category(akonadiconsole_bin_SRCS HEADER akonadiconsole_debug.h IDENTIFIER AKONADICONSOLE_LOG CATEGORY_NAME log_akonadiconsole)
 
 qt5_generate_dbus_interface(jobtracker.h org.freedesktop.Akonadi.JobTracker.xml)
 qt5_add_dbus_adaptor(akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker)
@@ -88,11 +87,13 @@ ki18n_wrap_ui(akonadiconsole_bin_SRCS
   dbbrowser.ui
   dbconsole.ui
   instanceselector.ui
-  rawsocketconsole.ui
   browserwidget_contentview.ui
   collectioninternalspage.ui
   tagpropertiesdialog.ui
 )
+
+
+qt5_add_resources(akonadiconsole_bin_SRCS akonadiconsole.qrc)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-akonadiconsole.png")
 ecm_add_app_icon(akonadiconsole_bin_SRCS ICONS ${ICONS_SRCS})
@@ -104,16 +105,13 @@ target_link_libraries(akonadiconsole_bin
   KF5::AkonadiCore
   KF5::AkonadiPrivate
   KF5::AkonadiContact
-  
-  calendarsupport
+  KF5::CalendarSupport
   KF5::CalendarCore
-  kdepim
-  messageviewer
-  KF5::KCMUtils
+  KF5::Libkdepim
+  KF5::MessageViewer
   KF5::DBusAddons
   Qt5::Sql
 )
 
 install(TARGETS akonadiconsole_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS org.kde.akonadiconsole.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-install(FILES akonadiconsoleui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/akonadiconsole)

@@ -24,14 +24,14 @@
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
-#include <util/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
-#include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
+#include "PimCommon/AttachmentTemporaryFilesDirs"
 #include "kaddressbook_debug.h"
 #include <QTemporaryDir>
-#include <KToolInvocation>
 #include <QFile>
 #include <KLocalizedString>
+#include <QDesktopServices>
+
 using namespace KABSendVCards;
 
 SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent)
@@ -68,8 +68,7 @@ bool SendVcardsJob::start()
             const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
             QByteArray data = item.payloadData();
             //Workaround about broken kaddressbook fields.
-            PimCommon::VCardUtil vcardUtil;
-            vcardUtil.adaptVcard(data);
+            KContacts::adaptIMAttributes(data);
             createTemporaryDir();
             const QString contactRealName(contact.realName());
             const QString attachmentName = (contactRealName.isEmpty() ? QStringLiteral("vcard") : contactRealName) + QLatin1String(".vcf");
@@ -105,7 +104,7 @@ void SendVcardsJob::jobFinished()
 {
     const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
     if (!lstAttachment.isEmpty()) {
-        KToolInvocation::invokeMailer(QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment);
+        QDesktopServices::openUrl(QStringLiteral("mailto:"));
     } else {
         sendVCardsError(i18n("No vCard created."));
     }

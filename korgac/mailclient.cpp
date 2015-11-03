@@ -170,7 +170,7 @@ bool MailClient::mailTo(const KCalCore::IncidenceBase::Ptr &incidence,
     QString subject;
 
     if (incidence->type() != KCalCore::Incidence::TypeFreeBusy) {
-        KCalCore::Incidence::Ptr inc = incidence.staticCast<KCalCore::Incidence>() ;
+        KCalCore::Incidence::Ptr inc = incidence.staticCast<KCalCore::Incidence>();
         subject = inc->summary();
     } else {
         subject = i18n("Free Busy Message");
@@ -256,7 +256,8 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
     // will be the root message that has 2 additional message. The body itself and
     // the attached cal.ics calendar file.
     KMime::Message::Ptr message = KMime::Message::Ptr(new KMime::Message);
-    message->contentTransferEncoding()->clear();  // 7Bit, decoded.
+    message->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
+    message->contentTransferEncoding()->setDecoded(true);
 
     // Set the headers
     message->userAgent()->fromUnicodeString(
@@ -278,8 +279,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
         message->contentType()->setParameter(QStringLiteral("method"), QStringLiteral("request"));
 
         if (!attachment.isEmpty()) {
-            KMime::Headers::ContentDisposition *disposition =
-                new KMime::Headers::ContentDisposition(message.get());
+            KMime::Headers::ContentDisposition *disposition = new KMime::Headers::ContentDisposition;
             disposition->setDisposition(KMime::Headers::CDinline);
             message->setHeader(disposition);
             message->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
@@ -297,8 +297,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
 
         // Set the first multipart, the body message.
         KMime::Content *bodyMessage = new KMime::Content;
-        KMime::Headers::ContentDisposition *bodyDisposition =
-            new KMime::Headers::ContentDisposition(bodyMessage);
+        KMime::Headers::ContentDisposition *bodyDisposition = new KMime::Headers::ContentDisposition;
         bodyDisposition->setDisposition(KMime::Headers::CDinline);
         bodyMessage->contentType()->setMimeType("text/plain");
         bodyMessage->contentType()->setCharset("utf-8");
@@ -309,8 +308,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
         // Set the sedcond multipart, the attachment.
         if (!attachment.isEmpty()) {
             KMime::Content *attachMessage = new KMime::Content;
-            KMime::Headers::ContentDisposition *attachDisposition =
-                new KMime::Headers::ContentDisposition(attachMessage);
+            KMime::Headers::ContentDisposition *attachDisposition = new KMime::Headers::ContentDisposition;
             attachDisposition->setDisposition(KMime::Headers::CDattachment);
             attachMessage->contentType()->setMimeType("text/calendar");
             attachMessage->contentType()->setCharset("utf-8");

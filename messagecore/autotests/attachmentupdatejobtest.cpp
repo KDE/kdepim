@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "attachmentupdatejobtest.h"
-#include <messagecore/attachment/attachmentupdatejob.h>
-#include <messagecore/attachment/attachmentpart.h>
+#include <attachment/attachmentupdatejob.h>
+#include <MessageCore/AttachmentPart>
 #include <qtest.h>
 #include "qtest_messagecore.h"
 

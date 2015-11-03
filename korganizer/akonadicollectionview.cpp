@@ -35,8 +35,8 @@
 #include "views/collectionview/calendardelegate.h"
 #include "views/collectionview/quickview.h"
 
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
 #include <AkonadiCore/AgentFilterProxyModel>
 #include <AkonadiCore/AgentInstanceCreateJob>
@@ -50,8 +50,8 @@
 #include <AkonadiWidgets/ETMViewStateSaver>
 #include <Akonadi/Calendar/StandardCalendarActionManager>
 #include <AkonadiCore/CollectionIdentificationAttribute>
-#include <manageserversidesubscription/manageserversidesubscriptionjob.h>
-#include "pimcommon/util/pimutil.h"
+#include <pimcommon/manageserversidesubscriptionjob.h>
+#include "PimCommon/PimUtil"
 
 #include <KActionCollection>
 #include <KCheckableProxyModel>
@@ -203,7 +203,8 @@ private:
     void saveTreeState()
     {
         Akonadi::ETMViewStateSaver treeStateSaver;
-        KConfigGroup group(KOGlobals::self()->config(), mTreeStateConfig);
+        KSharedConfig::Ptr config = KSharedConfig::openConfig();
+        KConfigGroup group = config->group(mTreeStateConfig);
         treeStateSaver.setView(mTreeView);
         treeStateSaver.setSelectionModel(0); // we only save expand state
         treeStateSaver.saveState(group);
@@ -223,7 +224,7 @@ private:
         }
         qCDebug(KORGANIZER_LOG) << "Restore tree state";
         treeStateRestorer = new Akonadi::ETMViewStateSaver(); // not a leak
-        KConfigGroup group(KOGlobals::self()->config(), mTreeStateConfig);
+        KConfigGroup group(KSharedConfig::openConfig(), mTreeStateConfig);
         treeStateRestorer->setView(mTreeView);
         treeStateRestorer->setSelectionModel(0);   // we only restore expand state
         treeStateRestorer->restoreState(group);
@@ -288,7 +289,7 @@ public:
         return score;
     }
 
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE
     {
         const int leftScore = score(left);
         const int rightScore = score(right);
@@ -309,7 +310,6 @@ public:
     {
     }
 
-    /* reimp */
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE
     {
         if (!index.isValid()) {
@@ -342,7 +342,6 @@ public:
         return QSortFilterProxyModel::data(index, role);
     }
 
-    /* reimp */
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE
     {
         return Qt::ItemIsSelectable | QSortFilterProxyModel::flags(index);
@@ -367,7 +366,7 @@ protected:
         const QModelIndex sourceIndex = sourceModel()->index(row, 0, sourceParent);
         Q_ASSERT(sourceIndex.isValid());
         const Akonadi::Collection &col = sourceIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-        CollectionIdentificationAttribute *attr = col.attribute<CollectionIdentificationAttribute>();
+        Akonadi::CollectionIdentificationAttribute *attr = col.attribute<Akonadi::CollectionIdentificationAttribute>();
         //We filter the user folders because we insert person nodes for user folders.
         if ((attr && attr->collectionNamespace().startsWith("usertoplevel"))
                 || col.name().contains(QStringLiteral("Other Users"))) {
@@ -505,6 +504,11 @@ AkonadiCollectionView::AkonadiCollectionView(CalendarView *view, bool hasContext
       mCollectionView(Q_NULLPTR),
       mBaseModel(Q_NULLPTR),
       mSelectionProxyModel(Q_NULLPTR),
+      mAssignColor(Q_NULLPTR),
+      mDisableColor(Q_NULLPTR),
+      mDefaultCalendar(Q_NULLPTR),
+      mEnableAction(Q_NULLPTR),
+      mServerSideSubscription(Q_NULLPTR),
       mNotSendAddRemoveSignal(false),
       mWasDefaultCalendar(false),
       mHasContextMenu(hasContextMenu)
@@ -691,12 +695,12 @@ AkonadiCollectionView::AkonadiCollectionView(CalendarView *view, bool hasContext
         //Disable a calendar or remove a referenced calendar
         QAction *disableAction = xmlclient->actionCollection()->addAction(QStringLiteral("collection_disable"), this, SLOT(edit_disable()));
         disableAction->setText(i18n("Remove from list"));
-        disableAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("list-remove"), KIconLoader::Small));
+        disableAction->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
 
         //Enable (subscribe) to a calendar.
         mEnableAction = xmlclient->actionCollection()->addAction(QStringLiteral("collection_enable"), this, SLOT(edit_enable()));
         mEnableAction->setText(i18n("Add to list permanently"));
-        mEnableAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("bookmarks"), KIconLoader::Small));
+        mEnableAction->setIcon(QIcon::fromTheme(QStringLiteral("bookmarks")));
 
         mServerSideSubscription = new QAction(QIcon::fromTheme(QStringLiteral("folder-bookmarks")), i18n("Serverside Subscription..."), this);
         xmlclient->actionCollection()->addAction(QStringLiteral("serverside_subscription"), mServerSideSubscription);

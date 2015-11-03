@@ -17,7 +17,7 @@
 
 #include "showarchivestructuredialog.h"
 #include "pimsettingexporter/core/utils.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 #include <QDialog>
 #include <KLocalizedString>
 #include <KZip>
@@ -30,6 +30,8 @@
 #include <KConfigGroup>
 #include <QPushButton>
 #include <QVBoxLayout>
+
+#include <ktreewidgetsearchline.h>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
     : QDialog(parent),
@@ -46,6 +48,8 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
     mTreeWidget->setAlternatingRowColors(true);
+    KTreeWidgetSearchLine *searchLine = new KTreeWidgetSearchLine(this, mTreeWidget);
+    mainLayout->addWidget(searchLine);
     mainLayout->addWidget(mTreeWidget);
     mainLayout->addWidget(buttonBox);
     const bool result = fillTree();

@@ -19,16 +19,16 @@
 #include "dialog/kmknotify.h"
 #include "newmailnotifierinterface.h"
 #include "kmkernel.h"
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 #include "configagentdelegate.h"
-#include "messagecomposer/settings/messagecomposersettings.h"
-#include "mailcommon/folder/accountconfigorderdialog.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "MessageComposer/MessageComposerSettings"
+#include "MailCommon/AccountConfigOrderDialog"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <MailTransport/mailtransport/transportmanagementwidget.h>
 using MailTransport::TransportManagementWidget;
 #include "ui_accountspagereceivingtab.h"
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 
 #include <AkonadiCore/agentfilterproxymodel.h>
 #include <AkonadiCore/agentinstancemodel.h>
@@ -134,7 +134,7 @@ AccountsPageSendingTab::AccountsPageSendingTab(QWidget *parent)
     l->setBuddy(mSendOnCheckCombo);
     glay->addWidget(l, 2, 0);
 
-    QString msg = i18n(GlobalSettings::self()->sendOnCheckItem()->whatsThis().toUtf8());
+    QString msg = i18n(KMailSettings::self()->sendOnCheckItem()->whatsThis().toUtf8());
     l->setWhatsThis(msg);
     mSendOnCheckCombo->setWhatsThis(msg);
 
@@ -145,21 +145,21 @@ AccountsPageSendingTab::AccountsPageSendingTab(QWidget *parent)
 
 void AccountsPage::SendingTab::doLoadFromGlobalSettings()
 {
-    mSendOnCheckCombo->setCurrentIndex(GlobalSettings::self()->sendOnCheck());
+    mSendOnCheckCombo->setCurrentIndex(KMailSettings::self()->sendOnCheck());
 }
 
 void AccountsPage::SendingTab::doLoadOther()
 {
     mSendMethodCombo->setCurrentIndex(MessageComposer::MessageComposerSettings::self()->sendImmediate() ? 0 : 1);
-    loadWidget(mConfirmSendCheck, GlobalSettings::self()->confirmBeforeSendItem());
-    loadWidget(mCheckSpellingBeforeSending, GlobalSettings::self()->checkSpellingBeforeSendItem());
+    loadWidget(mConfirmSendCheck, KMailSettings::self()->confirmBeforeSendItem());
+    loadWidget(mCheckSpellingBeforeSending, KMailSettings::self()->checkSpellingBeforeSendItem());
 }
 
 void AccountsPage::SendingTab::save()
 {
-    GlobalSettings::self()->setSendOnCheck(mSendOnCheckCombo->currentIndex());
-    saveCheckBox(mConfirmSendCheck, GlobalSettings::self()->confirmBeforeSendItem());
-    saveCheckBox(mCheckSpellingBeforeSending, GlobalSettings::self()->checkSpellingBeforeSendItem());
+    KMailSettings::self()->setSendOnCheck(mSendOnCheckCombo->currentIndex());
+    saveCheckBox(mConfirmSendCheck, KMailSettings::self()->confirmBeforeSendItem());
+    saveCheckBox(mCheckSpellingBeforeSending, KMailSettings::self()->checkSpellingBeforeSendItem());
     MessageComposer::MessageComposerSettings::self()->setSendImmediate(mSendMethodCombo->currentIndex() == 0);
 }
 
@@ -172,9 +172,9 @@ AccountsPageReceivingTab::AccountsPageReceivingTab(QWidget *parent)
     : ConfigModuleTab(parent)
 {
     mNewMailNotifierInterface = new OrgFreedesktopAkonadiNewMailNotifierInterface(QStringLiteral("org.freedesktop.Akonadi.NewMailNotifierAgent"),
-                                                                                  QStringLiteral("/NewMailNotifierAgent"),
-                                                                                  QDBusConnection::sessionBus(),
-                                                                                  this);
+            QStringLiteral("/NewMailNotifierAgent"),
+            QDBusConnection::sessionBus(),
+            this);
     if (!mNewMailNotifierInterface->isValid()) {
         qCDebug(KMAIL_LOG) << " org.freedesktop.Akonadi.NewMailNotifierAgent not found. Please verify your installation";
         delete mNewMailNotifierInterface;
@@ -186,16 +186,14 @@ AccountsPageReceivingTab::AccountsPageReceivingTab(QWidget *parent)
     mAccountsReceiving.mAccountsReceiving->setCapabilityFilter(QStringList() << QStringLiteral("Resource"));
     mAccountsReceiving.mAccountsReceiving->setExcludeCapabilities(QStringList() << QStringLiteral("MailTransport") << QStringLiteral("Notes"));
 
-    KConfig specialMailCollection(QLatin1String("specialmailcollectionsrc"));
-    if (specialMailCollection.hasGroup(QLatin1String("SpecialCollections"))) {
-        KConfigGroup grp = specialMailCollection.group(QLatin1String("SpecialCollections"));
+    KConfig specialMailCollection(QStringLiteral("specialmailcollectionsrc"));
+    if (specialMailCollection.hasGroup(QStringLiteral("SpecialCollections"))) {
+        KConfigGroup grp = specialMailCollection.group(QStringLiteral("SpecialCollections"));
         mAccountsReceiving.mAccountsReceiving->setSpecialCollectionIdentifier(grp.readEntry(QStringLiteral("DefaultResourceId")));
     }
     ConfigAgentDelegate *configDelegate = new ConfigAgentDelegate(mAccountsReceiving.mAccountsReceiving->view());
     mAccountsReceiving.mAccountsReceiving->setItemDelegate(configDelegate);
     connect(configDelegate, &ConfigAgentDelegate::optionsClicked, this, &AccountsPageReceivingTab::slotShowMailCheckMenu);
-
-    connect(mAccountsReceiving.mBeepNewMailCheck, &QCheckBox::stateChanged, this, &ConfigModuleTab::slotEmitChanged);
 
     connect(mAccountsReceiving.mVerboseNotificationCheck, &QCheckBox::stateChanged, this, &ConfigModuleTab::slotEmitChanged);
 
@@ -223,14 +221,14 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu(const QString &ident, const
     bool OfflineOnShutdown;
     bool CheckOnStartup;
     if (!mRetrievalHash.contains(ident)) {
-        const QString resourceGroupPattern(QLatin1String("Resource %1"));
+        const QString resourceGroupPattern(QStringLiteral("Resource %1"));
 
         KConfigGroup group;
         KConfig *conf = Q_NULLPTR;
         if (KMKernel::self()) {
             group = KConfigGroup(KMKernel::self()->config(), resourceGroupPattern.arg(ident));
         } else {
-            conf = new KConfig(QLatin1String("kmail2rc"));
+            conf = new KConfig(QStringLiteral("kmail2rc"));
             group = KConfigGroup(conf, resourceGroupPattern.arg(ident));
         }
 
@@ -326,22 +324,14 @@ void AccountsPage::ReceivingTab::doLoadFromGlobalSettings()
     }
 }
 
-void AccountsPage::ReceivingTab::doLoadOther()
-{
-    if (mNewMailNotifierInterface) {
-        mAccountsReceiving.mBeepNewMailCheck->setChecked(mNewMailNotifierInterface->beepOnNewMails());
-    }
-}
-
 void AccountsPage::ReceivingTab::save()
 {
     // Save Mail notification settings
     if (mNewMailNotifierInterface) {
-        mNewMailNotifierInterface->setBeepOnNewMails(mAccountsReceiving.mBeepNewMailCheck->isChecked());
         mNewMailNotifierInterface->setVerboseMailNotification(mAccountsReceiving.mVerboseNotificationCheck->isChecked());
     }
 
-    const QString resourceGroupPattern(QLatin1String("Resource %1"));
+    const QString resourceGroupPattern(QStringLiteral("Resource %1"));
     QHashIterator<QString, QSharedPointer<RetrievalOptions> > it(mRetrievalHash);
     while (it.hasNext()) {
         it.next();
@@ -350,7 +340,7 @@ void AccountsPage::ReceivingTab::save()
         if (KMKernel::self()) {
             group = KConfigGroup(KMKernel::self()->config(), resourceGroupPattern.arg(it.key()));
         } else {
-            conf = new KConfig(QLatin1String("kmail2rc"));
+            conf = new KConfig(QStringLiteral("kmail2rc"));
             group = KConfigGroup(conf, resourceGroupPattern.arg(it.key()));
         }
         QSharedPointer<RetrievalOptions> opts = it.value();

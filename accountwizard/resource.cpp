@@ -37,7 +37,7 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
 {
     QMetaMethod m;
     for (int i = 0; i < mo->methodCount(); ++i) {
-        const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
+        const QString signature = QLatin1String(mo->method(i).methodSignature());
         if (signature.contains(method + QLatin1Char('('))) {
             m = mo->method(i);
             break;
@@ -94,7 +94,7 @@ void Resource::create()
                 if (m_editMode) {
                     edit();
                 }
-                emit finished(i18n("Resource '%1' is already set up.", type.name()));
+                Q_EMIT finished(i18n("Resource '%1' is already set up.", type.name()));
                 return;
             }
         }
@@ -150,7 +150,7 @@ void Resource::instanceCreateResult(KJob *job)
     if (m_editMode) {
         edit();
     }
-    emit finished(i18n("Resource setup completed."));
+    Q_EMIT finished(i18n("Resource setup completed."));
 }
 
 void Resource::edit()

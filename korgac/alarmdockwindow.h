@@ -50,7 +50,7 @@ Q_SIGNALS:
     void dismissAllSignal();
 
 protected Q_SLOTS:
-    virtual void activate(const QPoint &pos);
+    void activate(const QPoint &pos) Q_DECL_OVERRIDE;
     void slotQuit();
     void slotSuspendAll();
     void slotDismissAll();

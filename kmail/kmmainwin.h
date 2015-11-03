@@ -38,10 +38,7 @@ public:
     // settings by kwin doesn't work
     explicit KMMainWin(QWidget *parent = Q_NULLPTR);
     virtual ~KMMainWin();
-    KMMainWidget *mainKMWidget() const
-    {
-        return mKMMainWidget;
-    }
+    KMMainWidget *mainKMWidget() const;
 
     /// Same as KMMainWin::restore(), except that it also restores the docked state,
     /// which we have saved in saveProperties().
@@ -63,7 +60,6 @@ protected:
 
 protected Q_SLOTS:
     void slotQuit();
-    void slotShowTipOnStart();
 
 private Q_SLOTS:
     void slotToggleMenubar(bool dontShowWarning = false);

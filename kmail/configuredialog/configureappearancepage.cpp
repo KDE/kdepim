@@ -16,32 +16,33 @@
 */
 
 #include "configureappearancepage.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include "configuredialog/colorlistbox.h"
-#include "messagelist/utils/aggregationcombobox.h"
-#include "messagelist/utils/aggregationconfigbutton.h"
-#include "messagelist/utils/themecombobox.h"
-#include "messagelist/utils/themeconfigbutton.h"
-#include "mailcommon/tag/tagwidget.h"
-#include "mailcommon/tag/tag.h"
+#include "messagelist/aggregationcombobox.h"
+#include "messagelist/aggregationconfigbutton.h"
+#include "messagelist/themecombobox.h"
+#include "messagelist/themeconfigbutton.h"
+#include "messagelistsettings.h"
+#include "MailCommon/TagWidget"
+#include "MailCommon/Tag"
 #include "kmkernel.h"
 #include "util.h"
-#include "foldertreewidget.h"
+#include "MailCommon/FolderTreeWidget"
 
 #include "kmmainwidget.h"
 
-#include "mailcommon/mailcommonsettings_base.h"
+#include "mailcommonsettings_base.h"
 
-#include "messageviewer/widgets/configurewidget.h"
-#include "messageviewer/settings/globalsettings.h"
+#include "MessageViewer/ConfigureWidget"
+#include "messageviewer/messageviewersettings.h"
 
-#include "messagelist/core/settings.h"
 #include "messagelist/messagelistutil.h"
-#include "messagecore/settings/globalsettings.h"
-#include "settings/globalsettings.h"
+#include "MessageCore/MessageCoreSettings"
+#include "MessageCore/MessageCoreUtil"
+#include "settings/kmailsettings.h"
 
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 
 #include <AkonadiCore/Tag>
 #include <AkonadiCore/TagFetchJob>
@@ -52,7 +53,6 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <AkonadiCore/TagModifyJob>
 
 #include <KIconButton>
-#include <KButtonGroup>
 #include <KLocalizedString>
 #include <KColorScheme>
 #include <KSeparator>
@@ -73,6 +73,10 @@ using KMime::DateFormatter;
 #include <QSpinBox>
 #include <QLabel>
 #include <QFontDatabase>
+#include <QGroupBox>
+#include <QVBoxLayout>
+#include <QRadioButton>
+#include <QCheckBox>
 #include <gravatar/gravatarconfigwidget.h>
 using namespace MailCommon;
 
@@ -113,7 +117,7 @@ AppearancePage::AppearancePage(QWidget *parent)
     //
     mReaderTab = new ReaderTab();
     addTab(mReaderTab, i18n("Message Window"));
-    addConfig(MessageViewer::GlobalSettings::self(), mReaderTab);
+    addConfig(MessageViewer::MessageViewerSettings::self(), mReaderTab);
 
     //
     // "System Tray" tab:
@@ -141,9 +145,9 @@ static const struct {
 } fontNames[] = {
     { "body-font", I18N_NOOP("Message Body"), true, false },
     { "MessageListFont", I18N_NOOP("Message List"), true, false },
-    { "UnreadMessageFont", I18N_NOOP("Message List - Unread Messages"), true, false },
-    { "ImportantMessageFont", I18N_NOOP("Message List - Important Messages"), true, false },
-    { "TodoMessageFont", I18N_NOOP("Message List - Action Item Messages"), true, false },
+    { "UnreadMessageFont", I18N_NOOP("Message List - Unread Messages"), false, false },
+    { "ImportantMessageFont", I18N_NOOP("Message List - Important Messages"), false, false },
+    { "TodoMessageFont", I18N_NOOP("Message List - Action Item Messages"), false, false },
     { "folder-font", I18N_NOOP("Folder List"), true, false },
     { "quote1-font", I18N_NOOP("Quoted Text - First Level"), false, false },
     { "quote2-font", I18N_NOOP("Quoted Text - Second Level"), false, false },
@@ -164,8 +168,8 @@ AppearancePageFontsTab::AppearancePageFontsTab(QWidget *parent)
     mCustomFontCheck = new QCheckBox(i18n("&Use custom fonts"), this);
     vlay->addWidget(mCustomFontCheck);
     vlay->addWidget(new KSeparator(Qt::Horizontal, this));
-    connect(mCustomFontCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mCustomFontCheck, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     // "font location" combo box and label:
     QHBoxLayout *hlay = new QHBoxLayout(); // inherites spacing
@@ -176,7 +180,7 @@ AppearancePageFontsTab::AppearancePageFontsTab(QWidget *parent)
 
     QStringList fontDescriptions;
     fontDescriptions.reserve(numFontNames);
-    for (int i = 0 ; i < numFontNames ; ++i) {
+    for (int i = 0; i < numFontNames; ++i) {
         fontDescriptions << i18n(fontNames[i].displayName);
     }
     mFontLocationCombo->addItems(fontDescriptions);
@@ -196,12 +200,12 @@ AppearancePageFontsTab::AppearancePageFontsTab(QWidget *parent)
             this, &ConfigModuleTab::slotEmitChanged);
 
     // {en,dis}able widgets depending on the state of mCustomFontCheck:
-    connect(mCustomFontCheck, SIGNAL(toggled(bool)),
-            label, SLOT(setEnabled(bool)));
-    connect(mCustomFontCheck, SIGNAL(toggled(bool)),
-            mFontLocationCombo, SLOT(setEnabled(bool)));
-    connect(mCustomFontCheck, SIGNAL(toggled(bool)),
-            mFontChooser, SLOT(setEnabled(bool)));
+    connect(mCustomFontCheck, &QAbstractButton::toggled,
+            label, &QWidget::setEnabled);
+    connect(mCustomFontCheck, &QAbstractButton::toggled,
+            mFontLocationCombo, &QWidget::setEnabled);
+    connect(mCustomFontCheck, &QAbstractButton::toggled,
+            mFontChooser, &QWidget::setEnabled);
     // load the right font settings into mFontChooser:
     connect(mFontLocationCombo, SIGNAL(activated(int)),
             this, SLOT(slotFontSelectorChanged(int)));
@@ -218,7 +222,7 @@ void AppearancePage::FontsTab::slotFontSelectorChanged(int index)
     if (mActiveFontIndex == 0) {
         mFont[0] = mFontChooser->font();
         // hardcode the family and size of "message body" dependant fonts:
-        for (int i = 0 ; i < numFontNames ; ++i)
+        for (int i = 0; i < numFontNames; ++i)
             if (!fontNames[i].enableFamilyAndSize) {
                 // ### shall we copy the font and set the save and re-set
                 // {regular,italic,bold,bold italic} property or should we
@@ -232,14 +236,14 @@ void AppearancePage::FontsTab::slotFontSelectorChanged(int index)
     mActiveFontIndex = index;
 
     // Disonnect so the "Apply" button is not activated by the change
-    disconnect(mFontChooser, SIGNAL(fontSelected(QFont)),
-               this, SLOT(slotEmitChanged()));
+    disconnect(mFontChooser, &KFontChooser::fontSelected,
+               this, &ConfigModuleTab::slotEmitChanged);
 
     // Display the new setting:
     mFontChooser->setFont(mFont[index], fontNames[index].onlyFixed);
 
-    connect(mFontChooser, SIGNAL(fontSelected(QFont)),
-            this, SLOT(slotEmitChanged()));
+    connect(mFontChooser, &KFontChooser::fontSelected,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     // Disable Family and Size list if we have selected a quote font:
     mFontChooser->enableColumn(KFontChooser::FamilyList | KFontChooser::SizeList,
@@ -250,25 +254,26 @@ void AppearancePage::FontsTab::doLoadOther()
 {
     if (KMKernel::self()) {
         KConfigGroup fonts(KMKernel::self()->config(), "Fonts");
-        KConfigGroup messagelistFont(KMKernel::self()->config(), "MessageListView::Fonts");
 
         mFont[0] = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
         QFont fixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
 
-        for (int i = 0 ; i < numFontNames ; ++i) {
+        for (int i = 0; i < numFontNames; ++i) {
             const QString configName = QLatin1String(fontNames[i].configName);
-            if (configName == QLatin1String("MessageListFont") ||
-                    configName == QLatin1String("UnreadMessageFont") ||
-                    configName == QLatin1String("ImportantMessageFont") ||
-                    configName == QLatin1String("TodoMessageFont")) {
-                mFont[i] = messagelistFont.readEntry(configName,
-                                                     (fontNames[i].onlyFixed) ? fixedFont : mFont[0]);
+            if (configName == QLatin1String("MessageListFont")) {
+                mFont[i] = MessageList::MessageListSettings::self()->messageListFont();
+            } else if (configName == QLatin1String("UnreadMessageFont")) {
+                mFont[i] = MessageList::MessageListSettings::self()->unreadMessageFont();
+            } else if (configName == QLatin1String("ImportantMessageFont")) {
+                mFont[i] = MessageList::MessageListSettings::self()->importantMessageFont();
+            } else if (configName == QLatin1String("TodoMessageFont")) {
+                mFont[i] = MessageList::MessageListSettings::self()->todoMessageFont();
             } else {
                 mFont[i] = fonts.readEntry(configName,
                                            (fontNames[i].onlyFixed) ? fixedFont : mFont[0]);
             }
         }
-        mCustomFontCheck->setChecked(!MessageCore::GlobalSettings::self()->useDefaultFonts());
+        mCustomFontCheck->setChecked(!MessageCore::MessageCoreSettings::self()->useDefaultFonts());
         mFontLocationCombo->setCurrentIndex(0);
         slotFontSelectorChanged(0);
     } else {
@@ -280,7 +285,6 @@ void AppearancePage::FontsTab::save()
 {
     if (KMKernel::self()) {
         KConfigGroup fonts(KMKernel::self()->config(), "Fonts");
-        KConfigGroup messagelistFont(KMKernel::self()->config(), "MessageListView::Fonts");
 
         // read the current font (might have been modified)
         if (mActiveFontIndex >= 0) {
@@ -288,19 +292,18 @@ void AppearancePage::FontsTab::save()
         }
 
         const bool customFonts = mCustomFontCheck->isChecked();
-        MessageCore::GlobalSettings::self()->setUseDefaultFonts(!customFonts);
+        MessageCore::MessageCoreSettings::self()->setUseDefaultFonts(!customFonts);
 
-        for (int i = 0 ; i < numFontNames ; ++i) {
+        for (int i = 0; i < numFontNames; ++i) {
             const QString configName = QLatin1String(fontNames[i].configName);
-            if (configName == QLatin1String("MessageListFont") ||
-                    configName == QLatin1String("UnreadMessageFont") ||
-                    configName == QLatin1String("ImportantMessageFont") ||
-                    configName == QLatin1String("TodoMessageFont")) {
-                if (customFonts || messagelistFont.hasKey(configName)) {
-                    // Don't write font info when we use default fonts, but write
-                    // if it's already there:
-                    messagelistFont.writeEntry(configName, mFont[i]);
-                }
+            if (customFonts && configName == QLatin1String("MessageListFont")) {
+                MessageList::MessageListSettings::self()->setMessageListFont(mFont[i]);
+            } else if (customFonts && configName == QLatin1String("UnreadMessageFont")) {
+                MessageList::MessageListSettings::self()->setUnreadMessageFont(mFont[i]);
+            } else if (customFonts && configName == QLatin1String("ImportantMessageFont")) {
+                MessageList::MessageListSettings::self()->setImportantMessageFont(mFont[i]);
+            } else if (customFonts && configName == QLatin1String("TodoMessageFont")) {
+                MessageList::MessageListSettings::self()->setTodoMessageFont(mFont[i]);
             } else {
                 if (customFonts || fonts.hasKey(configName))
                     // Don't write font info when we use default fonts, but write
@@ -336,11 +339,6 @@ static const struct {
     { "UnreadMessageColor", I18N_NOOP("Unread Message") },
     { "ImportantMessageColor", I18N_NOOP("Important Message") },
     { "TodoMessageColor", I18N_NOOP("Action Item Message") },
-    { "PGPMessageEncr", I18N_NOOP("OpenPGP Message - Encrypted") },
-    { "PGPMessageOkKeyOk", I18N_NOOP("OpenPGP Message - Valid Signature with Trusted Key") },
-    { "PGPMessageOkKeyBad", I18N_NOOP("OpenPGP Message - Valid Signature with Untrusted Key") },
-    { "PGPMessageWarn", I18N_NOOP("OpenPGP Message - Unchecked Signature") },
-    { "PGPMessageErr", I18N_NOOP("OpenPGP Message - Bad Signature") },
     { "HTMLWarningColor", I18N_NOOP("Border Around Warning Prepending HTML Messages") },
     { "CloseToQuotaColor", I18N_NOOP("Folder Name and Size When Close to Quota") },
     { "ColorbarBackgroundPlain", I18N_NOOP("HTML Status Bar Background - No HTML Message") },
@@ -359,13 +357,13 @@ AppearancePageColorsTab::AppearancePageColorsTab(QWidget *parent)
     QVBoxLayout *vlay = new QVBoxLayout(this);
     mCustomColorCheck = new QCheckBox(i18n("&Use custom colors"), this);
     vlay->addWidget(mCustomColorCheck);
-    connect(mCustomColorCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mCustomColorCheck, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     // color list box:
     mColorList = new ColorListBox(this);
     mColorList->setEnabled(false);   // since !mCustomColorCheck->isChecked()
-    for (int i = 0 ; i < numColorNames ; ++i) {
+    for (int i = 0; i < numColorNames; ++i) {
         mColorList->addColor(i18n(colorNames[i].displayName));
     }
     vlay->addWidget(mColorList, 1);
@@ -375,8 +373,8 @@ AppearancePageColorsTab::AppearancePageColorsTab(QWidget *parent)
         new QCheckBox(i18n("Recycle colors on deep &quoting"), this);
     mRecycleColorCheck->setEnabled(false);
     vlay->addWidget(mRecycleColorCheck);
-    connect(mRecycleColorCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mRecycleColorCheck, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     // close to quota threshold
     QHBoxLayout *hbox = new QHBoxLayout();
@@ -394,21 +392,21 @@ AppearancePageColorsTab::AppearancePageColorsTab(QWidget *parent)
     hbox->addWidget(new QWidget(this), 2);
 
     // {en,dir}able widgets depending on the state of mCustomColorCheck:
-    connect(mCustomColorCheck, SIGNAL(toggled(bool)),
-            mColorList, SLOT(setEnabled(bool)));
-    connect(mCustomColorCheck, SIGNAL(toggled(bool)),
-            mRecycleColorCheck, SLOT(setEnabled(bool)));
-    connect(mCustomColorCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
-    connect(mColorList, SIGNAL(changed()),
-            this, SLOT(slotEmitChanged()));
+    connect(mCustomColorCheck, &QAbstractButton::toggled,
+            mColorList, &QWidget::setEnabled);
+    connect(mCustomColorCheck, &QAbstractButton::toggled,
+            mRecycleColorCheck, &QWidget::setEnabled);
+    connect(mCustomColorCheck, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
+    connect(mColorList, &ColorListBox::changed,
+            this, &ConfigModuleTab::slotEmitChanged);
 }
 
 void AppearancePage::ColorsTab::doLoadOther()
 {
-    mCustomColorCheck->setChecked(!MessageCore::GlobalSettings::self()->useDefaultColors());
-    mRecycleColorCheck->setChecked(MessageViewer::GlobalSettings::self()->recycleQuoteColors());
-    mCloseToQuotaThreshold->setValue(GlobalSettings::self()->closeToQuotaThreshold());
+    mCustomColorCheck->setChecked(!MessageCore::MessageCoreSettings::self()->useDefaultColors());
+    mRecycleColorCheck->setChecked(MessageViewer::MessageViewerSettings::self()->recycleQuoteColors());
+    mCloseToQuotaThreshold->setValue(KMailSettings::self()->closeToQuotaThreshold());
     loadColor(true);
 }
 
@@ -419,25 +417,18 @@ void AppearancePage::ColorsTab::loadColor(bool loadFromConfig)
 
         KConfigGroup reader(KMKernel::self()->config(), "Reader");
 
-        KConfigGroup messageListView(KMKernel::self()->config(), "MessageListView::Colors");
-
         KConfigGroup collectionFolderView(KMKernel::self()->config(), "CollectionFolderView");
 
         static const QColor defaultColor[ numColorNames ] = {
-            KMail::Util::quoteL1Color(),
-            KMail::Util::quoteL2Color(),
-            KMail::Util::quoteL3Color(),
+            MessageCore::Util::quoteLevel1DefaultTextColor(),
+            MessageCore::Util::quoteLevel2DefaultTextColor(),
+            MessageCore::Util::quoteLevel3DefaultTextColor(),
             scheme.foreground(KColorScheme::LinkText).color(),   // link
             scheme.foreground(KColorScheme::VisitedText).color(),  // visited link
             scheme.foreground(KColorScheme::NegativeText).color(),   // misspelled words
             MessageList::Util::unreadDefaultMessageColor(), // unread mgs
             MessageList::Util::importantDefaultMessageColor(), // important msg
             MessageList::Util::todoDefaultMessageColor(), // action item mgs
-            QColor(0x00, 0x80, 0xFF),   // pgp encrypted
-            scheme.background(KColorScheme::PositiveBackground).color(),   // pgp ok, trusted key
-            QColor(0xFF, 0xFF, 0x40),   // pgp ok, untrusted key
-            QColor(0xFF, 0xFF, 0x40),   // pgp unchk
-            Qt::red, // pgp bad
             QColor(0xFF, 0x40, 0x40),   // warning text color
             MailCommon::Util::defaultQuotaColor(), // close to quota
             Qt::lightGray, // colorbar plain bg
@@ -448,13 +439,15 @@ void AppearancePage::ColorsTab::loadColor(bool loadFromConfig)
             scheme.background().color() // reader background color
         };
 
-        for (int i = 0 ; i < numColorNames ; ++i) {
+        for (int i = 0; i < numColorNames; ++i) {
             if (loadFromConfig) {
                 const QString configName = QLatin1String(colorNames[i].configName);
-                if (configName == QLatin1String("UnreadMessageColor") ||
-                        configName == QLatin1String("ImportantMessageColor") ||
-                        configName == QLatin1String("TodoMessageColor")) {
-                    mColorList->setColorSilently(i, messageListView.readEntry(configName, defaultColor[i]));
+                if (configName == QLatin1String("UnreadMessageColor")) {
+                    mColorList->setColorSilently(i, MessageList::MessageListSettings::self()->unreadMessageColor());
+                } else if (configName == QLatin1String("ImportantMessageColor")) {
+                    mColorList->setColorSilently(i, MessageList::MessageListSettings::self()->importantMessageColor());
+                } else if (configName == QLatin1String("TodoMessageColor")) {
+                    mColorList->setColorSilently(i, MessageList::MessageListSettings::self()->todoMessageColor());
                 } else if (configName == QLatin1String("BrokenAccountColor")) {
                     mColorList->setColorSilently(i, collectionFolderView.readEntry(configName, defaultColor[i]));
                 } else {
@@ -483,24 +476,20 @@ void AppearancePage::ColorsTab::save()
         return;
     }
     KConfigGroup reader(KMKernel::self()->config(), "Reader");
-    KConfigGroup messageListView(KMKernel::self()->config(), "MessageListView::Colors");
     KConfigGroup collectionFolderView(KMKernel::self()->config(), "CollectionFolderView");
     bool customColors = mCustomColorCheck->isChecked();
-    MessageCore::GlobalSettings::self()->setUseDefaultColors(!customColors);
+    MessageCore::MessageCoreSettings::self()->setUseDefaultColors(!customColors);
 
     KColorScheme scheme(QPalette::Active, KColorScheme::View);
 
-    for (int i = 0 ; i < numColorNames ; ++i) {
-        // Don't write color info when we use default colors, but write
-        // if it's already there:
+    for (int i = 0; i < numColorNames; ++i) {
         const QString configName = QLatin1String(colorNames[i].configName);
-        if (configName == QLatin1String("UnreadMessageColor") ||
-                configName == QLatin1String("ImportantMessageColor") ||
-                configName == QLatin1String("TodoMessageColor")) {
-            if (customColors || messageListView.hasKey(configName)) {
-                messageListView.writeEntry(configName, mColorList->color(i));
-            }
-
+        if (customColors && configName == QLatin1String("UnreadMessageColor")) {
+            MessageList::MessageListSettings::self()->setUnreadMessageColor(mColorList->color(i));
+        } else if (customColors && configName == QLatin1String("ImportantMessageColor")) {
+            MessageList::MessageListSettings::self()->setImportantMessageColor(mColorList->color(i));
+        } else if (customColors && configName == QLatin1String("TodoMessageColor")) {
+            MessageList::MessageListSettings::self()->setTodoMessageColor(mColorList->color(i));
         } else if (configName == QLatin1String("BrokenAccountColor")) {
             if (customColors || collectionFolderView.hasKey(configName)) {
                 collectionFolderView.writeEntry(configName, mColorList->color(i));
@@ -515,8 +504,8 @@ void AppearancePage::ColorsTab::save()
             }
         }
     }
-    MessageViewer::GlobalSettings::self()->setRecycleQuoteColors(mRecycleColorCheck->isChecked());
-    GlobalSettings::self()->setCloseToQuotaThreshold(mCloseToQuotaThreshold->value());
+    MessageViewer::MessageViewerSettings::self()->setRecycleQuoteColors(mRecycleColorCheck->isChecked());
+    KMailSettings::self()->setCloseToQuotaThreshold(mCloseToQuotaThreshold->value());
 }
 
 QString AppearancePage::LayoutTab::helpAnchor() const
@@ -532,14 +521,14 @@ AppearancePageLayoutTab::AppearancePageLayoutTab(QWidget *parent)
     // "folder list" radio buttons:
     populateButtonGroup(mFolderListGroupBox = new QGroupBox(this),
                         mFolderListGroup = new QButtonGroup(this),
-                        Qt::Vertical, GlobalSettings::self()->folderListItem());
+                        Qt::Vertical, KMailSettings::self()->folderListItem());
     vlay->addWidget(mFolderListGroupBox);
     connect(mFolderListGroup, SIGNAL(buttonClicked(int)),
             this, SLOT(slotEmitChanged()));
 
     QHBoxLayout *folderCBHLayout = new QHBoxLayout();
     mFolderQuickSearchCB = new QCheckBox(i18n("Show folder quick search field"), this);
-    connect(mFolderQuickSearchCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
+    connect(mFolderQuickSearchCB, &QAbstractButton::toggled, this, &ConfigModuleTab::slotEmitChanged);
     folderCBHLayout->addWidget(mFolderQuickSearchCB);
     vlay->addLayout(folderCBHLayout);
 
@@ -586,7 +575,7 @@ AppearancePageLayoutTab::AppearancePageLayoutTab(QWidget *parent)
     // "show reader window" radio buttons:
     populateButtonGroup(mReaderWindowModeGroupBox = new QGroupBox(this),
                         mReaderWindowModeGroup = new QButtonGroup(this),
-                        Qt::Vertical, GlobalSettings::self()->readerWindowModeItem());
+                        Qt::Vertical, KMailSettings::self()->readerWindowModeItem());
     vlay->addWidget(mReaderWindowModeGroupBox);
     connect(mReaderWindowModeGroup, SIGNAL(buttonClicked(int)),
             this, SLOT(slotEmitChanged()));
@@ -596,11 +585,11 @@ AppearancePageLayoutTab::AppearancePageLayoutTab(QWidget *parent)
 
 void AppearancePage::LayoutTab::doLoadOther()
 {
-    loadWidget(mFolderListGroupBox, mFolderListGroup, GlobalSettings::self()->folderListItem());
-    loadWidget(mReaderWindowModeGroupBox, mReaderWindowModeGroup, GlobalSettings::self()->readerWindowModeItem());
+    loadWidget(mFolderListGroupBox, mFolderListGroup, KMailSettings::self()->folderListItem());
+    loadWidget(mReaderWindowModeGroupBox, mReaderWindowModeGroup, KMailSettings::self()->readerWindowModeItem());
     loadWidget(mFavoriteFoldersViewGroupBox, mFavoriteFoldersViewGroup, MailCommon::MailCommonSettings::self()->favoriteCollectionViewModeItem());
-    loadWidget(mFolderQuickSearchCB, GlobalSettings::self()->enableFolderQuickSearchItem());
-    const int checkedFolderToolTipsPolicy = GlobalSettings::self()->toolTipDisplayPolicy();
+    loadWidget(mFolderQuickSearchCB, KMailSettings::self()->enableFolderQuickSearchItem());
+    const int checkedFolderToolTipsPolicy = KMailSettings::self()->toolTipDisplayPolicy();
     if (checkedFolderToolTipsPolicy >= 0) {
         mFolderToolTipsGroup->button(checkedFolderToolTipsPolicy)->setChecked(true);
     }
@@ -608,11 +597,11 @@ void AppearancePage::LayoutTab::doLoadOther()
 
 void AppearancePage::LayoutTab::save()
 {
-    saveButtonGroup(mFolderListGroup, GlobalSettings::self()->folderListItem());
-    saveButtonGroup(mReaderWindowModeGroup, GlobalSettings::self()->readerWindowModeItem());
+    saveButtonGroup(mFolderListGroup, KMailSettings::self()->folderListItem());
+    saveButtonGroup(mReaderWindowModeGroup, KMailSettings::self()->readerWindowModeItem());
     saveButtonGroup(mFavoriteFoldersViewGroup, MailCommon::MailCommonSettings::self()->favoriteCollectionViewModeItem());
-    saveCheckBox(mFolderQuickSearchCB, GlobalSettings::self()->enableFolderQuickSearchItem());
-    GlobalSettings::self()->setToolTipDisplayPolicy(mFolderToolTipsGroup->checkedId());
+    saveCheckBox(mFolderQuickSearchCB, KMailSettings::self()->enableFolderQuickSearchItem());
+    KMailSettings::self()->setToolTipDisplayPolicy(mFolderToolTipsGroup->checkedId());
 }
 
 //
@@ -647,25 +636,25 @@ AppearancePageHeadersTab::AppearancePageHeadersTab(QWidget *parent)
     QVBoxLayout *gvlay = new QVBoxLayout(group);
 
     mDisplayMessageToolTips = new QCheckBox(
-        MessageList::Core::Settings::self()->messageToolTipEnabledItem()->label(), group);
+        MessageList::MessageListSettings::self()->messageToolTipEnabledItem()->label(), group);
     gvlay->addWidget(mDisplayMessageToolTips);
 
-    connect(mDisplayMessageToolTips, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mDisplayMessageToolTips, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     mHideTabBarWithSingleTab = new QCheckBox(
-        MessageList::Core::Settings::self()->autoHideTabBarWithSingleTabItem()->label(), group);
+        MessageList::MessageListSettings::self()->autoHideTabBarWithSingleTabItem()->label(), group);
     gvlay->addWidget(mHideTabBarWithSingleTab);
 
-    connect(mHideTabBarWithSingleTab, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mHideTabBarWithSingleTab, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     mTabsHaveCloseButton = new QCheckBox(
-        MessageList::Core::Settings::self()->tabsHaveCloseButtonItem()->label(), group);
+        MessageList::MessageListSettings::self()->tabsHaveCloseButtonItem()->label(), group);
     gvlay->addWidget(mTabsHaveCloseButton);
 
-    connect(mTabsHaveCloseButton, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mTabsHaveCloseButton, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     // "Aggregation"
     using MessageList::Utils::AggregationComboBox;
@@ -683,8 +672,8 @@ AppearancePageHeadersTab::AppearancePageHeadersTab(QWidget *parent)
     aggregationLayout->addWidget(aggregationConfigButton, 0);
     gvlay->addLayout(aggregationLayout);
 
-    connect(aggregationConfigButton, SIGNAL(configureDialogCompleted()),
-            this, SLOT(slotSelectDefaultAggregation()));
+    connect(aggregationConfigButton, &MessageList::Utils::AggregationConfigButton::configureDialogCompleted,
+            this, &AppearancePageHeadersTab::slotSelectDefaultAggregation);
     connect(mAggregationComboBox, SIGNAL(activated(int)),
             this, SLOT(slotEmitChanged()));
 
@@ -704,19 +693,21 @@ AppearancePageHeadersTab::AppearancePageHeadersTab(QWidget *parent)
     themeLayout->addWidget(themeConfigButton, 0);
     gvlay->addLayout(themeLayout);
 
-    connect(themeConfigButton, SIGNAL(configureDialogCompleted()),
-            this, SLOT(slotSelectDefaultTheme()));
+    connect(themeConfigButton, &MessageList::Utils::ThemeConfigButton::configureDialogCompleted,
+            this, &AppearancePageHeadersTab::slotSelectDefaultTheme);
     connect(mThemeComboBox, SIGNAL(activated(int)),
             this, SLOT(slotEmitChanged()));
 
     vlay->addWidget(group);
 
     // "Date Display" group:
-    mDateDisplay = new KButtonGroup(this);
-    mDateDisplay->setTitle(i18n("Date Display"));
-    gvlay = new QVBoxLayout(mDateDisplay);
+    mDateDisplayBox = new QGroupBox(this);
+    mDateDisplayBox->setTitle(i18n("Date Display"));
+    mDateDisplay = new QButtonGroup(this);
+    mDateDisplay->setExclusive(true);
+    gvlay = new QVBoxLayout(mDateDisplayBox);
 
-    for (int i = 0 ; i < numDateDisplayConfig ; ++i) {
+    for (int i = 0; i < numDateDisplayConfig; ++i) {
         const char *label = dateDisplayConfig[i].displayName;
         QString buttonLabel;
         if (QString::fromLatin1(label).contains(QStringLiteral("%1"))) {
@@ -724,11 +715,12 @@ AppearancePageHeadersTab::AppearancePageHeadersTab(QWidget *parent)
         } else {
             buttonLabel = i18n(label);
         }
-        QRadioButton *radio = new QRadioButton(buttonLabel, mDateDisplay);
+        QRadioButton *radio = new QRadioButton(buttonLabel, mDateDisplayBox);
         gvlay->addWidget(radio);
+        mDateDisplay->addButton(radio, dateDisplayConfig[i].dateDisplay);
 
         if (dateDisplayConfig[i].dateDisplay == DateFormatter::Custom) {
-            QWidget *hbox = new QWidget(mDateDisplay);
+            QWidget *hbox = new QWidget(mDateDisplayBox);
             QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
             hboxHBoxLayout->setMargin(0);
 
@@ -737,16 +729,16 @@ AppearancePageHeadersTab::AppearancePageHeadersTab(QWidget *parent)
             mCustomDateFormatEdit->setEnabled(false);
             hboxHBoxLayout->setStretchFactor(mCustomDateFormatEdit, 1);
 
-            connect(radio, SIGNAL(toggled(bool)),
-                    mCustomDateFormatEdit, SLOT(setEnabled(bool)));
-            connect(mCustomDateFormatEdit, SIGNAL(textChanged(QString)),
-                    this, SLOT(slotEmitChanged()));
+            connect(radio, &QAbstractButton::toggled,
+                    mCustomDateFormatEdit, &QWidget::setEnabled);
+            connect(mCustomDateFormatEdit, &QLineEdit::textChanged,
+                    this, &ConfigModuleTab::slotEmitChanged);
 
             QLabel *formatHelp = new QLabel(
                 i18n("<qt><a href=\"whatsthis1\">Custom format information...</a></qt>"), hbox);
             formatHelp->setContextMenuPolicy(Qt::NoContextMenu);
-            connect(formatHelp, SIGNAL(linkActivated(QString)),
-                    SLOT(slotLinkClicked(QString)));
+            connect(formatHelp, &QLabel::linkActivated,
+                    this, &AppearancePageHeadersTab::slotLinkClicked);
             hboxHBoxLayout->addWidget(formatHelp);
 
             mCustomDateWhatsThis =
@@ -787,9 +779,8 @@ AppearancePageHeadersTab::AppearancePageHeadersTab(QWidget *parent)
         }
     } // end for loop populating mDateDisplay
 
-    vlay->addWidget(mDateDisplay);
-    connect(mDateDisplay, SIGNAL(clicked(int)),
-            this, SLOT(slotEmitChanged()));
+    vlay->addWidget(mDateDisplayBox);
+    connect(mDateDisplay, SIGNAL(buttonClicked(int)), this, SLOT(slotEmitChanged()));
 
     vlay->addStretch(10);   // spacer
 }
@@ -816,9 +807,9 @@ void AppearancePage::HeadersTab::slotSelectDefaultTheme()
 void AppearancePage::HeadersTab::doLoadOther()
 {
     // "General Options":
-    loadWidget(mDisplayMessageToolTips, MessageList::Core::Settings::self()->messageToolTipEnabledItem());
-    loadWidget(mHideTabBarWithSingleTab, MessageList::Core::Settings::self()->autoHideTabBarWithSingleTabItem());
-    loadWidget(mTabsHaveCloseButton, MessageList::Core::Settings::self()->tabsHaveCloseButtonItem());
+    loadWidget(mDisplayMessageToolTips, MessageList::MessageListSettings::self()->messageToolTipEnabledItem());
+    loadWidget(mHideTabBarWithSingleTab, MessageList::MessageListSettings::self()->autoHideTabBarWithSingleTabItem());
+    loadWidget(mTabsHaveCloseButton, MessageList::MessageListSettings::self()->tabsHaveCloseButtonItem());
 
     // "Aggregation":
     slotSelectDefaultAggregation();
@@ -827,23 +818,23 @@ void AppearancePage::HeadersTab::doLoadOther()
     slotSelectDefaultTheme();
 
     // "Date Display":
-    setDateDisplay(MessageCore::GlobalSettings::self()->dateFormat(),
-                   MessageCore::GlobalSettings::self()->customDateFormat());
+    setDateDisplay(MessageCore::MessageCoreSettings::self()->dateFormat(),
+                   MessageCore::MessageCoreSettings::self()->customDateFormat());
 }
 
 void AppearancePage::HeadersTab::doLoadFromGlobalSettings()
 {
-    loadWidget(mDisplayMessageToolTips, MessageList::Core::Settings::self()->messageToolTipEnabledItem());
-    loadWidget(mHideTabBarWithSingleTab, MessageList::Core::Settings::self()->autoHideTabBarWithSingleTabItem());
-    loadWidget(mTabsHaveCloseButton, MessageList::Core::Settings::self()->tabsHaveCloseButtonItem());
+    loadWidget(mDisplayMessageToolTips, MessageList::MessageListSettings::self()->messageToolTipEnabledItem());
+    loadWidget(mHideTabBarWithSingleTab, MessageList::MessageListSettings::self()->autoHideTabBarWithSingleTabItem());
+    loadWidget(mTabsHaveCloseButton, MessageList::MessageListSettings::self()->tabsHaveCloseButtonItem());
     // "Aggregation":
     slotSelectDefaultAggregation();
 
     // "Theme":
     slotSelectDefaultTheme();
 
-    setDateDisplay(MessageCore::GlobalSettings::self()->dateFormat(),
-                   MessageCore::GlobalSettings::self()->customDateFormat());
+    setDateDisplay(MessageCore::MessageCoreSettings::self()->dateFormat(),
+                   MessageCore::MessageCoreSettings::self()->customDateFormat());
 }
 
 void AppearancePage::HeadersTab::setDateDisplay(int num, const QString &format)
@@ -856,20 +847,20 @@ void AppearancePage::HeadersTab::setDateDisplay(int num, const QString &format)
         mCustomDateFormatEdit->setText(format);
     }
 
-    for (int i = 0 ; i < numDateDisplayConfig ; ++i)
+    for (int i = 0; i < numDateDisplayConfig; ++i)
         if (dateDisplay == dateDisplayConfig[i].dateDisplay) {
-            mDateDisplay->setSelected(i);
+            mDateDisplay->button(dateDisplay)->setChecked(true);
             return;
         }
     // fell through since none found:
-    mDateDisplay->setSelected(numDateDisplayConfig - 2);   // default
+    mDateDisplay->button(numDateDisplayConfig - 2)->setChecked(true);   // default
 }
 
 void AppearancePage::HeadersTab::save()
 {
-    saveCheckBox(mDisplayMessageToolTips, MessageList::Core::Settings::self()->messageToolTipEnabledItem());
-    saveCheckBox(mHideTabBarWithSingleTab, MessageList::Core::Settings::self()->autoHideTabBarWithSingleTabItem());
-    saveCheckBox(mTabsHaveCloseButton, MessageList::Core::Settings::self()->tabsHaveCloseButtonItem());
+    saveCheckBox(mDisplayMessageToolTips, MessageList::MessageListSettings::self()->messageToolTipEnabledItem());
+    saveCheckBox(mHideTabBarWithSingleTab, MessageList::MessageListSettings::self()->autoHideTabBarWithSingleTabItem());
+    saveCheckBox(mTabsHaveCloseButton, MessageList::MessageListSettings::self()->tabsHaveCloseButtonItem());
 
     KMKernel::self()->savePaneSelection();
     // "Aggregation"
@@ -878,13 +869,9 @@ void AppearancePage::HeadersTab::save()
     // "Theme"
     mThemeComboBox->writeDefaultConfig();
 
-    const int dateDisplayID = mDateDisplay->selected();
-    // check bounds:
-    if ((dateDisplayID >= 0) && (dateDisplayID < numDateDisplayConfig)) {
-        MessageCore::GlobalSettings::self()->setDateFormat(
-            static_cast<int>(dateDisplayConfig[ dateDisplayID ].dateDisplay));
-    }
-    MessageCore::GlobalSettings::self()->setCustomDateFormat(mCustomDateFormatEdit->text());
+    const int dateDisplayID = mDateDisplay->checkedId();
+    MessageCore::MessageCoreSettings::self()->setDateFormat(dateDisplayID);
+    MessageCore::MessageCoreSettings::self()->setCustomDateFormat(mCustomDateFormatEdit->text());
 }
 
 //
@@ -903,20 +890,20 @@ AppearancePageReaderTab::AppearancePageReaderTab(QWidget *parent)
 
     // "Close message window after replying or forwarding" check box:
     populateCheckBox(mCloseAfterReplyOrForwardCheck = new QCheckBox(this),
-                     GlobalSettings::self()->closeAfterReplyOrForwardItem());
+                     KMailSettings::self()->closeAfterReplyOrForwardItem());
     mCloseAfterReplyOrForwardCheck->setToolTip(
         i18n("Close the standalone message window after replying or forwarding the message"));
     topLayout->addWidget(mCloseAfterReplyOrForwardCheck);
-    connect(mCloseAfterReplyOrForwardCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mCloseAfterReplyOrForwardCheck, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     mViewerSettings = new MessageViewer::ConfigureWidget;
-    connect(mViewerSettings, SIGNAL(settingsChanged()),
-            this, SLOT(slotEmitChanged()));
+    connect(mViewerSettings, &MessageViewer::ConfigureWidget::settingsChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
     topLayout->addWidget(mViewerSettings);
 
-    mGravatarConfigWidget = new MessageViewer::GravatarConfigWidget;
-    connect(mGravatarConfigWidget, SIGNAL(configChanged(bool)), this, SLOT(slotEmitChanged()));
+    mGravatarConfigWidget = new Gravatar::GravatarConfigWidget;
+    connect(mGravatarConfigWidget, &Gravatar::GravatarConfigWidget::configChanged, this, &ConfigModuleTab::slotEmitChanged);
     topLayout->addWidget(mGravatarConfigWidget);
     topLayout->addStretch(100);   // spacer
 }
@@ -928,14 +915,14 @@ void AppearancePage::ReaderTab::doResetToDefaultsOther()
 
 void AppearancePage::ReaderTab::doLoadOther()
 {
-    loadWidget(mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem());
+    loadWidget(mCloseAfterReplyOrForwardCheck, KMailSettings::self()->closeAfterReplyOrForwardItem());
     mViewerSettings->readConfig();
     mGravatarConfigWidget->doLoadFromGlobalSettings();
 }
 
 void AppearancePage::ReaderTab::save()
 {
-    saveCheckBox(mCloseAfterReplyOrForwardCheck, GlobalSettings::self()->closeAfterReplyOrForwardItem());
+    saveCheckBox(mCloseAfterReplyOrForwardCheck, KMailSettings::self()->closeAfterReplyOrForwardItem());
     mViewerSettings->writeConfig();
     mGravatarConfigWidget->save();
 }
@@ -953,48 +940,54 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab(QWidget *parent)
     // "Enable system tray applet" check box
     mSystemTrayCheck = new QCheckBox(i18n("Enable system tray icon"), this);
     vlay->addWidget(mSystemTrayCheck);
-    connect(mSystemTrayCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
+    connect(mSystemTrayCheck, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
 
     mSystemTrayShowUnreadMail = new QCheckBox(i18n("Show unread mail in tray icon"), this);
     vlay->addWidget(mSystemTrayShowUnreadMail);
     mSystemTrayShowUnreadMail->setEnabled(false);
-    connect(mSystemTrayShowUnreadMail, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChanged()));
-    connect(mSystemTrayCheck, SIGNAL(toggled(bool)),
-            mSystemTrayShowUnreadMail, SLOT(setEnabled(bool)));
+    connect(mSystemTrayShowUnreadMail, &QCheckBox::stateChanged,
+            this, &ConfigModuleTab::slotEmitChanged);
+    connect(mSystemTrayCheck, &QAbstractButton::toggled,
+            mSystemTrayShowUnreadMail, &QWidget::setEnabled);
 
     // System tray modes
-    mSystemTrayGroup = new KButtonGroup(this);
-    mSystemTrayGroup->setTitle(i18n("System Tray Mode"));
-    QVBoxLayout *gvlay = new QVBoxLayout(mSystemTrayGroup);
+    mSystemTrayGroup = new QButtonGroup(this);
+    mSystemTrayGroup->setExclusive(true);
+    mSystemTrayGroupBox = new QGroupBox(this);
+    mSystemTrayGroupBox->setTitle(i18n("System Tray Mode"));
+    QVBoxLayout *gvlay = new QVBoxLayout(mSystemTrayGroupBox);
 
-    connect(mSystemTrayGroup, SIGNAL(clicked(int)),
+    connect(mSystemTrayGroup, SIGNAL(buttonClicked(int)),
             this, SLOT(slotEmitChanged()));
-    connect(mSystemTrayCheck, SIGNAL(toggled(bool)),
-            mSystemTrayGroup, SLOT(setEnabled(bool)));
+    connect(mSystemTrayCheck, &QAbstractButton::toggled,
+            mSystemTrayGroupBox, &QWidget::setEnabled);
 
-    gvlay->addWidget(new QRadioButton(i18n("Always show KMail in system tray"), mSystemTrayGroup));
-    gvlay->addWidget(new QRadioButton(i18n("Only show KMail in system tray if there are unread messages"), mSystemTrayGroup));
+    auto button = new QRadioButton(i18n("Always show KMail in system tray"), mSystemTrayGroupBox);
+    gvlay->addWidget(button);
+    mSystemTrayGroup->addButton(button, KMailSettings::EnumSystemTrayPolicy::ShowAlways);
+    button = new QRadioButton(i18n("Only show KMail in system tray if there are unread messages"), mSystemTrayGroupBox);
+    gvlay->addWidget(button);
+    mSystemTrayGroup->addButton(button, KMailSettings::EnumSystemTrayPolicy::ShowOnUnread);
 
-    vlay->addWidget(mSystemTrayGroup);
+    vlay->addWidget(mSystemTrayGroupBox);
     vlay->addStretch(10);   // spacer
 }
 
 void AppearancePage::SystemTrayTab::doLoadFromGlobalSettings()
 {
-    loadWidget(mSystemTrayCheck, GlobalSettings::self()->systemTrayEnabledItem());
-    loadWidget(mSystemTrayShowUnreadMail, GlobalSettings::self()->systemTrayShowUnreadItem());
-    mSystemTrayGroup->setSelected(GlobalSettings::self()->systemTrayPolicy());
-    mSystemTrayGroup->setEnabled(mSystemTrayCheck->isChecked());
+    loadWidget(mSystemTrayCheck, KMailSettings::self()->systemTrayEnabledItem());
+    loadWidget(mSystemTrayShowUnreadMail, KMailSettings::self()->systemTrayShowUnreadItem());
+    mSystemTrayGroup->button(KMailSettings::self()->systemTrayPolicy())->setChecked(true);
+    mSystemTrayGroupBox->setEnabled(mSystemTrayCheck->isChecked());
 }
 
 void AppearancePage::SystemTrayTab::save()
 {
-    saveCheckBox(mSystemTrayCheck, GlobalSettings::self()->systemTrayEnabledItem());
-    GlobalSettings::self()->setSystemTrayPolicy(mSystemTrayGroup->selected());
-    saveCheckBox(mSystemTrayShowUnreadMail, GlobalSettings::self()->systemTrayShowUnreadItem());
-    GlobalSettings::self()->save();
+    saveCheckBox(mSystemTrayCheck, KMailSettings::self()->systemTrayEnabledItem());
+    KMailSettings::self()->setSystemTrayPolicy(mSystemTrayGroup->checkedId());
+    saveCheckBox(mSystemTrayShowUnreadMail, KMailSettings::self()->systemTrayShowUnreadItem());
+    KMailSettings::self()->save();
 }
 
 QString AppearancePage::MessageTagTab::helpAnchor() const
@@ -1078,7 +1071,7 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab(QWidget *parent)
     tageditgrid->addLayout(listboxgrid);
     mTagListBox = new QListWidget(mTagsGroupBox);
     mTagListBox->setDragDropMode(QAbstractItemView::InternalMove);
-    connect(mTagListBox->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    connect(mTagListBox->model(), &QAbstractItemModel::rowsMoved, this, &AppearancePageMessageTagTab::slotRowsMoved);
 
     mTagListBox->setMinimumWidth(150);
     listboxgrid->addWidget(mTagListBox);
@@ -1103,35 +1096,35 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab(QWidget *parent)
     mTagWidget = new MailCommon::TagWidget(actionCollections, this);
     lay->addWidget(mTagWidget);
 
-    connect(mTagWidget, SIGNAL(changed()), this, SLOT(slotEmitChangeCheck()));
+    connect(mTagWidget, &TagWidget::changed, this, &AppearancePageMessageTagTab::slotEmitChangeCheck);
 
     //For enabling the add button in case box is non-empty
-    connect(mTagAddLineEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(slotAddLineTextChanged(QString)));
+    connect(mTagAddLineEdit, &KLineEdit::textChanged,
+            this, &AppearancePage::MessageTagTab::slotAddLineTextChanged);
 
     //For on-the-fly updating of tag name in editbox
-    connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
-            this, SLOT(slotNameLineTextChanged(QString)));
+    connect(mTagWidget->tagNameLineEdit(), &QLineEdit::textChanged,
+            this, &AppearancePageMessageTagTab::slotNameLineTextChanged);
 
     connect(mTagWidget, &TagWidget::iconNameChanged, this, &AppearancePageMessageTagTab::slotIconNameChanged);
 
     connect(mTagAddLineEdit, &KLineEdit::returnPressed,
             this, &AppearancePageMessageTagTab::slotAddNewTag);
 
-    connect(mTagAddButton, SIGNAL(clicked()),
-            this, SLOT(slotAddNewTag()));
+    connect(mTagAddButton, &QAbstractButton::clicked,
+            this, &AppearancePageMessageTagTab::slotAddNewTag);
 
-    connect(mTagRemoveButton, SIGNAL(clicked()),
-            this, SLOT(slotRemoveTag()));
+    connect(mTagRemoveButton, &QAbstractButton::clicked,
+            this, &AppearancePageMessageTagTab::slotRemoveTag);
 
-    connect(mTagUpButton, SIGNAL(clicked()),
-            this, SLOT(slotMoveTagUp()));
+    connect(mTagUpButton, &QAbstractButton::clicked,
+            this, &AppearancePageMessageTagTab::slotMoveTagUp);
 
-    connect(mTagDownButton, SIGNAL(clicked()),
-            this, SLOT(slotMoveTagDown()));
+    connect(mTagDownButton, &QAbstractButton::clicked,
+            this, &AppearancePageMessageTagTab::slotMoveTagDown);
 
-    connect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slotSelectionChanged()));
+    connect(mTagListBox, &QListWidget::currentItemChanged,
+            this, &AppearancePageMessageTagTab::slotSelectionChanged);
     //Adjust widths for columns
     maingrid->setStretchFactor(mTagsGroupBox, 1);
     maingrid->setStretchFactor(lay, 1);
@@ -1194,16 +1187,16 @@ void AppearancePage::MessageTagTab::slotMoveTagDown()
 void AppearancePage::MessageTagTab::swapTagsInListBox(const int first,
         const int second)
 {
-    disconnect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-               this, SLOT(slotSelectionChanged()));
+    disconnect(mTagListBox, &QListWidget::currentItemChanged,
+               this, &AppearancePageMessageTagTab::slotSelectionChanged);
     QListWidgetItem *item = mTagListBox->takeItem(first);
     // now selected item is at idx(idx-1), so
     // insert the other item at idx, ie. above(below).
     mPreviousTag = second;
     mTagListBox->insertItem(second, item);
     mTagListBox->setCurrentRow(second);
-    connect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slotSelectionChanged()));
+    connect(mTagListBox, &QListWidget::currentItemChanged,
+            this, &AppearancePageMessageTagTab::slotSelectionChanged);
     slotEmitChangeCheck();
 }
 
@@ -1241,19 +1234,19 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets(int aIndex)
     TagListWidgetItem *tagItem = static_cast<TagListWidgetItem *>(item);
     MailCommon::Tag::Ptr tmp_desc = tagItem->kmailTag();
 
-    disconnect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
-               this, SLOT(slotNameLineTextChanged(QString)));
+    disconnect(mTagWidget->tagNameLineEdit(), &KLineEdit::textChanged,
+               this, &AppearancePage::MessageTagTab::slotNameLineTextChanged);
 
     mTagWidget->tagNameLineEdit()->setEnabled(!tmp_desc->isImmutable);
     mTagWidget->tagNameLineEdit()->setText(tmp_desc->tagName);
-    connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
-            this, SLOT(slotNameLineTextChanged(QString)));
+    connect(mTagWidget->tagNameLineEdit(), &KLineEdit::textChanged,
+            this, &AppearancePage::MessageTagTab::slotNameLineTextChanged);
 
     mTagWidget->setTagTextColor(tmp_desc->textColor);
 
     mTagWidget->setTagBackgroundColor(tmp_desc->backgroundColor);
 
-    mTagWidget->setTagTextFont(tmp_desc->textFont);
+    mTagWidget->setTagTextFormat(tmp_desc->isBold, tmp_desc->isItalic);
 
     mTagWidget->iconButton()->setEnabled(!tmp_desc->isImmutable);
     mTagWidget->iconButton()->setIcon(tmp_desc->iconName);
@@ -1293,12 +1286,12 @@ void AppearancePage::MessageTagTab::slotRemoveTag()
             //Before deleting the current item, make sure the selectionChanged signal
             //is disconnected, so that the widgets will not get updated while the
             //deletion takes place.
-            disconnect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                       this, SLOT(slotSelectionChanged()));
+            disconnect(mTagListBox, &QListWidget::currentItemChanged,
+                       this, &AppearancePageMessageTagTab::slotSelectionChanged);
 
             delete item;
-            connect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                    this, SLOT(slotSelectionChanged()));
+            connect(mTagListBox, &QListWidget::currentItemChanged,
+                    this, &AppearancePageMessageTagTab::slotSelectionChanged);
 
             slotSelectionChanged();
             slotEmitChangeCheck();
@@ -1313,8 +1306,7 @@ void AppearancePage::MessageTagTab::slotDeleteTagJob(KJob *job)
     }
 }
 
-void AppearancePage::MessageTagTab::slotNameLineTextChanged(const QString
-        &aText)
+void AppearancePage::MessageTagTab::slotNameLineTextChanged(const QString &aText)
 {
     //If deleted all, leave the first character for the sake of not having an
     //empty tag name
@@ -1326,23 +1318,23 @@ void AppearancePage::MessageTagTab::slotNameLineTextChanged(const QString
     for (int i = 0; i < count; ++i) {
         if (mTagListBox->item(i)->text() == aText) {
             KMessageBox::error(this, i18n("We cannot create tag. A tag with same name already exists."));
-            disconnect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
-                       this, SLOT(slotNameLineTextChanged(QString)));
+            disconnect(mTagWidget->tagNameLineEdit(), &QLineEdit::textChanged,
+                       this, &AppearancePageMessageTagTab::slotNameLineTextChanged);
             mTagWidget->tagNameLineEdit()->setText(mTagListBox->currentItem()->text());
-            connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
-                    this, SLOT(slotNameLineTextChanged(QString)));
+            connect(mTagWidget->tagNameLineEdit(), &QLineEdit::textChanged,
+                    this, &AppearancePageMessageTagTab::slotNameLineTextChanged);
             return;
         }
     }
 
     //Disconnect so the tag information is not saved and reloaded with every
     //letter
-    disconnect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-               this, SLOT(slotSelectionChanged()));
+    disconnect(mTagListBox, &QListWidget::currentItemChanged,
+               this, &AppearancePageMessageTagTab::slotSelectionChanged);
 
     mTagListBox->currentItem()->setText(aText);
-    connect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slotSelectionChanged()));
+    connect(mTagListBox, &QListWidget::currentItemChanged,
+            this, &AppearancePageMessageTagTab::slotSelectionChanged);
 }
 
 void AppearancePage::MessageTagTab::slotIconNameChanged(const QString &iconName)
@@ -1376,7 +1368,7 @@ void AppearancePage::MessageTagTab::slotAddNewTag()
     newItem->setKMailTag(tag);
     mTagListBox->addItem(newItem);
     mTagListBox->setCurrentItem(newItem);
-    mTagAddLineEdit->setText(QString());
+    mTagAddLineEdit->clear();
 }
 
 void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
@@ -1385,7 +1377,7 @@ void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
 
     Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
     fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
-    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotTagsFetched(KJob*)));
+    connect(fetchJob, &KJob::result, this, &AppearancePageMessageTagTab::slotTagsFetched);
 }
 
 void AppearancePage::MessageTagTab::slotTagsFetched(KJob *job)
@@ -1397,7 +1389,7 @@ void AppearancePage::MessageTagTab::slotTagsFetched(KJob *job)
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
 
     QList<MailCommon::TagPtr> msgTagList;
-    const QList<Akonadi::Tag> tagList = fetchJob->tags();
+    const Akonadi::Tag::List tagList = fetchJob->tags();
     msgTagList.reserve(tagList.count());
     foreach (const Akonadi::Tag &akonadiTag, tagList) {
         MailCommon::Tag::Ptr tag = MailCommon::Tag::fromAkonadi(akonadiTag);
@@ -1415,11 +1407,11 @@ void AppearancePage::MessageTagTab::slotTagsFetched(KJob *job)
     }
 
     //Disconnect so that insertItem's do not trigger an update procedure
-    disconnect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-               this, SLOT(slotSelectionChanged()));
+    disconnect(mTagListBox, &QListWidget::currentItemChanged,
+               this, &AppearancePageMessageTagTab::slotSelectionChanged);
 
-    connect(mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slotSelectionChanged()));
+    connect(mTagListBox, &QListWidget::currentItemChanged,
+            this, &AppearancePageMessageTagTab::slotSelectionChanged);
 
     slotUpdateTagSettingWidgets(-1);
     //Needed since the previous function doesn't affect add button
@@ -1456,9 +1448,7 @@ void AppearancePage::MessageTagTab::save()
         if ((i >= mOriginalMsgTagList.count()) || *(tagItem->kmailTag()) != *(mOriginalMsgTagList[i])) {
             MailCommon::Tag::Ptr tag = tagItem->kmailTag();
             tag->priority = i;
-
-            MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
-            Akonadi::Tag akonadiTag = tag->saveToAkonadi(saveFlags);
+            Akonadi::Tag akonadiTag = tag->saveToAkonadi();
             if ((*tag).id() > 0) {
                 akonadiTag.setId((*tag).id());
             }

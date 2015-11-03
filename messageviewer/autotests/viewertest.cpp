@@ -17,7 +17,7 @@
 
 #include "viewertest.h"
 #include <qtest.h>
-#include "messageviewer/viewer/viewer.h"
+#include "messageviewer/viewer.h"
 #include <qtestmouse.h>
 #include <KActionCollection>
 #include <KToggleAction>
@@ -34,7 +34,7 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QTest::qWaitForWindowExposed(&viewer);
 
     QVERIFY(!viewer.message());
-    QWidget *createtodowidget = viewer.findChild<QWidget *>(QStringLiteral("createtodowidget"));
+    QWidget *createtodowidget = viewer.findChild<QWidget *>(QStringLiteral("todoedit"));
     QVERIFY(createtodowidget);
     QCOMPARE(createtodowidget->isVisible(), false);
 
@@ -57,11 +57,11 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(openattachementfolderwidget);
     QVERIFY(!openattachementfolderwidget->isVisible());
 
-    QWidget *createeventwidget = viewer.findChild<QWidget *>(QStringLiteral("createeventwidget"));
+    QWidget *createeventwidget = viewer.findChild<QWidget *>(QStringLiteral("eventedit"));
     QVERIFY(createeventwidget);
     QCOMPARE(createeventwidget->isVisible(), false);
 
-    QWidget *createnotewidget = viewer.findChild<QWidget *>(QStringLiteral("createnotewidget"));
+    QWidget *createnotewidget = viewer.findChild<QWidget *>(QStringLiteral("noteedit"));
     QVERIFY(createnotewidget);
     QCOMPARE(createnotewidget->isVisible(), false);
 
@@ -77,7 +77,6 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(viewer.urlOpenAction());
     QVERIFY(viewer.speakTextAction());
     QVERIFY(viewer.copyImageLocation());
-    QVERIFY(viewer.translateAction());
     QVERIFY(viewer.viewSourceAction());
     QVERIFY(viewer.findInMessageAction());
     QVERIFY(viewer.saveAsAction());
@@ -86,70 +85,10 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(viewer.blockImage());
     QVERIFY(viewer.openBlockableItems());
     QVERIFY(viewer.expandShortUrlAction());
-    QVERIFY(viewer.createTodoAction());
-    QVERIFY(viewer.createEventAction());
-    QVERIFY(viewer.createNoteAction());
     QVERIFY(viewer.urlClicked().isEmpty());
     QVERIFY(viewer.imageUrlClicked().isEmpty());
     QCOMPARE(viewer.isFixedFont(), false);
     QVERIFY(viewer.shareServiceUrlMenu());
-}
-
-void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()
-{
-    MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
-    viewer.show();
-    QTest::qWaitForWindowExposed(&viewer);
-    QWidget *createtodowidget = viewer.findChild<QWidget *>(QStringLiteral("createtodowidget"));
-    QVERIFY(viewer.createTodoAction());
-
-    viewer.createTodoAction()->trigger();
-    //No message => we can show it.
-    QCOMPARE(createtodowidget->isVisible(), false);
-
-    KMime::Message::Ptr msg(new KMime::Message);
-    viewer.setMessage(msg);
-
-    viewer.createTodoAction()->trigger();
-    QCOMPARE(createtodowidget->isVisible(), true);
-}
-
-void ViewerTest::shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage()
-{
-    MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
-    viewer.show();
-    QTest::qWaitForWindowExposed(&viewer);
-    QWidget *createeventwidget = viewer.findChild<QWidget *>(QStringLiteral("createeventwidget"));
-    QVERIFY(viewer.createEventAction());
-
-    viewer.createTodoAction()->trigger();
-    //No message => we can show it.
-    QCOMPARE(createeventwidget->isVisible(), false);
-
-    KMime::Message::Ptr msg(new KMime::Message);
-    viewer.setMessage(msg);
-
-    viewer.createEventAction()->trigger();
-    QCOMPARE(createeventwidget->isVisible(), true);
-}
-
-void ViewerTest::shouldShowCreateNoteWidgetWhenActivateItAndWeHaveAMessage()
-{
-    MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
-    viewer.show();
-    QTest::qWaitForWindowExposed(&viewer);
-    QWidget *createnotewidget = viewer.findChild<QWidget *>(QStringLiteral("createnotewidget"));
-    QVERIFY(viewer.createNoteAction());
-
-    viewer.createNoteAction()->trigger();
-    //No message => we can show it.
-    QCOMPARE(createnotewidget->isVisible(), false);
-
-    KMime::Message::Ptr msg(new KMime::Message);
-    viewer.setMessage(msg);
-
-    viewer.createNoteAction()->trigger();
-    QCOMPARE(createnotewidget->isVisible(), true);
 }
 
 QTEST_MAIN(ViewerTest)

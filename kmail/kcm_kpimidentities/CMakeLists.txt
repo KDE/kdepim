@@ -18,20 +18,20 @@ set(kcm_identities_srcs
 ki18n_wrap_ui(kcm_identities_srcs ../ui/identitypage.ui)
 add_library(kcm_kpimidentities MODULE ${kcm_identities_srcs})
 target_link_libraries(kcm_kpimidentities
-  ${KDEPIMLIBS_GPGMEPP_LIBS}
   KF5::AkonadiCore
   KF5::IdentityManagement
   KF5::MailTransport
   KF5::KCMUtils
   KF5::KIOCore
-  
-  mailcommon
-  messagecomposer
-  messageviewer
-  templateparser
-  pimcommon
-  kleo
-  kdepim
+  KF5::KIOWidgets
+  KF5::IconThemes  
+  KF5::MailCommon
+  KF5::MessageComposer
+  KF5::MessageViewer
+  KF5::TemplateParser
+  KF5::PimCommon
+  KF5::Libkleo
+  KF5::Libkdepim
 )
 
 install(FILES kcm_kpimidentities.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})

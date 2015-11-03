@@ -40,8 +40,8 @@
 
 #include <boost/mem_fn.hpp>
 
-#include <kleo/stl_util.h>
-#include <kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include <gpgme++/key.h>
 
@@ -60,8 +60,6 @@ using namespace Kleo;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
 using namespace boost;
-
-static const char option_prefix[] = "prefix";
 
 class SelectCertificateCommand::Private
 {
@@ -130,7 +128,7 @@ int SelectCertificateCommand::doStart()
     d->ensureDialogCreated();
 
     CertificateSelectionDialog::Options opts;
-    for (unsigned int i = 0 ; i < sizeof option_table / sizeof * option_table ; ++i)
+    for (unsigned int i = 0; i < sizeof option_table / sizeof * option_table; ++i)
         if (hasOption(option_table[i].name)) {
             opts |= option_table[i].option;
         }

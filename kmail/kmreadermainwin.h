@@ -8,11 +8,10 @@
 #include <QUrl>
 #include <KMime/Message>
 
-#include <boost/scoped_ptr.hpp>
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/collection.h>
 #include <QModelIndex>
-#include <messageviewer/viewer/viewer.h>
+#include <messageviewer/viewer.h>
 class KMReaderWin;
 class QAction;
 class KFontAction;
@@ -54,7 +53,7 @@ public:
     void showMessage(const QString &encoding, const Akonadi::Item &msg, const Akonadi::Collection &parentCollection = Akonadi::Collection());
 
     void showMessage(const QString &encoding, KMime::Message::Ptr message);
-    void showMessagePopup(const Akonadi::Item &msg , const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound);
+    void showMessagePopup(const Akonadi::Item &msg, const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound);
 
 private Q_SLOTS:
     void slotMessagePopup(const Akonadi::Item &, const QUrl &, const QUrl &imageUrl, const QPoint &);

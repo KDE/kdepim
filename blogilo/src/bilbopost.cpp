@@ -22,9 +22,9 @@
 */
 
 #include "bilbopost.h"
-#include <kdatetime.h>
 #include "blogilo_debug.h"
 #include <QStringList>
+#include <QDateTime>
 
 class BilboPostPrivate
 {
@@ -33,14 +33,14 @@ public:
     int mId;///id in DB
     int localId;
     bool mModifyTimeStamp;///Just for toolbox entry!
-    QList<Category> mCategoryList;
+    QVector<Category> mCategoryList;
 };
 
 BilboPost::BilboPost()
     : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
 {
-    this->setCreationDateTime(KDateTime::currentLocalDateTime());
-    this->setModificationDateTime(KDateTime::currentLocalDateTime());
+    this->setCreationDateTime(QDateTime::currentDateTime());
+    this->setModificationDateTime(QDateTime::currentDateTime());
     this->setCommentAllowed(true);
     this->setPrivate(false);
     this->setTrackBackAllowed(true);
@@ -108,13 +108,13 @@ QString BilboPost::toString() const
     //  if(!title().isEmpty())
     //   qDebug("BilboPost::toString: title is %s", this->title());
     QString ret;
-    ret = QLatin1String("\n******* Post Info **********");
+    ret = QStringLiteral("\n******* Post Info **********");
     ret += QLatin1String("\nID: ") + postId();
     ret += QLatin1String("\nTitle: ") + title();
     ret += QLatin1String("\nContent: ") + content();
     ret += QLatin1String("\nAdditionalContent: ") + additionalContent();
-    ret += QLatin1String("\nTags: ") + tags().join(QLatin1String(","));
-    ret += QLatin1String("\nCategories: ") + categories().join(QLatin1String(","));
+    ret += QLatin1String("\nTags: ") + tags().join(QStringLiteral(","));
+    ret += QLatin1String("\nCategories: ") + categories().join(QStringLiteral(","));
     ret += QLatin1String("\nCreation Date Time: ") + creationDateTime().toString();
     ret += QLatin1String("\nStatus: ") + QString::number(status());
     ret += QLatin1String("\nIsPrivate: ") + QVariant(isPrivate()).toString();
@@ -132,12 +132,12 @@ void BilboPost::setModifyTimeStamp(bool isModify)
     d_ptr->mModifyTimeStamp = isModify;
 }
 
-QList< Category > BilboPost::categoryList() const
+QVector<Category> BilboPost::categoryList() const
 {
     return d_ptr->mCategoryList;
 }
 
-void BilboPost::setCategoryList(const QList< Category > &list)
+void BilboPost::setCategoryList(const QVector<Category> &list)
 {
     d_ptr->mCategoryList = list;
     QStringList cats;

@@ -29,7 +29,7 @@
 #include <KMessageBox>
 #include <QFileDialog>
 #include <KRecentFilesAction>
-#include <KNS3/KNewStuffAction>
+#include <kns3/knewstuffaction.h>
 #include <KConfigGroup>
 
 #include <QApplication>
@@ -193,7 +193,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
         return;
     }
 
-    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"), QStringLiteral("kfiledialog:///OpenTheme"));
+    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"));
     if (directory.isEmpty()) {
         return;
     }
@@ -326,7 +326,7 @@ void ThemeEditorMainWindow::slotThemeSelected(const QUrl &url)
 
 void ThemeEditorMainWindow::slotSaveAsTheme()
 {
-    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"), QStringLiteral("kfiledialog:///SaveTheme"));
+    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"));
     if (!directory.isEmpty()) {
         if (mThemeEditor) {
             mThemeEditor->saveThemeAs(directory);

@@ -55,8 +55,8 @@ public:
     }
 
 private:
-    int doStart();
-    void doCanceled();
+    int doStart() Q_DECL_OVERRIDE;
+    void doCanceled() Q_DECL_OVERRIDE;
 
 #ifdef Q_MOC_RUN
 private Q_SLOTS:

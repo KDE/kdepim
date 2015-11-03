@@ -20,9 +20,9 @@
 
 #include <QObject>
 #include <QPointer>
-#include <foldercollection.h>
+#include <MailCommon/FolderCollection>
 
-#include <progresswidget/progressmanager.h>
+#include <libkdepim/progressmanager.h>
 
 namespace Akonadi
 {

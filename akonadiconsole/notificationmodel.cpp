@@ -24,7 +24,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusPendingCall>
 
-#include <KLocale>
+#include <QLocale>
 
 #include "akonadiconsole_debug.h"
 #include <AkonadiCore/ServerManager>
@@ -137,7 +137,7 @@ NotificationModel::NotificationEntity::NotificationEntity(const Protocol::Change
 NotificationModel::NotificationModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
-    QString service = QLatin1String("org.freedesktop.Akonadi");
+    QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
@@ -246,8 +246,8 @@ QVariant NotificationModel::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole) {
             switch (index.column()) {
             case 0:
-                return QString(KLocale::global()->formatTime(block->timestamp.time(), true) +
-                               QString::fromLatin1(".%1").arg(block->timestamp.time().msec(), 3, 10, QLatin1Char('0')));
+                return QString(QLocale().toString(block->timestamp.time()) +
+                               QStringLiteral(".%1").arg(block->timestamp.time().msec(), 3, 10, QLatin1Char('0')));
             case 1:
                 return block->nodes.count();
             }

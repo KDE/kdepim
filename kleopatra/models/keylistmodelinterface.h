@@ -55,7 +55,6 @@ public:
 
     enum Columns {
         PrettyName,
-#ifndef KDEPIM_MOBILE_UI
         PrettyEMail,
         ValidFrom,
         ValidUntil,
@@ -69,7 +68,6 @@ public:
         Issuer,
         Subject,
         SerialNumber,
-#endif
 #endif
 
         NumColumns,

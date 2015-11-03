@@ -44,8 +44,9 @@
 #include "kmcommands.h"
 
 #include "widgets/collectionpane.h"
-#include "kernel/mailkernel.h"
-#include "util/mailutil.h"
+#include "mailcommon/mailkernel.h"
+#include "mailcommon/mailutil.h"
+#include "messageviewer/headerstyleplugin.h"
 
 #include <unistd.h> // link()
 #include <QProgressDialog>
@@ -57,45 +58,45 @@
 #include <kmessagebox.h>
 #include <kbookmarkmanager.h>
 #include <QFileDialog>
+#include <KJobWidgets>
 // KIO headers
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
-#include <kio/netaccess.h>
+#include <kio/statjob.h>
 
 #include <kmime/kmime_message.h>
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <AkonadiCore/itemmodifyjob.h>
 #include <AkonadiCore/itemfetchjob.h>
+#include <MailCommon/MDNStateAttribute>
 
-#include "foldercollection.h"
+#include "MailCommon/FolderCollection"
 
-#include "messagecore/misc/mailinglist.h"
+#include "MessageCore/MailingList"
 #include "editor/composer.h"
-#include "mailcommon/filter/filteractions/filteraction.h"
-#include "mailcommon/filter/filtermanager.h"
-#include "mailcommon/filter/mailfilter.h"
-#include "mailcommon/widgets/redirectdialog.h"
+#include "MailCommon/FilterAction"
+#include "MailCommon/FilterManager"
+#include "MailCommon/MailFilter"
+#include "MailCommon/RedirectDialog"
 #include "kmmainwidget.h"
 #include "undostack.h"
 #ifndef QT_NO_CURSOR
-#include "messageviewer/utils/kcursorsaver.h"
+#include "Libkdepim/KCursorSaver"
 #endif
-#include "messageviewer/viewer/objecttreeparser.h"
-#include "messageviewer/viewer/csshelper.h"
-#include "messageviewer/utils/util.h"
-#include "messageviewer/header/headerstrategy.h"
-#include "messageviewer/header/headerstyle.h"
+#include "MessageViewer/ObjectTreeParser"
+#include "MessageViewer/CSSHelper"
+#include "messagecomposer/util.h"
 #include "kmreadermainwin.h"
 #include "secondarywindow.h"
 using KMail::SecondaryWindow;
 #include "util.h"
-#include "misc/broadcaststatus.h"
-#include "settings/globalsettings.h"
-#include "utils/stringutil.h"
-#include "messageviewer/utils/autoqpointer.h"
-#include "messageviewer/settings/globalsettings.h"
-#include "messagecore/settings/globalsettings.h"
+#include "libkdepim/broadcaststatus.h"
+#include "settings/kmailsettings.h"
+#include "MessageCore/StringUtil"
+
+#include "messageviewer/messageviewersettings.h"
+#include "MessageCore/MessageCoreSettings"
 
 #include <AkonadiCore/itemmovejob.h>
 #include <AkonadiCore/itemcopyjob.h>
@@ -110,26 +111,26 @@ using KMail::SecondaryWindow;
 #include <MailTransport/mailtransport/transportmanager.h>
 using MailTransport::TransportManager;
 
-#include "messageviewer/viewer/nodehelper.h"
-#include "messageviewer/viewer/objecttreeemptysource.h"
+#include "messageviewer/nodehelper.h"
+#include "MessageViewer/ObjectTreeEmptySource"
 
-#include "messagecore/utils/stringutil.h"
-#include "messagecore/helpers/messagehelpers.h"
+#include "MessageCore/StringUtil"
+#include "messagecore/messagehelpers.h"
 
-#include "messagecomposer/sender/messagesender.h"
-#include "messagecomposer/helper/messagehelper.h"
-#include "messagecomposer/settings/messagecomposersettings.h"
-#include "messagecomposer/helper/messagefactory.h"
+#include "MessageComposer/MessageSender"
+#include "MessageComposer/MessageHelper"
+#include "MessageComposer/MessageComposerSettings"
+#include "MessageComposer/MessageFactory"
 using MessageComposer::MessageFactory;
 
-#include "progresswidget/progressmanager.h"
+#include "libkdepim/progressmanager.h"
 using KPIM::ProgressManager;
 using KPIM::ProgressItem;
 #include <kmime/kmime_mdn.h>
 using namespace KMime;
 
-#include "kleo/cryptobackend.h"
-#include "kleo/cryptobackendfactory.h"
+#include "Libkleo/CryptoBackend"
+#include "Libkleo/CryptoBackendFactory"
 
 #include <gpgme++/error.h>
 
@@ -221,6 +222,31 @@ QWidget *KMCommand::parentWidget() const
     return mParent;
 }
 
+bool KMCommand::deletesItself() const
+{
+    return mDeletesItself;
+}
+
+void KMCommand::setDeletesItself(bool deletesItself)
+{
+    mDeletesItself = deletesItself;
+}
+
+bool KMCommand::emitsCompletedItself() const
+{
+    return mEmitsCompletedItself;
+}
+
+void KMCommand::setEmitsCompletedItself(bool emitsCompletedItself)
+{
+    mEmitsCompletedItself = emitsCompletedItself;
+}
+
+void KMCommand::setResult(KMCommand::Result result)
+{
+    mResult = result;
+}
+
 int KMCommand::mCountJobs = 0;
 
 void KMCommand::start()
@@ -306,7 +332,7 @@ void KMCommand::transferSelectedMsgs()
         complete = false;
         ++KMCommand::mCountJobs;
         Akonadi::ItemFetchJob *fetch = createFetchJob(mMsgList);
-        mFetchScope.fetchAttribute< MessageCore::MDNStateAttribute >();
+        mFetchScope.fetchAttribute< MailCommon::MDNStateAttribute >();
         fetch->setFetchScope(mFetchScope);
         connect(fetch, &Akonadi::ItemFetchJob::itemsReceived, this, &KMCommand::slotMsgTransfered);
         connect(fetch, &Akonadi::ItemFetchJob::result, this, &KMCommand::slotJobFinished);
@@ -324,8 +350,8 @@ void KMCommand::transferSelectedMsgs()
     } else {
         // wait for the transfer and tell the progressBar the necessary steps
         if (mProgressDialog.data()) {
-            connect(mProgressDialog.data(), SIGNAL(canceled()),
-                    this, SLOT(slotTransferCancelled()));
+            connect(mProgressDialog.data(), &QProgressDialog::canceled,
+                    this, &KMCommand::slotTransferCancelled);
             mProgressDialog.data()->setMaximum(totalSize);
         }
     }
@@ -486,7 +512,7 @@ KMAddBookmarksCommand::KMAddBookmarksCommand(const QUrl &url, QWidget *parent)
 
 KMCommand::Result KMAddBookmarksCommand::execute()
 {
-    const QString filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("konqueror/bookmarks.xml") ;
+    const QString filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("konqueror/bookmarks.xml");
     QFileInfo fileInfo(filename);
     QDir().mkpath(fileInfo.absolutePath());
     KBookmarkManager *bookManager = KBookmarkManager::managerForFile(filename, QStringLiteral("konqueror"));
@@ -513,7 +539,17 @@ KMCommand::Result KMUrlSaveCommand::execute()
     if (saveUrl.isEmpty()) {
         return Canceled;
     }
-    if (KIO::NetAccess::exists(saveUrl, KIO::NetAccess::DestinationSide, parentWidget())) {
+
+    bool fileExists = false;
+    if (saveUrl.isLocalFile()) {
+        fileExists = QFile::exists(saveUrl.toLocalFile());
+    } else {
+        auto job = KIO::stat(saveUrl, KIO::StatJob::DestinationSide, 0);
+        KJobWidgets::setWindow(job, parentWidget());
+        fileExists = job->exec();
+    }
+
+    if (fileExists) {
         if (KMessageBox::warningContinueCancel(Q_NULLPTR,
                                                xi18nc("@info", "File <filename>%1</filename> exists.<nl/>Do you want to replace it?",
                                                        saveUrl.toDisplayString()), i18n("Save to File"), KGuiItem(i18n("&Replace")))
@@ -608,8 +644,8 @@ KMCommand::Result KMEditItemCommand::execute()
         }
     }
 
-    if (msg->headerByType("Reply-To")) {
-        const QString replyTo = msg->headerByType("Reply-To")->asUnicodeString();
+    if (auto hdr = msg->replyTo(false)) {
+        const QString replyTo = hdr->asUnicodeString();
         win->setCurrentReplyTo(replyTo);
     }
 
@@ -663,8 +699,8 @@ KMCommand::Result KMUseTemplateCommand::execute()
     newMsg->setContent(msg->encodedContent());
     newMsg->parse();
     // these fields need to be regenerated for the new message
-    newMsg->removeHeader("Date");
-    newMsg->removeHeader("Message-ID");
+    newMsg->removeHeader<KMime::Headers::Date>();
+    newMsg->removeHeader<KMime::Headers::MessageID>();
 
     KMail::Composer *win = KMail::makeComposer();
 
@@ -707,7 +743,7 @@ KMOpenMsgCommand::KMOpenMsgCommand(QWidget *parent, const QUrl &url,
 KMCommand::Result KMOpenMsgCommand::execute()
 {
     if (mUrl.isEmpty()) {
-        mUrl = QFileDialog::getOpenFileUrl(parentWidget(), i18n("Open Message"), QUrl(QLatin1String("kfiledialog:///OpenMessage")),
+        mUrl = QFileDialog::getOpenFileUrl(parentWidget(), i18n("Open Message"), QUrl(),
                                            i18n("Message (*.mbox)")
                                           );
     }
@@ -825,7 +861,7 @@ KMReplyCommand::KMReplyCommand(QWidget *parent, const Akonadi::Item &msg, Messag
 KMCommand::Result KMReplyCommand::execute()
 {
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     Akonadi::Item item = retrievedMessage();
     KMime::Message::Ptr msg = MessageCore::Util::message(item);
@@ -886,7 +922,7 @@ KMCommand::Result KMForwardCommand::createComposer(const Akonadi::Item &item)
         return Failed;
     }
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     MessageFactory factory(msg, item.id(), MailCommon::Util::updatedCollection(item.parentCollection()));
     factory.setIdentityManager(KMKernel::self()->identityManager());
@@ -1027,7 +1063,7 @@ KMCommand::Result KMRedirectCommand::execute()
             ? MailCommon::RedirectDialog::SendNow
             : MailCommon::RedirectDialog::SendLater;
 
-    MessageViewer::AutoQPointer<MailCommon::RedirectDialog> dlg(new MailCommon::RedirectDialog(sendMode, parentWidget()));
+    QScopedPointer<MailCommon::RedirectDialog> dlg(new MailCommon::RedirectDialog(sendMode, parentWidget()));
     dlg->setObjectName(QStringLiteral("redirect"));
     if (dlg->exec() == QDialog::Rejected || !dlg) {
         return Failed;
@@ -1094,12 +1130,11 @@ KMCommand::Result KMRedirectCommand::execute()
 }
 
 KMPrintCommand::KMPrintCommand(QWidget *parent, const Akonadi::Item &msg,
-                               MessageViewer::HeaderStyle *headerStyle,
-                               MessageViewer::HeaderStrategy *headerStrategy,
+                               MessageViewer::HeaderStylePlugin *plugin,
                                MessageViewer::Viewer::DisplayFormatMessage format, bool htmlLoadExtOverride,
                                bool useFixedFont, const QString &encoding)
     : KMCommand(parent, msg),
-      mHeaderStyle(headerStyle), mHeaderStrategy(headerStrategy),
+      mHeaderStylePlugin(plugin),
       mAttachmentStrategy(Q_NULLPTR),
       mEncoding(encoding),
       mFormat(format),
@@ -1108,10 +1143,10 @@ KMPrintCommand::KMPrintCommand(QWidget *parent, const Akonadi::Item &msg,
       mPrintPreview(false)
 {
     fetchScope().fetchFullPayload(true);
-    if (MessageCore::GlobalSettings::useDefaultFonts()) {
+    if (MessageCore::MessageCoreSettings::useDefaultFonts()) {
         mOverrideFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     } else {
-        mOverrideFont = MessageCore::GlobalSettings::self()->printFont();
+        mOverrideFont = MessageViewer::MessageViewerSettings::self()->printFont();
     }
 }
 
@@ -1136,8 +1171,8 @@ KMCommand::Result KMPrintCommand::execute()
     KMReaderWin *printerWin = new KMReaderWin(Q_NULLPTR, kmkernel->mainWin(), Q_NULLPTR, Q_NULLPTR);
     printerWin->setPrinting(true);
     printerWin->readConfig();
-    if (mHeaderStyle != Q_NULLPTR && mHeaderStrategy != Q_NULLPTR) {
-        printerWin->setHeaderStyleAndStrategy(mHeaderStyle, mHeaderStrategy);
+    if (mHeaderStylePlugin) {
+        printerWin->viewer()->setPluginName(mHeaderStylePlugin->name());
     }
     printerWin->setDisplayFormatMessageOverwrite(mFormat);
     printerWin->setHtmlLoadExtOverride(mHtmlLoadExtOverride);
@@ -1300,7 +1335,7 @@ void KMSetTagCommand::setTags()
     if (!mCreatedTags.isEmpty()) {
         KConfigGroup tag(KMKernel::self()->config(), "MessageListView");
         const QString oldTagList = tag.readEntry("TagSelected");
-        QStringList lst = oldTagList.split(QLatin1String(","));
+        QStringList lst = oldTagList.split(QStringLiteral(","));
         Q_FOREACH (const Akonadi::Tag &tag, mCreatedTags) {
             const QString url = tag.url().url();
             if (!lst.contains(url)) {
@@ -1330,7 +1365,7 @@ KMFilterActionCommand::KMFilterActionCommand(QWidget *parent,
 KMCommand::Result KMFilterActionCommand::execute()
 {
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     int msgCount = 0;
     const int msgCountToFilter = mMsgListId.count();
@@ -1369,7 +1404,7 @@ KMMetaFilterActionCommand::KMMetaFilterActionCommand(const QString &filterId,
 void KMMetaFilterActionCommand::start()
 {
     KMCommand *filterCommand = new KMFilterActionCommand(
-        mMainWidget, mMainWidget->messageListPane()->selectionAsMessageItemListId() , mFilterId);
+        mMainWidget, mMainWidget->messageListPane()->selectionAsMessageItemListId(), mFilterId);
     filterCommand->start();
 }
 
@@ -1438,7 +1473,7 @@ KMMoveCommand::KMMoveCommand(const Akonadi::Collection &destFolder,
 }
 
 KMMoveCommand::KMMoveCommand(const Akonadi::Collection &destFolder,
-                             const Akonadi::Item &msg ,
+                             const Akonadi::Item &msg,
                              MessageList::Core::MessageItemSetReference ref)
     : KMCommand(Q_NULLPTR, msg), mDestFolder(destFolder), mProgressItem(Q_NULLPTR), mRef(ref)
 {
@@ -1459,7 +1494,7 @@ void KMMoveCommand::slotMoveResult(KJob *job)
 KMCommand::Result KMMoveCommand::execute()
 {
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     setEmitsCompletedItself(true);
     setDeletesItself(true);
@@ -1544,7 +1579,7 @@ Akonadi::Collection KMTrashMsgCommand::findTrashFolder(const Akonadi::Collection
     return Akonadi::Collection();
 }
 
-KMSaveAttachmentsCommand::KMSaveAttachmentsCommand(QWidget *parent, const Akonadi::Item &msg , MessageViewer::Viewer *viewer)
+KMSaveAttachmentsCommand::KMSaveAttachmentsCommand(QWidget *parent, const Akonadi::Item &msg, MessageViewer::Viewer *viewer)
     : KMCommand(parent, msg),
       mViewer(viewer)
 {
@@ -1560,15 +1595,15 @@ KMSaveAttachmentsCommand::KMSaveAttachmentsCommand(QWidget *parent, const Akonad
 
 KMCommand::Result KMSaveAttachmentsCommand::execute()
 {
-    QList<KMime::Content *> contentsToSave;
+    KMime::Content::List contentsToSave;
     foreach (const Akonadi::Item &item, retrievedMsgs()) {
         if (item.hasPayload<KMime::Message::Ptr>()) {
-            contentsToSave += MessageViewer::Util::extractAttachments(item.payload<KMime::Message::Ptr>().get());
+            contentsToSave += item.payload<KMime::Message::Ptr>()->attachments();
         } else {
             qCWarning(KMAIL_LOG) << "Retrieved item has no payload? Ignoring for saving the attachments";
         }
     }
-    KUrl currentUrl;
+    QUrl currentUrl;
     if (MessageViewer::Util::saveAttachments(contentsToSave, parentWidget(), currentUrl)) {
         if (mViewer) {
             mViewer->showOpenAttachmentFolderWidget(currentUrl);
@@ -1598,11 +1633,11 @@ KMCommand::Result KMResendMessageCommand::execute()
     factory.setIdentityManager(KMKernel::self()->identityManager());
     factory.setFolderIdentity(MailCommon::Util::folderIdentity(item));
     KMime::Message::Ptr newMsg = factory.createResend();
-    newMsg->contentType()->setCharset(MessageViewer::NodeHelper::charset(msg.get()));
+    newMsg->contentType()->setCharset(MessageViewer::NodeHelper::charset(msg.data()));
 
     KMail::Composer *win = KMail::makeComposer();
-    if (msg->headerByType("Reply-To")) {
-        const QString replyTo = msg->headerByType("Reply-To")->asUnicodeString();
+    if (auto hdr = msg->replyTo(false)) {
+        const QString replyTo = hdr->asUnicodeString();
         win->setCurrentReplyTo(replyTo);
     }
     bool lastEncrypt = false;

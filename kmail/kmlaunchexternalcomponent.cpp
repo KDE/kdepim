@@ -19,13 +19,12 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KRun>
-#include <KTipDialog>
 
 #include "util.h"
 #include "archivemailagentinterface.h"
 #include "sendlateragentinterface.h"
 #include "followupreminderinterface.h"
-#include "mailcommon/filter/filtermanager.h"
+#include "MailCommon/FilterManager"
 
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
@@ -163,7 +162,3 @@ void KMLaunchExternalComponent::slotFilterLogViewer()
     MailCommon::FilterManager::instance()->showFilterLogDialog((qlonglong)mParentWidget->winId());
 }
 
-void KMLaunchExternalComponent::slotShowTip()
-{
-    KTipDialog::showTip(mParentWidget, QString(), true);
-}

@@ -36,12 +36,12 @@
 
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <utils/headerview.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/keyfilter.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/KeyFilter>
 
 #include "kleopatra_debug.h"
 #include <QTreeView>
@@ -64,7 +64,7 @@ class TreeView : public QTreeView
 public:
     explicit TreeView(QWidget *parent = Q_NULLPTR) : QTreeView(parent) {}
 
-    /* reimp */ QSize minimumSizeHint() const
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE
     {
         const QSize min = QTreeView::minimumSizeHint();
         return QSize(min.width(), min.height() + 5 * fontMetrics().height());
@@ -201,9 +201,6 @@ void KeyTreeView::init()
     m_proxy->setFilterFixedString(m_stringFilter);
     m_proxy->setKeyFilter(m_keyFilter);
     m_view->setModel(m_proxy);
-#ifdef KDEPIM_MOBILE_UI
-    m_view->setFrameStyle(QFrame::NoFrame);
-#endif
 }
 
 KeyTreeView::~KeyTreeView() {}
@@ -414,11 +411,11 @@ static const struct {
         SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>))
     },
 };
-static const unsigned int numConnections = sizeof connections / sizeof * connections ;
+static const unsigned int numConnections = sizeof connections / sizeof * connections;
 
 void KeyTreeView::disconnectSearchBar(const QObject *bar)
 {
-    for (unsigned int i = 0 ; i < numConnections ; ++i) {
+    for (unsigned int i = 0; i < numConnections; ++i) {
         disconnect(this, connections[i].signal, bar,  connections[i].slot);
         disconnect(bar,  connections[i].signal, this, connections[i].slot);
     }
@@ -426,7 +423,7 @@ void KeyTreeView::disconnectSearchBar(const QObject *bar)
 
 bool KeyTreeView::connectSearchBar(const QObject *bar)
 {
-    for (unsigned int i = 0 ; i < numConnections ; ++i)
+    for (unsigned int i = 0; i < numConnections; ++i)
         if (!connect(this, connections[i].signal, bar,  connections[i].slot) ||
                 !connect(bar,  connections[i].signal, this, connections[i].slot)) {
             return false;

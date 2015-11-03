@@ -1,10 +1,6 @@
-
-include_directories(${CMAKE_SOURCE_DIR}/korganizer ${CMAKE_SOURCE_DIR}/korganizer/interfaces ${Boost_INCLUDE_DIRS})
-
-
-
 ########### next target ###############
-set(libcommon_SRCS korg_uniqueapp.cpp korganizerplugin_debug.cpp)
+set(libcommon_SRCS korg_uniqueapp.cpp)
+ecm_qt_declare_logging_category(libcommon_SRCS HEADER korganizerplugin_debug.h IDENTIFIER KORGANIZERPLUGIN_LOG CATEGORY_NAME log_korganizer_plugin)
 
 set(kontact_korganizerplugin_PART_SRCS korganizerplugin.cpp apptsummarywidget.cpp summaryeventinfo.cpp ${libcommon_SRCS})
 
@@ -12,7 +8,7 @@ qt5_add_dbus_interfaces(kontact_korganizerplugin_PART_SRCS ${CMAKE_SOURCE_DIR}/k
 
 add_library(kontact_korganizerplugin MODULE ${kontact_korganizerplugin_PART_SRCS})
 
-target_link_libraries(kontact_korganizerplugin KF5::AkonadiCalendar KF5::CalendarUtils KF5::Contacts KF5::CalendarCore kdepim KF5::KontactInterface korganizerprivate calendarsupport KF5::AkonadiCalendar)
+target_link_libraries(kontact_korganizerplugin KF5::AkonadiCalendar KF5::CalendarUtils KF5::Contacts KF5::CalendarCore KF5::Libkdepim KF5::KontactInterface korganizerprivate KF5::CalendarSupport KF5::AkonadiCalendar)
 
 ########### next target ###############
 
@@ -22,7 +18,7 @@ qt5_add_dbus_interfaces(kontact_todoplugin_PART_SRCS ${CMAKE_SOURCE_DIR}/korgani
 
 add_library(kontact_todoplugin MODULE ${kontact_todoplugin_PART_SRCS})
 
-target_link_libraries(kontact_todoplugin KF5::AkonadiCalendar  KF5::Contacts kdepim KF5::KontactInterface KF5::CalendarCore KF5::CalendarUtils korganizerprivate calendarsupport KF5::AkonadiCalendar)
+target_link_libraries(kontact_todoplugin KF5::AkonadiCalendar  KF5::Contacts KF5::Libkdepim KF5::KontactInterface KF5::CalendarCore KF5::CalendarUtils KF5::CalendarSupport KF5::AkonadiCalendar)
 
 ########### next target ###############
 
@@ -42,7 +38,7 @@ ki18n_wrap_ui(kcm_apptsummary_PART_SRCS apptsummaryconfig_base.ui)
 
 add_library(kcm_apptsummary MODULE ${kcm_apptsummary_PART_SRCS})
 
-target_link_libraries(kcm_apptsummary  korganizerprivate KF5::CalendarUtils KF5::KCMUtils)
+target_link_libraries(kcm_apptsummary  KF5::KCMUtils KF5::I18n)
 
 ########### next target ###############
 

@@ -17,16 +17,14 @@
 
 #include "exportblogilojob.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
-
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 
 #include <KZip>
 
-#include <QWidget>
 #include <QStandardPaths>
+#include <QTimer>
 
 ExportBlogiloJob::ExportBlogiloJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -41,46 +39,41 @@ ExportBlogiloJob::~ExportBlogiloJob()
 void ExportBlogiloJob::start()
 {
     Q_EMIT title(i18n("Start export Blogilo settings..."));
-    mArchiveDirectory = archive()->directory();
+    createProgressDialog(i18n("Export Blogilo settings"));
     if (mTypeSelected & Utils::Config) {
-        backupConfig();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else if (mTypeSelected & Utils::Data) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+    } else {
+        Q_EMIT jobFinished();
     }
-    if (mTypeSelected & Utils::Data) {
-        backupData();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
-    Q_EMIT jobFinished();
 }
 
-void ExportBlogiloJob::backupConfig()
+void ExportBlogiloJob::slotCheckBackupConfig()
 {
-    showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString blogiloStr(QLatin1String("blogilorc"));
-    const QString blogilorc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + blogiloStr;
-    backupFile(blogilorc, Utils::configsPath(), blogiloStr);
+    setProgressDialogLabel(i18n("Backing up config..."));
+    increaseProgressDialog();
+
+    backupConfigFile(QStringLiteral("blogilorc"));
+    backupUiRcFile(QStringLiteral("blogiloui.rc"), QStringLiteral("blogilo"));
 
     Q_EMIT info(i18n("Config backup done."));
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
 }
 
-void ExportBlogiloJob::backupData()
+void ExportBlogiloJob::slotCheckBackupData()
 {
-    showInfo(i18n("Backing up data..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString dbfileStr = QLatin1String("blogilo.db");
-    const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr ;
+    if (mTypeSelected & Utils::Data) {
+        setProgressDialogLabel(i18n("Backing up data..."));
+        increaseProgressDialog();
 
-    backupFile(dbfile, Utils::dataPath() +  QLatin1String("/blogilo/"), dbfileStr);
+        const QString dbfileStr = QStringLiteral("blogilo.db");
+        const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr;
 
-    Q_EMIT info(i18n("Data backup done."));
+        backupFile(dbfile, Utils::dataPath() +  QLatin1String("/blogilo/"), dbfileStr);
+
+        Q_EMIT info(i18n("Data backup done."));
+    }
+    Q_EMIT jobFinished();
 }
 

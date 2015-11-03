@@ -44,7 +44,6 @@
 #include <kalarmcal/karecurrence.h>
 
 #include <KLocalizedString>
-#include <kstandarddirs.h>
 #include <kconfig.h>
 #include <KSharedConfig>
 #include <K4AboutData>
@@ -52,10 +51,8 @@
 #include <kfileitem.h>
 #include <kstandardguiitem.h>
 #include <kservicetypetrader.h>
-#include <ktoolinvocation.h>
 #include <netwm.h>
 #include <kshell.h>
-#include <ksystemtrayicon.h>
 #include <ksystemtimezone.h>
 
 #include <QObject>
@@ -64,15 +61,13 @@
 #include <QTextStream>
 #include <QtDBus/QtDBus>
 #include <QStandardPaths>
+#include <QSystemTrayIcon>
 #include "kalarm_debug.h"
 
 #include <stdlib.h>
 #include <ctype.h>
 #include <iostream>
 #include <climits>
-
-static const QLatin1String KTTSD_DBUS_SERVICE("org.kde.kttsd");
-static const QLatin1String KTTDS_DBUS_PATH("/KSpeech");
 
 static const int AKONADI_TIMEOUT = 30;   // timeout (seconds) for Akonadi collections to be populated
 
@@ -113,13 +108,11 @@ KAlarmApp::KAlarmApp()
       mAlarmTimer(Q_NULLPTR),
       mArchivedPurgeDays(-1),      // default to not purging
       mPurgeDaysQueued(-1),
-      mKSpeech(Q_NULLPTR),
       mPendingQuit(false),
       mCancelRtcWake(false),
       mProcessingQueue(false),
       mSessionClosingDown(false),
-      mAlarmsEnabled(true),
-      mSpeechEnabled(false)
+      mAlarmsEnabled(true)
 {
     qCDebug(KALARM_LOG);
 #ifndef NDEBUG
@@ -142,20 +135,18 @@ KAlarmApp::KAlarmApp()
     Preferences::connect(SIGNAL(messageFontChanged(QFont)), this, SLOT(slotMessageFontChanged(QFont)));
     slotFeb29TypeChanged(Preferences::defaultFeb29Type());
 
-    connect(QDBusConnection::sessionBus().interface(), SIGNAL(serviceUnregistered(QString)),
-            SLOT(slotDBusServiceUnregistered(QString)));
     KAEvent::setStartOfDay(Preferences::startOfDay());
     KAEvent::setWorkTime(Preferences::workDays(), Preferences::workDayStart(), Preferences::workDayEnd());
     KAEvent::setHolidays(Preferences::holidays());
     KAEvent::setDefaultFont(Preferences::messageFont());
     if (initialise())   // initialise calendars and alarm timer
     {
-        connect(AkonadiModel::instance(), SIGNAL(collectionAdded(Akonadi::Collection)),
-                                          SLOT(purgeNewArchivedDefault(Akonadi::Collection)));
-        connect(AkonadiModel::instance(), SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
-                                          SLOT(checkWritableCalendar()));
-        connect(AkonadiModel::instance(), SIGNAL(migrationCompleted()),
-                                          SLOT(checkWritableCalendar()));
+        connect(AkonadiModel::instance(), &AkonadiModel::collectionAdded,
+                                          this, &KAlarmApp::purgeNewArchivedDefault);
+        connect(AkonadiModel::instance(), &Akonadi::EntityTreeModel::collectionTreeFetched,
+                                          this, &KAlarmApp::checkWritableCalendar);
+        connect(AkonadiModel::instance(), &AkonadiModel::migrationCompleted,
+                                          this, &KAlarmApp::checkWritableCalendar);
 
         KConfigGroup config(KSharedConfig::openConfig(), "General");
         mNoSystemTray        = config.readEntry("NoSystemTray", false);
@@ -164,12 +155,9 @@ KAlarmApp::KAlarmApp()
         mPrefsArchivedColour = Preferences::archivedColour();
     }
 
-    // Check if the speech synthesis daemon is installed
-    mSpeechEnabled = (KServiceTypeTrader::self()->query(QStringLiteral("DBUS/Text-to-Speech"), QStringLiteral("Name == 'KTTSD'")).count() > 0);
-    if (!mSpeechEnabled) { qCDebug(KALARM_LOG) << "Speech synthesis disabled (KTTSD not found)"; }
     // Check if KOrganizer is installed
-    const QString korg = QLatin1String("korganizer");
-    mKOrganizerEnabled = !QStandardPaths::findExecutable(korg).isNull()  ||  !KStandardDirs::findExe(korg).isNull();
+    const QString korg = QStringLiteral("korganizer");
+    mKOrganizerEnabled = !QStandardPaths::findExecutable(korg).isEmpty();
     if (!mKOrganizerEnabled) { qCDebug(KALARM_LOG) << "KOrganizer options disabled (KOrganizer not found)"; }
     // Check if the window manager can't handle keyboard focus transfer between windows
     mWindowFocusBroken = (QProcessEnvironment::systemEnvironment().value(QStringLiteral("XDG_CURRENT_DESKTOP")) == QLatin1String("Unity"));
@@ -226,8 +214,8 @@ bool KAlarmApp::initialise()
         qCDebug(KALARM_LOG) << "initialising calendars";
         if (AlarmCalendar::initialiseCalendars())
         {
-            connect(AlarmCalendar::resources(), SIGNAL(earliestAlarmChanged()), SLOT(checkNextDueAlarm()));
-            connect(AlarmCalendar::resources(), SIGNAL(atLoginEventAdded(KAEvent)), SLOT(atLoginEventAdded(KAEvent)));
+            connect(AlarmCalendar::resources(), &AlarmCalendar::earliestAlarmChanged, this, &KAlarmApp::checkNextDueAlarm);
+            connect(AlarmCalendar::resources(), &AlarmCalendar::atLoginEventAdded, this, &KAlarmApp::atLoginEventAdded);
             return true;
         }
     }
@@ -316,7 +304,7 @@ bool KAlarmApp::restoreSession()
         return false;    // quitIf() can sometimes return, despite calling exit()
 
     // Check whether the KDE time zone daemon is running (but don't hold up initialisation)
-    QTimer::singleShot(0, this, SLOT(checkKtimezoned()));
+    QTimer::singleShot(0, this, &KAlarmApp::checkKtimezoned);
 
     startProcessQueue();      // start processing the execution queue
     return true;
@@ -412,7 +400,7 @@ int KAlarmApp::newInstance()
                     if (options.alarmTime().isValid())
                         editDlg->setTime(options.alarmTime());
                     if (options.recurrence())
-                        editDlg->setRecurrence(*options.recurrence(), options.subRepeatInterval(), options.subRepeatCount());
+                        editDlg->setRecurrence(*options.recurrence(), options.subRepeatInterval(), options.subRepeatCount()); // FIXME: subRepeatInterval bool->int implicit cast is not what we want
                     else if (options.flags() & KAEvent::REPEAT_AT_LOGIN)
                         editDlg->setRepeatAtLogin();
                     editDlg->setAction(options.editAction(), AlarmText(options.text()));
@@ -500,7 +488,7 @@ int KAlarmApp::newInstance()
 
             case CommandOptions::TRAY:
                 // Display only the system tray icon
-                if (Preferences::showInSystemTray()  &&  KSystemTrayIcon::isSystemTrayAvailable())
+                if (Preferences::showInSystemTray()  &&  QSystemTrayIcon::isSystemTrayAvailable())
                 {
                     if (!initCheck()   // open the calendar, start processing execution queue
                     ||  !displayTrayIcon(true))
@@ -563,7 +551,7 @@ int KAlarmApp::newInstance()
     quitIf(exitCode);
 
     // Check whether the KDE time zone daemon is running (but don't hold up initialisation)
-    QTimer::singleShot(0, this, SLOT(checkKtimezoned()));
+    QTimer::singleShot(0, this, &KAlarmApp::checkKtimezoned);
 
     return exitCode;
 }
@@ -723,7 +711,7 @@ void KAlarmApp::displayFatalError(const QString& message)
         mFatalError = 1;
         mFatalMessage = message;
         if (theInstance)
-            QTimer::singleShot(0, theInstance, SLOT(quitFatal()));
+            QTimer::singleShot(0, theInstance, &KAlarmApp::quitFatal);
     }
 }
 
@@ -747,7 +735,7 @@ void KAlarmApp::quitFatal()
                 theInstance->quitIf(1, true);
             break;
     }
-    QTimer::singleShot(1000, this, SLOT(quitFatal()));
+    QTimer::singleShot(1000, this, &KAlarmApp::quitFatal);
 }
 
 /******************************************************************************
@@ -772,7 +760,7 @@ void KAlarmApp::checkNextDueAlarm()
         // Queue the alarm
         queueAlarmId(*nextEvent);
         qCDebug(KALARM_LOG) << nextEvent->id() << ": due now";
-        QTimer::singleShot(0, this, SLOT(processQueue()));
+        QTimer::singleShot(0, this, &KAlarmApp::processQueue);
     }
     else
     {
@@ -823,7 +811,7 @@ void KAlarmApp::startProcessQueue()
     {
         qCDebug(KALARM_LOG);
         mInitialised = true;
-        QTimer::singleShot(0, this, SLOT(processQueue()));    // process anything already queued
+        QTimer::singleShot(0, this, &KAlarmApp::processQueue);    // process anything already queued
     }
 }
 
@@ -926,7 +914,7 @@ void KAlarmApp::atLoginEventAdded(const KAEvent& event)
         {
             mActionQueue.enqueue(ActionQEntry(EVENT_HANDLE, EventId(ev)));
             if (mInitialised)
-                QTimer::singleShot(0, this, SLOT(processQueue()));
+                QTimer::singleShot(0, this, &KAlarmApp::processQueue);
         }
     }
 }
@@ -950,7 +938,7 @@ bool KAlarmApp::displayTrayIcon(bool show, MainWindow* parent)
     {
         if (!mTrayWindow  &&  !creating)
         {
-            if (!KSystemTrayIcon::isSystemTrayAvailable())
+            if (!QSystemTrayIcon::isSystemTrayAvailable())
                 return false;
             if (!MainWindow::count())
             {
@@ -984,7 +972,7 @@ bool KAlarmApp::checkSystemTray()
 {
     if (!mTrayWindow)
         return true;
-    if (KSystemTrayIcon::isSystemTrayAvailable() == mNoSystemTray)
+    if (QSystemTrayIcon::isSystemTrayAvailable() == mNoSystemTray)
     {
         qCDebug(KALARM_LOG) << "changed ->" << mNoSystemTray;
         mNoSystemTray = !mNoSystemTray;
@@ -1107,7 +1095,7 @@ void KAlarmApp::slotFeb29TypeChanged(Preferences::Feb29Type type)
 */
 bool KAlarmApp::wantShowInSystemTray() const
 {
-    return Preferences::showInSystemTray()  &&  KSystemTrayIcon::isSystemTrayAvailable();
+    return Preferences::showInSystemTray()  &&  QSystemTrayIcon::isSystemTrayAvailable();
 }
 
 /******************************************************************************
@@ -1158,7 +1146,7 @@ void KAlarmApp::purgeNewArchivedDefault(const Akonadi::Collection& collection)
         // Allow time (1 minute) for AkonadiModel to be populated with the
         // collection's events before purging it.
         qCDebug(KALARM_LOG) << collection.id() << ": standard archived...";
-        QTimer::singleShot(60000, this, SLOT(purgeAfterDelay()));
+        QTimer::singleShot(60000, this, &KAlarmApp::purgeAfterDelay);
     }
 }
 
@@ -1351,7 +1339,7 @@ bool KAlarmApp::scheduleEvent(KAEvent::SubAction action, const QString& text, co
     // Queue the alarm for insertion into the calendar file
     mActionQueue.enqueue(ActionQEntry(event));
     if (mInitialised)
-        QTimer::singleShot(0, this, SLOT(processQueue()));
+        QTimer::singleShot(0, this, &KAlarmApp::processQueue);
     return true;
 }
 
@@ -1365,7 +1353,7 @@ bool KAlarmApp::dbusHandleEvent(const EventId& eventID, EventFunc function)
     qCDebug(KALARM_LOG) << eventID;
     mActionQueue.append(ActionQEntry(function, eventID));
     if (mInitialised)
-        QTimer::singleShot(0, this, SLOT(processQueue()));
+        QTimer::singleShot(0, this, &KAlarmApp::processQueue);
     return true;
 }
 
@@ -2049,7 +2037,7 @@ ShellProcess* KAlarmApp::doShellCommand(const QString& command, const KAEvent& e
                 heading.sprintf("\n******* KAlarm %s *******\n", dateTime.toLatin1().data());
             }
             else
-                heading = QLatin1String("\n******* KAlarm *******\n");
+                heading = QStringLiteral("\n******* KAlarm *******\n");
             QFile logfile(event.logFile());
             if (logfile.open(QIODevice::Append | QIODevice::Text))
             {
@@ -2195,7 +2183,7 @@ void KAlarmApp::slotCommandExited(ShellProcess* proc)
                 if (pd->messageBoxParent)
                 {
                     // Close the existing informational KMessageBox for this process
-                    QList<KDialog*> dialogs = pd->messageBoxParent->findChildren<KDialog*>();
+                    QList<QDialog*> dialogs = pd->messageBoxParent->findChildren<QDialog*>();
                     if (!dialogs.isEmpty())
                         delete dialogs[0];
                     setEventCommandError(*pd->event, pd->preAction() ? KAEvent::CMD_ERROR_PRE
@@ -2248,19 +2236,19 @@ void KAlarmApp::commandErrorMsg(const ShellProcess* proc, const KAEvent& event, 
         if (event.extraActionOptions() & KAEvent::DontShowPreActError)
             return;   // don't notify user of any errors for the alarm
         errmsgs += i18nc("@info", "Pre-alarm action:");
-        dontShowAgain = QLatin1String("Pre");
+        dontShowAgain = QStringLiteral("Pre");
         cmderr = KAEvent::CMD_ERROR_PRE;
     }
     else if (flags & ProcData::POST_ACTION)
     {
         errmsgs += i18nc("@info", "Post-alarm action:");
-        dontShowAgain = QLatin1String("Post");
+        dontShowAgain = QStringLiteral("Post");
         cmderr = (event.commandError() == KAEvent::CMD_ERROR_PRE)
                ? KAEvent::CMD_ERROR_PRE_POST : KAEvent::CMD_ERROR_POST;
     }
     else
     {
-        dontShowAgain = QLatin1String("Exec");
+        dontShowAgain = QStringLiteral("Exec");
         cmderr = KAEvent::CMD_ERROR;
     }
 
@@ -2291,51 +2279,6 @@ void KAlarmApp::commandMessage(ShellProcess* proc, QWidget* parent)
             pd->messageBoxParent = parent;
             break;
         }
-    }
-}
-
-/******************************************************************************
-* Return a D-Bus interface object for KSpeech.
-* The KTTSD D-Bus service is started if necessary.
-* If the service cannot be started, 'error' is set to an error text.
-*/
-OrgKdeKSpeechInterface* KAlarmApp::kspeechInterface(QString& error) const
-{
-#if 0 //QT5
-    error.clear();
-    QDBusConnection client = QDBusConnection::sessionBus();
-    if (!client.interface()->isServiceRegistered(KTTSD_DBUS_SERVICE))
-    {
-        // kttsd is not running, so start it
-        delete mKSpeech;
-        mKSpeech = 0;
-        if (KToolInvocation::startServiceByDesktopName(QStringLiteral("kttsd"), QStringList(), &error))
-        {
-            qCDebug(KALARM_LOG) << "Failed to start kttsd:" << error;
-            return 0;
-        }
-    }
-    if (!mKSpeech)
-    {
-        mKSpeech = new OrgKdeKSpeechInterface(KTTSD_DBUS_SERVICE, KTTDS_DBUS_PATH, QDBusConnection::sessionBus());
-        mKSpeech->setParent(theApp());
-        mKSpeech->setApplicationName(KComponentData::mainComponent().aboutData()->programName());
-        mKSpeech->setDefaultPriority(KSpeech::jpMessage);
-    }
-#endif
-    return mKSpeech;
-}
-
-/******************************************************************************
-* Called when a D-Bus service unregisters.
-* If it's the KTTSD service, delete the KSpeech interface object.
-*/
-void KAlarmApp::slotDBusServiceUnregistered(const QString& serviceName)
-{
-    if (serviceName == KTTSD_DBUS_SERVICE)
-    {
-        delete mKSpeech;
-        mKSpeech = Q_NULLPTR;
     }
 }
 

@@ -25,7 +25,7 @@
 #include "summaryview_part.h"
 #include "dropwidget.h"
 
-#include <libkdepim/misc/broadcaststatus.h>
+#include <Libkdepim/BroadcastStatus>
 using KPIM::BroadcastStatus;
 
 #include <KIdentityManagement/Identity>
@@ -40,11 +40,10 @@ using KPIM::BroadcastStatus;
 #include <KCMultiDialog>
 #include <KConfigGroup>
 #include <QDialog>
-#include <KGlobalSettings>
 #include <QIcon>
 #include <KLocalizedString>
 #include <KParts/PartActivateEvent>
-
+#include <KConfig>
 #include <QApplication>
 #include <QDate>
 #include <QHBoxLayout>
@@ -52,7 +51,7 @@ using KPIM::BroadcastStatus;
 #include <QScrollArea>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <KLocale>
+#include <QLocale>
 
 SummaryViewPart::SummaryViewPart(KontactInterface::Core *core, const char *,
                                  const KAboutData &aboutData, QObject *parent)
@@ -79,7 +78,7 @@ SummaryViewPart::SummaryViewPart(KontactInterface::Core *core, const char *,
 
     setXMLFile(QStringLiteral("kontactsummary_part.rc"));
 
-    QTimer::singleShot(0, this, SLOT(slotTextChanged()));
+    QTimer::singleShot(0, this, &SummaryViewPart::slotTextChanged);
 }
 
 SummaryViewPart::~SummaryViewPart()
@@ -162,8 +161,8 @@ void SummaryViewPart::updateWidgets()
             if (summary->summaryHeight() > 0) {
                 mSummaries.insert(plugin->identifier(), summary);
 
-                connect(summary, SIGNAL(message(QString)),
-                        BroadcastStatus::instance(), SLOT(setStatusMsg(QString)));
+                connect(summary, &KontactInterface::Summary::message,
+                        BroadcastStatus::instance(), &KPIM::BroadcastStatus::setStatusMsg);
                 connect(summary, &KontactInterface::Summary::summaryWidgetDropped,
                         this, &SummaryViewPart::summaryWidgetMoved);
 
@@ -395,35 +394,35 @@ void SummaryViewPart::slotAdjustPalette()
 {
     if (!QApplication::isRightToLeft()) {
         mMainWidget->setStyleSheet(
-            QLatin1String("#mMainWidget { "
-                          " background: palette(base);"
-                          " color: palette(text);"
-                          " background-image: url(:/summaryview/kontact_bg.png);"
-                          " background-position: bottom right;"
-                          " background-repeat: no-repeat; }"
-                          "QLabel { "
-                          " color: palette(text); }"
-                          "KUrlLabel { "
-                          " color: palette(link); }"));
+            QStringLiteral("#mMainWidget { "
+                           " background: palette(base);"
+                           " color: palette(text);"
+                           " background-image: url(:/summaryview/kontact_bg.png);"
+                           " background-position: bottom right;"
+                           " background-repeat: no-repeat; }"
+                           "QLabel { "
+                           " color: palette(text); }"
+                           "KUrlLabel { "
+                           " color: palette(link); }"));
     } else {
         mMainWidget->setStyleSheet(
-            QLatin1String("#mMainWidget { "
-                          " background: palette(base);"
-                          " color: palette(text);"
-                          " background-image: url(:/summaryview/kontact_bg.png);"
-                          " background-position: bottom left;"
-                          " background-repeat: no-repeat; }"
-                          "QLabel { "
-                          " color: palette(text); }"
-                          "KUrlLabel { "
-                          " color: palette(link); }"));
+            QStringLiteral("#mMainWidget { "
+                           " background: palette(base);"
+                           " color: palette(text);"
+                           " background-image: url(:/summaryview/kontact_bg.png);"
+                           " background-position: bottom left;"
+                           " background-repeat: no-repeat; }"
+                           "QLabel { "
+                           " color: palette(text); }"
+                           "KUrlLabel { "
+                           " color: palette(link); }"));
     }
 }
 
 void SummaryViewPart::setDate(const QDate &newDate)
 {
     QString date(QStringLiteral("<b>%1</b>"));
-    date = date.arg(KLocale::global()->formatDate(newDate));
+    date = date.arg(QLocale().toString(newDate));
     mDateLabel->setText(date);
 }
 
@@ -481,7 +480,8 @@ void SummaryViewPart::initGUI(KontactInterface::Core *core)
     mMainWidget->setFocusPolicy(Qt::StrongFocus);
     setWidget(sa);
 
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &SummaryViewPart::slotAdjustPalette);
+    //KF5: port it
+    //connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &SummaryViewPart::slotAdjustPalette);
     slotAdjustPalette();
 
     mMainLayout = new QVBoxLayout(mMainWidget);
@@ -516,7 +516,7 @@ void SummaryViewPart::initGUI(KontactInterface::Core *core)
 
 void SummaryViewPart::loadLayout()
 {
-    KConfig config(QLatin1String("kontact_summaryrc"));
+    KConfig config(QStringLiteral("kontact_summaryrc"));
     KConfigGroup grp(&config, QString());
 
     if (!grp.hasKey("LeftColumnSummaries")) {
@@ -537,7 +537,7 @@ void SummaryViewPart::loadLayout()
 
 void SummaryViewPart::saveLayout()
 {
-    KConfig config(QLatin1String("kontact_summaryrc"));
+    KConfig config(QStringLiteral("kontact_summaryrc"));
     KConfigGroup grp(&config, QString());
 
     grp.writeEntry("LeftColumnSummaries", mLeftColumnSummaries);

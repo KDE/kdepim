@@ -17,23 +17,26 @@
 
 #include "exportalarmjob.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
+
 
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 
 #include <QTemporaryFile>
+#include <QTimer>
 #include <KConfigGroup>
 #include <KZip>
 
-#include <QWidget>
+
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <exportresourcearchivejob.h>
 
 ExportAlarmJob::ExportAlarmJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep),
+      mIndexIdentifier(0)
 {
 }
 
@@ -45,15 +48,25 @@ ExportAlarmJob::~ExportAlarmJob()
 void ExportAlarmJob::start()
 {
     Q_EMIT title(i18n("Start export KAlarm settings..."));
-    mArchiveDirectory = archive()->directory();
+    createProgressDialog(i18n("Export KAlarm settings"));
     if (mTypeSelected & Utils::Resources) {
-        backupResources();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
+    } else if (mTypeSelected & Utils::Config) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else {
+        Q_EMIT jobFinished();
     }
+}
+
+void ExportAlarmJob::slotCheckBackupResource()
+{
+    setProgressDialogLabel(i18n("Backing up resources..."));
+    increaseProgressDialog();
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+void ExportAlarmJob::slotCheckBackupConfig()
+{
     if (mTypeSelected & Utils::Config) {
         backupConfig();
         increaseProgressDialog();
@@ -65,50 +78,61 @@ void ExportAlarmJob::start()
     Q_EMIT jobFinished();
 }
 
-void ExportAlarmJob::backupResources()
+void ExportAlarmJob::slotAlarmJobTerminated()
 {
-    showInfo(i18n("Backing up resources..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
+    }
+    mIndexIdentifier++;
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
 
+void ExportAlarmJob::slotWriteNextArchiveResource()
+{
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
-    Q_FOREACH (const Akonadi::AgentInstance &agent, list) {
+    if (mIndexIdentifier < list.count()) {
+        Akonadi::AgentInstance agent = list.at(mIndexIdentifier);
         const QString identifier = agent.identifier();
-        if (identifier.contains(QStringLiteral("akonadi_kalarm_resource_"))) {
-            backupResourceFile(agent, Utils::alarmPath());
-        } else if (identifier.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))) {
+        if (identifier.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))) {
             const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
 
-            QUrl url = Utils::resourcePath(agent);
-            if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("alarm.zip"));
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty()) {
-                        Q_EMIT error(errorStr);
-                    }
-                    url = Utils::akonadiAgentConfigPath(identifier);
-                    if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                        if (fileAdded) {
-                            Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                        } else {
-                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                        }
-                    }
+            QString url = Utils::resourcePath(agent);
+            if (!mAgentPaths.contains(url)) {
+                mAgentPaths << url;
+                if (!url.isEmpty()) {
+                    ExportResourceArchiveJob *resourceJob = new ExportResourceArchiveJob(this);
+                    resourceJob->setArchivePath(archivePath);
+                    resourceJob->setUrl(url);
+                    resourceJob->setIdentifier(identifier);
+                    resourceJob->setArchive(archive());
+                    resourceJob->setArchiveName(QStringLiteral("alarm.zip"));
+                    connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportAlarmJob::error);
+                    connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportAlarmJob::info);
+                    connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportAlarmJob::slotAlarmJobTerminated);
+                    resourceJob->start();
                 }
+            } else {
+                QTimer::singleShot(0, this, SLOT(slotAlarmJobTerminated()));
             }
+        } else if (identifier.contains(QStringLiteral("akonadi_kalarm_resource_"))) {
+            backupResourceFile(agent, Utils::alarmPath());
+            QTimer::singleShot(0, this, SLOT(slotAlarmJobTerminated()));
+        } else {
+            QTimer::singleShot(0, this, SLOT(slotAlarmJobTerminated()));
         }
+    } else {
+        Q_EMIT info(i18n("Resources backup done."));
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
     }
-
-    Q_EMIT info(i18n("Resources backup done."));
 }
+
 
 void ExportAlarmJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    setProgressDialogLabel(i18n("Backing up config..."));
+
     const QString kalarmStr(QStringLiteral("kalarmrc"));
     const QString kalarmrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kalarmStr;
     if (QFile(kalarmrc).exists()) {
@@ -131,7 +155,8 @@ void ExportAlarmJob::backupConfig()
         delete kalarmConfig;
     }
 
-    Q_EMIT info(i18n("Config backup done."));
+    backupUiRcFile(QStringLiteral("kalarmui.rc"), QStringLiteral("kalarm"));
 
+    Q_EMIT info(i18n("Config backup done."));
 }
 

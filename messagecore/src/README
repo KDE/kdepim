@@ -1,0 +1,12 @@
+What should be put here?
+========================
+
+Stuff here needs to comply with at least these rules (additionally to all the other ones that apply to all code):
+- no dependencies on legacy libs (libkdepim)
+- no dependencies on:
+  - libmessagelist
+  - libmessageviewer
+  - libmessagecomposer
+- used by at least one of the above listed libs
+- used by at least one other component (most commonly a second one of the above listed libs)
+

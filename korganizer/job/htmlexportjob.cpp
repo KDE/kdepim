@@ -22,9 +22,9 @@
 
 #include "htmlexportjob.h"
 #include "htmlexportsettings.h"
-#include "korganizer/mainwindow.h"
+#include "mainwindow.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <Akonadi/Contact/ContactSearchJob>
 
@@ -32,13 +32,13 @@
 
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KCalendarSystem>
 #include "korganizer_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <QTemporaryFile>
-#include <KIO/NetAccess>
+#include <KIO/FileCopyJob>
+#include <KJobWidgets>
 
+#include <QTemporaryFile>
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
@@ -162,7 +162,9 @@ void HtmlExportJob::finishExport()
         QString tfile = tf.fileName();
         saveStatus = save(tfile);
         errorMessage = i18n("Unable to write the temporary file for uploading.");
-        if (!KIO::NetAccess::upload(tfile, dest, d->mParentWidget)) {
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tfile), dest);
+        KJobWidgets::setWindow(job, d->mParentWidget);
+        if (!job->exec()) {
             saveStatus = false;
             errorMessage = i18n("Unable to upload the export file.");
         }
@@ -313,8 +315,8 @@ void HtmlExportJob::createMonthView(QTextStream *ts)
     while (start < toDate()) {
         // Write header
         QDate hDate(start.year(), start.month(), 1);
-        QString hMon = hDate.toString(QLatin1String("MMMM"));
-        QString hYear = hDate.toString(QLatin1String("yyyy"));
+        QString hMon = hDate.toString(QStringLiteral("MMMM"));
+        QString hYear = hDate.toString(QStringLiteral("yyyy"));
         *ts << "<h2>"
             << i18nc("@title month and year", "%1 %2", hMon, hYear)
             << "</h2>" << endl;
@@ -330,7 +332,7 @@ void HtmlExportJob::createMonthView(QTextStream *ts)
         // Write table header
         *ts << "  <tr>";
         for (int i = 0; i < 7; ++i) {
-            *ts << "<th>" << KLocale::global()->calendar()->weekDayName(start.addDays(i)) << "</th>";
+            *ts << "<th>" << QLocale::system().dayName(start.addDays(i).dayOfWeek()) << "</th>";
         }
         *ts << "</tr>" << endl;
 
@@ -426,7 +428,7 @@ void HtmlExportJob::createEventList(QTextStream *ts)
         if (!events.isEmpty()) {
             *ts << "  <tr><td colspan=\"" << QString::number(columns)
                 << "\" class=\"datehead\"><i>"
-                << KLocale::global()->formatDate(dt)
+                << QLocale::system().toString(dt)
                 << "</i></td></tr>" << endl;
 
             foreach (const KCalCore::Event::Ptr &event, events) {
@@ -848,15 +850,15 @@ QString cleanChars(const QString &text)
     txt = txt.replace(QLatin1Char('<'), QStringLiteral("&lt;"));
     txt = txt.replace(QLatin1Char('>'), QStringLiteral("&gt;"));
     txt = txt.replace(QLatin1Char('\"'), QStringLiteral("&quot;"));
-    txt = txt.replace(QString::fromUtf8("ä"), QStringLiteral("&auml;"));
-    txt = txt.replace(QString::fromUtf8("Ä"), QStringLiteral("&Auml;"));
-    txt = txt.replace(QString::fromUtf8("ö"), QStringLiteral("&ouml;"));
-    txt = txt.replace(QString::fromUtf8("Ö"), QStringLiteral("&Ouml;"));
-    txt = txt.replace(QString::fromUtf8("ü"), QStringLiteral("&uuml;"));
-    txt = txt.replace(QString::fromUtf8("Ü"), QStringLiteral("&Uuml;"));
-    txt = txt.replace(QString::fromUtf8("ß"), QStringLiteral("&szlig;"));
-    txt = txt.replace(QString::fromUtf8("€"), QStringLiteral("&euro;"));
-    txt = txt.replace(QString::fromUtf8("é"), QStringLiteral("&eacute;"));
+    txt = txt.replace(QStringLiteral("ä"), QStringLiteral("&auml;"));
+    txt = txt.replace(QStringLiteral("Ä"), QStringLiteral("&Auml;"));
+    txt = txt.replace(QStringLiteral("ö"), QStringLiteral("&ouml;"));
+    txt = txt.replace(QStringLiteral("Ö"), QStringLiteral("&Ouml;"));
+    txt = txt.replace(QStringLiteral("ü"), QStringLiteral("&uuml;"));
+    txt = txt.replace(QStringLiteral("Ü"), QStringLiteral("&Uuml;"));
+    txt = txt.replace(QStringLiteral("ß"), QStringLiteral("&szlig;"));
+    txt = txt.replace(QStringLiteral("€"), QStringLiteral("&euro;"));
+    txt = txt.replace(QStringLiteral("é"), QStringLiteral("&eacute;"));
 
     return txt;
 }

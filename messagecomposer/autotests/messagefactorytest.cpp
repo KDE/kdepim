@@ -22,23 +22,23 @@
 
 #include "cryptofunctions.h"
 
-#include <messagecore/utils/stringutil.h>
-#include <messagecore/helpers/nodehelper.h>
+#include <MessageCore/StringUtil>
+#include <MessageCore/NodeHelper>
 
-#include "messagecomposer/composer/composer.h"
-#include "messagecomposer/helper/messagefactory.h"
-#include "messagecomposer/part/globalpart.h"
-#include "messagecomposer/settings/messagecomposersettings.h"
+#include "MessageComposer/Composer"
+#include "MessageComposer/MessageFactory"
+#include "MessageComposer/GlobalPart"
+#include "MessageComposer/MessageComposerSettings"
 
-#include "messagecomposer/part/infopart.h"
-#include "messagecomposer/part/textpart.h"
+#include "MessageComposer/InfoPart"
+#include "MessageComposer/TextPart"
 
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"
-#include <messageviewer/viewer/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <messageviewer/nodehelper.h>
+#include <setupenv.h>
 
-#include <messageviewer/viewer/objecttreeparser.h>
+#include <MessageViewer/ObjectTreeParser>
 
 #include "qtest_messagecomposer.h"
 #include <kmime/kmime_dateformatter.h>
@@ -49,9 +49,8 @@
 #include <QDateTime>
 #include <KCharsets>
 #include <QDir>
-#include <KLocale>
-#include "templateparser/globalsettings_base.h"
-#include "templateparser/templateparser_export.h"
+#include <QLocale>
+#include "globalsettings_templateparser.h"
 
 using namespace MessageComposer;
 using namespace MessageComposer;
@@ -100,10 +99,10 @@ String very_simplistic_diff(const String &a, const String &b)
             //qDebug( "result ( a@%d b@%d ):\n%s\n--end", ai, bi, result.constData() );
         }
 
-    for (int i = ai ; i < al.size() ; ++i) {
+    for (int i = ai; i < al.size(); ++i) {
         result += "- " + al[i] + '\n';
     }
-    for (int i = bi ; i < bl.size() ; ++i) {
+    for (int i = bi; i < bl.size(); ++i) {
         result += "+ " + bl[i] + '\n';
     }
     return result;
@@ -117,6 +116,14 @@ String very_simplistic_diff(const String &a, const String &b)
 
 QTEST_MAIN(MessageFactoryTest)
 
+void MessageFactoryTest::initTestCase()
+{
+    // Force fake XDG dirs and KDEHOME so that KIdentityManagement does not
+    // read actual user data when running tests locally
+    QStandardPaths::setTestModeEnabled(true);
+    qputenv("KDEHOME", "~/.qttest/kde");
+}
+
 void MessageFactoryTest::testCreateReply()
 {
     KMime::Message::Ptr msg = createPlainTestMessage();
@@ -126,21 +133,21 @@ void MessageFactoryTest::testCreateReply()
     factory.setIdentityManager(identMan);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
     qDebug() << reply.msg->body();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(" ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n\n")));
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: Test Email Subject"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: Test Email Subject"));
     QCOMPARE_OR_DIFF(reply.msg->body(), replyStr.toLatin1());
 
 }
 
 void MessageFactoryTest::testCreateReplyHtml()
 {
-    KMime::Message::Ptr msg = loadMessageFromFile(QLatin1String("html_utf8_encoded.mbox"));
+    KMime::Message::Ptr msg = loadMessageFromFile(QStringLiteral("html_utf8_encoded.mbox"));
     KIdentityManagement::IdentityManager *identMan = new KIdentityManagement::IdentityManager;
 
     qDebug() << "html message:" << msg->encodedContent();
@@ -149,23 +156,23 @@ void MessageFactoryTest::testCreateReplyHtml()
     factory.setIdentityManager(identMan);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
     qDebug() << "html reply" << reply.msg->encodedContent();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(" ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> encoded?\n")));
     QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
-    QVERIFY(reply.msg->contentType()->mimeType() == "multipart/alternative");
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: reply to please"));
+    QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: reply to please"));
     QCOMPARE_OR_DIFF(reply.msg->contents().at(0)->body(), replyStr.toLatin1());
 
 }
 
 void MessageFactoryTest::testCreateReplyUTF16Base64()
 {
-    KMime::Message::Ptr msg = loadMessageFromFile(QLatin1String("plain_utf16.mbox"));
+    KMime::Message::Ptr msg = loadMessageFromFile(QStringLiteral("plain_utf16.mbox"));
     KIdentityManagement::IdentityManager *identMan = new KIdentityManagement::IdentityManager;
 
 //   qDebug() << "plain base64 msg message:" << msg->encodedContent();
@@ -174,16 +181,16 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
     factory.setIdentityManager(identMan);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
 //   qDebug() << "html reply" << reply.msg->encodedContent();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(" ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> quote me please.\n")));
     QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
-    QVERIFY(reply.msg->contentType()->mimeType() == "multipart/alternative");
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: asking for reply"));
+    QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: asking for reply"));
     QCOMPARE_OR_DIFF(reply.msg->contents().at(0)->body(), replyStr.toLatin1());
 
 }
@@ -193,8 +200,8 @@ void MessageFactoryTest::testCreateForward()
     KMime::Message::Ptr msg = createPlainTestMessage();
     KIdentityManagement::IdentityManager *identMan = new KIdentityManagement::IdentityManager;
     KIdentityManagement::Identity &ident = identMan->modifyIdentityForUoid(identMan->identityForUoidOrDefault(0).uoid());
-    ident.setFullName(QLatin1String("another"));
-    ident.setPrimaryEmailAddress(QLatin1String("another@another.com"));
+    ident.setFullName(QStringLiteral("another"));
+    ident.setPrimaryEmailAddress(QStringLiteral("another@another.com"));
     identMan->commit();
 
     MessageFactory factory(msg, 0);
@@ -203,21 +210,20 @@ void MessageFactoryTest::testCreateForward()
     KMime::Message::Ptr fw =  factory.createForward();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(", ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(", ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
 
     QString fwdMsg = QString::fromLatin1(
                          "From: another <another@another.com>\n"
-                         "Subject: Fwd: Test Email Subject\n"
                          "Date: %2\n"
                          "User-Agent: %3\n"
                          "X-KMail-Transport: 0\n"
                          "MIME-Version: 1.0\n"
-                         "Content-Type: text/plain; charset=\"ISO-8859-1\"\n"
+                         "Subject: Fwd: Test Email Subject\n"
+                         "Content-Type: text/plain; charset=\"US-ASCII\"\n"
                          "Content-Transfer-Encoding: 8Bit\n"
                          "X-KMail-Link-Message: 0\n"
                          "X-KMail-Link-Type: forward\n"
-                         "\n"
                          "\n"
                          "----------  Forwarded Message  ----------\n"
                          "\n"
@@ -241,18 +247,18 @@ void MessageFactoryTest::testCreateRedirect()
     KMime::Message::Ptr msg = createPlainTestMessage();
     KIdentityManagement::IdentityManager *identMan = new KIdentityManagement::IdentityManager;
     KIdentityManagement::Identity &ident = identMan->modifyIdentityForUoid(identMan->identityForUoidOrDefault(0).uoid());
-    ident.setFullName(QLatin1String("another"));
-    ident.setPrimaryEmailAddress(QLatin1String("another@another.com"));
+    ident.setFullName(QStringLiteral("another"));
+    ident.setPrimaryEmailAddress(QStringLiteral("another@another.com"));
     identMan->commit();
 
     MessageFactory factory(msg, 0);
     factory.setIdentityManager(identMan);
 
-    QString redirectTo = QLatin1String("redir@redir.com");
+    QString redirectTo = QStringLiteral("redir@redir.com");
     KMime::Message::Ptr rdir =  factory.createRedirect(redirectTo);
 
     QDateTime date = rdir->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
     datetime = rdir->date()->asUnicodeString();
 
 //   qDebug() << rdir->encodedContent();
@@ -284,7 +290,7 @@ void MessageFactoryTest::testCreateRedirect()
                                            "X-KMail-Redirect-From: me@me.me (by way of another <another@another.com>)\n"
                                            "\n"
                                            "All happy families are alike; each unhappy family is unhappy in its own way.");
-    baseline = baseline.arg(datetime).arg(rxmessageid.cap(1)).arg(rx.cap(1)).arg(datetime).arg(QLatin1String("another <another@another.com>"));
+    baseline = baseline.arg(datetime).arg(rxmessageid.cap(1)).arg(rx.cap(1)).arg(datetime).arg(QStringLiteral("another <another@another.com>"));
 
 //   qDebug() << baseline.toLatin1();
 //   qDebug() << "instead:" << rdir->encodedContent();
@@ -299,8 +305,8 @@ void MessageFactoryTest::testCreateResend()
     KMime::Message::Ptr msg = createPlainTestMessage();
     KIdentityManagement::IdentityManager *identMan = new KIdentityManagement::IdentityManager;
     KIdentityManagement::Identity &ident = identMan->modifyIdentityForUoid(identMan->identityForUoidOrDefault(0).uoid());
-    ident.setFullName(QLatin1String("another"));
-    ident.setPrimaryEmailAddress(QLatin1String("another@another.com"));
+    ident.setFullName(QStringLiteral("another"));
+    ident.setPrimaryEmailAddress(QStringLiteral("another@another.com"));
     identMan->commit();
 
     MessageFactory factory(msg, 0);
@@ -309,7 +315,7 @@ void MessageFactoryTest::testCreateResend()
     KMime::Message::Ptr rdir =  factory.createResend();
 
     QDateTime date = rdir->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
     datetime = rdir->date()->asUnicodeString();
 
 //   qDebug() << msg->encodedContent();
@@ -357,7 +363,7 @@ void MessageFactoryTest::testCreateMDN()
 
     KMime::Message::Ptr mdn = factory.createMDN(KMime::MDN::AutomaticAction, KMime::MDN::Displayed, KMime::MDN::SentAutomatically);
 
-    QVERIFY(mdn.get());
+    QVERIFY(mdn.data());
     qDebug() << "mdn" << mdn->encodedContent();
     /*
       // parse the result and make sure it is valid in various ways
@@ -369,7 +375,7 @@ void MessageFactoryTest::testCreateMDN()
       MessageViewer::ProcessResult pResult( nh ); */
 
 //   qDebug() << MessageCore::NodeHelper::firstChild( mdn->mainBodyPart() )->encodedContent();
-//   qDebug() << MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body();
+//   qDebug() << MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.data(), "multipart", "report", true, true ) )->body();
 
     QString mdnContent = QString::fromLatin1("The message sent on %1 to %2 with subject \"%3\" has been displayed. "
                          "This is no guarantee that the message has been read or understood.");
@@ -378,7 +384,7 @@ void MessageFactoryTest::testCreateMDN()
 
     qDebug() << "comparing with:" << mdnContent;
 
-    QCOMPARE_OR_DIFF(MessageCore::NodeHelper::next(MessageViewer::ObjectTreeParser::findType(mdn.get(), "multipart", "report", true, true))->body(),
+    QCOMPARE_OR_DIFF(MessageCore::NodeHelper::next(MessageViewer::ObjectTreeParser::findType(mdn.data(), "multipart", "report", true, true))->body(),
                      mdnContent.toLatin1());
 }
 
@@ -391,7 +397,7 @@ KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
     composer->infoPart()->setCc(QStringList(QString::fromLatin1("cc@cc.cc")));
     composer->infoPart()->setBcc(QStringList(QString::fromLatin1("bcc@bcc.bcc")));
     composer->textPart()->setWrappedPlainText(QString::fromLatin1("All happy families are alike; each unhappy family is unhappy in its own way."));
-    composer->infoPart()->setSubject(QLatin1String("Test Email Subject"));
+    composer->infoPart()->setSubject(QStringLiteral("Test Email Subject"));
     composer->globalPart()->setMDNRequested(true);
     composer->exec();
 
@@ -424,7 +430,7 @@ void MessageFactoryTest::test_multipartAlternative_data()
     QTest::addColumn<QString>("selection");
     QTest::addColumn<QString>("expected");
 
-    QDir dir(QLatin1String(MAIL_DATA_DIR));
+    QDir dir(QStringLiteral(MAIL_DATA_DIR));
     foreach (const QString &file, dir.entryList(QStringList(QLatin1String("plain_message.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
         QTest::newRow(file.toLatin1()) << QString(dir.path() + QLatin1Char('/') + file) << 0 << "" <<
                                        "> This *is* the *message* text *from* Sudhendu Kumar<dontspamme@yoohoo.com>\n"
@@ -460,17 +466,17 @@ void MessageFactoryTest::test_multipartAlternative()
     factory.setSelection(selection);
     factory.setQuote(true);
     factory.setReplyStrategy(ReplyAll);
-    TemplateParser::GlobalSettings::self()->setTemplateReplyAll(QLatin1String("%QUOTE"));
+    TemplateParser::TemplateParserSettings::self()->setTemplateReplyAll(QStringLiteral("%QUOTE"));
 
     QString str;
-    str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+    str = TemplateParser::TemplateParserSettings::self()->templateReplyAll();
     factory.setTemplate(str);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
     QSKIP("This tests has been failing for a long time, please someone fix it", SkipSingle);
-    QVERIFY(reply.msg->contentType()->mimeType() == "multipart/alternative");
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: Plain Message Test"));
+    QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: Plain Message Test"));
     QCOMPARE(reply.msg->contents().at(contentAt)->encodedBody().data(), expected.toLatin1().data());
 }
 

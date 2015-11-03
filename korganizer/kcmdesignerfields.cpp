@@ -30,11 +30,12 @@
 #include <KRun>
 #include <KShell>
 #include <QStandardPaths>
-#include <KIO/Job>
-#include <KIO/NetAccess>
+#include <KIO/DeleteJob>
+#include <KIO/FileCopyJob>
+#include <KIO/MkdirJob>
+#include <KJobWidgets>
 #include <KLocalizedString>
 #include <QDialog>
-#include <KGlobal>
 
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -73,16 +74,16 @@ public:
             mPreview = QPixmap::fromImage(img);
 
             QMap<QString, QString> allowedTypes;
-            allowedTypes.insert(QLatin1String("QLineEdit"), i18n("Text"));
-            allowedTypes.insert(QLatin1String("QTextEdit"), i18n("Text"));
-            allowedTypes.insert(QLatin1String("QSpinBox"), i18n("Numeric Value"));
-            allowedTypes.insert(QLatin1String("QCheckBox"), i18n("Boolean"));
-            allowedTypes.insert(QLatin1String("QComboBox"), i18n("Selection"));
-            allowedTypes.insert(QLatin1String("QDateTimeEdit"), i18n("Date & Time"));
-            allowedTypes.insert(QLatin1String("KLineEdit"), i18n("Text"));
-            allowedTypes.insert(QLatin1String("KTextEdit"), i18n("Text"));
-            allowedTypes.insert(QLatin1String("KDateTimeWidget"), i18n("Date & Time"));
-            allowedTypes.insert(QLatin1String("KDatePicker"), i18n("Date"));
+            allowedTypes.insert(QStringLiteral("QLineEdit"), i18n("Text"));
+            allowedTypes.insert(QStringLiteral("QTextEdit"), i18n("Text"));
+            allowedTypes.insert(QStringLiteral("QSpinBox"), i18n("Numeric Value"));
+            allowedTypes.insert(QStringLiteral("QCheckBox"), i18n("Boolean"));
+            allowedTypes.insert(QStringLiteral("QComboBox"), i18n("Selection"));
+            allowedTypes.insert(QStringLiteral("QDateTimeEdit"), i18n("Date & Time"));
+            allowedTypes.insert(QStringLiteral("KLineEdit"), i18n("Text"));
+            allowedTypes.insert(QStringLiteral("KTextEdit"), i18n("Text"));
+            allowedTypes.insert(QStringLiteral("KDateTimeWidget"), i18n("Date & Time"));
+            allowedTypes.insert(QStringLiteral("KDatePicker"), i18n("Date"));
 
             QList<QWidget *> list = wdg->findChildren<QWidget *>();
             QWidget *it;
@@ -192,7 +193,8 @@ void KCMDesignerFields::deleteFile()
                     this,
                     i18n("<qt>Do you really want to delete '<b>%1</b>'?</qt>",
                          pageItem->text(0)), QString(), KStandardGuiItem::del()) == KMessageBox::Continue) {
-            KIO::NetAccess::del(pageItem->path(), Q_NULLPTR);
+            auto job = KIO::del(pageItem->path());
+            job->exec();
         }
     }
     // The actual view refresh will be done automagically by the slots connected to kdirwatch
@@ -200,7 +202,7 @@ void KCMDesignerFields::deleteFile()
 
 void KCMDesignerFields::importFile()
 {
-    QUrl src = QFileDialog::getOpenFileUrl(this, i18n("Import Page"), QDir::homePath(),
+    QUrl src = QFileDialog::getOpenFileUrl(this, i18n("Import Page"), QUrl::fromLocalFile(QDir::homePath()),
                                            i18n("Designer Files (*.ui)")
                                           );
     QUrl dest = QUrl::fromLocalFile(localUiDir());
@@ -208,8 +210,8 @@ void KCMDesignerFields::importFile()
     dest = dest.adjusted(QUrl::RemoveFilename);
     dest.setPath(src.fileName());
     KIO::Job *job = KIO::file_copy(src, dest, -1, KIO::Overwrite);
-    KIO::NetAccess::synchronousRun(job, this);
-
+    KJobWidgets::setWindow(job, this);
+    job->exec();
     // The actual view refresh will be done automagically by the slots connected to kdirwatch
 }
 
@@ -447,7 +449,9 @@ void KCMDesignerFields::startDesigner()
     // check if path exists and create one if not.
     QString cepPath = localUiDir();
     if (!QDir(cepPath).exists()) {
-        KIO::NetAccess::mkdir(cepPath, this);
+        auto job = KIO::mkdir(cepPath);
+        KJobWidgets::setWindow(job, this);
+        job->exec();
     }
 
     // finally jump there

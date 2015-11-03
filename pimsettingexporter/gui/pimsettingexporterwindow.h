@@ -48,11 +48,11 @@ private Q_SLOTS:
     void slotShowBackupFinishDialogInformation();
     void slotJobFailed();
     void slotJobFinished();
+    void slotShowCurrentArchiveInformations();
 private:
     void initializeBackupRestoreUi();
     void backupData(const QString &filename, const QString &templateFile = QString());
     void loadData(const QString &filename, const QString &templateFile = QString());
-    bool canZip() const;
     void setupActions(bool canZipFile);
     LogWidget *mLogWidget;
     KRecentFilesAction *mRecentFilesAction;
@@ -61,7 +61,9 @@ private:
     QAction *mSaveLogAction;
     QAction *mArchiveStructureInfo;
     QAction *mShowArchiveInformationsAction;
+    QAction *mShowArchiveInformationsAboutCurrentArchiveAction;
     PimSettingsBackupRestoreUI *mPimSettingsBackupRestoreUI;
+    QString mLastArchiveFileName;
 };
 
 #endif /* PIMSETTINGEXPORTERWINDOW_H */

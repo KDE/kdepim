@@ -45,8 +45,8 @@
 #include <utils/scrollarea.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
-#include "libkleo/ui/filenamerequester.h"
+#include <Libkleo/Stl_Util>
+#include "Libkleo/FileNameRequester"
 
 #include <KLocalizedString>
 #include <KGuiItem>
@@ -110,7 +110,7 @@ public:
         return m_widgets.at(idx);
     }
 
-    bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return true;
     }
@@ -180,7 +180,7 @@ DecryptVerifyOperationWidget *DecryptVerifyFilesWizard::operationWidget(unsigned
 void DecryptVerifyFilesWizard::onNext(int id)
 {
     if (id == OperationsPage) {
-        QTimer::singleShot(0, this, SIGNAL(operationPrepared()));
+        QTimer::singleShot(0, this, &DecryptVerifyFilesWizard::operationPrepared);
     }
     Wizard::onNext(id);
 }
@@ -267,7 +267,7 @@ void OperationsWidget::ensureIndexAvailable(unsigned int idx)
     assert(qobject_cast<QBoxLayout *>(m_ui.scrollArea.widget()->layout()));
     QBoxLayout &blay = *static_cast<QBoxLayout *>(m_ui.scrollArea.widget()->layout());
 
-    for (unsigned int i = m_widgets.size() ; i < idx + 1 ; ++i) {
+    for (unsigned int i = m_widgets.size(); i < idx + 1; ++i) {
         if (i) {
             blay.insertWidget(blay.count() - 1, new HLine(m_ui.scrollArea.widget()));
         }

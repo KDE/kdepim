@@ -30,7 +30,7 @@
 #include "koglobals.h"
 #include "prefs/koprefs.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
@@ -506,7 +506,7 @@ void KODayMatrix::mousePressEvent(QMouseEvent *e)
 {
     mSelStart = getDayIndexFrom(e->x(), e->y());
     if (e->button() == Qt::RightButton) {
-        popupMenu(mDays[mSelStart]) ;
+        popupMenu(mDays[mSelStart]);
     } else if (e->button() == Qt::LeftButton) {
         if (mSelStart > NUMDAYS - 1) {
             mSelStart = NUMDAYS - 1;
@@ -679,16 +679,16 @@ void KODayMatrix::dropEvent(QDropEvent *e)
             QAction *copy = Q_NULLPTR, *move = Q_NULLPTR;
             QMenu *menu = new QMenu(this);
             if (exist) {
-                move = menu->addAction(KOGlobals::self()->smallIcon(QStringLiteral("edit-paste")), i18n("&Move"));
+                move = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-paste")), i18n("&Move"));
                 if (/*existingEvent*/1) {
-                    copy = menu->addAction(KOGlobals::self()->smallIcon(QStringLiteral("edit-copy")), i18n("&Copy"));
+                    copy = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("&Copy"));
                 }
             } else {
-                move = menu->addAction(KOGlobals::self()->smallIcon(QStringLiteral("list-add")), i18n("&Add"));
+                move = menu->addAction(QIcon::fromTheme(QStringLiteral("list-add")), i18n("&Add"));
             }
             menu->addSeparator();
             /*QAction *cancel =*/
-            menu->addAction(KOGlobals::self()->smallIcon(QStringLiteral("process-stop")), i18n("&Cancel"));
+            menu->addAction(QIcon::fromTheme(QStringLiteral("process-stop")), i18n("&Cancel"));
             QAction *a = menu->exec(QCursor::pos());
             if (a == copy) {
                 action = DRAG_COPY;

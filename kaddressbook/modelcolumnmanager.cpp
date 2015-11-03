@@ -185,7 +185,7 @@ bool ModelColumnManager::eventFilter(QObject *watched, QEvent *event)
                 }
 
                 mModel->setColumns(columns);
-                QTimer::singleShot(0, this, SLOT(adaptHeaderView()));
+                QTimer::singleShot(0, this, &ModelColumnManager::adaptHeaderView);
             }
 
             return true;

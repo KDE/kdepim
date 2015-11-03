@@ -1,11 +1,9 @@
 
-include_directories(
-  ${Boost_INCLUDE_DIRS}
-)
-
 
 add_definitions(-DTRANSLATION_DOMAIN=\"messageviewer_text_calendar_plugin\")
-set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp syncitiphandler.cpp text_calendar_debug.cpp)
+set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp syncitiphandler.cpp)
+
+ecm_qt_declare_logging_category(messageviewer_bodypartformatter_text_calendar_PART_SRCS HEADER text_calendar_debug.h IDENTIFIER TEXT_CALENDAR_LOG CATEGORY_NAME log_text_calendar)
 
 qt5_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.Korganizer.Calendar.xml
@@ -17,7 +15,6 @@ add_library(messageviewer_bodypartformatter_text_calendar MODULE ${messageviewer
 
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar
-  KF5::AkonadiContact
   KF5::Codecs
   Qt5::Core 
   KF5::CalendarCore
@@ -26,13 +23,13 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   KF5::IdentityManagement
   KF5::MailTransport
   KF5::AkonadiMime
-  calendarsupport
-  kdepim
-  mailcommon
-  messageviewer
+  KF5::CalendarSupport
+  KF5::Libkdepim
+  KF5::MessageViewer
+  KF5::Libkleo
 )
 
-target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditorsng)
+target_link_libraries(messageviewer_bodypartformatter_text_calendar KF5::IncidenceEditorsng)
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${KDE_INSTALL_PLUGINDIR})
 

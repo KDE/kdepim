@@ -21,7 +21,7 @@
 #include "knotedisplayconfigwidget.h"
 #include "knoteeditorconfigwidget.h"
 
-#include "noteshared/attributes/notedisplayattribute.h"
+#include "NoteShared/NoteDisplayAttribute"
 
 #include <KLocalizedString>
 #include <KWindowSystem>
@@ -90,7 +90,7 @@ void KNoteSimpleConfigDialog::slotUpdateCaption(const QString &name)
 
 void KNoteSimpleConfigDialog::save(Akonadi::Item &item, bool &isRichText)
 {
-    NoteShared::NoteDisplayAttribute *attr =  item.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    NoteShared::NoteDisplayAttribute *attr =  item.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Item::AddIfMissing);
     mEditorConfigWidget->save(attr, isRichText);
     mDisplayConfigWidget->save(attr);
 }

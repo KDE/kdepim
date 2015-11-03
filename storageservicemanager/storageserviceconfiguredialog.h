@@ -21,7 +21,7 @@
 #ifndef STORAGESERVICECONFIGUREDIALOG_H
 #define STORAGESERVICECONFIGUREDIALOG_H
 
-#include "pimcommon/storageservice/dialog/storageserviceconfiguredialog.h"
+#include "PimCommon/StorageServiceConfigureDialog"
 
 class QCheckBox;
 
@@ -32,10 +32,10 @@ public:
     explicit StorageServiceConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~StorageServiceConfigureDialog();
 
-    void writeSettings();
+    void writeSettings() Q_DECL_OVERRIDE;
 
 private:
-    void loadSettings();
+    void loadSettings() Q_DECL_OVERRIDE;
     QCheckBox *mCloseWallet;
 };
 

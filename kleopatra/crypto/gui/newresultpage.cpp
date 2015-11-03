@@ -39,7 +39,7 @@
 
 #include <crypto/taskcollection.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <boost/mem_fn.hpp>
 
@@ -101,7 +101,7 @@ NewResultPage::Private::Private(NewResultPage *qq) : q(qq), m_lastErrorItemIndex
     m_keepOpenCB = new QCheckBox;
     m_keepOpenCB->setText(i18n("Keep open after operation completed"));
     m_keepOpenCB->setChecked(true);
-    connect(m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)));
+    connect(m_keepOpenCB, &QAbstractButton::toggled, q, &NewResultPage::keepOpenWhenDone);
     layout->addWidget(m_keepOpenCB);
 
     connect(&m_hideProgressTimer, &QTimer::timeout, m_progressBar, &QProgressBar::hide);
@@ -131,7 +131,7 @@ void NewResultPage::Private::allDone()
     const bool errorOccurred =
         kdtools::any(m_collections, mem_fn(&TaskCollection::errorOccurred));
     m_collections.clear();
-    Q_FOREACH (const QString &i, m_progressLabelByTag.keys()) {   //krazy:exclude=foreach
+    Q_FOREACH (const QString &i, m_progressLabelByTag.keys()) {
         if (!i.isEmpty()) {
             m_progressLabelByTag.value(i)->setText(i18n("%1: All operations completed.", i));
         } else {

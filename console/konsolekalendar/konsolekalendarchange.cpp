@@ -112,8 +112,8 @@ bool KonsoleKalendarChange::changeEvent()
             }
             event->endUpdates();
             QEventLoop loop;
-            QObject::connect(calendar.data(), SIGNAL(modifyFinished(bool,QString)),
-                             &loop, SLOT(quit()));
+            QObject::connect(calendar.data(), &Akonadi::CalendarBase::modifyFinished,
+                             &loop, &QEventLoop::quit);
             QElapsedTimer t;
             t.start();
             calendar->modifyIncidence(event);

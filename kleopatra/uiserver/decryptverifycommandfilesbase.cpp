@@ -46,8 +46,8 @@
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -127,8 +127,8 @@ int DecryptVerifyCommandFilesBase::doStart()
                      d.get(), SLOT(slotDone()), Qt::QueuedConnection);
     QObject::connect(d->controller.get(), SIGNAL(error(int,QString)),
                      d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection);
-    QObject::connect(d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)),
-                     d.get(), SLOT(verificationResult(GpgME::VerificationResult)), Qt::QueuedConnection);
+    QObject::connect(d->controller.get(), &DecryptVerifyFilesController::verificationResult,
+                     d.get(), &Private::verificationResult, Qt::QueuedConnection);
 
     d->controller->start();
 

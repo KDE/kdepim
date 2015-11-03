@@ -88,7 +88,7 @@ public:
 
     friend inline bool operator==(const Recipient &lhs, const Recipient &rhs)
     {
-        return rhs.d == lhs.d || lhs.deepEquals(rhs) ;
+        return rhs.d == lhs.d || lhs.deepEquals(rhs);
     }
 
 private:

@@ -24,7 +24,7 @@
 #include <KAboutData>
 
 #include <KLocalizedString>
-#include "../addressline/addresslineedit/addresseelineedit.h"
+#include "../src/addressline/addresslineedit/addresseelineedit.h"
 
 #include <QApplication>
 #include <QCommandLineParser>

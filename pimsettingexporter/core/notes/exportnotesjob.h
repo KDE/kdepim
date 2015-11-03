@@ -19,10 +19,9 @@
 #define EXPORTNOTESJOB_H
 
 #include "abstractimportexportjob.h"
-#include "pimsettingexporter_export.h"
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ExportNotesJob : public AbstractImportExportJob
+class ExportNotesJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
@@ -31,9 +30,15 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
+private Q_SLOTS:
+    void slotCheckBackupResource();
+    void slotCheckBackupConfig();
+    void slotAddressbookJobTerminated();
+    void slotWriteNextArchiveResource();
 private:
     void backupConfig();
-    void backupData();
+    void backupTheme();
+    int mIndexIdentifier;
 };
 
 #endif // EXPORTNOTESJOB_H

@@ -89,7 +89,7 @@ QHash<Utils::AppsType, Utils::importExportParameters> TemplateSelection::loadTem
         QDomElement e = n.toElement();
         if (!e.isNull())  {
             const QString tagName(e.tagName());
-            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "tag :" << tagName;
+            //qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "tag :" << tagName;
             Utils::AppsType type = Utils::Unknown;
             if (tagName == QLatin1String("kmail")) {
                 type = Utils::KMail;
@@ -203,6 +203,10 @@ void TemplateSelection::createTemplate(const QHash<Utils::AppsType, Utils::impor
             QDomElement tag = mDocument.createElement(QStringLiteral("blogilo"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
+            break;
+        }
+        case Utils::Unknown: {
+            qCCritical(PIMSETTINGEXPORTERCORE_LOG) << "Code must not use this enum here";
             break;
         }
         }

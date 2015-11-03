@@ -52,10 +52,10 @@ class SignerResolveValidator : public SignerResolvePage::Validator
 {
 public:
     explicit SignerResolveValidator(SignerResolvePage *page);
-    bool isComplete() const;
-    QString explanation() const;
+    bool isComplete() const Q_DECL_OVERRIDE;
+    QString explanation() const Q_DECL_OVERRIDE;
     void update() const;
-    QString customWindowTitle() const;
+    QString customWindowTitle() const Q_DECL_OVERRIDE;
 
 private:
     SignerResolvePage *const m_page;

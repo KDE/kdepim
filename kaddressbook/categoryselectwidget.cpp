@@ -29,7 +29,7 @@
 #include <AkonadiCore/monitor.h>
 #include <AkonadiCore/tagmodel.h>
 
-#include <widgets/kcheckcombobox.h>
+#include <Libkdepim/KCheckComboBox>
 
 using namespace Akonadi;
 

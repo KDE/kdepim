@@ -33,9 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "dirservconfigpage.h"
-#include "libkleo/ui/directoryserviceswidget.h"
-#include "libkleo/ui/cryptoconfigmodule.h"
-#include "libkleo/kleo/cryptobackendfactory.h"
+#include "Libkleo/DirectoryServicesWidget"
+#include "Libkleo/CryptoConfigModule"
+#include "Libkleo/CryptoBackendFactory"
 
 #include <kmessagebox.h>
 #include <KLocalizedString>
@@ -148,9 +148,11 @@ static const char s_maxitems_componentName[] = "dirmngr";
 static const char s_maxitems_groupName[] = "LDAP";
 static const char s_maxitems_entryName[] = "max-replies";
 
+#ifdef NOT_USEFUL_CURRENTLY
 static const char s_addnewservers_componentName[] = "dirmngr";
 static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
+#endif
 
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
@@ -200,28 +202,14 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage(QWidget *
     load();
 }
 
-static KUrl::List string2urls(const QString &str)
+static QList<QUrl> string2urls(const QString &str)
 {
-    return str.isEmpty() ? KUrl::List() : KUrl(str) ;
-}
-
-static KUrl::List strings2urls(const QStringList &strs)
-{
-    KUrl::List urls;
-    Q_FOREACH (const QString &str, strs)
-        if (!str.isEmpty()) {
-            urls.push_back(KUrl(str));
-        }
-    return urls;
-}
-
-static QStringList urls2strings(const KUrl::List &urls)
-{
-    QStringList result;
-    Q_FOREACH (const KUrl &url, urls) {
-        result.push_back(url.url());
+    QList<QUrl> ret;
+    if (str.isEmpty()) {
+        return ret;
     }
-    return result;
+    ret << QUrl::fromPercentEncoding(str.toLocal8Bit());
+    return ret;
 }
 
 void DirectoryServicesConfigurationPage::load()
@@ -229,13 +217,10 @@ void DirectoryServicesConfigurationPage::load()
 
     mWidget->clear();
 
-    // gpgsm/Configuration/keyserver is not provided by older gpgconf versions; it's type changed from String to LDAPURL
+    // gpgsm/Configuration/keyserver is not provided by older gpgconf versions;
     if ((mX509ServicesEntry = configEntry(s_x509services_new_componentName, s_x509services_new_groupName, s_x509services_new_entryName,
                                           Kleo::CryptoConfigEntry::ArgType_LDAPURL, /*isList=*/true, /*showError=*/false))) {
         mWidget->addX509Services(mX509ServicesEntry->urlValueList());
-    } else if ((mX509ServicesEntry = configEntry(s_x509services_new_componentName, s_x509services_new_groupName, s_x509services_new_entryName,
-                                     Kleo::CryptoConfigEntry::ArgType_String, /*isList=*/true, /*showError=*/false))) {
-        mWidget->addX509Services(strings2urls(mX509ServicesEntry->stringValueList()));
     } else if ((mX509ServicesEntry = configEntry(s_x509services_componentName, s_x509services_groupName, s_x509services_entryName,
                                      Kleo::CryptoConfigEntry::ArgType_LDAPURL, true))) {
         mWidget->addX509Services(mX509ServicesEntry->urlValueList());
@@ -296,15 +281,11 @@ void DirectoryServicesConfigurationPage::load()
 void DirectoryServicesConfigurationPage::save()
 {
     if (mX509ServicesEntry) {
-        if (mX509ServicesEntry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL) {
-            mX509ServicesEntry->setURLValueList(mWidget->x509Services());
-        } else {
-            mX509ServicesEntry->setStringValueList(urls2strings(mWidget->x509Services()));
-        }
+        mX509ServicesEntry->setURLValueList(mWidget->x509Services());
     }
 
     if (mOpenPGPServiceEntry) {
-        const KUrl::List serv = mWidget->openPGPServices();
+        const QList<QUrl> serv = mWidget->openPGPServices();
         if (serv.empty()) {
             mOpenPGPServiceEntry->setStringValue(QString());
         } else {
@@ -354,11 +335,7 @@ void DirectoryServicesConfigurationPage::defaults()
 {
     // these guys don't have a default, to clear them:
     if (mX509ServicesEntry) {
-        if (mX509ServicesEntry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL) {
-            mX509ServicesEntry->setURLValueList(KUrl());
-        } else {
-            mX509ServicesEntry->setStringValueList(QStringList());
-        }
+        mX509ServicesEntry->setURLValueList(QList<QUrl>());
     }
     if (mOpenPGPServiceEntry) {
         mOpenPGPServiceEntry->setStringValue(QString());

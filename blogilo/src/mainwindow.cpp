@@ -42,14 +42,14 @@
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
 
-#include "pimcommon/storageservice/storageservicemanager.h"
-#include "pimcommon/storageservice/storageservicejobconfig.h"
-#include "pimcommon/storageservice/storageserviceabstract.h"
-#include "pimcommon/storageservice/storageserviceprogressmanager.h"
+#include "PimCommon/StorageServiceManager"
+#include "PimCommon/StorageServiceJobConfig"
+#include "PimCommon/StorageServiceAbstract"
+#include "PimCommon/StorageServiceProgressManager"
 
-#include "libkdepim/progresswidget/progressdialog.h"
-#include "libkdepim/progresswidget/statusbarprogresswidget.h"
-#include "libkdepim/progresswidget/progressstatusbarwidget.h"
+#include "Libkdepim/ProgressDialog"
+#include "Libkdepim/StatusbarProgressWidget"
+#include "Libkdepim/ProgressStatusBarWidget"
 
 #include <qtabwidget.h>
 #include <KStatusNotifierItem>
@@ -126,12 +126,10 @@ MainWindow::MainWindow()
     connect(toolbox, &Toolbox::sigError, this, &MainWindow::slotError);
     connect(toolbox, &Toolbox::sigBusy, this, &MainWindow::slotBusy);
 
-    QList<BilboBlog *> blogList = DBMan::self()->blogList().values();
-    const int count = blogList.count();
-    for (int i = 0; i < count; ++i) {
-        QAction *act = new QAction(blogList.at(i)->title(), blogs);
+    foreach (BilboBlog *blog, DBMan::self()->blogList()) {
+        QAction *act = new QAction(blog->title(), blogs);
         act->setCheckable(true);
-        act->setData(blogList.at(i)->id());
+        act->setData(blog->id());
         blogs->addAction(act);
     }
     connect(blogs, static_cast<void (KSelectAction::*)(QAction *)>(&KSelectAction::triggered), this, &MainWindow::currentBlogChanged);
@@ -474,7 +472,7 @@ void MainWindow::slotActivePostChanged(int index)
         }
         toolbox->setFieldsValue(activePost->currentPost());
     } else {
-        qCCritical(BLOGILO_LOG) << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex() ;
+        qCCritical(BLOGILO_LOG) << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex();
     }
     previousActivePostIndex = index;
 }

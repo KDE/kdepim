@@ -31,6 +31,13 @@ private Q_SLOTS:
     void shouldInvalidWhenPathIsNotValid();
     void shouldLoadTheme_data();
     void shouldLoadTheme();
+
+    void testRenderTemplate_data();
+    void testRenderTemplate();
+
+private:
+    bool validateHtml(const QString &path, const QString &name, const QString &html);
+    bool compareHtml(const QString &path, const QString &name);
 };
 
 #endif // GRANTLEETHEMETEST_H

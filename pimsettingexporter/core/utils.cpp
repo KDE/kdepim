@@ -17,8 +17,8 @@
 
 #include "utils.h"
 
-#include "mailcommon/util/mailutil.h"
-#include "pimcommon/util/pimutil.h"
+#include "MailCommon/MailUtil"
+#include "PimCommon/PimUtil"
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
@@ -109,41 +109,43 @@ QString Utils::infoPath()
     return QStringLiteral("information/");
 }
 
-QUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
+QString Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
-    const QUrl url = Utils::resourcePath(resourceConfig);
-    QUrl newUrl = url;
-    if (!url.path().contains(QDir::homePath())) {
+    QString newUrl = Utils::resourcePath(resourceConfig);
+    if (!newUrl.contains(QDir::homePath())) {
+        QFileInfo fileInfo(newUrl);
+        fileInfo.fileName();
         //qCDebug(PIMSETTINGEXPORTERCORE_LOG)<<" url "<<url.path();
-        newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storedData + url.fileName());
-        if (!QDir(QDir::homePath() + QLatin1Char('/') + storedData).exists()) {
-            QDir dir(QDir::homePath());
-            dir.mkdir(storedData);
+        QString currentPath = QDir::homePath() + QLatin1Char('/') + storedData;
+        newUrl = (currentPath + QLatin1Char('/') + fileInfo.fileName());
+        if (!QDir(currentPath).exists()) {
+            QDir().mkdir(currentPath);
         }
     }
-    if (QFile(newUrl.path()).exists()) {
-        QString newFileName = newUrl.path();
+    if (QFile(newUrl).exists()) {
+        QString newFileName = newUrl;
+        QFileInfo fileInfo(newFileName);
         for (int i = 0;; ++i) {
-            newFileName = newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path() + QLatin1Char('/') + QString::number(i) + QLatin1Char('/') + newUrl.fileName();
+            const QString currentPath = fileInfo.path() + QLatin1Char('/') + QString::number(i) + QLatin1Char('/');
+            newFileName = currentPath + fileInfo.fileName();
             if (!QFile(newFileName).exists()) {
-                QDir dir(newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path());
-                dir.mkdir(QString::number(i));
+                QDir().mkdir(currentPath);
                 break;
             }
         }
-        newUrl = QUrl(newFileName);
+        newUrl = newFileName;
     }
     return newUrl;
 }
 
-QUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
+QString Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
 {
-    KConfigGroup group = resourceConfig->group(QLatin1String("General"));
+    KConfigGroup group = resourceConfig->group(QStringLiteral("General"));
     QString url = group.readEntry(QStringLiteral("Path"), defaultPath);
     if (!url.isEmpty()) {
         url.replace(QLatin1String("$HOME"), QDir::homePath());
     }
-    return QUrl::fromLocalFile(url);
+    return url;
 }
 
 void Utils::convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey)
@@ -213,20 +215,20 @@ void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &curr
     }
 }
 
-QUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
+QString Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
-    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
+    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig(configFileName);
-    QUrl url = Utils::resourcePath(resourceConfig, defaultPath);
+    const QString url = Utils::resourcePath(resourceConfig, defaultPath);
     return url;
 }
 
 QString Utils::storeResources(KZip *archive, const QString &identifier, const QString &path)
 {
     const QString agentFileName = identifier + QLatin1String("rc");
-    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
+    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName;
     qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "configFileName " << configFileName << "agentFileName " << configFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig(configFileName);
@@ -235,13 +237,13 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     KConfig *config = resourceConfig->copyTo(tmp.fileName());
 
     if (identifier.contains(POP3_RESOURCE_IDENTIFIER)) {
-        const QString targetCollection = QLatin1String("targetCollection");
+        const QString targetCollection = QStringLiteral("targetCollection");
         KConfigGroup group = config->group("General");
         if (group.hasKey(targetCollection)) {
             group.writeEntry(targetCollection, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
         }
     } else if (PimCommon::Util::isImapResource(identifier)) {
-        const QString trash = QLatin1String("TrashCollection");
+        const QString trash = QStringLiteral("TrashCollection");
         KConfigGroup group = config->group("cache");
         if (group.hasKey(trash)) {
             group.writeEntry(trash, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
@@ -257,14 +259,14 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     return QString();
 }
 
-QUrl Utils::akonadiAgentConfigPath(const QString &identifier)
+QString Utils::akonadiAgentConfigPath(const QString &identifier)
 {
-    const QString relativeFileName = QString::fromLatin1("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
+    const QString relativeFileName = QStringLiteral("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
     const QString configFile = Akonadi::XdgBaseDirs::findResourceFile("config", relativeFileName);
     if (!configFile.isEmpty()) {
-        return QUrl::fromLocalFile(configFile);
+        return configFile;
     }
-    return QUrl();
+    return configFile;
 }
 
 QString Utils::akonadiAgentName(const QString &configPath)
@@ -290,7 +292,7 @@ void Utils::addVersion(KZip *archive)
 {
     QTemporaryFile tmp;
     tmp.open();
-    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
+    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QStringLiteral("VERSION_%1").arg(currentArchiveVersion()));
     if (!fileAdded) {
         //TODO add i18n ?
         qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "version file can not add to archive";

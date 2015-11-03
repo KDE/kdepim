@@ -7,8 +7,8 @@
   <include>QFontDatabase</include>
   <include>kcolorscheme.h</include>
   <include>editor/composer.h</include>
-  <include>messagecomposer/utils/util.h</include>
-  <include>KGlobalSettings</include>
+  <include>MessageComposer/Util</include>
+  <include>KCompletion</include>
   <kcfgfile name="kmail2rc"/>
   <group name="Behaviour">
       <entry name="ActionEnterFolder"  type="Enum">
@@ -96,10 +96,6 @@
         <label>Show unread mail in system tray</label>
         <default>true</default>
       </entry>
-      <entry name="CloseDespiteSystemTray" type="Bool">
-          <label>Close the application when the main window is closed, even if there is a system tray icon active.</label>
-        <default>false</default>
-      </entry>
       <entry name="ExternalEditor" type="String" key="external-editor">
         <label>Specify e&amp;ditor:</label>
         <default>kwrite %f</default>
@@ -166,10 +162,6 @@
         <label>Show folder quick search line edit</label>
         <default>false</default>
       </entry>
-      <!-- <entry name="HideLocalInbox" type="Bool">
-        <label>Hide local inbox if unused</label>
-        <default>true</default>
-      </entry> -->
     </group>
 
     <group name="Composer">
@@ -238,7 +230,7 @@
         <default>KMail::Composer::HDR_SUBJECT</default>
       </entry>
       <entry name="CompletionMode" type="Int" key="Completion Mode">
-        <default code="true">KGlobalSettings::completionMode()</default>
+        <default code="true">KCompletion::CompletionPopup</default>
       </entry>
       <entry name="AutoSpellChecking" type="Bool" key="autoSpellChecking">
         <default>true</default>
@@ -259,11 +251,6 @@
       </entry>
 
       <entry name="CustomTemplates" type="StringList" key="CustomTemplates" />
-
-
-      <entry name="FolderLoadingTimeout" type="Int" hidden="true">
-         <default>1000</default>
-      </entry>
 
       <entry name="ShowSnippetManager" type="Bool">
           <label>Show the Text Snippet Management and Insertion Panel in the composer.</label>
@@ -307,10 +294,6 @@
     <group name="Geometry">
       <entry name="ComposerSize" type="Size" key="composer">
         <default>QSize(480,510)</default>
-      </entry>
-      <entry name="FilterDialogSize" type="Size" key="filterDialogSize">
-        <label>The size of the filter dialog (for internal use only)</label>
-        <default>QSize()</default>
       </entry>
       <entry name="IdentityDialogSize" type="Size" key="Identity Dialog size">
         <label>The size of the identity dialog (for internal use only)</label>
@@ -391,14 +374,6 @@
      </entry>
     </group>
 
-    <group name="MDN">
-      <entry name="SendMDNsWithEmptySender" type="Bool">
-        <default>false</default>
-        <label>Send Message Disposition Notifications with an empty sender.</label>
-        <whatsthis>Send Message Disposition Notifications with an empty sender string. Some servers might be configure to reject such messages, so if you are experiencing problems sending MDNs, uncheck this option.</whatsthis>
-      </entry>
-    </group>
-
   <group name="GlobalTemplates">
     <entry name="TemplateNewMessage" type="String" key="TemplateNewMessage">
       <label>Message template for new message</label>
@@ -433,13 +408,6 @@
    </entry>
  </group>
 
- <!-- Startup settings -->
- <group name="Startup">
-   <entry name="UpdateLevel" type="Int" key="update-level">
-     <label>Specifies the number of updates to perform (for internal use only)</label>
-     <default>0</default>
-   </entry>
- </group>
  <!-- Main Folder View settings -->
  <group name="MainFolderView">
     <entry name="ToolTipDisplayPolicy" type="Int">

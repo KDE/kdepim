@@ -54,8 +54,8 @@ void SummaryEventTester::test_Multiday()
 
         QCOMPARE(ev4->summaryText, QString(multidayWithTimeInProgress + QString::fromLatin1(" (%1/7)").arg(i + 2)));
         QCOMPARE(ev4->timeRange, QStringLiteral("%1 - %2").arg(
-                                    KLocale::global()->formatTime(QTime(0, 0)),
-                                    KLocale::global()->formatTime(QTime(23, 59))));
+                     QLocale::system().toString(QTime(0, 0), QLocale::ShortFormat),
+                     QLocale::system().toString(QTime(23, 59), QLocale::ShortFormat)));
         //QCOMPARE( ev4->startDate, KLocale::global()->formatDate( QDate( today.addDays( i ) ), KLocale::FancyLongDate ) );
         QCOMPARE(ev4->makeBold, i == 0);
 
@@ -78,7 +78,7 @@ void SummaryEventTester::test_Multiday()
         qDebug() << i;*/
 
         QCOMPARE(ev5->summaryText, QString(multiDayWithTimeFuture + QString::fromLatin1(" (%1/7)").arg(i - 100 + 1)));
-        QCOMPARE(ev5->daysToGo, QString::fromLatin1("in %1 days").arg(i));
+        QCOMPARE(ev5->daysToGo, QStringLiteral("in %1 days").arg(i));
 
         qDeleteAll(events5);
     }
@@ -115,8 +115,8 @@ void SummaryEventTester::test_Multiday()
     foreach (const SummaryEventInfo *ev, eventsToday) {
         if (ev->summaryText == multidayWithTimeInProgress + QLatin1String(" (2/7)")) {
             QCOMPARE(ev->timeRange, QStringLiteral("%1 - %2").arg(
-                                        KLocale::global()->formatTime(QTime(0, 0)),
-                                        KLocale::global()->formatTime(QTime(23, 59))));
+                         QLocale::system().toString(QTime(0, 0), QLocale::ShortFormat),
+                         QLocale::system().toString(QTime(23, 59), QLocale::ShortFormat)));
             QCOMPARE(ev->startDate, QStringLiteral("Today"));
             QCOMPARE(ev->daysToGo, QStringLiteral("now"));
             QCOMPARE(ev->makeBold, true);

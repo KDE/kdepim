@@ -45,7 +45,7 @@ public:
     //~DecryptVerifyFilesCommand();
 
 private:
-    DecryptVerifyOperation operation() const
+    DecryptVerifyOperation operation() const Q_DECL_OVERRIDE
     {
         return DecryptVerify;
     }

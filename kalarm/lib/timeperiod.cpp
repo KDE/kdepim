@@ -25,7 +25,6 @@
 #include "timespinbox.h"
 
 #include <KLocalizedString>
-#include <kdialog.h>
 
 #include <QHBoxLayout>
 #include <QStackedWidget>
@@ -178,7 +177,7 @@ void TimePeriod::setPeriod(const Duration& perod, bool dateOnly, TimePeriod::Uni
     if (!dateOnly  &&  mNoHourMinute)
         dateOnly = true;
     int item;
-    if (perod)
+    if (!perod.isNull())
     {
         int count = perod.value();
         if (perod.isDaily())

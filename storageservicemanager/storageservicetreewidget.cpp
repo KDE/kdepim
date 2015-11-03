@@ -19,10 +19,10 @@
 */
 
 #include "storageservicetreewidget.h"
-#include "storageservice/storageserviceabstract.h"
-#include "storageservice/dialog/storageservicechecknamedialog.h"
+#include "pimcommon/storageserviceabstract.h"
+#include "pimcommon/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
-#include "storageservice/storageserviceprogressmanager.h"
+#include "pimcommon/storageserviceprogressmanager.h"
 #include "storageservicemanager_debug.h"
 
 #include <QMenu>
@@ -481,7 +481,7 @@ void StorageServiceTreeWidget::slotFileDoubleClicked()
 {
     if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) {
         if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to download this file?"),
-                                                           i18nc("@title:window", "Download File"))) {
+                i18nc("@title:window", "Download File"))) {
             Q_EMIT downloadFile();
         }
     }

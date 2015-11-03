@@ -21,7 +21,7 @@
 #ifndef TEST_HTML_WRITER_H
 #define TEST_HTML_WRITER_H
 
-#include <messageviewer/interfaces/htmlwriter.h>
+#include <messageviewer/htmlwriter.h>
 
 // Objecttreeparser needs a valid html writer othewise it doesn't parse
 // inline messages, so give it one to chew on.

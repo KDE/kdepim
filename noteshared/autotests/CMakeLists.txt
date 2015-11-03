@@ -1,8 +1,4 @@
-include_directories(
-    ${CMAKE_SOURCE_DIR}/noteshared/
-)
-
 add_executable(noteeditorutilstest noteeditorutilstest.cpp )
 add_test(noteeditorutilstest noteeditorutilstest)
 ecm_mark_as_test(noteeditorutilstest)
-target_link_libraries(noteeditorutilstest  Qt5::Test noteshared)
+target_link_libraries(noteeditorutilstest  Qt5::Test KF5::NoteShared)

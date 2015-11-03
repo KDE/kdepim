@@ -18,11 +18,11 @@
 */
 #include "archivefolderdialog.h"
 
-#include "mailcommon/job/backupjob.h"
+#include "MailCommon/BackupJob"
 #include "kmkernel.h"
 #include "kmmainwidget.h"
-#include "folderrequester.h"
-#include "messageviewer/utils/util.h"
+#include "MailCommon/FolderRequester"
+#include "MessageViewer/MessageViewerUtil"
 
 #include <AkonadiCore/Collection>
 
@@ -53,7 +53,7 @@ QString ArchiveFolderDialog::standardArchivePath(const QString &folderName)
         currentPath = QDir::homePath();
     }
     return currentPath + QLatin1Char('/') +
-           i18nc("Start of the filename for a mail archive file" , "Archive") + QLatin1Char('_') + folderName + QLatin1Char('_') + QDate::currentDate().toString(Qt::ISODate) + QLatin1String(".tar.bz2");
+           i18nc("Start of the filename for a mail archive file", "Archive") + QLatin1Char('_') + folderName + QLatin1Char('_') + QDate::currentDate().toString(Qt::ISODate) + QLatin1String(".tar.bz2");
 }
 
 ArchiveFolderDialog::ArchiveFolderDialog(QWidget *parent)
@@ -110,7 +110,7 @@ ArchiveFolderDialog::ArchiveFolderDialog(QWidget *parent)
     mainLayout->addWidget(fileNameLabel, row, 0);
     mUrlRequester = new KUrlRequester(mainWidget);
     mUrlRequester->setMode(KFile::LocalOnly | KFile::File);
-    mUrlRequester->setFilter(QLatin1String("*.tar *.zip *.tar.gz *.tar.bz2"));
+    mUrlRequester->setFilter(QStringLiteral("*.tar *.zip *.tar.gz *.tar.bz2"));
     fileNameLabel->setBuddy(mUrlRequester);
     connect(mUrlRequester, &KUrlRequester::urlSelected, this, &ArchiveFolderDialog::slotFixFileExtension);
     connect(mUrlRequester, &KUrlRequester::textChanged, this, &ArchiveFolderDialog::slotUrlChanged);

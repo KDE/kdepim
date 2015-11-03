@@ -56,9 +56,9 @@ using namespace KCalCore;
 
 #include <KLocalizedString>
 #include <kiconloader.h>
-#include <kio/netaccess.h>
 #include <kfileitem.h>
 
+#include <QComboBox>
 #include <QLabel>
 #include <QDir>
 #include <QStyle>
@@ -145,6 +145,7 @@ void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
 {
     // Display type combo box
     QWidget* box = new QWidget(parent);    // to group widgets for QWhatsThis text
+
     QHBoxLayout* boxHLayout = new QHBoxLayout(box);
     boxHLayout->setMargin(0);
     QLabel* label = new QLabel(i18nc("@label:listbox", "Display type:"), box);
@@ -205,7 +206,7 @@ void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     // File browse button
     mFileBrowseButton = new QPushButton(mFileBox);
     fileBoxHLayout->addWidget(mFileBrowseButton);
-    mFileBrowseButton->setIcon(SmallIcon(QStringLiteral("document-open")));
+    mFileBrowseButton->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     int size = mFileBrowseButton->sizeHint().height();
     mFileBrowseButton->setFixedSize(size, size);
     mFileBrowseButton->setToolTip(i18nc("@info:tooltip", "Choose a file"));
@@ -226,7 +227,7 @@ void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     mSoundPicker->setFixedSize(mSoundPicker->sizeHint());
     connect(mSoundPicker, &SoundPicker::changed, this, &EditDisplayAlarmDlg::contentsChanged);
     hlayout->addWidget(mSoundPicker);
-    hlayout->addSpacing(2*spacingHint());
+    hlayout->addSpacing(2 * style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     hlayout->addStretch();
 
     // Font and colour choice button and sample text
@@ -573,7 +574,7 @@ void EditDisplayAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, con
     int   fadeSecs;
     float volume = mSoundPicker->volume(fadeVolume, fadeSecs);
     int   repeatPause = mSoundPicker->repeatPause();
-    event.setAudioFile(mSoundPicker->file().prettyUrl(), volume, fadeVolume, fadeSecs, repeatPause);
+    event.setAudioFile(mSoundPicker->file().toDisplayString(), volume, fadeVolume, fadeSecs, repeatPause);
     if (!trial  &&  reminder()->isEnabled())
         event.setReminder(reminder()->minutes(), reminder()->isOnceOnly());
     if (mSpecialActionsButton  &&  mSpecialActionsButton->isEnabled())
@@ -614,7 +615,7 @@ void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
             mCmdEdit->hide();
             mTextMessageEdit->show();
             mSoundPicker->showSpeak(true);
-            setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Display the alarm message now"));
+            mTryButton->setWhatsThis(i18nc("@info:whatsthis", "Display the alarm message now"));
             focus = mTextMessageEdit;
             break;
         case tFILE:    // file contents
@@ -623,7 +624,7 @@ void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
             mFilePadding->show();
             mCmdEdit->hide();
             mSoundPicker->showSpeak(false);
-            setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Display the file now"));
+            mTryButton->setWhatsThis(i18nc("@info:whatsthis", "Display the file now"));
             mFileMessageEdit->setNoSelect();
             focus = mFileMessageEdit;
             break;
@@ -633,7 +634,7 @@ void EditDisplayAlarmDlg::slotAlarmTypeChanged(int index)
             slotCmdScriptToggled(mCmdEdit->isScript());  // show/hide mFilePadding
             mCmdEdit->show();
             mSoundPicker->showSpeak(true);
-            setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Display the command output now"));
+            mTryButton->setWhatsThis(i18nc("@info:whatsthis", "Display the command output now"));
             focus = mCmdEdit;
             break;
     }
@@ -682,12 +683,12 @@ bool EditDisplayAlarmDlg::checkText(QString& result, bool showErrorMessage) cons
         case tFILE:
         {
             QString alarmtext = mFileMessageEdit->text().trimmed();
-            KUrl url;
+            QUrl url;
             KAlarm::FileErr err = KAlarm::checkFileExists(alarmtext, url);
             if (err == KAlarm::FileErr_None)
             {
-#if 0 //QT5
-                switch (KAlarm::fileType(KFileItem(KFileItem::Unknown, KFileItem::Unknown, url).currentMimeType()))
+                KFileItem fi(url);
+                switch (KAlarm::fileType(fi.currentMimeType()))
                 {
                     case KAlarm::TextFormatted:
                     case KAlarm::TextPlain:
@@ -698,7 +699,6 @@ bool EditDisplayAlarmDlg::checkText(QString& result, bool showErrorMessage) cons
                         err = KAlarm::FileErr_NotTextImage;
                         break;
                 }
-#endif
             }
             if (err != KAlarm::FileErr_None  &&  showErrorMessage)
             {
@@ -765,7 +765,7 @@ QString EditCommandAlarmDlg::type_caption() const
 */
 void EditCommandAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
 {
-    setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Execute the specified command now"));
+    mTryButton->setWhatsThis(i18nc("@info:whatsthis", "Execute the specified command now"));
 
     mCmdEdit = new CommandEdit(parent);
     connect(mCmdEdit, &CommandEdit::scriptToggled, this, &EditCommandAlarmDlg::slotCmdScriptToggled);
@@ -777,8 +777,8 @@ void EditCommandAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     mCmdOutputBox = new QGroupBox(i18nc("@title:group", "Command Output"), parent);
     frameLayout->addWidget(mCmdOutputBox);
     QVBoxLayout* vlayout = new QVBoxLayout(mCmdOutputBox);
-    vlayout->setMargin(marginHint());
-    vlayout->setSpacing(spacingHint());
+    vlayout->setMargin(style()->pixelMetric(QStyle::PM_DefaultChildMargin));
+    vlayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     mCmdOutputGroup = new ButtonGroup(mCmdOutputBox);
     connect(mCmdOutputGroup, &ButtonGroup::buttonSet, this, &EditCommandAlarmDlg::contentsChanged);
 
@@ -805,7 +805,7 @@ void EditCommandAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     // The file browser dialog is activated by the PickLogFileRadio class.
     QPushButton* browseButton = new QPushButton(box);
     boxHLayout->addWidget(browseButton);
-    browseButton->setIcon(SmallIcon(QStringLiteral("document-open")));
+    browseButton->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     int size = browseButton->sizeHint().height();
     browseButton->setFixedSize(size, size);
     browseButton->setToolTip(i18nc("@info:tooltip", "Choose a file"));
@@ -1074,7 +1074,7 @@ QString EditEmailAlarmDlg::type_caption() const
 */
 void EditEmailAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
 {
-    setButtonWhatsThis(Try, i18nc("@info:whatsthis", "Send the email to the specified addressees now"));
+    mTryButton->setWhatsThis(i18nc("@info:whatsthis", "Send the email to the specified addressees now"));
 
     QGridLayout* grid = new QGridLayout();
     grid->setMargin(0);
@@ -1110,7 +1110,7 @@ void EditEmailAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     grid->addWidget(mEmailToEdit, 1, 1);
 
     mEmailAddressButton = new QPushButton(parent);
-    mEmailAddressButton->setIcon(SmallIcon(QStringLiteral("help-contents")));
+    mEmailAddressButton->setIcon(QIcon::fromTheme(QStringLiteral("help-contents")));
     int size = mEmailAddressButton->sizeHint().height();
     mEmailAddressButton->setFixedSize(size, size);
     connect(mEmailAddressButton, &QPushButton::clicked, this, &EditEmailAlarmDlg::openAddressBook);
@@ -1144,7 +1144,7 @@ void EditEmailAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     label->setFixedSize(label->sizeHint());
     grid->addWidget(label, 0, 0);
 
-    mEmailAttachList = new KComboBox(parent);
+    mEmailAttachList = new QComboBox(parent);
     mEmailAttachList->setEditable(true);
     mEmailAttachList->setMinimumSize(mEmailAttachList->sizeHint());
     if (mEmailAttachList->lineEdit())
@@ -1385,8 +1385,8 @@ bool EditEmailAlarmDlg::type_validate(bool trial)
 void EditEmailAlarmDlg::type_aboutToTry()
 {
     // Disconnect any previous connections, to prevent multiple messages being output
-    disconnect(theApp(), SIGNAL(execAlarmSuccess()), this, SLOT(slotTrySuccess()));
-    connect(theApp(), SIGNAL(execAlarmSuccess()), SLOT(slotTrySuccess()));
+    disconnect(theApp(), &KAlarmApp::execAlarmSuccess, this, &EditEmailAlarmDlg::slotTrySuccess);
+    connect(theApp(), &KAlarmApp::execAlarmSuccess, this, &EditEmailAlarmDlg::slotTrySuccess);
 }
 
 /******************************************************************************
@@ -1394,7 +1394,7 @@ void EditEmailAlarmDlg::type_aboutToTry()
 */
 void EditEmailAlarmDlg::slotTrySuccess()
 {
-    disconnect(theApp(), SIGNAL(execAlarmSuccess()), this, SLOT(slotTrySuccess()));
+    disconnect(theApp(), &KAlarmApp::execAlarmSuccess, this, &EditEmailAlarmDlg::slotTrySuccess);
     QString msg;
     QString to = KAEvent::joinEmailAddresses(mEmailAddresses, QStringLiteral("<nl/>"));
     to.replace(QLatin1Char('<'), QStringLiteral("&lt;"));
@@ -1503,9 +1503,8 @@ EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, const KAEvent* event, bool n
 {
     qCDebug(KALARM_LOG) << "Event.id()";
     init(event);
-    QPushButton* tryButton = button(Try);
-    tryButton->setEnabled(!MessageWin::isAudioPlaying());
-    connect(theApp(), SIGNAL(audioPlaying(bool)), SLOT(slotAudioPlaying(bool)));
+    mTryButton->setEnabled(!MessageWin::isAudioPlaying());
+    connect(theApp(), &KAlarmApp::audioPlaying, this, &EditAudioAlarmDlg::slotAudioPlaying);
 }
 
 /******************************************************************************
@@ -1631,9 +1630,9 @@ void EditAudioAlarmDlg::type_setEvent(KAEvent& event, const KDateTime& dt, const
     int   fadeSecs;
     mSoundConfig->getVolume(volume, fadeVolume, fadeSecs);
     int   repeatPause = mSoundConfig->repeatPause();
-    KUrl url;
+    QUrl url;
     mSoundConfig->file(url, false);
-    event.setAudioFile(url.prettyUrl(), volume, fadeVolume, fadeSecs, repeatPause, isTemplate());
+    event.setAudioFile(url.toString(), volume, fadeVolume, fadeSecs, repeatPause, isTemplate());
 }
 
 /******************************************************************************
@@ -1651,13 +1650,13 @@ KAEvent::Flags EditAudioAlarmDlg::getAlarmFlags() const
 */
 bool EditAudioAlarmDlg::checkText(QString& result, bool showErrorMessage) const
 {
-    KUrl url;
+    QUrl url;
     if (!mSoundConfig->file(url, showErrorMessage))
     {
         result.clear();
         return false;
     }
-    result = url.pathOrUrl();
+    result = url.isLocalFile() ? url.toLocalFile() : url.toString();
     return true;
 }
 
@@ -1696,28 +1695,27 @@ void EditAudioAlarmDlg::type_executedTry(const QString&, void* result)
 */
 void EditAudioAlarmDlg::slotAudioPlaying(bool playing)
 {
-    QPushButton* tryButton = button(Try);
     if (!playing)
     {
         // Nothing is playing, so enable the Try button
-        tryButton->setEnabled(true);
-        tryButton->setCheckable(false);
-        tryButton->setChecked(false);
+        mTryButton->setEnabled(true);
+        mTryButton->setCheckable(false);
+        mTryButton->setChecked(false);
         mMessageWin = Q_NULLPTR;
     }
     else if (mMessageWin)
     {
         // The test sound file is playing, so enable the Try button and depress it
-        tryButton->setEnabled(true);
-        tryButton->setCheckable(true);
-        tryButton->setChecked(true);
+        mTryButton->setEnabled(true);
+        mTryButton->setCheckable(true);
+        mTryButton->setChecked(true);
     }
     else
     {
         // An alarm is playing, so disable the Try button
-        tryButton->setEnabled(false);
-        tryButton->setCheckable(false);
-        tryButton->setChecked(false);
+        mTryButton->setEnabled(false);
+        mTryButton->setCheckable(false);
+        mTryButton->setChecked(false);
     }
 }
 
@@ -1731,7 +1729,7 @@ CommandEdit::CommandEdit(QWidget* parent)
 {
     QVBoxLayout* vlayout = new QVBoxLayout(this);
     vlayout->setMargin(0);
-    vlayout->setSpacing(KDialog::spacingHint());
+    vlayout->setSpacing(style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     mTypeScript = new CheckBox(EditCommandAlarmDlg::i18n_chk_EnterScript(), this);
     mTypeScript->setFixedSize(mTypeScript->sizeHint());
     mTypeScript->setWhatsThis(i18nc("@info:whatsthis", "Check to enter the contents of a script instead of a shell command line"));
@@ -1843,7 +1841,7 @@ QSize CommandEdit::minimumSizeHint() const
 {
     QSize t(mTypeScript->minimumSizeHint());
     QSize s(mCommandEdit->minimumSizeHint().expandedTo(mScriptEdit->minimumSizeHint()));
-    s.setHeight(s.height() + KDialog::spacingHint() + t.height());
+    s.setHeight(s.height() + style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing) + t.height());
     if (s.width() < t.width())
         s.setWidth(t.width());
     return s;

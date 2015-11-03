@@ -24,10 +24,10 @@
 
 #include <kmime/kmime_message.h>
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/infopart.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/skeletonmessagejob.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/InfoPart>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/SkeletonMessageJob>
 using namespace MessageComposer;
 
 QTEST_MAIN(SkeletonMessageJobTest)
@@ -37,7 +37,7 @@ void SkeletonMessageJobTest::testSubject_data()
     QTest::addColumn<QString>("subject");
 
     QTest::newRow("simple subject") << QStringLiteral("Antaa virrata sateen...");
-    QTest::newRow("non-ascii subject") << QString::fromUtf8("Muzicologă în bej, vând whisky și tequila, preț fix.");
+    QTest::newRow("non-ascii subject") << QStringLiteral("Muzicologă în bej, vând whisky și tequila, preț fix.");
     // NOTE: This works fine, but shows ??s in the debug output.  Why?
 }
 
@@ -114,15 +114,15 @@ void SkeletonMessageJobTest::testAddresses_data()
     }
 
     {
-        QString from = QString::fromUtf8("Şîşkin <one@example.com>");
+        QString from = QStringLiteral("Şîşkin <one@example.com>");
         QStringList to;
-        to << QString::fromUtf8("Ivan Turbincă <two@example.com>");
+        to << QStringLiteral("Ivan Turbincă <two@example.com>");
         to << QStringLiteral("two.two@example.com");
         QStringList cc;
-        cc << QString::fromUtf8("Luceafărul <three@example.com>");
+        cc << QStringLiteral("Luceafărul <three@example.com>");
         cc << QStringLiteral("three.three@example.com");
         QStringList bcc;
-        bcc << QString::fromUtf8("Zburătorul <four@example.com>");
+        bcc << QStringLiteral("Zburătorul <four@example.com>");
         bcc << QStringLiteral("four.four@example.com");
         QString replyto = QStringLiteral("Şîşzbură <five@example.com>");
 
@@ -167,10 +167,10 @@ void SkeletonMessageJobTest::testAddresses()
     {
         QVERIFY(message->to(false));
         qDebug() << "To:" << message->to()->asUnicodeString();
-        foreach (const QString &addr, message->to()->prettyAddresses()) {
-            qDebug() << addr;
-            QVERIFY(to.contains(addr));
-            to.removeOne(addr);
+        foreach (const auto &addr, message->to()->mailboxes()) {
+            qDebug() << addr.prettyAddress();
+            QVERIFY(to.contains(addr.prettyAddress()));
+            to.removeOne(addr.prettyAddress());
         }
         QVERIFY(to.isEmpty());
     }
@@ -178,10 +178,10 @@ void SkeletonMessageJobTest::testAddresses()
     {
         QVERIFY(message->cc(false));
         qDebug() << "Cc:" << message->cc()->asUnicodeString();
-        foreach (const QString &addr, message->cc()->prettyAddresses()) {
-            qDebug() << addr;
-            QVERIFY(cc.contains(addr));
-            cc.removeOne(addr);
+        foreach (const auto &addr, message->cc()->mailboxes()) {
+            qDebug() << addr.prettyAddress();
+            QVERIFY(cc.contains(addr.prettyAddress()));
+            cc.removeOne(addr.prettyAddress());
         }
         QVERIFY(cc.isEmpty());
     }
@@ -189,10 +189,10 @@ void SkeletonMessageJobTest::testAddresses()
     {
         QVERIFY(message->bcc(false));
         qDebug() << "Bcc:" << message->bcc()->asUnicodeString();
-        foreach (const QString &addr, message->bcc()->prettyAddresses()) {
-            qDebug() << addr;
-            QVERIFY(bcc.contains(addr));
-            bcc.removeOne(addr);
+        foreach (const auto &addr, message->bcc()->mailboxes()) {
+            qDebug() << addr.prettyAddress();
+            QVERIFY(bcc.contains(addr.prettyAddress()));
+            bcc.removeOne(addr.prettyAddress());
         }
         QVERIFY(bcc.isEmpty());
     }

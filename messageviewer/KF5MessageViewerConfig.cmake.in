@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+find_dependency(KF5PimCommon "@KDEPIM_LIB_VERSION@")
+find_dependency(KF5MessageCore "@KDEPIM_LIB_VERSION@")
+find_dependency(KF5Akonadi "@KDEPIMLIBS_LIB_VERSION@")
+find_dependency(KF5Mime "@KMIME_LIB_VERSION@")
+find_dependency(KF5Contacts "@KCONTACTS_LIB_VERSION@")
+find_dependency(KF5WebKit "@KF5_VERSION@")
+
+include("${CMAKE_CURRENT_LIST_DIR}/KF5MessageViewerTargets.cmake")

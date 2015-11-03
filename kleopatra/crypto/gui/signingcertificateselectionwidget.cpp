@@ -40,7 +40,7 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <QByteArray>
 #include <QMap>

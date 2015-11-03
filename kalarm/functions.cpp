@@ -51,7 +51,7 @@
 using namespace KCalCore;
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KIdentityManagement/kidentitymanagement/identity.h>
-#include <KHolidays/kholidays/holidays.h>
+#include <KHolidays/HolidayRegion>
 
 #include <kconfiggroup.h>
 #include <KSharedConfig>
@@ -64,7 +64,8 @@ using namespace KCalCore;
 #include <kstandardguiitem.h>
 #include <kstandardshortcut.h>
 #include <kfiledialog.h>
-#include <kio/netaccess.h>
+#include <KIO/StatJob>
+#include <KJobWidgets>
 #include <kfileitem.h>
 #include <ktoolinvocation.h>
 
@@ -186,9 +187,9 @@ KToggleAction* createAlarmEnableAction(QObject* parent)
 {
     KToggleAction* action = new KToggleAction(i18nc("@action", "Enable &Alarms"), parent);
     action->setChecked(theApp()->alarmsEnabled());
-    QObject::connect(action, SIGNAL(toggled(bool)), theApp(), SLOT(setAlarmsEnabled(bool)));
+    QObject::connect(action, &QAction::toggled, theApp(), &KAlarmApp::setAlarmsEnabled);
     // The following line ensures that all instances are kept in the same state
-    QObject::connect(theApp(), SIGNAL(alarmEnabledToggled(bool)), action, SLOT(setChecked(bool)));
+    QObject::connect(theApp(), &KAlarmApp::alarmEnabledToggled, action, &QAction::setChecked);
     return action;
 }
 
@@ -199,9 +200,9 @@ QAction* createStopPlayAction(QObject* parent)
 {
     QAction* action = new QAction(QIcon::fromTheme(QStringLiteral("media-playback-stop")), i18nc("@action", "Stop Play"), parent);
     action->setEnabled(MessageWin::isAudioPlaying());
-    QObject::connect(action, SIGNAL(triggered(bool)), theApp(), SLOT(stopAudio()));
+    QObject::connect(action, &QAction::triggered, theApp(), &KAlarmApp::stopAudio);
     // The following line ensures that all instances are kept in the same state
-    QObject::connect(theApp(), SIGNAL(audioPlaying(bool)), action, SLOT(setEnabled(bool)));
+    QObject::connect(theApp(), &KAlarmApp::audioPlaying, action, &QAction::setEnabled);
     return action;
 }
 
@@ -211,9 +212,9 @@ QAction* createStopPlayAction(QObject* parent)
 KToggleAction* createSpreadWindowsAction(QObject* parent)
 {
     KToggleAction* action = new KToggleAction(i18nc("@action", "Spread Windows"), parent);
-    QObject::connect(action, SIGNAL(triggered(bool)), theApp(), SLOT(spreadWindows(bool)));
+    QObject::connect(action, &QAction::triggered, theApp(), &KAlarmApp::spreadWindows);
     // The following line ensures that all instances are kept in the same state
-    QObject::connect(theApp(), SIGNAL(spreadWindowsToggled(bool)), action, SLOT(setChecked(bool)));
+    QObject::connect(theApp(), &KAlarmApp::spreadWindowsToggled, action, &QAction::setChecked);
     return action;
 }
 
@@ -890,8 +891,8 @@ void execNewAlarmDlg(EditAlarmDlg* editDlg)
 PrivateNewAlarmDlg::PrivateNewAlarmDlg(EditAlarmDlg* dlg)
     : QObject(dlg)
 {
-    connect(dlg, SIGNAL(accepted()), SLOT(okClicked()));
-    connect(dlg, SIGNAL(rejected()), SLOT(cancelClicked()));
+    connect(dlg, &QDialog::accepted, this, &PrivateNewAlarmDlg::okClicked);
+    connect(dlg, &QDialog::rejected, this, &PrivateNewAlarmDlg::cancelClicked);
 }
 
 /******************************************************************************
@@ -1023,7 +1024,7 @@ void cancelRtcWake(QWidget* msgParent, const QString& eventId)
     if (!wakeup.isEmpty()  &&  (eventId.isEmpty() || wakeup[0] == eventId))
     {
         Private::instance()->mMsgParent = msgParent ? msgParent : MainWindow::mainMainWindow();
-        QTimer::singleShot(0, Private::instance(), SLOT(cancelRtcWake()));
+        QTimer::singleShot(0, Private::instance(), &Private::cancelRtcWake);
     }
 }
 
@@ -1331,7 +1332,7 @@ void outputAlarmWarnings(QWidget* parent, const KAEvent* event)
     {
         if (KAMessageBox::warningYesNo(parent, xi18nc("@info", "<para>Alarms are currently disabled.</para><para>Do you want to enable alarms now?</para>"),
                                        QString(), KGuiItem(i18nc("@action:button", "Enable")), KGuiItem(i18nc("@action:button", "Keep Disabled")),
-                                       QLatin1String("EditEnableAlarms"))
+                                       QStringLiteral("EditEnableAlarms"))
                         == KMessageBox::Yes)
             theApp()->setAlarmsEnabled(true);
     }
@@ -1536,7 +1537,7 @@ void setDontShowErrors(const EventId& eventId, const QStringList& tags)
         return;
     KConfig config(QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QLatin1Char('/') + ALARM_OPTS_FILE);
     KConfigGroup group(&config, DONT_SHOW_ERRORS_GROUP);
-    const QString id = QString::fromLatin1("%1:%2").arg(eventId.collectionId()).arg(eventId.eventId());
+    const QString id = QStringLiteral("%1:%2").arg(eventId.collectionId()).arg(eventId.eventId());
     if (tags.isEmpty())
         group.deleteEntry(id);
     else
@@ -1554,7 +1555,7 @@ void setDontShowErrors(const EventId& eventId, const QString& tag)
         return;
     KConfig config(QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QLatin1Char('/') + ALARM_OPTS_FILE);
     KConfigGroup group(&config, DONT_SHOW_ERRORS_GROUP);
-    const QString id = QString::fromLatin1("%1:%2").arg(eventId.collectionId()).arg(eventId.eventId());
+    const QString id = QStringLiteral("%1:%2").arg(eventId.collectionId()).arg(eventId.eventId());
     QStringList tags = group.readEntry(id, QStringList());
     if (tags.indexOf(tag) < 0)
     {
@@ -1574,13 +1575,13 @@ bool readConfigWindowSize(const char* window, QSize& result, int* splitterWidth)
 {
     KConfigGroup config(KSharedConfig::openConfig(), window);
     QWidget* desktop = KApplication::desktop();
-    QSize s = QSize(config.readEntry(QString::fromLatin1("Width %1").arg(desktop->width()), (int)0),
-                    config.readEntry(QString::fromLatin1("Height %1").arg(desktop->height()), (int)0));
+    QSize s = QSize(config.readEntry(QStringLiteral("Width %1").arg(desktop->width()), (int)0),
+                    config.readEntry(QStringLiteral("Height %1").arg(desktop->height()), (int)0));
     if (s.isEmpty())
         return false;
     result = s;
     if (splitterWidth)
-        *splitterWidth = config.readEntry(QString::fromLatin1("Splitter %1").arg(desktop->width()), -1);
+        *splitterWidth = config.readEntry(QStringLiteral("Splitter %1").arg(desktop->width()), -1);
     return true;
 }
 
@@ -1604,15 +1605,15 @@ void writeConfigWindowSize(const char* window, const QSize& size, int splitterWi
 * If a text file, its type is distinguished.
 * Reply = file type.
 */
-FileType fileType(const KMimeType::Ptr& mimetype)
+FileType fileType(const QMimeType& mimetype)
 {
-    if (mimetype->is(QStringLiteral("text/html")))
+    if (mimetype.inherits(QStringLiteral("text/html")))
         return TextFormatted;
-    if (mimetype->is(QStringLiteral("application/x-executable")))
+    if (mimetype.inherits(QStringLiteral("application/x-executable")))
         return TextApplication;
-    if (mimetype->is(QStringLiteral("text/plain")))
+    if (mimetype.inherits(QStringLiteral("text/plain")))
         return TextPlain;
-    if (mimetype->name().startsWith(QStringLiteral("image/")))
+    if (mimetype.name().startsWith(QLatin1String("image/")))
         return Image;
     return Unknown;
 }
@@ -1622,9 +1623,9 @@ FileType fileType(const KMimeType::Ptr& mimetype)
 * Updates 'filename' and 'url' even if an error occurs, since 'filename' may
 * be needed subsequently by showFileErrMessage().
 */
-FileErr checkFileExists(QString& filename, KUrl& url)
+FileErr checkFileExists(QString& filename, QUrl& url)
 {
-    url = KUrl();
+    url = QUrl();
     FileErr err = FileErr_None;
     QString file = filename;
     QRegExp f(QStringLiteral("^file:/+"));
@@ -1636,14 +1637,15 @@ FileErr checkFileExists(QString& filename, KUrl& url)
     if (i > 0  &&  file[i - 1] == QLatin1Char(':'))
     {
         url = file;
-        url.cleanPath();
-        filename = url.prettyUrl();
-        KIO::UDSEntry uds;
-        if (!KIO::NetAccess::stat(url, uds, MainWindow::mainMainWindow()))
+        const QString displayStr = url.toDisplayString();
+        filename = displayStr.mid(displayStr.lastIndexOf(QLatin1Char('/')) + 1);
+        auto statJob = KIO::stat(url, KIO::StatJob::SourceSide, 2);
+        KJobWidgets::setWindow(statJob, MainWindow::mainMainWindow());
+        if (!statJob->exec())
             err = FileErr_Nonexistent;
         else
         {
-            KFileItem fi(uds, url);
+            KFileItem fi(statJob->statResult(), url);
             if (fi.isDir())             err = FileErr_Directory;
             else if (!fi.isReadable())  err = FileErr_Unreadable;
         }
@@ -1746,11 +1748,11 @@ QString browseFile(const QString& caption, QString& defaultDir, const QString& i
         fileDlg->setSelection(initialFile);
     if (fileDlg->exec() != QDialog::Accepted)
         return fileDlg ? QStringLiteral("") : QString();  // return null only if dialog was deleted
-    KUrl url = fileDlg->selectedUrl();
+    QUrl url = fileDlg->selectedUrl();
     if (url.isEmpty())
         return QStringLiteral("");   // return empty, non-null string
-    defaultDir = url.isLocalFile() ? url.upUrl().toLocalFile() : url.directory();
-    return (mode & KFile::LocalOnly) ? url.pathOrUrl() : url.prettyUrl();
+    defaultDir = url.isLocalFile() ? KIO::upUrl(url).toLocalFile() : url.adjusted(QUrl::RemoveFilename).path();
+    return (mode & KFile::LocalOnly) ? url.toDisplayString(QUrl::PreferLocalFile) : url.toDisplayString();
 }
 
 /******************************************************************************

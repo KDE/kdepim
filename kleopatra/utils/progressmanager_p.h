@@ -35,16 +35,16 @@
 
 #include "utils/progressmanager.h"
 
-#include <libkdepim/progresswidget/progressmanager.h>
+#include <Libkdepim/ProgressManager>
 
-#include <kleo/job.h>
+#include <libkleo/job.h>
 
 #include <QPointer>
 
 namespace
 {
 
-class Mapper : QObject
+class Mapper : public QObject
 {
     Q_OBJECT
 public:
@@ -52,13 +52,13 @@ public:
         : QObject(item), m_item(item), m_job(job)
     {
 
-        connect(item, SIGNAL(progressItemCanceled(KPIM::ProgressItem *)),
-                job,  SLOT(slotCancel()));
+        connect(item, &KPIM::ProgressItem::progressItemCanceled,
+                job,  &Kleo::Job::slotCancel);
 
-        connect(job,  SIGNAL(done()),
-                this, SLOT(slotDone()));
-        connect(job,  SIGNAL(progress(QString, int, int)),
-                this, SLOT(slotProgress(QString, int, int)));
+        connect(job,  &Kleo::Job::done,
+                this, &Mapper::slotDone);
+        connect(job,  &Kleo::Job::progress,
+                this, &Mapper::slotProgress);
     }
 
 private Q_SLOTS:

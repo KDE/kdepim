@@ -30,18 +30,17 @@
   you do not wish to do so, delete this exception statement from
   your version.
 */
-#include "messageviewer/interfaces/bodypartformatter.h"
-#include "messageviewer/interfaces/bodyparturlhandler.h"
-#include "messageviewer/interfaces/bodypart.h"
-#include <messageviewer/viewer/nodehelper.h>
+#include "messageviewer/bodypartformatter.h"
+#include "messageviewer/bodyparturlhandler.h"
+#include "messageviewer/bodypart.h"
+#include <messageviewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"
-#define TRANSLATION_DOMAIN "messageviewer_text_vcard_plugin"
 
 using MessageViewer::Interface::BodyPart;
-#include "messageviewer/htmlwriter/webkitparthtmlwriter.h"
+#include "messageviewer/webkitparthtmlwriter.h"
 
-#include <libkdepim/job/addcontactjob.h>
+#include <Libkdepim/AddContactJob>
 
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactFormatter>
@@ -55,7 +54,9 @@ using MessageViewer::Interface::BodyPart;
 #include <QMenu>
 #include <KMessageBox>
 #include <QTemporaryFile>
-#include <KIO/NetAccess>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 #include "vcard_debug.h"
 
 namespace
@@ -68,12 +69,12 @@ public:
     {
     }
 
-    Result format(BodyPart *part, MessageViewer::HtmlWriter *writer) const
+    Result format(BodyPart *part, MessageViewer::HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
         return format(part, writer, 0);
     }
 
-    Result format(BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject *asyncResultObserver) const
+    Result format(BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject *asyncResultObserver) const Q_DECL_OVERRIDE
     {
         if (!writer) {
             return Ok;
@@ -112,8 +113,8 @@ public:
                       QLatin1String("</h2></div>"));
 
         count = 0;
-        static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QLatin1String("user-identity"), KIconLoader::Desktop);
-        static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QLatin1String("document-open-remote"), KIconLoader::Small);
+        static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("user-identity"), KIconLoader::Desktop);
+        static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-open-remote"), KIconLoader::Small);
 
         if (!memento) {
             MessageViewer::VcardMemento *memento = new MessageViewer::VcardMemento(lst);
@@ -184,7 +185,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 {
 public:
     bool handleClick(MessageViewer::Viewer *viewerInstance, BodyPart *bodyPart,
-                     const QString &path) const
+                     const QString &path) const Q_DECL_OVERRIDE
     {
 
         Q_UNUSED(viewerInstance);
@@ -194,7 +195,7 @@ public:
         }
         KContacts::VCardConverter vcc;
         const KContacts::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
-        const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
+        const int index = path.rightRef(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
         if (index == -1 || index >= al.count()) {
             return true;
         }
@@ -221,7 +222,7 @@ public:
         if (!vCard.isEmpty()) {
             KContacts::VCardConverter vcc;
             const KContacts::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
-            const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
+            const int index = path.rightRef(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
             if (index >= 0 && index < al.count()) {
                 return al.at(index);
             }
@@ -229,7 +230,7 @@ public:
         return KContacts::Addressee();
     }
 
-    bool handleContextMenuRequest(BodyPart *part, const QString &path, const QPoint &point) const
+    bool handleContextMenuRequest(BodyPart *part, const QString &path, const QPoint &point) const Q_DECL_OVERRIDE
     {
         const QString vCard = part->asText();
         if (vCard.isEmpty()) {
@@ -256,7 +257,7 @@ public:
         return true;
     }
 
-    QString statusBarMessage(BodyPart *part, const QString &path) const
+    QString statusBarMessage(BodyPart *part, const QString &path) const Q_DECL_OVERRIDE
     {
         KContacts::Addressee a = findAddressee(part, path);
         const bool addToAddressBook = path.startsWith(QStringLiteral("addToAddressBook"));
@@ -305,23 +306,23 @@ public:
         QByteArray data = vCard.toUtf8();
         tmpFile.write(data);
         tmpFile.flush();
-
-        return KIO::NetAccess::upload(tmpFile.fileName(), saveAsUrl, 0);
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), saveAsUrl);
+        return job->exec();
     }
 };
 
 class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 {
 public:
-    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
-        return validIndex(idx) ? new Formatter() : 0 ;
+        return validIndex(idx) ? new Formatter() : 0;
     }
-    const char *type(int idx) const
+    const char *type(int idx) const Q_DECL_OVERRIDE
     {
-        return validIndex(idx) ? "text" : 0 ;
+        return validIndex(idx) ? "text" : 0;
     }
-    const char *subtype(int idx) const
+    const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
         switch (idx) {
         case 0:
@@ -335,9 +336,9 @@ public:
         }
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int idx) const
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int idx) const Q_DECL_OVERRIDE
     {
-        return validIndex(idx) ? new UrlHandler() : 0 ;
+        return validIndex(idx) ? new UrlHandler() : 0;
     }
 
 private:

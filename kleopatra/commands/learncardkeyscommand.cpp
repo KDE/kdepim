@@ -53,8 +53,8 @@ LearnCardKeysCommand::LearnCardKeysCommand(GpgME::Protocol proto)
 {
     setIgnoresSuccessOrFailure(true);
     setShowsOutputWindow(true);
-    connect(this, SIGNAL(finished()),
-            SmartCard::ReaderStatus::mutableInstance(), SLOT(updateStatus()));
+    connect(this, &Command::finished,
+            SmartCard::ReaderStatus::mutableInstance(), &SmartCard::ReaderStatus::updateStatus);
 }
 
 LearnCardKeysCommand::~LearnCardKeysCommand() {}
@@ -88,7 +88,7 @@ QString LearnCardKeysCommand::crashExitMessage(const QStringList &args) const
     return xi18nc("@info",
                   "<para>The GPG or GpgSM process that tried to learn the smart card "
                   "ended prematurely because of an unexpected error.</para>"
-                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" "))) ;
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" ")));
 }
 
 QString LearnCardKeysCommand::errorExitMessage(const QStringList &) const

@@ -19,26 +19,26 @@
 #include "manualselectfilterpage.h"
 
 // Filter includes
-#include <filter_mbox.h>
-#include <filter_oe.h>
-#include <filter_pmail.h>
-#include <filter_plain.h>
-#include <filter_evolution.h>
-#include <filter_mailapp.h>
-#include <filter_evolution_v2.h>
-#include <filter_opera.h>
-#include <filter_thunderbird.h>
-#include <filter_kmail_maildir.h>
-#include <filter_kmail_archive.h>
-#include <filter_sylpheed.h>
-#include <filter_thebat.h>
-#include <filter_lnotes.h>
-#include <filter_mailmangzip.h>
+#include <filtermbox.h>
+#include <filteroe.h>
+#include <filterpmail.h>
+#include <filterplain.h>
+#include <filterevolution.h>
+#include <filtermailapp.h>
+#include <filterevolution_v2.h>
+#include <filteropera.h>
+#include <filterthunderbird.h>
+#include <filterkmail_maildir.h>
+#include <filterkmailarchive.h>
+#include <filtersylpheed.h>
+#include <filterthebat.h>
+#include <filterlnotes.h>
+#include <filtermailmangzip.h>
 #include <filtericedove.h>
 
 #include <filters.h>
 
-#include <filter_evolution_v3.h>
+#include <filterevolution_v3.h>
 
 // KDE includes
 

@@ -17,9 +17,9 @@
 
 #include "configurestorageservicewidget.h"
 #include "kmkernel.h"
-#include "settings/globalsettings.h"
-#include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "settings/kmailsettings.h"
+#include "PimCommon/StorageServiceSettingsWidget"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 #include <KLocalizedString>

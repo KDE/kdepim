@@ -27,11 +27,9 @@
 #include <kalarmcal/alarmtext.h>
 #include <kalarmcal/kaevent.h>
 
-#include <kurl.h>
-
 class QAbstractButton;
 class QGroupBox;
-class KComboBox;
+class QComboBox;
 class EmailIdCombo;
 class CheckBox;
 class ComboBox;
@@ -121,7 +119,7 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
         Preferences::SoundType mSavedSoundType;     // mSoundPicker sound type
         bool                mSavedSound;            // mSoundPicker sound status
         int                 mSavedRepeatPause;      // mSoundPicker repeat pause
-        KUrl                mSavedSoundFile;        // mSoundPicker sound file
+        QUrl                mSavedSoundFile;        // mSoundPicker sound file
         float               mSavedSoundVolume;      // mSoundPicker volume
         float               mSavedSoundFadeVolume;  // mSoundPicker fade volume
         int                 mSavedSoundFadeSeconds; // mSoundPicker fade time
@@ -238,7 +236,7 @@ class EditEmailAlarmDlg : public EditAlarmDlg
         QPushButton*    mEmailAddressButton; // email open address book button
         LineEdit*       mEmailSubjectEdit;
         TextEdit*       mEmailMessageEdit;   // email body edit box
-        KComboBox*      mEmailAttachList;
+        QComboBox*      mEmailAttachList;
         QPushButton*    mEmailAddAttachButton;
         QPushButton*    mEmailRemoveButton;
         CheckBox*       mEmailBcc;

@@ -20,9 +20,9 @@
 #include "importexportprogressindicatorbase.h"
 #include "synchronizeresourcejob.h"
 
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 
-#include "pimcommon/util/createresource.h"
+#include "PimCommon/CreateResource"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KZip>
@@ -34,6 +34,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QCoreApplication>
 
 int AbstractImportExportJob::sArchiveVersion = -1;
 
@@ -50,7 +51,7 @@ AbstractImportExportJob::AbstractImportExportJob(QObject *parent, ArchiveStorage
       mImportExportProgressIndicator(new ImportExportProgressIndicatorBase(this))
 {
     mImportExportProgressIndicator->setNumberOfStep(numberOfStep);
-    connect(mImportExportProgressIndicator, SIGNAL(info(QString)), this, SIGNAL(info(QString)));
+    connect(mImportExportProgressIndicator, &ImportExportProgressIndicatorBase::info, this, &AbstractImportExportJob::info);
 }
 
 AbstractImportExportJob::~AbstractImportExportJob()
@@ -60,9 +61,16 @@ AbstractImportExportJob::~AbstractImportExportJob()
     delete mTempDir;
 }
 
-void AbstractImportExportJob::createProgressDialog()
+void AbstractImportExportJob::createProgressDialog(const QString &title)
 {
-    mImportExportProgressIndicator->createProgressDialog();
+    mImportExportProgressIndicator->createProgressDialog(title);
+    connect(mImportExportProgressIndicator, &ImportExportProgressIndicatorBase::canceled, this, &AbstractImportExportJob::slotTaskCanceled);
+}
+
+void AbstractImportExportJob::slotTaskCanceled()
+{
+    Q_EMIT error(i18n("Task Canceled"));
+    Q_EMIT jobFinished();
 }
 
 bool AbstractImportExportJob::wasCanceled() const
@@ -76,9 +84,14 @@ void AbstractImportExportJob::increaseProgressDialog()
 
 }
 
-void AbstractImportExportJob::showInfo(const QString &text)
+void AbstractImportExportJob::setProgressDialogLabel(const QString &text)
 {
-    mImportExportProgressIndicator->showInfo(text);
+    mImportExportProgressIndicator->setProgressDialogLabel(text);
+}
+
+ImportExportProgressIndicatorBase *AbstractImportExportJob::importExportProgressIndicator() const
+{
+    return mImportExportProgressIndicator;
 }
 
 void AbstractImportExportJob::setImportExportProgressIndicator(ImportExportProgressIndicatorBase *importExportProgressIndicator)
@@ -91,6 +104,16 @@ void AbstractImportExportJob::setImportExportProgressIndicator(ImportExportProgr
 KZip *AbstractImportExportJob::archive() const
 {
     return mArchiveStorage->archive();
+}
+
+void AbstractImportExportJob::backupUiRcFile(const QString &configFileName, const QString &application)
+{
+    const QString configrcStr(configFileName);
+    const QString configrc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + application + QLatin1Char('/') + configrcStr;
+    qDebug()<<" configrc"<<configrc << " configFileName "<<configFileName;
+    if (QFile(configrc).exists()) {
+        backupFile(configrc, Utils::configsPath(), configrcStr);
+    }
 }
 
 void AbstractImportExportJob::backupConfigFile(const QString &configFileName)
@@ -111,6 +134,8 @@ void AbstractImportExportJob::backupFile(const QString &filename, const QString 
         } else {
             Q_EMIT error(i18n("\"%1\" cannot be exported.", storedName));
         }
+    } else {
+        Q_EMIT error(i18n("\"%1\" does not exist.", filename));
     }
 }
 
@@ -246,60 +271,27 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     if (destination.exists()) {
         destination.remove();
     }
+    QFileInfo destFileInfo(dest);
+
+    QDir().mkpath(destFileInfo.path());
     if (!file.copy(dest)) {
         mImportExportProgressIndicator->showErrorMessage(i18n("File \"%1\" cannot be copied to \"%2\".", filename, dest), i18n("Copy file"));
+    } else {
+        Q_EMIT info(i18n("\"%1\" was restored.", filename));
     }
 }
 
-void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath)
-{
-    const QString identifier = agent.identifier();
-    const QString archivePath = defaultPath + identifier + QDir::separator();
-
-    QUrl url = Utils::resourcePath(agent);
-    if (!url.isEmpty()) {
-        QString filename = url.fileName();
-        if (QDir(url.path()).exists()) {
-            const bool fileAdded  = archive()->addLocalDirectory(url.path(), archivePath + filename);
-            if (fileAdded) {
-                const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                if (!errorStr.isEmpty()) {
-                    Q_EMIT error(errorStr);
-                }
-                Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-
-                url = Utils::akonadiAgentConfigPath(identifier);
-                if (!url.isEmpty()) {
-                    filename = url.fileName();
-
-                    if (QDir(url.path()).exists()) {
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                        if (fileAdded) {
-                            Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                        } else {
-                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                        }
-                    }
-                }
-
-            } else {
-                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-            }
-        } else {
-            Q_EMIT error(i18n("Resource was not configured correctly, not archiving it."));
-        }
-    }
-}
 
 void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
     const QString identifier = agent.identifier();
     const QString archivePath = defaultPath + identifier + QDir::separator();
 
-    QUrl url = Utils::resourcePath(agent);
+    QString url = Utils::resourcePath(agent);
     if (!url.isEmpty()) {
-        QString filename = url.fileName();
-        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+        QFileInfo fi(url);
+        QString filename = fi.fileName();
+        const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
         if (fileAdded) {
             const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
             if (!errorStr.isEmpty()) {
@@ -309,8 +301,9 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
 
             url = Utils::akonadiAgentConfigPath(identifier);
             if (!url.isEmpty()) {
-                filename = url.fileName();
-                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                fi = QFileInfo(url);
+                filename = fi.fileName();
+                const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                 if (fileAdded) {
                     Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                 } else {
@@ -349,7 +342,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    QUrl newUrl;
+                    QString newUrl;
                     if (overwriteResources) {
                         newUrl = Utils::resourcePath(resourceConfig);
                     } else {
@@ -359,9 +352,9 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
-                        file->copyTo(newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path());
+                        file->copyTo(newUrl);
                     }
-                    settings.insert(QStringLiteral("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl);
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {
@@ -396,66 +389,57 @@ void AbstractImportExportJob::addSpecificResourceSettings(KSharedConfig::Ptr /*r
     //Redefine it in subclass
 }
 
-void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination)
+void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination, bool isStoredAsZippedArchive)
 {
     file->copyTo(source);
     QDir dest(destination);
     if (!dest.exists()) {
         dest.mkpath(destination);
     }
-    QString errorMsg;
-    KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
-    if (zip) {
-        const KArchiveDirectory *zipDir = zip->directory();
-        Q_FOREACH (const QString &entryName, zipDir->entries()) {
-            const KArchiveEntry *entry = zipDir->entry(entryName);
-            if (entry) {
-                if (entry->isDirectory()) {
-                    const KArchiveDirectory *dir = static_cast<const KArchiveDirectory *>(entry);
-                    dir->copyTo(destination + QDir::separator() + dir->name(), true);
-                } else if (entry->isFile()) {
-                    const KArchiveFile *dir = static_cast<const KArchiveFile *>(entry);
-                    dir->copyTo(destination);
+    if (isStoredAsZippedArchive) {
+        QString errorMsg;
+        KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
+        if (zip) {
+            const KArchiveDirectory *zipDir = zip->directory();
+            Q_FOREACH (const QString &entryName, zipDir->entries()) {
+                const KArchiveEntry *entry = zipDir->entry(entryName);
+                if (entry) {
+                    if (entry->isDirectory()) {
+                        const KArchiveDirectory *dir = static_cast<const KArchiveDirectory *>(entry);
+                        dir->copyTo(destination + QDir::separator() + dir->name(), true);
+                    } else if (entry->isFile()) {
+                        const KArchiveFile *dir = static_cast<const KArchiveFile *>(entry);
+                        dir->copyTo(destination);
+                    }
                 }
+                qApp->processEvents();
             }
+            delete zip;
+        } else {
+            Q_EMIT error(errorMsg);
         }
-        delete zip;
     } else {
-        Q_EMIT error(errorMsg);
+        QFile achiveFile(source + QLatin1Char('/') + file->name());
+        if (!achiveFile.copy(destination + QLatin1Char('/') + file->name())) {
+            Q_EMIT error(i18n("Unable to copy file", file->name()));
+        }
     }
 }
 
-bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString &archivePath, const QString &archivename)
+void AbstractImportExportJob::restoreUiRcFile(const QString &configNameStr, const QString &applicationName)
 {
-    QTemporaryFile tmp;
-    tmp.open();
-    KZip *vcarddirArchive = new KZip(tmp.fileName());
-    vcarddirArchive->setCompression(KZip::NoCompression);
-    bool result = vcarddirArchive->open(QIODevice::WriteOnly);
-    if (!result) {
-        delete vcarddirArchive;
-        return false;
+    const KArchiveEntry *configNameentry  = mArchiveDirectory->entry(Utils::configsPath() + configNameStr);
+    if (configNameentry &&  configNameentry->isFile()) {
+        const KArchiveFile *configNameconfiguration = static_cast<const KArchiveFile *>(configNameentry);
+        const QString configNamerc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + applicationName + QLatin1Char('/') + configNameStr;
+        if (QFile(configNamerc).exists()) {
+            if (overwriteConfigMessageBox(configNameStr)) {
+                copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());
+        }
     }
-    const QString filename = url.fileName();
-    const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
-    //TODO add MessageBox
-    if (!vcarddirAdded) {
-        delete vcarddirArchive;
-        return false;
-    }
-    vcarddirArchive->setCompression(KZip::DeflateCompression);
-    vcarddirArchive->close();
-    tmp.close();
-
-    const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
-    if (fileAdded) {
-        Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-    } else {
-        Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-    }
-
-    delete vcarddirArchive;
-    return fileAdded;
 }
 
 void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
@@ -503,10 +487,10 @@ void AbstractImportExportJob::slotSynchronizeInstanceDone(const QString &instanc
 void AbstractImportExportJob::slotAllResourceSynchronized()
 {
     Q_EMIT info(i18n("All resources synchronized."));
-    nextStep();
+    slotNextStep();
 }
 
-void AbstractImportExportJob::nextStep()
+void AbstractImportExportJob::slotNextStep()
 {
     //Implement in sub class.
 }
@@ -540,5 +524,8 @@ void AbstractImportExportJob::initializeListStep()
     }
     if (mTypeSelected & Utils::AkonadiDb) {
         mListStep << Utils::AkonadiDb;
+    }
+    if (mTypeSelected & Utils::Data) {
+        mListStep << Utils::Data;
     }
 }

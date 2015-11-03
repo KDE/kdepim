@@ -2,39 +2,36 @@
 
 
 ########### next target ###############
-include_directories(
-    ${Grantlee_INCLUDE_DIRS}
-)
-
 set(kontact_knotesplugin_PART_SRCS
-  knotes_kontact_plugin_debug.cpp 
   knotes_plugin.cpp
   knotes_part.cpp
   summarywidget.cpp
   knotesiconview.cpp
   knoteslistwidgetsearchline.cpp
   knoteswidget.cpp
-  knoteseditdialog.cpp  
+  knoteseditdialog.cpp
   knotesselectdeletenotesdialog.cpp
 )
 
 qt5_add_dbus_adaptor(kontact_knotesplugin_PART_SRCS org.kde.kontact.KNotes.xml knotes_part.h KNotesPart)
 qt5_add_dbus_interfaces(kontact_knotesplugin_interface_SRCS org.kde.kontact.KNotes.xml)
 
+ecm_qt_declare_logging_category(kontact_knotesplugin_PART_SRCS HEADER knotes_kontact_plugin_debug.h IDENTIFIER KNOTES_KONTACT_PLUGIN_LOG CATEGORY_NAME log_knoteskontactplugin)
 
 
 add_library(kontact_knotesplugin MODULE ${kontact_knotesplugin_PART_SRCS} ${kontact_knotesplugin_interface_SRCS} )
 
-target_link_libraries(kontact_knotesplugin 
-                      knotesprivate 
-                      KF5::CalendarCore 
-                      KF5::CalendarUtils 
-                      KF5::KontactInterface 
-                      kdepim 
-                      pimcommon 
-                      noteshared 
+target_link_libraries(kontact_knotesplugin
+                      knotesprivate
+                      KF5::CalendarCore
+                      KF5::CalendarUtils
+                      KF5::KontactInterface
+                      KF5::Libkdepim 
+                      KF5::NoteShared
                       KF5::DNSSD
-                      
+                      KF5::Mime
+                      KF5::KCMUtils
+                      KF5::AkonadiWidgets
 )
 
 ########### install files ###############
@@ -43,7 +40,7 @@ set(kcm_knotessummary_PART_SRCS kcmknotessummary.cpp )
 
 add_library(kcm_knotessummary MODULE ${kcm_knotessummary_PART_SRCS})
 
-target_link_libraries(kcm_knotessummary  KF5::Mime KF5::AkonadiCore pimcommon KF5::AkonadiNotes)
+target_link_libraries(kcm_knotessummary  KF5::PimCommon KF5::AkonadiNotes KF5::ConfigWidgets)
 
 
 install(TARGETS kcm_knotessummary DESTINATION ${KDE_INSTALL_PLUGINDIR})

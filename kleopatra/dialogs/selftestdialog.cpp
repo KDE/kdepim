@@ -87,7 +87,7 @@ public:
 
     int rowCount(const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
-        return idx.isValid() ? 0 : m_tests.size() ;
+        return idx.isValid() ? 0 : m_tests.size();
     }
     int columnCount(const QModelIndex &) const Q_DECL_OVERRIDE
     {
@@ -119,7 +119,7 @@ public:
         return QVariant();
     }
 
-    /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role) const
+    QVariant headerData(int section, Qt::Orientation o, int role) const Q_DECL_OVERRIDE
     {
         if (o == Qt::Horizontal &&
                 section >= 0 && section < NumColumns &&
@@ -206,7 +206,7 @@ private:
             if (!src_parent.isValid() && src_row >= 0 &&
                     src_row < model->rowCount(src_parent)) {
                 if (const shared_ptr<SelfTest> &t = model->at(src_row)) {
-                    return !t->passed() ;
+                    return !t->passed();
                 } else {
                     qCWarning(KLEOPATRA_LOG) <<  "NULL test??";
                 }
@@ -257,8 +257,8 @@ public:
 
         connect(ui.resultsTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SLOT(slotSelectionChanged()));
-        connect(ui.showAllCB, SIGNAL(toggled(bool)),
-                &proxy, SLOT(setShowAll(bool)));
+        connect(ui.showAllCB, &QAbstractButton::toggled,
+                &proxy, &Proxy::setShowAll);
     }
 
 private:
@@ -301,7 +301,7 @@ private:
             return QModelIndex();
         }
         const QModelIndexList mil = ism->selectedRows();
-        return mil.empty() ? QModelIndex() : proxy.mapToSource(mil.front()) ;
+        return mil.empty() ? QModelIndex() : proxy.mapToSource(mil.front());
     }
     int selectedRowIndex() const
     {
@@ -325,8 +325,8 @@ private:
             buttonBox->addButton(rerunPB, QDialogButtonBox::ActionRole);
             buttonBox->button(QDialogButtonBox::Ok)->setText(i18n("Continue"));
 
-            connect(rerunPB, SIGNAL(clicked()),
-                    qq, SIGNAL(updateRequested()));
+            connect(rerunPB, &QAbstractButton::clicked,
+                    qq, &SelfTestDialog::updateRequested);
         }
     } ui;
 };

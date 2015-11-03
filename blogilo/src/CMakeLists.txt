@@ -1,18 +1,10 @@
 
 if (KF5GAPI_FOUND)
-  include_directories(${LibKGAPI2_INCLUDE_DIR} )
   add_definitions(-DHAVE_GAPIBLOGGER_SUPPORT)
 endif()
 
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} 
-                     ${CMAKE_CURRENT_BINARY_DIR}  
-                     ${CMAKE_SOURCE_DIR}/libkdepim
-                     ${CMAKE_SOURCE_DIR}/pimcommon
-                     )
-
 set(blogilo_SRCS
  blogilomigrateapplication.cpp
- blogilo_debug.cpp
  main.cpp
  mainwindow.cpp
  toolbox.cpp
@@ -65,13 +57,27 @@ ki18n_wrap_ui(
   ui/blogsettingsbase.ui
   ui/uploadmediabase.ui
 )
+ecm_qt_declare_logging_category(blogilo_SRCS HEADER blogilo_debug.h IDENTIFIER BLOGILO_LOG CATEGORY_NAME log_blogilo)
+qt5_add_resources(blogilo_SRCS blogilo.qrc)
 
 kconfig_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/*-apps-blogilo.png")
 ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo kdepim  KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet Qt5::Sql KF5::XmlRpcClient KF5::DBusAddons)
+target_link_libraries(blogilo
+    KF5::Blog
+    KF5::PimCommon
+    Qt5::Sql
+    KF5::ComposerEditorNG
+    KF5::Libkdepim
+    KF5::TextEditor
+    KF5::WebKit
+    KF5::Wallet
+    KF5::DBusAddons
+    KF5::XmlGui
+    KF5::PimTextEdit
+)
 
 if (KF5GAPI_FOUND)
    target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore)
@@ -86,4 +92,3 @@ install( TARGETS blogilo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 install( PROGRAMS ../org.kde.blogilo.desktop  DESTINATION  ${KDE_INSTALL_APPDIR} )
 install( FILES ../blogilo.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 install( FILES blogilo.kcfg  DESTINATION  ${KDE_INSTALL_KCFGDIR} )
-install( FILES blogiloui.rc DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/blogilo )

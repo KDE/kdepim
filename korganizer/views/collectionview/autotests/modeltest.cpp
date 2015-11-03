@@ -35,51 +35,51 @@ ModelTest::ModelTest(QAbstractItemModel *_model, QObject *parent) : QObject(pare
 {
     Q_ASSERT(model);
 
-    connect(model, SIGNAL(columnsAboutToBeInserted(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(columnsAboutToBeRemoved(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(columnsInserted(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(columnsRemoved(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(layoutAboutToBeChanged()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(layoutChanged()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(modelReset()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(modelAboutToBeReset()), this, SLOT(modelAboutToBeReset()));
-    connect(model, SIGNAL(modelReset()), this, SLOT(modelReset()));
-    connect(model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
-    connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            this, SLOT(runAllTests()));
+    connect(model, &QAbstractItemModel::columnsAboutToBeInserted,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::columnsAboutToBeRemoved,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::columnsInserted,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::columnsRemoved,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::dataChanged,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::headerDataChanged,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::layoutAboutToBeChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::layoutChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::modelReset, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::modelAboutToBeReset, this, &ModelTest::modelAboutToBeReset);
+    connect(model, &QAbstractItemModel::modelReset, this, &ModelTest::modelReset);
+    connect(model, &QAbstractItemModel::rowsAboutToBeInserted,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::rowsAboutToBeRemoved,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::rowsInserted,
+            this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::rowsRemoved,
+            this, &ModelTest::runAllTests);
 
     // Special checks for inserting/removing
-    connect(model, SIGNAL(layoutAboutToBeChanged()),
-            this, SLOT(layoutAboutToBeChanged()));
-    connect(model, SIGNAL(layoutChanged()),
-            this, SLOT(layoutChanged()));
+    connect(model, &QAbstractItemModel::layoutAboutToBeChanged,
+            this, &ModelTest::layoutAboutToBeChanged);
+    connect(model, &QAbstractItemModel::layoutChanged,
+            this, &ModelTest::layoutChanged);
 
-    connect(model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-            this, SLOT(rowsAboutToBeInserted(QModelIndex,int,int)));
-    connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-            this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(rowsInserted(QModelIndex,int,int)));
-    connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            this, SLOT(rowsRemoved(QModelIndex,int,int)));
+    connect(model, &QAbstractItemModel::rowsAboutToBeInserted,
+            this, &ModelTest::rowsAboutToBeInserted);
+    connect(model, &QAbstractItemModel::rowsAboutToBeRemoved,
+            this, &ModelTest::rowsAboutToBeRemoved);
+    connect(model, &QAbstractItemModel::rowsInserted,
+            this, &ModelTest::rowsInserted);
+    connect(model, &QAbstractItemModel::rowsRemoved,
+            this, &ModelTest::rowsRemoved);
 
-    connect(model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
-            this, SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
-    connect(model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-            this, SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    connect(model, &QAbstractItemModel::rowsAboutToBeMoved,
+            this, &ModelTest::rowsAboutToBeMoved);
+    connect(model, &QAbstractItemModel::rowsMoved,
+            this, &ModelTest::rowsMoved);
 
     runAllTests();
 }
@@ -569,7 +569,7 @@ void ModelTest::rowsAboutToBeMoved(const QModelIndex &srcParent, int start, int 
     cs.parent = srcParent;
     cs.oldSize = model->rowCount(srcParent);
     cs.last = model->data(model->index(start - 1, 0, srcParent));
-    qDebug() << start << model->data(model->index(start , 0, srcParent)).toString();
+    qDebug() << start << model->data(model->index(start, 0, srcParent)).toString();
     cs.next = model->data(model->index(end + 1, 0, srcParent));
     remove.push(cs);
     Changing cd;
@@ -607,7 +607,7 @@ void ModelTest::rowsMoved(const QModelIndex &srcParent, int start, int end, cons
     } else {
         Q_ASSERT(cs.oldSize - (end - start + 1) == model->rowCount(srcParent));
         qDebug() << start - 1 << model->data(model->index(start - 1, 0, srcParent)).toString() << cs.last.toString();
-        qDebug() << start << model->data(model->index(start , 0, srcParent)).toString() << cs.next.toString();
+        qDebug() << start << model->data(model->index(start, 0, srcParent)).toString() << cs.next.toString();
         Q_ASSERT(cs.last == model->data(model->index(start - 1, 0, srcParent)));
         qDebug() << cs.next << model->data(model->index(start, 0, srcParent));
         Q_ASSERT(cs.next == model->data(model->index(start, 0, srcParent)));

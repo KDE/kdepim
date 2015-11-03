@@ -17,7 +17,7 @@
 #ifndef IMPORTWIZARDKERNEL_H
 #define IMPORTWIZARDKERNEL_H
 
-#include <mailcommon/interfaces/mailinterfaces.h>
+#include <MailCommon/MailInterfaces>
 
 namespace Akonadi
 {
@@ -48,8 +48,8 @@ public:
     qreal closeToQuotaThreshold() Q_DECL_OVERRIDE;
     bool excludeImportantMailFromExpiry() Q_DECL_OVERRIDE;
     QStringList customTemplates() Q_DECL_OVERRIDE;
-    Akonadi::Entity::Id lastSelectedFolder() Q_DECL_OVERRIDE;
-    void setLastSelectedFolder(const Akonadi::Entity::Id &col) Q_DECL_OVERRIDE;
+    Akonadi::Collection::Id lastSelectedFolder() Q_DECL_OVERRIDE;
+    void setLastSelectedFolder(const Akonadi::Collection::Id &col) Q_DECL_OVERRIDE;
     bool showPopupAfterDnD() Q_DECL_OVERRIDE;
 
 private:

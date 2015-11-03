@@ -37,7 +37,7 @@
 #include <view/keytreeview.h>
 #include <models/keylistmodel.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -160,7 +160,7 @@ private:
             unselectedKTV.view()->setSelectionMode(QAbstractItemView::NoSelection);
 
             connect(&buttonBox, SIGNAL(accepted()), qq, SLOT(accept()));
-            connect(&buttonBox, SIGNAL(rejected()), qq, SLOT(reject()));
+            connect(&buttonBox, &QDialogButtonBox::rejected, qq, &QDialog::reject);
         }
     } ui;
 };

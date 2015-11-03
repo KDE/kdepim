@@ -18,7 +18,7 @@
 #include "importnotesjob.h"
 #include "archivestorage.h"
 
-#include "pimcommon/util/createresource.h"
+#include "PimCommon/CreateResource"
 
 #include <KArchive>
 #include <KLocalizedString>
@@ -29,6 +29,7 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QDir>
+#include <QTimer>
 
 namespace
 {
@@ -48,21 +49,41 @@ ImportNotesJob::~ImportNotesJob()
 {
 }
 
+void ImportNotesJob::slotNextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        const Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Resources) {
+            restoreResources();
+        } else if (type == Utils::Config) {
+            restoreConfig();
+        } else if (type == Utils::Data) {
+            restoreData();
+        } else {
+            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << Q_FUNC_INFO << " not supported type "<< type;
+            slotNextStep();
+        }
+    } else {
+        Q_EMIT jobFinished();
+    }
+}
+
+
 void ImportNotesJob::start()
 {
     Q_EMIT title(i18n("Start import KNotes settings..."));
     mArchiveDirectory = archive()->directory();
-    if (mTypeSelected & Utils::Config) {
-        restoreConfig();
-    }
-    if (mTypeSelected & Utils::Data) {
-        restoreData();
-    }
-    Q_EMIT jobFinished();
+    // FIXME search archive ? searchAllFiles(mArchiveDirectory, QString());
+    createProgressDialog(i18n("Import KNotes settings"));
+    initializeListStep();
+    QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
 }
 
 void ImportNotesJob::restoreConfig()
 {
+    increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
     const QString knotesStr(QStringLiteral("knotesrc"));
     restoreConfigFile(knotesStr);
     if (archiveVersion() <= 1) {
@@ -86,10 +107,13 @@ void ImportNotesJob::restoreConfig()
     }
 
     Q_EMIT info(i18n("Config restored."));
+    QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
 }
 
 void ImportNotesJob::restoreData()
 {
+    increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore data..."));
     if (archiveVersion() <= 1) {
         //Knote < knote-akonadi
         const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("knotes/"));
@@ -97,6 +121,7 @@ void ImportNotesJob::restoreData()
             const QString notesPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("knotes/");
             overwriteDirectory(notesPath, notesEntry);
         }
+        QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
     } else {
         restoreResources();
     }
@@ -106,6 +131,7 @@ void ImportNotesJob::restoreData()
 void ImportNotesJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    setProgressDialogLabel(i18n("Restore resources..."));
     QStringList listResource;
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -128,16 +154,16 @@ void ImportNotesJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, backupnote());
-
+                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, backupnote());
+                    QFileInfo newUrlInfo(newUrl);
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
-                        extractZipFile(file, copyToDirName, newUrl.path());
+                        extractZipFile(file, copyToDirName, newUrlInfo.path());
                     }
-                    settings.insert(QLatin1String("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl);
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {
@@ -162,10 +188,10 @@ void ImportNotesJob::restoreResources()
     startSynchronizeResources(listResource);
 }
 
-void ImportNotesJob::importKNoteGlobalSettings(const KArchiveFile *kmailsnippet, const QString &kmail2rc, const QString &filename, const QString &prefix)
+void ImportNotesJob::importKNoteGlobalSettings(const KArchiveFile *archive, const QString &configrc, const QString &filename, const QString &prefix)
 {
-    copyToFile(kmailsnippet, kmail2rc, filename, prefix);
-    KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);
+    copyToFile(archive, configrc, filename, prefix);
+    KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(configrc);
 
     const QString composerStr(QStringLiteral("SelectNoteFolder"));
     if (kmailConfig->hasGroup(composerStr)) {

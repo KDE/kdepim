@@ -1,19 +1,18 @@
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
-
 remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 # Convenience macro to add unit tests.
-macro( sendlater_agent _source )
-  set( _test ${_source} ../sendlaterconfiguredialog.cpp ../sendlaterconfigurewidget.cpp)
-  ki18n_wrap_ui(_test ../ui/sendlaterconfigurewidget.ui)
-  get_filename_component( _name ${_source} NAME_WE )
-  add_executable( ${_name} ${_test} )
-  add_test( ${_name} ${_name} )
-  ecm_mark_as_test(sendlatertest-${_name})
-  target_link_libraries( ${_name} Qt5::Test KF5::AkonadiCore sendlater pimcommon)
+macro(add_sendlater_agent_test _source )
+    set(_test ${_source} ../sendlaterconfiguredialog.cpp ../sendlaterconfigurewidget.cpp)
+    ki18n_wrap_ui(_test ../ui/sendlaterconfigurewidget.ui)
+    get_filename_component(_name ${_source} NAME_WE)
+    ecm_add_test(${_test}
+        TEST_NAME ${_name}
+        NAME_PREFIX "sendlateragent-"
+        LINK_LIBRARIES Qt5::Test KF5::XmlGui KF5::AkonadiCore KF5::SendLater KF5::PimCommon
+    )
 endmacro()
 
-sendlater_agent(sendlaterinfotest.cpp)
-sendlater_agent(sendlaterconfiguredialogtest.cpp)
-sendlater_agent(sendlaterconfigtest.cpp)
-sendlater_agent(sendlaterdialogtest.cpp)
+add_sendlater_agent_test(sendlaterinfotest.cpp)
+add_sendlater_agent_test(sendlaterconfiguredialogtest.cpp)
+add_sendlater_agent_test(sendlaterconfigtest.cpp)
+add_sendlater_agent_test(sendlaterdialogtest.cpp)

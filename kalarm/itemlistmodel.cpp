@@ -56,8 +56,8 @@ ItemListModel::ItemListModel(CalEvent::Types allowed, QObject* parent)
     setDynamicSortFilter(true);
     connect(this, &ItemListModel::rowsInserted, this, &ItemListModel::slotRowsInserted);
     connect(this, &ItemListModel::rowsRemoved, this, &ItemListModel::slotRowsRemoved);
-    connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)),
-                                      SLOT(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)));
+    connect(AkonadiModel::instance(), &AkonadiModel::collectionStatusChanged,
+                                      this, &ItemListModel::collectionStatusChanged);
 }
 
 int ItemListModel::columnCount(const QModelIndex& /*parent*/) const
@@ -149,7 +149,7 @@ Qt::ItemFlags ItemListModel::flags(const QModelIndex& index) const
 /******************************************************************************
 * Return the index to a specified event.
 */
-QModelIndex ItemListModel::eventIndex(Entity::Id itemId) const
+QModelIndex ItemListModel::eventIndex(Item::Id itemId) const
 {
     QModelIndexList list = match(QModelIndex(), AkonadiModel::ItemIdRole, itemId, 1, Qt::MatchExactly | Qt::MatchRecursive);
     if (list.isEmpty())

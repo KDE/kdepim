@@ -47,7 +47,7 @@ AddFeedWidget::AddFeedWidget(QWidget *parent, const char *name)
 {
     setObjectName(QLatin1String(name));
     setupUi(this);
-    pixmapLabel1->setPixmap(KIconLoader::global()->loadIcon(QStringLiteral("applications-internet"), KIconLoader::Desktop, KIconLoader::SizeHuge, KIconLoader::DefaultState, QStringList(), 0, true));
+    pixmapLabel1->setPixmap(QIcon::fromTheme(QStringLiteral("applications-internet")).pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)));
     statusLabel->setText(QString());
 }
 
@@ -68,10 +68,9 @@ Feed *AddFeedDialog::feed()
 }
 
 AddFeedDialog::AddFeedDialog(QWidget *parent, const char *name)
-    : QDialog(parent
-          /*Qt::WStyle_DialogBorder*/), m_feed(0)
+    : QDialog(parent), m_feed(0)
 {
-    setObjectName(name);
+    setObjectName(QLatin1String(name));
     widget = new AddFeedWidget(this);
     setWindowTitle(i18n("Add Feed"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -110,8 +109,8 @@ void AddFeedDialog::accept()
         feedUrl = feedUrl.right(feedUrl.length() - 5);
     }
 
-    if (feedUrl.indexOf(":/") == -1) {
-        feedUrl.prepend("http://");
+    if (feedUrl.indexOf(QStringLiteral(":/")) == -1) {
+        feedUrl.prepend(QStringLiteral("http://"));
     }
 
     QUrl asUrl(feedUrl);

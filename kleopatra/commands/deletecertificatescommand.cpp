@@ -39,13 +39,13 @@
 #include <dialogs/deletecertificatesdialog.h>
 
 #include <models/keycache.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
-#include <kleo/stl_util.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/multideletejob.h>
-#include <kleo/deletejob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/MultiDeleteJob>
+#include <Libkleo/DeleteJob>
 
 #include <gpgme++/key.h>
 
@@ -314,14 +314,14 @@ void DeleteCertificatesCommand::Private::slotDialogAccepted()
     pgpEnd = std::stable_partition(pgpBegin, keys.end(),
                                    boost::bind(&GpgME::Key::protocol, _1) != CMS),
              cmsBegin = pgpEnd,
-             cmsEnd = keys.end() ;
+             cmsEnd = keys.end();
 
     std::vector<Key> openpgp(pgpBegin, pgpEnd);
     std::vector<Key>     cms(cmsBegin, cmsEnd);
 
     const unsigned int errorCase =
         openpgp.empty() << 3U | canDelete(OpenPGP) << 2U |
-        cms.empty() << 1U |     canDelete(CMS) << 0U ;
+        cms.empty() << 1U |     canDelete(CMS) << 0U;
 
     if (const unsigned int actions = deletionErrorCases[errorCase].actions) {
         information(i18n(deletionErrorCases[errorCase].text),
@@ -362,12 +362,12 @@ void DeleteCertificatesCommand::Private::startDeleteJob(GpgME::Protocol protocol
 {
     assert(protocol != GpgME::UnknownProtocol);
 
-    const std::vector<Key> &keys = protocol == CMS ? cmsKeys : pgpKeys ;
+    const std::vector<Key> &keys = protocol == CMS ? cmsKeys : pgpKeys;
 
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol);
     assert(backend);
 
-    std::auto_ptr<MultiDeleteJob> job(new MultiDeleteJob(backend));
+    std::unique_ptr<MultiDeleteJob> job(new MultiDeleteJob(backend));
 
     if (protocol == CMS)
         connect(job.get(), SIGNAL(result(GpgME::Error,GpgME::Key)),
@@ -376,8 +376,8 @@ void DeleteCertificatesCommand::Private::startDeleteJob(GpgME::Protocol protocol
         connect(job.get(), SIGNAL(result(GpgME::Error,GpgME::Key)),
                 q_func(), SLOT(pgpDeleteResult(GpgME::Error)));
 
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
 
     if (const Error err = job->start(keys, true /*allowSecretKeyDeletion*/)) {
         (protocol == CMS ? cmsError : pgpError) = err;

@@ -24,17 +24,17 @@
 #include "dialog/knoteselectednotesdialog.h"
 #include "utils/knoteutils.h"
 
-#include "noteshared/akonadi/notesakonaditreemodel.h"
-#include "noteshared/akonadi/noteschangerecorder.h"
-#include "noteshared/attributes/notelockattribute.h"
-#include "noteshared/attributes/notedisplayattribute.h"
-#include "noteshared/attributes/notealarmattribute.h"
-#include "noteshared/attributes/showfoldernotesattribute.h"
-#include "noteshared/resources/localresourcecreator.h"
-#include "noteshared/job/createnewnotejob.h"
+#include "NoteShared/NotesAkonadiTreeModel"
+#include "NoteShared/NotesChangeRecorder"
+#include "NoteShared/NoteLockAttribute"
+#include "NoteShared/NoteDisplayAttribute"
+#include "NoteShared/NoteAlarmAttribute"
+#include "NoteShared/ShowFolderNotesAttribute"
+#include "noteshared/localresourcecreator.h"
+#include "NoteShared/CreateNewNoteJob"
 
 #include "apps/knotesakonaditray.h"
-#include "dialog/selectednotefolderdialog.h"
+#include "noteshared/selectednotefolderdialog.h"
 
 #include "notesharedglobalconfig.h"
 #include "notes/knote.h"
@@ -99,9 +99,7 @@ KNotesApp::KNotesApp()
 {
     Akonadi::ControlGui::widgetNeedsAkonadi(this);
 
-    if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
-        mDebugBaloo = true;
-    }
+    mDebugBaloo = !qEnvironmentVariableIsEmpty("KDEPIM_BALOO_DEBUG");
 
     if (KNotesGlobalConfig::self()->autoCreateResourceOnStart()) {
         NoteShared::LocalResourceCreator *creator = new NoteShared::LocalResourceCreator(this);
@@ -109,7 +107,7 @@ KNotesApp::KNotesApp()
     }
 
     new KNotesAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/KNotes") , this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/KNotes"), this);
     qApp->setQuitOnLastWindowClosed(false);
     // create the GUI...
     QAction *action  = new QAction(QIcon::fromTheme(QStringLiteral("document-new")),
@@ -199,8 +197,8 @@ KNotesApp::KNotesApp()
     mNoteRecorder = new NoteShared::NotesChangeRecorder(this);
     mNoteRecorder->changeRecorder()->setSession(session);
     mTray = new KNotesAkonadiTray(0);
-    connect(mTray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)));
-    connect(mTray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)));
+    connect(mTray, &KStatusNotifierItem::activateRequested, this, &KNotesApp::slotActivateRequested);
+    connect(mTray, &KStatusNotifierItem::secondaryActivateRequested, this, &KNotesApp::slotSecondaryActivateRequested);
 
     mTray->setContextMenu(contextMenu);
     mNoteTreeModel = new NoteShared::NotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
@@ -208,10 +206,10 @@ KNotesApp::KNotesApp()
     connect(mNoteTreeModel, &QAbstractItemModel::rowsInserted,
             this, &KNotesApp::slotRowInserted);
 
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemChanged, this, &KNotesApp::slotItemChanged);
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemRemoved, this, &KNotesApp::slotItemRemoved);
     connect(mNoteRecorder->changeRecorder(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
-    connect(qApp, SIGNAL(commitDataRequest(QSessionManager&)), this, SLOT(slotCommitData(QSessionManager&)), Qt::DirectConnection);
+    connect(qApp, &QGuiApplication::commitDataRequest, this, &KNotesApp::slotCommitData, Qt::DirectConnection);
     updateNoteActions();
 }
 
@@ -245,7 +243,7 @@ void KNotesApp::slotDeleteSelectedNotes()
         Akonadi::Item::List lst = dlg->selectedNotes();
         if (!lst.isEmpty()) {
             Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(lst, this);
-            connect(deleteJob, SIGNAL(result(KJob*)), SLOT(slotNoteDeleteFinished(KJob*)));
+            connect(deleteJob, &KJob::result, this, &KNotesApp::slotNoteDeleteFinished);
         }
     }
     delete dlg;
@@ -298,16 +296,16 @@ void KNotesApp::createNote(const Akonadi::Item &item)
         //TODO add AllowDebugBaloo
         KNote *note = new KNote(m_noteGUI, item, mDebugBaloo);
         mNotes.insert(item.id(), note);
-        connect(note, SIGNAL(sigShowNextNote()),
-                SLOT(slotWalkThroughNotes())) ;
+        connect(note, &KNote::sigShowNextNote,
+                this, &KNotesApp::slotWalkThroughNotes);
         connect(note, SIGNAL(sigRequestNewNote()),
                 SLOT(newNote()));
-        connect(note, SIGNAL(sigNameChanged(QString)),
-                SLOT(updateNoteActions()));
-        connect(note, SIGNAL(sigColorChanged()),
-                SLOT(updateNoteActions()));
-        connect(note, SIGNAL(sigKillNote(Akonadi::Item::Id)),
-                SLOT(slotNoteKilled(Akonadi::Item::Id)));
+        connect(note, &KNote::sigNameChanged,
+                this, &KNotesApp::updateNoteActions);
+        connect(note, &KNote::sigColorChanged,
+                this, &KNotesApp::updateNoteActions);
+        connect(note, &KNote::sigKillNote,
+                this, &KNotesApp::slotNoteKilled);
     }
 }
 
@@ -326,10 +324,10 @@ void KNotesApp::newNote(const QString &name, const QString &text)
     job->start();
 }
 
-void KNotesApp::showNote(const Akonadi::Entity::Id &id) const
+void KNotesApp::showNote(const Akonadi::Item::Id &id) const
 {
-    if (mNotes.contains(id)) {
-        KNote *note = mNotes.value(id);
+    KNote *note = mNotes.value(id);
+    if (note) {
         showNote(note);
     } else {
         qCWarning(KNOTES_LOG) << "hideNote: no note with id:" << id;
@@ -353,8 +351,8 @@ void KNotesApp::showNote(KNote *note) const
 
 void KNotesApp::hideNote(const Akonadi::Item::Id &id) const
 {
-    if (mNotes.contains(id)) {
-        KNote *note = mNotes.value(id);
+    KNote *note = mNotes.value(id);
+    if (note) {
         note->hide();
     } else {
         qCWarning(KNOTES_LOG) << "hideNote: no note with id:" << id;
@@ -419,24 +417,27 @@ void KNotesApp::updateNetworkListener()
 
 QString KNotesApp::name(const Akonadi::Item::Id &id) const
 {
-    if (mNotes.contains(id)) {
-        return mNotes.value(id)->name();
+    KNote *note = mNotes.value(id);
+    if (note) {
+        return note->name();
     }
     return QString();
 }
 
 QString KNotesApp::text(const Akonadi::Item::Id &id) const
 {
-    if (mNotes.contains(id)) {
-        return mNotes.value(id)->text();
+    KNote *note = mNotes.value(id);
+    if (note) {
+        return note->text();
     }
     return QString();
 }
 
 void KNotesApp::setName(const Akonadi::Item::Id &id, const QString &newName)
 {
-    if (mNotes.contains(id)) {
-        mNotes.value(id)->setName(newName);
+    KNote *note = mNotes.value(id);
+    if (note) {
+        note->setName(newName);
     } else {
         qCWarning(KNOTES_LOG) << "setName: no note with id:" << id;
     }
@@ -444,8 +445,9 @@ void KNotesApp::setName(const Akonadi::Item::Id &id, const QString &newName)
 
 void KNotesApp::setText(const Akonadi::Item::Id &id, const QString &newText)
 {
-    if (mNotes.contains(id)) {
-        mNotes.value(id)->setText(newText);
+    KNote *note = mNotes.value(id);
+    if (note) {
+        note->setText(newText);
     } else {
         qCWarning(KNOTES_LOG) << "setText: no note with id:" << id;
     }
@@ -453,7 +455,7 @@ void KNotesApp::setText(const Akonadi::Item::Id &id, const QString &newText)
 
 void KNotesApp::updateNoteActions()
 {
-    unplugActionList(QLatin1String("notes"));
+    unplugActionList(QStringLiteral("notes"));
     m_noteActions.clear();
 
     QHashIterator<Akonadi::Item::Id, KNote *> i(mNotes);
@@ -471,7 +473,7 @@ void KNotesApp::updateNoteActions()
         QAction *action = new QAction(replaceText.replace(QLatin1String("&"), QStringLiteral("&&")), this);
         action->setToolTip(realName);
         action->setObjectName(QString::number(note->noteId()));
-        connect(action, SIGNAL(triggered(bool)), SLOT(slotShowNote()));
+        connect(action, &QAction::triggered, this, &KNotesApp::slotShowNote);
         KIconEffect effect;
         QPixmap icon =
             effect.apply(qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),
@@ -612,7 +614,7 @@ void KNotesApp::slotConfigureAccels()
 void KNotesApp::slotNoteKilled(Akonadi::Item::Id id)
 {
     Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(Akonadi::Item(id), this);
-    connect(deleteJob, SIGNAL(result(KJob*)), SLOT(slotNoteDeleteFinished(KJob*)));
+    connect(deleteJob, &KJob::result, this, &KNotesApp::slotNoteDeleteFinished);
 }
 
 void KNotesApp::slotNoteDeleteFinished(KJob *job)
@@ -669,9 +671,9 @@ void KNotesApp::slotOpenFindDialog()
 {
     if (!mFindDialog) {
         mFindDialog = new KNoteFindDialog(this);
-        connect(mFindDialog, SIGNAL(noteSelected(Akonadi::Item::Id)), this, SLOT(slotSelectNote(Akonadi::Item::Id)));
+        connect(mFindDialog.data(), &KNoteFindDialog::noteSelected, this, &KNotesApp::slotSelectNote);
     }
-    QHash<Akonadi::Item::Id , Akonadi::Item> lst;
+    QHash<Akonadi::Item::Id, Akonadi::Item> lst;
 
     QHashIterator<Akonadi::Item::Id, KNote *> i(mNotes);
     while (i.hasNext()) {
@@ -690,7 +692,7 @@ void KNotesApp::fetchNotesFromCollection(const Akonadi::Collection &col)
     job->fetchScope().fetchAttribute<NoteShared::NoteDisplayAttribute>();
     job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
     job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotItemFetchFinished(KJob*)));
+    connect(job, &KJob::result, this, &KNotesApp::slotItemFetchFinished);
 }
 
 void KNotesApp::slotItemFetchFinished(KJob *job)

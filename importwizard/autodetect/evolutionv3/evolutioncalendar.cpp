@@ -107,11 +107,11 @@ void EvolutionCalendar::extractCalendarInfo(const QString &info)
                 }
                 if (e.hasAttribute(QStringLiteral("name"))) {
                     name = e.attribute(QStringLiteral("name"));
-                    settings.insert(QLatin1String("DisplayName"), name);
+                    settings.insert(QStringLiteral("DisplayName"), name);
                 }
                 if (e.hasAttribute(QStringLiteral("relative_uri"))) {
                     const QString path = mCalendarPath + e.attribute(QStringLiteral("relative_uri")) + QLatin1String("/calendar.ics");
-                    settings.insert(QLatin1String("Path"), path);
+                    settings.insert(QStringLiteral("Path"), path);
                 }
                 if (e.hasAttribute(QStringLiteral("color_spec"))) {
                     //const QString color = e.attribute(QStringLiteral("color_spec"));
@@ -128,7 +128,7 @@ void EvolutionCalendar::extractCalendarInfo(const QString &info)
                                 if (propertyName == QLatin1String("custom-file-readonly")) {
                                     if (property.hasAttribute(QStringLiteral("value"))) {
                                         if (property.attribute(QStringLiteral("value")) == QLatin1String("1")) {
-                                            settings.insert(QLatin1String("ReadOnly"), true);
+                                            settings.insert(QStringLiteral("ReadOnly"), true);
                                         }
                                     }
                                 } else if (propertyName == QLatin1String("alarm")) {
@@ -142,7 +142,7 @@ void EvolutionCalendar::extractCalendarInfo(const QString &info)
                         }
                     }
                 }
-                AbstractBase::createResource(QLatin1String("akonadi_ical_resource"), name, settings);
+                AbstractBase::createResource(QStringLiteral("akonadi_ical_resource"), name, settings);
             } else {
                 qCDebug(IMPORTWIZARD_LOG) << " tag unknown :" << tag;
             }

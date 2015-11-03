@@ -55,8 +55,8 @@
 #include <utils/kleo_assert.h>
 #include <utils/getpid.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include <gpgme++/data.h>
 #include <gpgme++/key.h>
@@ -396,7 +396,7 @@ private:
         AssuanServerConnection::Private &conn = *static_cast<AssuanServerConnection::Private *>(assuan_get_pointer(ctx_));
 
         const QString str = QString::fromUtf8(line);
-        QRegExp rx(QLatin1String("(\\d+)(?:\\s+(.*))?"));
+        QRegExp rx(QStringLiteral("(\\d+)(?:\\s+(.*))?"));
         if (!rx.exactMatch(str)) {
             static const QString errorString = i18n("Parse error");
             return assuan_process_done_msg(ctx_, gpg_error(GPG_ERR_ASS_SYNTAX), errorString);
@@ -450,7 +450,7 @@ private:
         AssuanServerConnection::Private &conn = *static_cast<AssuanServerConnection::Private *>(assuan_get_pointer(ctx_));
 
         if (qstrcmp(line, "version") == 0) {
-            static const char version[] = "Kleopatra " KLEOPATRA_VERSION_STRING ;
+            static const char version[] = "Kleopatra " KLEOPATRA_VERSION_STRING;
             return assuan_process_done(ctx_, assuan_send_data(ctx_, version, sizeof version - 1));
         }
 
@@ -795,7 +795,7 @@ private:
     QByteArray dumpOptions() const
     {
         QByteArray result;
-        for (std::map<std::string, QVariant>::const_iterator it = options.begin(), end = options.end() ; it != end ; ++it) {
+        for (std::map<std::string, QVariant>::const_iterator it = options.begin(), end = options.end(); it != end; ++it) {
             result += it->first.c_str() + it->second.toString().toUtf8() + '\n';
         }
         return result;
@@ -803,7 +803,7 @@ private:
 
     static QByteArray dumpStringList(const QStringList &sl)
     {
-        return sl.join(QLatin1String("\n")).toUtf8();
+        return sl.join(QStringLiteral("\n")).toUtf8();
     }
 
     template <typename T_container>
@@ -837,7 +837,7 @@ private:
     QByteArray dumpMementos() const
     {
         QByteArray result;
-        for (std::map< QByteArray, shared_ptr<AssuanCommand::Memento> >::const_iterator it = mementos.begin(), end = mementos.end() ; it != end ; ++it) {
+        for (std::map< QByteArray, shared_ptr<AssuanCommand::Memento> >::const_iterator it = mementos.begin(), end = mementos.end(); it != end; ++it) {
             char buf[2 + 2 * sizeof(void *) + 2];
             sprintf(buf, "0x%p\n", (void *)it->second.get());
             buf[sizeof(buf) - 1] = '\0';
@@ -964,14 +964,14 @@ AssuanServerConnection::Private::Private(assuan_fd_t fd_, const std::vector< sha
 
     if (!numFDs || fds[0] != fd) {
         const shared_ptr<QSocketNotifier> sn(new QSocketNotifier((intptr_t)fd, QSocketNotifier::Read), mem_fn(&QObject::deleteLater));
-        connect(sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)));
+        connect(sn.get(), &QSocketNotifier::activated, this, &Private::slotReadActivity);
         notifiers.push_back(sn);
     }
 
     notifiers.reserve(notifiers.size() + numFDs);
-    for (int i = 0 ; i < numFDs ; ++i) {
+    for (int i = 0; i < numFDs; ++i) {
         const shared_ptr<QSocketNotifier> sn(new QSocketNotifier((intptr_t)fds[i], QSocketNotifier::Read), mem_fn(&QObject::deleteLater));
-        connect(sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)));
+        connect(sn.get(), &QSocketNotifier::activated, this, &Private::slotReadActivity);
         notifiers.push_back(sn);
     }
 
@@ -1092,7 +1092,7 @@ void AssuanServerConnection::enableCryptoCommands(bool on)
     }
     d->cryptoCommandsEnabled = on;
     if (d->commandWaitingForCryptoCommandsEnabled) {
-        QTimer::singleShot(0, d.get(), SLOT(startCommandBottomHalf()));
+        QTimer::singleShot(0, d.get(), &Private::startCommandBottomHalf);
     }
 }
 
@@ -1272,7 +1272,7 @@ std::vector<U> keys(const std::map<U, V> &map)
 {
     std::vector<U> result;
     result.resize(map.size());
-    for (typename std::map<U, V>::const_iterator it = map.begin(), end = map.end() ; it != end ; ++it) {
+    for (typename std::map<U, V>::const_iterator it = map.begin(), end = map.end(); it != end; ++it) {
         result.push_back(it->first);
     }
     return result;
@@ -1290,7 +1290,7 @@ const std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > &AssuanCommand:
 bool AssuanCommand::hasMemento(const QByteArray &tag) const
 {
     if (const unsigned int id = sessionId()) {
-        return SessionDataHandler::instance()->sessionData(id)->mementos.count(tag) || mementos().count(tag) ;
+        return SessionDataHandler::instance()->sessionData(id)->mementos.count(tag) || mementos().count(tag);
     } else {
         return mementos().count(tag);
     }
@@ -1411,7 +1411,7 @@ int AssuanCommand::inquire(const char *keyword, QObject *receiver, const char *s
     }
 
 #if defined(HAVE_ASSUAN2) || defined(HAVE_ASSUAN_INQUIRE_EXT)
-    std::auto_ptr<InquiryHandler> ih(new InquiryHandler(keyword, receiver));
+    std::unique_ptr<InquiryHandler> ih(new InquiryHandler(keyword, receiver));
     receiver->connect(ih.get(), SIGNAL(signal(int,QByteArray,QByteArray)), slot);
     if (const gpg_error_t err = assuan_inquire_ext(d->ctx.get(), keyword,
 # if !defined(HAVE_ASSUAN2) && !defined(HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT)
@@ -1563,7 +1563,7 @@ gpg_error_t AssuanCommandFactory::_handle(assuan_context_t ctx, char *line, cons
         cmd->d->sessionId             = conn.sessionId;
 
         const std::map<std::string, std::string> cmdline_options = parse_commandline(line);
-        for (std::map<std::string, std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it) {
+        for (std::map<std::string, std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end(); it != end; ++it) {
             cmd->d->options[it->first] = QString::fromUtf8(it->second.c_str());
         }
 
@@ -1579,7 +1579,7 @@ gpg_error_t AssuanCommandFactory::_handle(assuan_context_t ctx, char *line, cons
         conn.currentCommand = cmd;
         conn.currentCommandIsNohup = nohup;
 
-        QTimer::singleShot(0, &conn, SLOT(startCommandBottomHalf()));
+        QTimer::singleShot(0, &conn, &AssuanServerConnection::Private::startCommandBottomHalf);
 
         return 0;
 

@@ -36,9 +36,7 @@ Akonadi
 Having a working installation of Baloo and MySQL should
 normally result in a working installation of Akonadi.  Akonadi provides a self
 test dialog to make sure it really works. Please make sure all tests in this
-self test dialog pass.  The test can be found in a control center module that is
-started with 'kcmshell4 kcm_akonadi'. The test is in the tab 'Akonadi Server
-Configuration' and is started with the 'Test...' button.
+self test dialog pass.
 
 
 KDEPIM-Runtime
@@ -76,9 +74,7 @@ when splitting up the KDEPIM module in several packages. The Kontact plugin
 should be packaged together with its application. It is an error to install a
 Kontact plugin without installing the associated application, this will make
 Kontact crash.  As an example, assume you want to provide a separate package for
-KNode. This package should contain KNode from the knode/ directory, and the
-Kontact plugin from the kontact/plugins/knode directory. kontact/plugins/knode
-should not be installed when knode/ is not installed.
+KNode. This package should contain KMail from the kmail/ directory.
 
 
 GPG Support

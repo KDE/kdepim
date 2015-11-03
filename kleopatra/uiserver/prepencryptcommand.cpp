@@ -36,7 +36,7 @@
 
 #include <crypto/newsignencryptemailcontroller.h>
 
-#include <kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include <KLocalizedString>
 
@@ -119,7 +119,7 @@ int PrepEncryptCommand::doStart()
 
     d->controller->setSigning(hasOption("expect-sign"));
 
-    QObject::connect(d->controller.get(), SIGNAL(certificatesResolved()), d.get(), SLOT(slotRecipientsResolved()));
+    QObject::connect(d->controller.get(), &NewSignEncryptEMailController::certificatesResolved, d.get(), &Private::slotRecipientsResolved);
     QObject::connect(d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)));
 
     d->controller->startResolveCertificates(recipients(), senders());

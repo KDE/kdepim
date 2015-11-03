@@ -16,7 +16,7 @@
 */
 
 #include "sendlaterdialogtest.h"
-#include "../sendlaterdialog.h"
+#include "sendlaterdialog.h"
 #include <KTimeComboBox>
 #include <KDateComboBox>
 #include <QLineEdit>

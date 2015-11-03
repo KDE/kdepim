@@ -27,12 +27,11 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("ktnef"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("ktnefrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("ktnefui.rc"));
     migrate.migrate();
-
-    KLocalizedString::setApplicationDomain("ktnef");
 
     KAboutData aboutData(QStringLiteral("ktnef"),
                          i18n("KTnef"),

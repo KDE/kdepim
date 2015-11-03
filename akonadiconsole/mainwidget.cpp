@@ -25,7 +25,6 @@
 #include "dbbrowser.h"
 #include "dbconsole.h"
 #include "debugwidget.h"
-#include "rawsocketconsole.h"
 #include "searchdialog.h"
 #include "searchwidget.h"
 #include "jobtrackerwidget.h"
@@ -42,7 +41,6 @@
 #include <QIcon>
 #include <QAction>
 #include <KActionCollection>
-#include <KCMultiDialog>
 #include <QTabWidget>
 #include <KXmlGuiWindow>
 
@@ -61,7 +59,6 @@ MainWidget::MainWidget(KXmlGuiWindow *parent)
     mBrowser = new BrowserWidget(parent, tabWidget);
     tabWidget->addTab(mBrowser, QStringLiteral("Browser"));
     tabWidget->addTab(new DebugWidget(tabWidget), QStringLiteral("Debugger"));
-    tabWidget->addTab(new RawSocketConsole(tabWidget), QStringLiteral("Raw Socket"));
     tabWidget->addTab(new DbBrowser(tabWidget), QStringLiteral("DB Browser"));
     tabWidget->addTab(new DbConsole(tabWidget), QStringLiteral("DB Console"));
     tabWidget->addTab(new QueryDebugger(tabWidget), QStringLiteral("Query Debugger"));
@@ -94,11 +91,6 @@ MainWidget::MainWidget(KXmlGuiWindow *parent)
     action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_restart"));
     action->setText(QStringLiteral("Restart Server"));
     connect(action, &QAction::triggered, this, &MainWidget::restartServer);
-
-    action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_configure"));
-    action->setText(QStringLiteral("Configure Server..."));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-    connect(action, &QAction::triggered, this, &MainWidget::configureServer);
 }
 
 MainWidget::~MainWidget()
@@ -143,12 +135,5 @@ void MainWidget::stopServer()
 void MainWidget::restartServer()
 {
     Akonadi::ControlGui::restart(this);
-}
-
-void MainWidget::configureServer()
-{
-    KCMultiDialog dlg;
-    dlg.addModule(QStringLiteral("kcm_akonadi_server"));
-    dlg.exec();
 }
 

@@ -18,10 +18,10 @@
 */
 #include "stringutiltest.h"
 
-#include "../utils/stringutil.h"
+#include "../src/utils/stringutil.h"
 
 #include "qtest.h"
-#include <KUrl>
+#include <QUrl>
 using namespace MessageCore;
 
 QTEST_MAIN(StringUtilTest)
@@ -195,7 +195,7 @@ void StringUtilTest::test_SmartQuote_data()
 void StringUtilTest::test_signatureStripping()
 {
     //QStringList tests;
-    const QString test1 = QLatin1String(
+    const QString test1 = QStringLiteral(
                               "text1\n"
                               "-- \n"
                               "Signature Block1\n"
@@ -220,7 +220,7 @@ void StringUtilTest::test_signatureStripping()
                               "-- \n"
                               "Signature Block 6\n");
 
-    const QString test1Result = QLatin1String(
+    const QString test1Result = QStringLiteral(
                                     "text1\n"
                                     "> text2\n"
                                     ">> text3 -- not a signature block\n"
@@ -233,7 +233,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test1), test1Result);
 
-    const QString test2 = QLatin1String(
+    const QString test2 = QStringLiteral(
                               "text1\n"
                               "> text2\n"
                               ">> text3 -- not a signature block\n"
@@ -247,7 +247,7 @@ void StringUtilTest::test_signatureStripping()
     // No actual signature - should stay the same
     QCOMPARE(StringUtil::stripSignature(test2), test2);
 
-    const QString test3 = QLatin1String(
+    const QString test3 = QStringLiteral(
                               "text1\n"
                               "-- \n"
                               "Signature Block1\n"
@@ -269,7 +269,7 @@ void StringUtilTest::test_signatureStripping()
                               "-- \n"
                               "Signature Block 5");
 
-    const QString test3Result = QLatin1String(
+    const QString test3Result = QStringLiteral(
                                     "text1\n"
                                     ">text2\n"
                                     "> >text3\n"
@@ -281,7 +281,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test3), test3Result);
 
-    const QString test4 = QLatin1String(
+    const QString test4 = QStringLiteral(
                               "Text 1\n"
                               "-- \n"
                               "First sign\n\n\n"
@@ -295,7 +295,7 @@ void StringUtilTest::test_signatureStripping()
                               ">> --\n"
                               ">> Not Signature block 3\n");
 
-    const QString test4Result = QLatin1String(
+    const QString test4Result = QStringLiteral(
                                     "Text 1\n"
                                     "> From: bla\n"
                                     "> Texto 2\n\n"
@@ -309,7 +309,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test4), test4Result);
 
-    const QString test5 = QLatin1String(
+    const QString test5 = QStringLiteral(
                               "-- \n"
                               "-- ACME, Inc\n"
                               "-- Joe User\n"
@@ -319,7 +319,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test5), QString());
 
-    const QString test6 = QLatin1String(
+    const QString test6 = QStringLiteral(
                               "Text 1\n\n\n\n"
                               "> From: bla\n"
                               "> Texto 2\n\n"
@@ -334,24 +334,9 @@ void StringUtilTest::test_signatureStripping()
     QCOMPARE(StringUtil::stripSignature(test6), test6);
 }
 
-void StringUtilTest::test_isCryptoPart()
-{
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pgp-encrypted"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pgp-signature"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pkcs7-mime"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pkcs7-signature"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("x-pkcs7-signature"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("octet-stream"), QStringLiteral("msg.asc")));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("octet-stream"), QStringLiteral("encrypted.asc")));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("octet-stream"), QStringLiteral("bla.foo")));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("foo"), QString()));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("foo"), QStringLiteral("msg.asc")));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("foo"), QStringLiteral("encrypted.asc")));
-}
-
 void StringUtilTest::test_stripOffMessagePrefixBenchmark()
 {
-    const QString subject = QLatin1String("Fwd: Hello World Subject");
+    const QString subject = QStringLiteral("Fwd: Hello World Subject");
     QBENCHMARK {
         StringUtil::stripOffPrefixes(subject);
     }
@@ -364,11 +349,10 @@ void StringUtilTest::test_parseMailtoUrl_data()
     QTest::addColumn<int>("numberOfTo");
 
     QTest::newRow("1 mailto") << QStringLiteral("mailto:foo@kde.org") << true << 1;
-    //I can't test it because it asserts in kpimutils
-    //QTest::newRow("invalid (not mailto)") << QStringLiteral("http://www.kde.org") << false << 0;
+    QTest::newRow("invalid (not mailto)") << QStringLiteral("http://www.kde.org") << false << 0;
     QTest::newRow("invalid (no email address") << QStringLiteral("mailto:") << false << 0;
-    //QTest::newRow("2 address") << QStringLiteral("mailto:foo@kde.org?foo2@kde.org") << true << 2;
-    //QTest::newRow("invalid") << QStringLiteral("fookde.org") << false << 0;
+    QTest::newRow("2 address") << QStringLiteral("mailto:foo@kde.org?to=foo2@kde.org") << true << 2;
+    QTest::newRow("invalid") << QStringLiteral("fookde.org") << false << 0;
 }
 
 void StringUtilTest::test_parseMailtoUrl()
@@ -377,10 +361,21 @@ void StringUtilTest::test_parseMailtoUrl()
     QFETCH(bool, toIsNotEmpty);
     QFETCH(int, numberOfTo);
 
-    KUrl url(mailToUrl);
+    QUrl url(mailToUrl);
     QCOMPARE(!StringUtil::parseMailtoUrl(url).value(QStringLiteral("to")).isEmpty(), toIsNotEmpty);
     QCOMPARE(StringUtil::parseMailtoUrl(url).value(QStringLiteral("to")).split(QLatin1String(", "), QString::SkipEmptyParts).count(), numberOfTo);
 
+}
+
+void StringUtilTest::test_parseMailtoUrlExtra()
+{
+    auto url = QUrl::fromEncoded("mailto:someone@example.com?subject=This%20is%20the%20subject&cc=someone_else@example.com&body=This%20is%20the%20body");
+    auto data = StringUtil::parseMailtoUrl(url);
+    QCOMPARE(data.size(), 4);
+    QCOMPARE(data.value(QLatin1String("to")), QLatin1String("someone@example.com"));
+    QCOMPARE(data.value(QLatin1String("subject")), QLatin1String("This is the subject"));
+    QCOMPARE(data.value(QLatin1String("cc")), QLatin1String("someone_else@example.com"));
+    QCOMPARE(data.value(QLatin1String("body")), QLatin1String("This is the body"));
 }
 
 void StringUtilTest::test_stripOffMessagePrefix_data()
@@ -403,4 +398,27 @@ void StringUtilTest::test_stripOffMessagePrefix()
     QFETCH(QString, result);
     const QString subjectAfterStrip = StringUtil::stripOffPrefixes(subject);
     QCOMPARE(subjectAfterStrip, result);
+}
+
+void StringUtilTest::test_formatQuotePrefix_data()
+{
+    QTest::addColumn<QString>("quotePattern");
+    QTest::addColumn<QString>("from");
+    QTest::addColumn<QString>("result");
+
+    QTest::newRow("empty") << QString() << QString() << QString();
+    QTest::newRow("default") << QStringLiteral("> ") << QStringLiteral("Jon Doe") << QStringLiteral("> ");
+    QTest::newRow("initials") << QStringLiteral("| %f |") << QStringLiteral("Jon Doe") << QStringLiteral("| JD |");
+    QTest::newRow("initials one name") << QStringLiteral("| %f |") << QStringLiteral("Jon") << QStringLiteral("| Jo |");
+    QTest::newRow("initials one letter") << QStringLiteral("| %f |") << QStringLiteral("J") << QStringLiteral("| J |");
+    QTest::newRow("initials empty name") << QStringLiteral("| %f |") << QString() << QStringLiteral("|  |");
+    QTest::newRow("percent") << QStringLiteral("%% %_ %a") << QString() << QStringLiteral("%   %a");
+}
+
+void StringUtilTest::test_formatQuotePrefix()
+{
+    QFETCH(QString, quotePattern);
+    QFETCH(QString, from);
+    QFETCH(QString, result);
+    QCOMPARE(MessageCore::StringUtil::formatQuotePrefix(quotePattern, from), result);
 }

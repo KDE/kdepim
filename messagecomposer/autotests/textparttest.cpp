@@ -17,7 +17,7 @@
 
 #include "textparttest.h"
 #include <qtest.h>
-#include <../part/textpart.h>
+#include <../src/part/textpart.h>
 TextPartTest::TextPartTest(QObject *parent)
     : QObject(parent)
 {

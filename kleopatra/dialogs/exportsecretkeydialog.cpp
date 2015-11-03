@@ -102,7 +102,7 @@ private:
         const unsigned int idx = 2 * x509 + armor;
         const char *const extension = extensions[idx];
 
-        const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4 *.pgp)")
+        const QString nf = i18n("Secret Key Files") + QStringLiteral("(*%1 *%2 *%3 *%4 *.pgp)")
                            .arg(QLatin1String(extensions[idx]), QLatin1String(extensions[(idx + 1) % 4]), QLatin1String(extensions[(idx + 2) % 4]), QLatin1String(extensions[(idx + 3) % 4]));
         ui.outputFileFR->setNameFilter(nf);
 
@@ -112,7 +112,7 @@ private:
         }
 
         bool found = false;
-        for (unsigned int i = 0 ; i < sizeof extensions / sizeof * extensions ; ++i)
+        for (unsigned int i = 0; i < sizeof extensions / sizeof * extensions; ++i)
             if (fn.endsWith(QLatin1String(extensions[i]), Qt::CaseInsensitive)) {
                 fn.chop(4);
                 found = true;
@@ -142,7 +142,7 @@ private:
             outputFileFR->setFilter(QDir::Files);
             outputFileFR->setNameFilter(i18n("Secret Key Files (*.pem *.p12 *.gpg *.asc *.pgp)"));
 
-            for (unsigned int i = 0 ; i < numCharsets ; ++i) {
+            for (unsigned int i = 0; i < numCharsets; ++i) {
                 charsetCB->addItem(QString::fromLatin1(charsets[i]));
             }
             charsetCB->setCurrentIndex(0);
@@ -187,7 +187,7 @@ QString ExportSecretKeyDialog::fileName() const
 
 void ExportSecretKeyDialog::setCharset(const QByteArray &charset)
 {
-    for (unsigned int i = 0 ; i < sizeof charsets / sizeof * charsets ; ++i)
+    for (unsigned int i = 0; i < sizeof charsets / sizeof * charsets; ++i)
         if (charset == charsets[i]) {
             d->ui.charsetCB->setCurrentIndex(i);
             return;

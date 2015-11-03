@@ -1,42 +1,77 @@
+cmake_minimum_required(VERSION 2.8.12)
+
+project(kdepimdbusinterfaces)
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${kdepimdbusinterfaces_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(LIBRARY_NAMELINK)
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+set(KF5_VERSION "5.16.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.47")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
 
-
-########### next target ###############
-
-set(kdepimdbusinterfaces_LIB_SRCS
-    urihandler.cpp
-    reminderclient.cpp
-    kdepimdbusinterface_debug.cpp
+find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets)
+find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX KDEPIMDBUSINTERFACES
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kdepimdbusinterfaces_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KdepimDBusInterfacesConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-qt5_generate_dbus_interface(${CMAKE_SOURCE_DIR}/kmail/kmkernel.h org.kde.kmail.kmail.xml OPTIONS -a)
-qt5_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korgac/org.kde.korganizer.KOrgac.xml)
-qt5_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.korganizer.Korganizer.xml)
-qt5_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.kmail.xml)
+########### Targets ###########
 
-add_library(kdepimdbusinterfaces ${kdepimdbusinterfaces_LIB_SRCS})
-generate_export_header(kdepimdbusinterfaces BASE_NAME kdepimdbusinterfaces)
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5KdepimDBusInterfaces")
 
-add_dependencies(kdepimdbusinterfaces kmail_xml)
-
-include_directories (
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_BINARY_DIR}
-    ${Boost_INCLUDE_DIR}
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5KdepimDBusInterfacesConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5KdepimDBusInterfacesConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-target_link_libraries(kdepimdbusinterfaces
-PUBLIC
-    KF5::AkonadiCore
-PRIVATE
-    KF5::AkonadiContact 
-    KF5::KIOWidgets
-    Qt5::DBus
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5KdepimDBusInterfacesConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5KdepimDBusInterfacesConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
 
-set_target_properties(kdepimdbusinterfaces PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_VERSION})
-install(TARGETS kdepimdbusinterfaces ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(EXPORT KF5KdepimDBusInterfacesTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5KdepimDBusInterfacesTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/kdepimdbusinterfaces_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX KDEPIMDBUSINTERFACES
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kdepimdbusinterfaces_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5KdepimDBusInterfacesConfigVersion.cmake"
+                        SOVERSION 5
+)
+endif()
+
+add_subdirectory(src)
 

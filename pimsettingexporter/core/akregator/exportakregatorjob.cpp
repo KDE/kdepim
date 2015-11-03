@@ -17,16 +17,17 @@
 
 #include "exportakregatorjob.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
+
 
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 #include <KZip>
 
-#include <QWidget>
+
 #include <QDir>
 #include <QStandardPaths>
+#include <QTimer>
 
 ExportAkregatorJob::ExportAkregatorJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -41,48 +42,47 @@ ExportAkregatorJob::~ExportAkregatorJob()
 void ExportAkregatorJob::start()
 {
     Q_EMIT title(i18n("Start export Akregator settings..."));
-    mArchiveDirectory = archive()->directory();
+    createProgressDialog(i18n("Export Akregator settings"));
     if (mTypeSelected & Utils::Config) {
-        backupConfig();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else if (mTypeSelected & Utils::Data) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+    } else {
+        Q_EMIT jobFinished();
     }
+}
+
+void ExportAkregatorJob::slotCheckBackupConfig()
+{
+    increaseProgressDialog();
+    setProgressDialogLabel(i18n("Backing up config..."));
+
+    backupConfigFile(QStringLiteral("akregatorrc"));
+    backupUiRcFile(QStringLiteral("pageviewer.rc"), QStringLiteral("akregator"));
+    backupUiRcFile(QStringLiteral("akregator_part.rc"), QStringLiteral("akregator"));
+    backupUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
+    backupUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
+
+    Q_EMIT info(i18n("Config backup done."));
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+}
+
+void ExportAkregatorJob::slotCheckBackupData()
+{
     if (mTypeSelected & Utils::Data) {
-        backupData();
         increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
+        setProgressDialogLabel(i18n("Backing up data..."));
+
+        const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator");
+        QDir akregatorDirectory(akregatorDir);
+        if (akregatorDirectory.exists()) {
+            const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String("/akregator"));
+            if (!akregatorDirAdded) {
+                Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", akregatorDir));
+            }
         }
+        Q_EMIT info(i18n("Data backup done."));
     }
     Q_EMIT jobFinished();
-}
-
-void ExportAkregatorJob::backupConfig()
-{
-    showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString akregatorStr(QLatin1String("akregatorrc"));
-    const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
-    backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
-    Q_EMIT info(i18n("Config backup done."));
-}
-
-void ExportAkregatorJob::backupData()
-{
-    showInfo(i18n("Backing up data..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator") ;
-    QDir akregatorDirectory(akregatorDir);
-    if (akregatorDirectory.exists()) {
-        const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String("/akregator"));
-        if (!akregatorDirAdded) {
-            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", akregatorDir));
-        }
-    }
-    Q_EMIT info(i18n("Data backup done."));
 }
 

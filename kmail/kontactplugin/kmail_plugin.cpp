@@ -184,12 +184,6 @@ bool KMailPlugin::createDBUSInterface(const QString &serviceType)
     return false;
 }
 
-QString KMailPlugin::tipFile() const
-{
-    const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kmail2/tips"));
-    return file;
-}
-
 KParts::ReadOnlyPart *KMailPlugin::createPart()
 {
     KParts::ReadOnlyPart *part = loadPart();
@@ -226,17 +220,17 @@ void KMailUniqueAppHandler::loadCommandLineOptions(QCommandLineParser *parser)
     kmail_options(parser);
 }
 
-int KMailUniqueAppHandler::activate(const QStringList &args)
+int KMailUniqueAppHandler::activate(const QStringList &args, const QString &workingDir)
 {
     // Ensure part is loaded
     (void)plugin()->part();
     org::kde::kmail::kmail kmail(QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
-    QDBusReply<bool> reply = kmail.handleCommandLine(false, args);
+    QDBusReply<bool> reply = kmail.handleCommandLine(false, args, workingDir);
 
     if (reply.isValid()) {
         bool handled = reply;
         if (!handled) {   // no args -> simply bring kmail plugin to front
-            return KontactInterface::UniqueAppHandler::activate(args);
+            return KontactInterface::UniqueAppHandler::activate(args, workingDir);
         }
     }
     return 0;

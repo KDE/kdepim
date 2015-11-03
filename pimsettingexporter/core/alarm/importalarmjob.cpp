@@ -18,7 +18,7 @@
 #include "importalarmjob.h"
 #include "archivestorage.h"
 
-#include "pimcommon/util/createresource.h"
+#include "PimCommon/CreateResource"
 
 #include <KArchive>
 #include <KLocalizedString>
@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QFile>
 #include <QStandardPaths>
+#include <QTimer>
 
 namespace
 {
@@ -52,22 +53,25 @@ ImportAlarmJob::~ImportAlarmJob()
 void ImportAlarmJob::start()
 {
     Q_EMIT title(i18n("Start import KAlarm settings..."));
+    createProgressDialog(i18n("Import KAlarm settings"));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory , QString());
+    searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
-    nextStep();
+    QTimer::singleShot(0, this, &ImportAlarmJob::slotNextStep);
 }
 
-void ImportAlarmJob::nextStep()
+void ImportAlarmJob::slotNextStep()
 {
     ++mIndex;
     if (mIndex < mListStep.count()) {
-        Utils::StoredType type = mListStep.at(mIndex);
+        const Utils::StoredType type = mListStep.at(mIndex);
         if (type == Utils::Resources) {
             restoreResources();
-        }
-        if (type == Utils::Config) {
+        } else if (type == Utils::Config) {
             restoreConfig();
+        } else {
+            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << Q_FUNC_INFO << " not supported type "<< type;
+            slotNextStep();
         }
     } else {
         Q_EMIT jobFinished();
@@ -77,6 +81,8 @@ void ImportAlarmJob::nextStep()
 void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    setProgressDialogLabel(i18n("Restore resources..."));
+    increaseProgressDialog();
     QStringList listResource;
     listResource << restoreResourceFile(QStringLiteral("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm(), false);
     if (!mListResourceFile.isEmpty()) {
@@ -88,7 +94,8 @@ void ImportAlarmJob::restoreResources()
         for (int i = 0; i < numberOfResourceFile; ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))) {
+            if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))
+                    || value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_resource_"))) {
                 const KArchiveEntry *fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
@@ -101,15 +108,17 @@ void ImportAlarmJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm());
+                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm());
+                    QFileInfo newUrlInfo(newUrl);
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    bool isDirResource = value.akonadiConfigFile.contains(QStringLiteral("akonadi_kalarm_dir_resource_"));
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
-                        extractZipFile(file, copyToDirName, newUrl.path());
+                        extractZipFile(file, copyToDirName, newUrlInfo.path(), isDirResource);
                     }
-                    settings.insert(QLatin1String("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl);
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {
@@ -121,7 +130,7 @@ void ImportAlarmJob::restoreResources()
                             filename = Utils::akonadiAgentName(copyToDirName + QLatin1Char('/') + resourceName);
                         }
                     }
-
+                    const QString archiveNameType = isDirResource ? QStringLiteral("akonadi_kalarm_dir_resource") : QStringLiteral("akonadi_kalarm_resource");
                     const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_kalarm_dir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
@@ -132,11 +141,6 @@ void ImportAlarmJob::restoreResources()
     }
     //It's maildir support. Need to add support
     startSynchronizeResources(listResource);
-}
-
-void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
-{
-
 }
 
 void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
@@ -186,7 +190,9 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
 
 void ImportAlarmJob::restoreConfig()
 {
-    const QString kalarmStr(QLatin1String("kalarmrc"));
+    increaseProgressDialog();
+    setProgressDialogLabel(i18n("Restore configs..."));
+    const QString kalarmStr(QStringLiteral("kalarmrc"));
     const KArchiveEntry *kalarmrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kalarmStr);
     if (kalarmrcentry && kalarmrcentry->isFile()) {
         const KArchiveFile *kalarmrcFile = static_cast<const KArchiveFile *>(kalarmrcentry);
@@ -199,8 +205,9 @@ void ImportAlarmJob::restoreConfig()
             importkalarmConfig(kalarmrcFile, kalarmrc, kalarmStr, Utils::configsPath());
         }
     }
+    restoreUiRcFile(QStringLiteral("kalarmui.rc"), QStringLiteral("kalarm"));
     Q_EMIT info(i18n("Config restored."));
-    nextStep();
+    QTimer::singleShot(0, this, &ImportAlarmJob::slotNextStep);
 }
 
 void ImportAlarmJob::importkalarmConfig(const KArchiveFile *kalarmFile, const QString &kalarmrc, const QString &filename, const QString &prefix)
@@ -208,10 +215,10 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile *kalarmFile, const QS
     copyToFile(kalarmFile, kalarmrc, filename, prefix);
     KSharedConfig::Ptr kalarmConfig = KSharedConfig::openConfig(kalarmrc);
 
-    const QString collectionsStr(QLatin1String("Collections"));
+    const QString collectionsStr(QStringLiteral("Collections"));
     if (kalarmConfig->hasGroup(collectionsStr)) {
         KConfigGroup group = kalarmConfig->group(collectionsStr);
-        const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+        const QString selectionKey(QStringLiteral("FavoriteCollectionIds"));
         convertRealPathToCollectionList(group, selectionKey, false);
     }
 

@@ -54,8 +54,8 @@ public:
     }
 
 private:
-    int doStart();
-    void doCanceled();
+    int doStart() Q_DECL_OVERRIDE;
+    void doCanceled() Q_DECL_OVERRIDE;
 
 #ifdef Q_MOC_RUN
 private Q_SLOTS:
@@ -66,8 +66,6 @@ private Q_SLOTS:
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    //Q_PRIVATE_SLOT( th, void done() )
-    //Q_PRIVATE_SLOT( this, void done(int,QString) )
 };
 
 }

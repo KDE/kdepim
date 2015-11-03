@@ -1,0 +1,8 @@
+File=gravatar.kcfg
+ClassName=GravatarSettings
+NameSpace=Gravatar
+Visibility=GRAVATAR_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+IncludeFiles=gravatar_export.h

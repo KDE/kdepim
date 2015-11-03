@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <include>QFontDatabase</include>
+ 
+  <group name="MessageListView">
+    <entry name="MessageToolTipEnabled" type="Bool">
+      <default>true</default>
+      <label>Display tooltips for messages and group headers</label>
+      <whatsthis>Enable this option to display tooltips when hovering over an item in the message list.</whatsthis>
+    </entry>
+    <entry name="AutoHideTabBarWithSingleTab" type="Bool">
+      <default>true</default>
+      <label>Hide tab bar when only one tab is open</label>
+      <whatsthis>With this option enabled the tab bar will be displayed only when there are two or more tabs. With this option disabled the tab bar will be always shown. When the tab bar is hidden you can always open a folder in a new tab by middle-clicking it.</whatsthis>
+    </entry>
+    <entry name="TabsHaveCloseButton" type="Bool">
+      <default>false</default>
+      <label>Show close button on each tab</label>
+      <whatsthis>Enable this option if you want to have a close button on each tab.</whatsthis>
+    </entry>
+    <entry name="ShowQuickSearch" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="TagSelected" type="String"/>
+  </group>
+  <group name="QuickSearchWarning">
+    <entry name="QuickSearchWarningDoNotShowAgain" type="Bool">
+     <default>false</default>
+    </entry>
+  </group>
+
+  <group name="MessageListView::Colors">
+    <entry name="UnreadMessageColor" type="Color">
+      <default code="true">MessageList::Util::unreadDefaultMessageColor()</default>
+    </entry>
+    <entry name="ImportantMessageColor" type="Color">
+      <default code="true">MessageList::Util::importantDefaultMessageColor()</default>
+    </entry>
+    <entry name="TodoMessageColor" type="Color">
+      <default code="true">MessageList::Util::todoDefaultMessageColor()</default>
+    </entry>
+  </group>
+
+  <group name="MessageListView::Fonts">
+    <entry name="MessageListFont" type="Font">
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
+    </entry>
+    <entry name="UnreadMessageFont" type="Font">
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
+    </entry>
+    <entry name="ImportantMessageFont" type="Font">
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
+    </entry>
+    <entry name="TodoMessageFont" type="Font">
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
+    </entry>
+  </group>
+</kcfg>

@@ -20,8 +20,8 @@
 
 #include "sieveeditormanagesievewidget.h"
 #include "sieveeditorutil.h"
-#include "widgets/sievetreewidgetitem.h"
-#include "widgets/managesievetreeview.h"
+#include "ksieveui/sievetreewidgetitem.h"
+#include "ksieveui/managesievetreeview.h"
 
 #include <kmanagesieve/sievejob.h>
 
@@ -49,8 +49,8 @@ bool SieveEditorManageSieveWidget::refreshList()
     const QVector<SieveEditorUtil::SieveServerConfig> listConfig = SieveEditorUtil::readServerSieveConfig();
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, listConfig) {
         last = new SieveTreeWidgetItem(treeView(), last);
-        last->setText(0, conf.serverName + QString::fromLatin1(" (%1)").arg(conf.userName));
-        last->setIcon(0, SmallIcon(QStringLiteral("network-server")));
+        last->setText(0, conf.serverName + QStringLiteral(" (%1)").arg(conf.userName));
+        last->setIcon(0, QIcon::fromTheme(QStringLiteral("network-server")));
 
         const QUrl u = conf.url();
         if (u.isEmpty()) {

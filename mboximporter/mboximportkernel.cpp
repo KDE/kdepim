@@ -18,7 +18,7 @@
 #include "mboximportkernel.h"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <mailcommon/folder/foldercollectionmonitor.h>
+#include <MailCommon/FolderCollectionMonitor>
 #include <AkonadiCore/session.h>
 #include <entitytreemodel.h>
 #include <entitymimetypefiltermodel.h>
@@ -33,7 +33,7 @@ MBoxImporterKernel::MBoxImporterKernel(QObject *parent)
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
 
     mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
-    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setListFilter(Akonadi::CollectionFetchScope::Enabled);
     mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
@@ -107,13 +107,13 @@ bool MBoxImporterKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id MBoxImporterKernel::lastSelectedFolder()
+Akonadi::Collection::Id MBoxImporterKernel::lastSelectedFolder()
 {
     Q_ASSERT(false);
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void MBoxImporterKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void MBoxImporterKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

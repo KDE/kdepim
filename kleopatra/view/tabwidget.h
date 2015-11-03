@@ -102,8 +102,6 @@ private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
 
-    Q_PRIVATE_SLOT(d, void slotContextMenu(QWidget *, const QPoint &))
-    Q_PRIVATE_SLOT(d, void slotContextMenu(const QPoint &))
     Q_PRIVATE_SLOT(d, void currentIndexChanged(int))
     Q_PRIVATE_SLOT(d, void slotPageTitleChanged(const QString &))
     Q_PRIVATE_SLOT(d, void slotPageKeyFilterChanged(const boost::shared_ptr<Kleo::KeyFilter> &))

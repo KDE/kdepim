@@ -39,7 +39,7 @@
 #include <utils/formatting.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <KLocalizedString>
 
@@ -83,7 +83,7 @@ void UserIDModel::setCertificateToCertify(const Key &key)
 void UserIDModel::setCheckedUserIDs(const std::vector<unsigned int> &uids)
 {
     const std::vector<unsigned int> sorted = kdtools::sorted(uids);
-    for (unsigned int i = 0, end = rowCount() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = rowCount(); i != end; ++i) {
         item(i)->setCheckState(kdtools::binary_search(sorted, i) ? Qt::Checked : Qt::Unchecked);
     }
 }
@@ -146,7 +146,7 @@ SelectUserIDsPage::SelectUserIDsPage(QWidget *parent) : QWizardPage(parent), m_u
     m_checkbox->setText(i18n("I have verified the fingerprint"));
     layout->addWidget(m_checkbox);
     connect(m_checkbox, &QCheckBox::toggled, this, &SelectUserIDsPage::completeChanged);
-    connect(&m_userIDModel, SIGNAL(itemChanged(QStandardItem*)), this, SIGNAL(completeChanged()));
+    connect(&m_userIDModel, &QStandardItemModel::itemChanged, this, &QWizardPage::completeChanged);
 }
 
 bool SelectUserIDsPage::isComplete() const
@@ -197,7 +197,7 @@ OptionsPage::OptionsPage(QWidget *parent) : QWizardPage(parent), m_ui()
 {
     m_ui.setupUi(this);
     m_ui.keyListView->setModel(&m_model);
-    connect(m_ui.keyListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(completeChanged()));
+    connect(m_ui.keyListView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &QWizardPage::completeChanged);
     setCommitPage(true);
     setButtonText(QWizard::CommitButton, i18n("Certify"));
 }
@@ -282,7 +282,7 @@ void SummaryPage::setSummary(const SummaryPage::Summary &sum)
     Q_FOREACH (const unsigned int i, sum.selectedUserIDs) {
         ids += Formatting::prettyUserID(key.userID(i)).toHtmlEscaped();
     }
-    m_userIDsLabel->setText(QLatin1String("<qt>") + ids.join(QLatin1String("<br/>")) + QLatin1String("</qt>"));
+    m_userIDsLabel->setText(QLatin1String("<qt>") + ids.join(QStringLiteral("<br/>")) + QLatin1String("</qt>"));
     m_secretKeyLabel->setText(sum.secretKey.isNull() ? i18n("Default certificate") : Formatting::prettyNameAndEMail(sum.secretKey));
 #ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
     switch (sum.checkLevel) {
@@ -354,7 +354,7 @@ public:
 
     Key key() const
     {
-        return selectUserIDsPage ? selectUserIDsPage->certificateToCertify() : Key() ;
+        return selectUserIDsPage ? selectUserIDsPage->certificateToCertify() : Key();
     }
 
     void ensureSummaryPageVisible();
@@ -473,7 +473,7 @@ struct UidEqual : std::binary_function<UserID, UserID, bool> {
     {
         return qstrcmp(lhs.parent().primaryFingerprint(),
                        rhs.parent().primaryFingerprint()) == 0
-               && qstrcmp(lhs.id(), rhs.id()) == 0 ;
+               && qstrcmp(lhs.id(), rhs.id()) == 0;
     }
 };
 }

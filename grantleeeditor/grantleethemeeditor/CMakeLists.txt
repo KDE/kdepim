@@ -2,10 +2,6 @@ project(grantleethemeeditor)
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libgrantleethemeeditor\")
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/pimcommon/
-)
-
 
 set(libgrantleethemeeditor_SRCS 
     newthemedialog.cpp 
@@ -18,7 +14,6 @@ set(libgrantleethemeeditor_SRCS
     previewwidget.cpp
     configurewidget.cpp
     grantleeplaintexteditor.cpp
-    grantleethemeeditor_debug.cpp
 )
 
 kconfig_add_kcfg_files(libgrantleethemeeditor_SRCS
@@ -29,11 +24,21 @@ ki18n_wrap_ui(libgrantleethemeeditor_SRCS
     ui/configurewidget.ui
 )
 
+ecm_qt_declare_logging_category(libgrantleethemeeditor_SRCS HEADER grantleethemeeditor_debug.h IDENTIFIER GRANTLEETHEMEEDITOR_LOG CATEGORY_NAME log_grantleethemeeditor)
 
 add_library(grantleethemeeditor ${libgrantleethemeeditor_SRCS})
 generate_export_header(grantleethemeeditor BASE_NAME grantleethemeeditor)
 
-target_link_libraries(grantleethemeeditor    KF5::Archive KF5::PimTextEdit pimcommon
+target_include_directories(grantleethemeeditor PUBLIC "$<BUILD_INTERFACE:${grantleeditor_SOURCE_DIR};${grantleethemeeditor_SOURCE_DIR};${grantleethemeeditor_BINAY_DIR}>")
+
+target_link_libraries(grantleethemeeditor
+PUBLIC
+  KF5::Archive 
+PRIVATE
+  KF5::KIOWidgets 
+  KF5::PimTextEdit 
+  KF5::PimCommon 
+  KF5::ConfigWidgets
 )
 
 set_target_properties(grantleethemeeditor PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

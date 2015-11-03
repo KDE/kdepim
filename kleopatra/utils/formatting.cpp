@@ -36,7 +36,7 @@
 
 #include <utils/kleo_assert.h>
 
-#include <kleo/dn.h>
+#include <Libkleo/Dn>
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -72,12 +72,12 @@ QString Formatting::prettyName(int proto, const char *id, const char *name_, con
         if (comment.isEmpty()) {
             return name;
         }
-        return QString::fromLatin1("%1 (%2)").arg(name, comment);
+        return QStringLiteral("%1 (%2)").arg(name, comment);
     }
 
     if (proto == CMS) {
         const DN subject(id);
-        const QString cn = subject[QLatin1String("CN")].trimmed();
+        const QString cn = subject[QStringLiteral("CN")].trimmed();
         if (cn.isEmpty()) {
             return subject.prettyDN();
         }
@@ -100,28 +100,28 @@ QString Formatting::prettyNameAndEMail(int proto, const QString &id, const QStri
             if (email.isEmpty()) {
                 return QString();
             } else if (comment.isEmpty()) {
-                return QString::fromLatin1("<%1>").arg(email);
+                return QStringLiteral("<%1>").arg(email);
             } else {
-                return QString::fromLatin1("(%2) <%1>").arg(email, comment);
+                return QStringLiteral("(%2) <%1>").arg(email, comment);
             }
         }
         if (email.isEmpty()) {
             if (comment.isEmpty()) {
                 return name;
             } else {
-                return QString::fromLatin1("%1 (%2)").arg(name, comment);
+                return QStringLiteral("%1 (%2)").arg(name, comment);
             }
         }
         if (comment.isEmpty()) {
-            return QString::fromLatin1("%1 <%2>").arg(name, email);
+            return QStringLiteral("%1 <%2>").arg(name, email);
         } else {
-            return QString::fromLatin1("%1 (%3) <%2>").arg(name, email, comment);
+            return QStringLiteral("%1 (%3) <%2>").arg(name, email, comment);
         }
     }
 
     if (proto == CMS) {
         const DN subject(id);
-        const QString cn = subject[QLatin1String("CN")].trimmed();
+        const QString cn = subject[QStringLiteral("CN")].trimmed();
         if (cn.isEmpty()) {
             return subject.prettyDN();
         }
@@ -187,7 +187,7 @@ QString Formatting::prettyName(const UserID::Signature &sig)
 
 QString Formatting::prettyEMail(const Key &key)
 {
-    for (unsigned int i = 0, end = key.numUserIDs() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = key.numUserIDs(); i < end; ++i) {
         const QString email = prettyEMail(key.userID(i));
         if (!email.isEmpty()) {
             return email;
@@ -212,7 +212,7 @@ QString Formatting::prettyEMail(const char *email_, const char *id)
     if (email_ && parseMailbox(email_, email_ + strlen(email_), mailBox)) {
         return mailBox.addrSpec().asPrettyString();
     } else {
-        return DN(id)[QLatin1String("EMAIL")].trimmed();
+        return DN(id)[QStringLiteral("EMAIL")].trimmed();
     }
 }
 
@@ -298,7 +298,7 @@ QString Formatting::toolTip(const Key &key, int flags)
     const Subkey subkey = key.subkey(0);
 
     QString result;
-    if (flags & Validity)
+    if (flags & Validity) {
         if (key.protocol() == OpenPGP || (key.keyListMode() & Validate))
             if (key.isRevoked()) {
                 result += make_red(i18n("This certificate has been revoked."));
@@ -312,6 +312,7 @@ QString Formatting::toolTip(const Key &key, int flags)
         else {
             result += i18n("The validity of this certificate cannot be checked at the moment.");
         }
+    }
     if (flags == Validity) {
         return result;
     }
@@ -332,7 +333,7 @@ QString Formatting::toolTip(const Key &key, int flags)
                                  ? i18n("Subject")
                                  : i18n("User-ID"), prettyUserID(uids.front()));
         if (uids.size() > 1)
-            for (std::vector<UserID>::const_iterator it = uids.begin() + 1, end = uids.end() ; it != end ; ++it)
+            for (std::vector<UserID>::const_iterator it = uids.begin() + 1, end = uids.end(); it != end; ++it)
                 if (!it->isRevoked() && !it->isInvalid()) {
                     result += format_row(i18n("a.k.a."), prettyUserID(*it));
                 }
@@ -349,24 +350,28 @@ QString Formatting::toolTip(const Key &key, int flags)
         result += format_row(i18n("Certificate usage"), format_keyusage(key));
     }
     if (flags & KeyID) {
-        result += format_row(i18n("Key-ID"), QString::fromLatin1(key.shortKeyID())) ;
+        result += format_row(i18n("Key-ID"), QString::fromLatin1(key.shortKeyID()));
     }
     if (flags & Fingerprint) {
         result += format_row(i18n("Fingerprint"), key.primaryFingerprint());
     }
-    if (flags & OwnerTrust)
+    if (flags & OwnerTrust) {
         if (key.protocol() == OpenPGP) {
             result += format_row(i18n("Ownertrust"), ownerTrustShort(key));
-        } else if (key.isRoot())
+        } else if (key.isRoot()) {
             result += format_row(i18n("Trusted issuer?"),
                                  key.userID(0).validity() == UserID::Ultimate ? i18n("Yes") :
                                  /* else */                                     i18n("No"));
-    if (flags & StorageLocation)
+        }
+    }
+
+    if (flags & StorageLocation) {
         if (const char *card = subkey.cardSerialNumber()) {
             result += format_row(i18n("Stored"), i18nc("stored...", "on SmartCard with serial no. %1", QString::fromUtf8(card)));
         } else {
             result += format_row(i18n("Stored"), i18nc("stored...", "on this computer"));
         }
+    }
     result += QLatin1String("</table>");
 
     return result;
@@ -395,7 +400,7 @@ static QString date2string(const QDate &date)
 template <typename T>
 QString expiration_date_string(const T &tee)
 {
-    return tee.neverExpires() ? QString() : date2string(time_t2date(tee.expirationTime())) ;
+    return tee.neverExpires() ? QString() : date2string(time_t2date(tee.expirationTime()));
 }
 template <typename T>
 QDate creation_date(const T &tee)
@@ -582,7 +587,7 @@ QString Formatting::formatKeyLink(const Key &key)
     if (key.isNull()) {
         return QString();
     }
-    return QString::fromLatin1("<a href=\"key:%1\">%2</a>").arg(QLatin1String(key.primaryFingerprint()), Formatting::prettyName(key));
+    return QStringLiteral("<a href=\"key:%1\">%2</a>").arg(QLatin1String(key.primaryFingerprint()), Formatting::prettyName(key));
 }
 
 QString Formatting::formatForComboBox(const GpgME::Key &key)
@@ -611,7 +616,7 @@ static QString keyToString(const Key &key)
     } else if (email.isEmpty()) {
         return name;
     } else {
-        return QString::fromLatin1("%1 <%2>").arg(name, email);
+        return QStringLiteral("%1 <%2>").arg(name, email);
     }
 }
 
@@ -682,7 +687,7 @@ QString Formatting::importMetaData(const Import &import, const QStringList &ids)
     } else
         return result + QLatin1Char('\n') +
                i18n("This certificate was imported from the following sources:") + QLatin1Char('\n') +
-               ids.join(QLatin1String("\n"));
+               ids.join(QStringLiteral("\n"));
 }
 
 QString Formatting::importMetaData(const Import &import)
@@ -703,7 +708,7 @@ QString Formatting::importMetaData(const Import &import)
     if (status & Import::NewKey)
         return (status & Import::ContainedSecretKey)
                ? i18n("This certificate was new to your keystore. The secret key is available.")
-               : i18n("This certificate is new to your keystore.") ;
+               : i18n("This certificate is new to your keystore.");
 
     QStringList results;
     if (status & Import::NewUserIDs) {
@@ -718,7 +723,7 @@ QString Formatting::importMetaData(const Import &import)
 
     return results.empty()
            ? i18n("The import contained no new data for this certificate. It is unchanged.")
-           : results.join(QLatin1String("\n"));
+           : results.join(QStringLiteral("\n"));
 }
 
 //

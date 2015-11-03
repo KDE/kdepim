@@ -27,14 +27,13 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/attachmentjob.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/AttachmentJob>
 using namespace MessageComposer;
 
-#include <messagecore/attachment/attachmentfromurljob.h>
-#include <messagecore/attachment/attachmentpart.h>
-#include <boost/shared_ptr.hpp>
+#include <MessageCore/AttachmentFromUrlJob>
+#include <MessageCore/AttachmentPart>
 using namespace MessageCore;
 
 #define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )

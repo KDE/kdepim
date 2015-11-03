@@ -96,18 +96,18 @@ void TagPropertiesDialog::setupUi()
 
     if (mTag.isValid()) {
         ui.idLabel->setText(QString::number(mTag.id()));
-        ui.typeEdit->setText(QString::fromLatin1(mTag.type()));
-        ui.gidEdit->setText(QString::fromLatin1(mTag.gid()));
+        ui.typeEdit->setText(QLatin1String(mTag.type()));
+        ui.gidEdit->setText(QLatin1String(mTag.gid()));
         ui.parentIdLabel->setText(QString::number(mTag.parent().id()));
 
         for (int i = 0; i < attributes.count(); ++i) {
             QModelIndex index = mAttributesModel->index(i, 0);
             Q_ASSERT(index.isValid());
-            mAttributesModel->setData(index, QString::fromLatin1(attributes[i]->type()));
+            mAttributesModel->setData(index, QLatin1String(attributes[i]->type()));
             mAttributesModel->item(i, 0)->setEditable(false);
             index = mAttributesModel->index(i, 1);
             Q_ASSERT(index.isValid());
-            mAttributesModel->setData(index, QString::fromLatin1(attributes[i]->serialized()));
+            mAttributesModel->setData(index, QLatin1String(attributes[i]->serialized()));
             mAttributesModel->item(i, 1)->setEditable(true);
         }
 
@@ -279,16 +279,16 @@ void TagPropertiesDialog::slotAccept()
 
     if (mTag.isValid() && !mRemovedRIDs.isEmpty()) {
         QSqlQuery query(DbAccess::database());
-        QString queryStr = QLatin1String("DELETE FROM TagRemoteIdResourceRelationTable "
-                                         "WHERE tagId = ? AND "
-                                         "resourceId IN (SELECT id "
-                                         "FROM ResourceTable "
-                                         "WHERE ");
+        QString queryStr = QStringLiteral("DELETE FROM TagRemoteIdResourceRelationTable "
+                                          "WHERE tagId = ? AND "
+                                          "resourceId IN (SELECT id "
+                                          "FROM ResourceTable "
+                                          "WHERE ");
         QStringList conds;
         for (int i = 0; i < mRemovedRIDs.count(); ++i) {
             conds << QStringLiteral("name = ?");
         }
-        queryStr += conds.join(QLatin1String(" OR ")) + QLatin1String(")");
+        queryStr += conds.join(QStringLiteral(" OR ")) + QLatin1String(")");
         query.prepare(queryStr);
         query.addBindValue(mTag.id());
         Q_FOREACH (const QString &removedRid, mRemovedRIDs) {
@@ -310,7 +310,7 @@ void TagPropertiesDialog::slotAccept()
             for (int i = 0; i < mChangedRIDs.count(); ++i) {
                 conds << QStringLiteral("name = ?");
             }
-            queryStr += conds.join(QLatin1String(" OR "));
+            queryStr += conds.join(QStringLiteral(" OR "));
             query.prepare(queryStr);
             Q_FOREACH (const QString &res, mChangedRIDs) {
                 query.addBindValue(res);
@@ -329,7 +329,7 @@ void TagPropertiesDialog::slotAccept()
         // This is a workaround for PSQL not supporting UPSERTs
         {
             QSqlQuery query(DbAccess::database());
-            query.prepare(QLatin1String("SELECT resourceId FROM TagRemoteIdResourceRelationTable WHERE tagId = ?"));
+            query.prepare(QStringLiteral("SELECT resourceId FROM TagRemoteIdResourceRelationTable WHERE tagId = ?"));
             query.addBindValue(mTag.id());
             if (!query.exec()) {
                 qCritical() << query.executedQuery();

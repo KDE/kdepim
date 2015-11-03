@@ -29,14 +29,14 @@ public:
     explicit ClawsMailSettings(ImportWizard *parent);
     ~ClawsMailSettings();
 
-    void importSettings(const QString &filename, const QString &path);
+    void importSettings(const QString &filename, const QString &path) Q_DECL_OVERRIDE;
 
 protected:
     //Reimplement from sylpheed
-    void readSettingsColor(const KConfigGroup &group);
-    void readTemplateFormat(const KConfigGroup &group);
-    void readGlobalSettings(const KConfigGroup &group);
-    void readTagColor(const KConfigGroup &group);
+    void readSettingsColor(const KConfigGroup &group) Q_DECL_OVERRIDE;
+    void readTemplateFormat(const KConfigGroup &group) Q_DECL_OVERRIDE;
+    void readGlobalSettings(const KConfigGroup &group) Q_DECL_OVERRIDE;
+    void readTagColor(const KConfigGroup &group) Q_DECL_OVERRIDE;
 
 private:
     QString writeColor(const QColor &col);

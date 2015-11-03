@@ -18,9 +18,9 @@
 #ifndef VCARDMEMENTO_H
 #define VCARDMEMENTO_H
 
-#include <messageviewer/interfaces/bodypart.h>
+#include <messageviewer/bodypart.h>
 
-#include <messageviewer/viewer/viewer.h>
+#include <messageviewer/viewer.h>
 
 #include <QObject>
 #include <QMap>
@@ -33,6 +33,7 @@ namespace MessageViewer
 
 struct VCard {
     VCard()
+        : found(false)
     {
 
     }

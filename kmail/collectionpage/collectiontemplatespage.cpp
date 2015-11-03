@@ -19,10 +19,10 @@
 #include "collectiontemplatespage.h"
 
 #include "kmkernel.h"
-#include "kernel/mailkernel.h"
-#include "foldercollection.h"
-#include "templateparser/templatesconfiguration.h"
-#include "templateparser/templatesconfiguration_kfg.h"
+#include "mailcommon/mailkernel.h"
+#include "MailCommon/FolderCollection"
+#include "TemplateParser/TemplatesConfiguration"
+#include "templatesconfiguration_kfg.h"
 #include <AkonadiCore/collection.h>
 
 #include <KLocalizedString>

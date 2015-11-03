@@ -7,32 +7,11 @@ if(BUILD_TESTING)
     add_subdirectory(autotests)
 endif()
 
-set(sendlaterlib_SRCS 
-    sendlateragent_debug.cpp
-    sendlaterinfo.cpp
-    sendlaterdialog.cpp
-    sendlaterutil.cpp
-    sendlatertimedatewidget.cpp
-)
-
-kconfig_add_kcfg_files(sendlaterlib_SRCS
-    settings/sendlateragentsettings.kcfgc 
-  )
-
-ki18n_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
-
-
-add_library( sendlater ${sendlaterlib_SRCS} )
-generate_export_header(sendlater BASE_NAME sendlater)
-target_link_libraries( sendlater PUBLIC KF5::AkonadiCore KF5::ConfigCore Qt5::Widgets PRIVATE KF5::I18n KF5::WidgetsAddons KF5::ConfigGui Qt5::DBus )
-
-set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
-
-install( TARGETS sendlater ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
-
+set(sendlater_common_SRCS)
+ecm_qt_declare_logging_category(sendlater_common_SRCS HEADER sendlateragent_debug.h IDENTIFIER SENDLATERAGENT_LOG CATEGORY_NAME log_sendlateragent)
 
 set(sendlateragent_SRCS
-   sendlateragent_debug.cpp
+   ${sendlater_common_SRCS}
    sendlateragent.cpp
    sendlaterconfiguredialog.cpp
    sendlaterconfigurewidget.cpp
@@ -48,21 +27,25 @@ ki18n_wrap_ui(sendlateragent_SRCS ui/sendlaterconfigurewidget.ui)
 add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 
 target_link_libraries(akonadi_sendlater_agent
-  sendlater
+  KF5::SendLater
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::MailTransport
   KF5::Mime
-  messagecomposer
-  messagecore
-  pimcommon
+  KF5::MessageComposer
+  KF5::MessageCore
+  KF5::PimCommon
   KF5::AkonadiAgentBase
   KF5::DBusAddons
+  KF5::WindowSystem
+  KF5::XmlGui
+  KF5::Notifications
+  KF5::IconThemes
 )
 
 if( APPLE )
   set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist.template)
-  set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.sendlater")
+  set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.KF5::SendLater")
   set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Send Later")
 endif ()
 

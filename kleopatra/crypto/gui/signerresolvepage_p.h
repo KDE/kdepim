@@ -68,10 +68,10 @@ class SigningProtocolSelectionWidget : public AbstractSigningProtocolSelectionWi
     Q_OBJECT
 public:
     explicit SigningProtocolSelectionWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
-    void setProtocolChecked(GpgME::Protocol protocol, bool checked);
-    bool isProtocolChecked(GpgME::Protocol protocol) const;
-    std::vector<GpgME::Protocol> checkedProtocols() const;
-    void setCertificate(GpgME::Protocol protocol, const GpgME::Key &key);
+    void setProtocolChecked(GpgME::Protocol protocol, bool checked) Q_DECL_OVERRIDE;
+    bool isProtocolChecked(GpgME::Protocol protocol) const Q_DECL_OVERRIDE;
+    std::vector<GpgME::Protocol> checkedProtocols() const Q_DECL_OVERRIDE;
+    void setCertificate(GpgME::Protocol protocol, const GpgME::Key &key) Q_DECL_OVERRIDE;
 
     void setExclusive(bool exclusive);
     bool isExclusive() const;
@@ -87,10 +87,10 @@ class ReadOnlyProtocolSelectionWidget : public AbstractSigningProtocolSelectionW
     Q_OBJECT
 public:
     explicit ReadOnlyProtocolSelectionWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
-    void setProtocolChecked(GpgME::Protocol protocol, bool checked);
-    bool isProtocolChecked(GpgME::Protocol protocol) const;
-    std::vector<GpgME::Protocol> checkedProtocols() const;
-    void setCertificate(GpgME::Protocol protocol, const GpgME::Key &key);
+    void setProtocolChecked(GpgME::Protocol protocol, bool checked) Q_DECL_OVERRIDE;
+    bool isProtocolChecked(GpgME::Protocol protocol) const Q_DECL_OVERRIDE;
+    std::vector<GpgME::Protocol> checkedProtocols() const Q_DECL_OVERRIDE;
+    void setCertificate(GpgME::Protocol protocol, const GpgME::Key &key) Q_DECL_OVERRIDE;
 
 private:
     QLabel *label(GpgME::Protocol p) const;

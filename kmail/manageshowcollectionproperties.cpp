@@ -20,7 +20,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <AkonadiCore/CollectionAttributesSynchronizationJob>
-#include <Solid/Networking>
 #include "kmail_debug.h"
 #include <AkonadiCore/CollectionFetchJob>
 #include <AkonadiWidgets/CollectionPropertiesDialog>
@@ -89,7 +88,7 @@ void ManageShowCollectionProperties::showCollectionProperties(const QString &pag
         dlg->raise();
         return;
     }
-    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+    if (!KMKernel::self()->isOffline()) {
         const Akonadi::AgentInstance agentInstance = Akonadi::AgentManager::self()->instance(mMainWidget->currentFolder()->collection().resource());
         bool isOnline = agentInstance.isOnline();
         if (!isOnline) {
@@ -108,8 +107,8 @@ void ManageShowCollectionProperties::showCollectionProperties(const QString &pag
                     this, &ManageShowCollectionProperties::slotCollectionPropertiesContinued);
             connect(progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
                     sync, SLOT(kill()));
-            connect(progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
-                    KPIM::ProgressManager::instance(), SLOT(slotStandardCancelHandler(KPIM::ProgressItem*)));
+            connect(progressItem.data(), &KPIM::ProgressItem::progressItemCanceled,
+                    KPIM::ProgressManager::instance(), &KPIM::ProgressManager::slotStandardCancelHandler);
             sync->start();
         }
     } else {
@@ -152,8 +151,8 @@ void ManageShowCollectionProperties::showCollectionPropertiesContinued(const QSt
         progressItem = KPIM::ProgressManager::createProgressItem(i18n("Retrieving folder properties"));
         progressItem->setUsesBusyIndicator(true);
         progressItem->setCryptoStatus(KPIM::ProgressItem::Unknown);
-        connect(progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
-                KPIM::ProgressManager::instance(), SLOT(slotStandardCancelHandler(KPIM::ProgressItem*)));
+        connect(progressItem.data(), &KPIM::ProgressItem::progressItemCanceled,
+                KPIM::ProgressManager::instance(), &KPIM::ProgressManager::slotStandardCancelHandler);
     }
 
     Akonadi::CollectionFetchJob *fetch = new Akonadi::CollectionFetchJob(mMainWidget->currentFolder()->collection(),
@@ -162,8 +161,8 @@ void ManageShowCollectionProperties::showCollectionPropertiesContinued(const QSt
     fetch->fetchScope().setIncludeStatistics(true);
     fetch->setProperty("pageToShow", pageToShow);
     fetch->setProperty("progressItem", QVariant::fromValue(progressItem));
-    connect(fetch, SIGNAL(result(KJob*)),
-            this, SLOT(slotCollectionPropertiesFinished(KJob*)));
+    connect(fetch, &KJob::result,
+            this, &ManageShowCollectionProperties::slotCollectionPropertiesFinished);
     connect(progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
             fetch, SLOT(kill()));
 }

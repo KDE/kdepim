@@ -40,6 +40,8 @@ void GravatarUpdateDialogTest::shouldHaveDefaultValue()
 
     QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
+
+    QVERIFY(!dlg.saveUrl());
 }
 
 QTEST_MAIN(GravatarUpdateDialogTest)

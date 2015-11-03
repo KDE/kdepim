@@ -1,0 +1,15 @@
+set(pimcommon_isgdshorturlengineplugin_SRCS
+    isgdshorturlengineplugin.cpp
+    isgdshorturlengineinterface.cpp
+)
+ecm_qt_declare_logging_category(pimcommon_isgdshorturlengineplugin_SRCS HEADER isgdshorturlengineplugin_debug.h IDENTIFIER ISGDSHORTURLENGINEPLUGIN_LOG CATEGORY_NAME log_isgdshorturlengineplugin)
+
+add_library(pimcommon_isgdshorturlengineplugin MODULE ${pimcommon_isgdshorturlengineplugin_SRCS})
+
+target_link_libraries(pimcommon_isgdshorturlengineplugin
+  KF5::PimCommon
+)
+
+install(TARGETS pimcommon_isgdshorturlengineplugin DESTINATION ${PLUGIN_INSTALL_DIR}/pimcommon)
+kcoreaddons_desktop_to_json(pimcommon_isgdshorturlengineplugin pimcommon_isgdshorturlengineplugin.desktop)
+

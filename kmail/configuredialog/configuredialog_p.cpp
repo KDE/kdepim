@@ -5,7 +5,7 @@
 #include "configuredialog_p.h"
 
 // other KMail headers:
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 
 // other KDE headers:
 #include <QTabWidget>
@@ -44,7 +44,7 @@ void ConfigModuleWithTabs::showEvent(QShowEvent *event)
 void ConfigModuleWithTabs::load()
 {
     const int numberOfTab = mTabWidget->count();
-    for (int i = 0 ; i < numberOfTab ; ++i) {
+    for (int i = 0; i < numberOfTab; ++i) {
         ConfigModuleTab *tab = dynamic_cast<ConfigModuleTab *>(mTabWidget->widget(i));
         if (tab) {
             tab->load();
@@ -58,7 +58,7 @@ void ConfigModuleWithTabs::save()
     if (mWasInitialized) {
         KCModule::save();
         const int numberOfTab = mTabWidget->count();
-        for (int i = 0 ; i < numberOfTab ; ++i) {
+        for (int i = 0; i < numberOfTab; ++i) {
             ConfigModuleTab *tab = dynamic_cast<ConfigModuleTab *>(mTabWidget->widget(i));
             if (tab) {
                 tab->save();
@@ -88,9 +88,9 @@ void ConfigModuleTab::defaults()
 {
     // reset settings which are available via GlobalSettings to their defaults
     // (stolen from KConfigDialogManager::updateWidgetsDefault())
-    const bool bUseDefaults = GlobalSettings::self()->useDefaults(true);
+    const bool bUseDefaults = KMailSettings::self()->useDefaults(true);
     doLoadFromGlobalSettings();
-    GlobalSettings::self()->useDefaults(bUseDefaults);
+    KMailSettings::self()->useDefaults(bUseDefaults);
     // reset other settings to default values
     doResetToDefaultsOther();
 }

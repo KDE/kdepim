@@ -62,9 +62,11 @@ set(pimsettingexporter_LIB_SRCS
   synchronizeresourcejob.cpp
   pimsettingsbackuprestore.cpp
   importexportprogressindicatorbase.cpp
+  pimsettingbackupthread.cpp
+  exportresourcearchivejob.cpp
 )
 
-
+ecm_qt_declare_logging_category(pimsettingexporter_LIB_SRCS HEADER pimsettingexportcore_debug.h IDENTIFIER PIMSETTINGEXPORTERCORE_LOG CATEGORY_NAME log_pimsettingexportercore)
 
 add_library(pimsettingexporterprivate ${pimsettingexporter_LIB_SRCS})
 generate_export_header(pimsettingexporterprivate BASE_NAME pimsettingexporter)
@@ -72,18 +74,17 @@ generate_export_header(pimsettingexporterprivate BASE_NAME pimsettingexporter)
 
 
 target_link_libraries(pimsettingexporterprivate
+PRIVATE
   KF5::AkonadiCore
   KF5::AkonadiPrivate
   KF5::Mime
   KF5::MailTransport
   KF5::AlarmCalendar
-  mailcommon
+  KF5::MailCommon
+  KF5::Archive
 )
 
 set_target_properties(pimsettingexporterprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 
-install(TARGETS pimsettingexporterprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS pimsettingexporterprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()

@@ -58,7 +58,7 @@ MonitorItem::MonitorItem(const QDBusObjectPath &identifier_, MonitorsModel *mode
     connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::isAllMonitoredChanged, this, &MonitorItem::isAllMonitoredChanged);
     connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::ignoredSessionsChanged, this, &MonitorItem::ignoredSessionsChanged);
 
-    QTimer::singleShot(0, this, SLOT(init()));
+    QTimer::singleShot(0, this, &MonitorItem::init);
 }
 
 MonitorItem::~MonitorItem()
@@ -83,7 +83,7 @@ void MonitorItem::isAllMonitoredChanged()
 
 void MonitorItem::monitoredCollectionsChanged()
 {
-    const QVector<long long> list = mInterface->monitoredCollections();
+    const QVector<qint64> list = mInterface->monitoredCollections();
     monitoredCollections.clear();
     for (int i = 0; i < list.size(); i++) {
         if (i > 0) {
@@ -97,7 +97,7 @@ void MonitorItem::monitoredCollectionsChanged()
 
 void MonitorItem::monitoredItemsChanged()
 {
-    const QVector<long long> list = mInterface->monitoredItems();
+    const QVector<qint64> list = mInterface->monitoredItems();
     monitoredItems.clear();
     for (int i = 0; i < list.size(); i++) {
         if (i > 0) {
@@ -124,7 +124,7 @@ void MonitorItem::monitoredResourcesChanged()
         if (i > 0) {
             monitoredResources += QStringLiteral(", ");
         }
-        monitoredResources += QString::fromLatin1(list[i]);
+        monitoredResources += QLatin1String(list[i]);
     }
 
     Q_EMIT changed(MonitorsModel::MonitoredResourcesColumn);
@@ -138,7 +138,7 @@ void MonitorItem::ignoredSessionsChanged()
         if (i > 0) {
             ignoredSessions += QLatin1String(", ");
         }
-        ignoredSessions += QString::fromLatin1(list[i]);
+        ignoredSessions += QLatin1String(list[i]);
     }
 
     Q_EMIT changed(MonitorsModel::IgnoredSessionsColumn);

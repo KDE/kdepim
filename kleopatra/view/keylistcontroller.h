@@ -92,7 +92,7 @@ public:
     bool shutdownWarningRequired() const;
 
 private:
-    void registerAction(QAction *action, Command::Restrictions restrictions , Command * (*create)(QAbstractItemView *, KeyListController *));
+    void registerAction(QAction *action, Command::Restrictions restrictions, Command * (*create)(QAbstractItemView *, KeyListController *));
 
     template <typename T_Command>
     static Command *create(QAbstractItemView *v, KeyListController *c)

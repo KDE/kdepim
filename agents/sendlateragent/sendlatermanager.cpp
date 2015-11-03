@@ -20,8 +20,8 @@
 #include "sendlaterutil.h"
 #include "sendlaterjob.h"
 
-#include "messagecomposer/sender/akonadisender.h"
-#include "messagecomposer/utils/util.h"
+#include "MessageComposer/AkonadiSender"
+#include "MessageComposer/Util"
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -66,7 +66,7 @@ void SendLaterManager::load(bool forcereload)
 
     const QStringList itemList = mConfig->groupList().filter(QRegExp(QStringLiteral("SendLaterItem \\d+")));
     const int numberOfItems = itemList.count();
-    for (int i = 0 ; i < numberOfItems; ++i) {
+    for (int i = 0; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
         SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
         if (info->isValid()) {
@@ -203,7 +203,7 @@ void SendLaterManager::recreateSendList()
 {
     mCurrentJob = Q_NULLPTR;
     Q_EMIT needUpdateConfigDialogBox();
-    QTimer::singleShot(1000 * 60, this, SLOT(createSendInfoList()));
+    QTimer::singleShot(1000 * 60, this, &SendLaterManager::createSendInfoList);
 }
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)

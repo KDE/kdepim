@@ -55,7 +55,6 @@ AlarmDockWindow::AlarmDockWindow()
 
     // Set up icons
     KIconLoader::global()->addAppDir(QStringLiteral("korgac"));
-    KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
     QString iconPath = KIconLoader::global()->iconPath(QStringLiteral("korgac"), KIconLoader::Panel);
     QIcon iconEnabled  = QIcon(iconPath);
     if (iconEnabled.isNull()) {

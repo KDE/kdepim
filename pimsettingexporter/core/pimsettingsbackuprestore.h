@@ -36,6 +36,8 @@ public:
 
     void setStoredParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &stored);
 
+    void nextStep();
+    void closeArchive();
 private Q_SLOTS:
     void slotJobFinished();
 
@@ -65,6 +67,7 @@ private:
     void backupFinished();
     void restoreFinished();
     void executeJob();
+    void addDate();
 
     QHash<Utils::AppsType, Utils::importExportParameters> mStored;
     QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;

@@ -19,16 +19,13 @@
 */
 
 #include "conflictresolvertest.h"
-#include "../conflictresolver.h"
+#include "../src/conflictresolver.h"
 
 #include <KCalCore/Event>
 #include <KCalCore/Period>
 #include <KCalCore/Duration>
 
 #include <QWidget>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/concept_check.hpp>
 
 #include <qtest.h>
 

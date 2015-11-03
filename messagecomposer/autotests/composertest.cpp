@@ -28,14 +28,13 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/part/infopart.h>
-#include <messagecomposer/part/textpart.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/InfoPart>
+#include <MessageComposer/TextPart>
 using namespace MessageComposer;
 
-#include <messagecore/attachment/attachmentpart.h>
-#include <boost/shared_ptr.hpp>
+#include <MessageCore/AttachmentPart>
 using MessageCore::AttachmentPart;
 
 QTEST_MAIN(ComposerTest)
@@ -101,12 +100,12 @@ void ComposerTest::testNonAsciiHeaders()
     Composer *composer = new Composer;
     fillComposerData(composer);
 
-    const QString mailbox = QLatin1String(" <bla@example.com>");
-    const QString fromDisplayName = QString::fromUtf8("Hellö");
-    const QString toDisplayName = QString::fromUtf8("æſłĸð");
-    const QString ccDisplayName = QString::fromUtf8("Вася");
-    const QString bccDisplayName = QString::fromUtf8("ĸłſðđøþĸµ»«„¢þµ¢”«ł„·ĸ”");
-    const QString replyToDisplayName = QString::fromUtf8("æĸſłð˝đВасяðæĸđ");
+    const QString mailbox = QStringLiteral(" <bla@example.com>");
+    const QString fromDisplayName = QStringLiteral("Hellö");
+    const QString toDisplayName = QStringLiteral("æſłĸð");
+    const QString ccDisplayName = QStringLiteral("Вася");
+    const QString bccDisplayName = QStringLiteral("ĸłſðđøþĸµ»«„¢þµ¢”«ł„·ĸ”");
+    const QString replyToDisplayName = QStringLiteral("æĸſłð˝đВасяðæĸđ");
     const QString from = fromDisplayName + mailbox;
     const QString to = toDisplayName + mailbox;
     const QString cc = ccDisplayName + mailbox;
@@ -141,8 +140,8 @@ void ComposerTest::testNonAsciiHeaders()
 
 void ComposerTest::testBug271192()
 {
-    const QString displayName = QString::fromUtf8("Интернет-компания example");
-    const QString mailbox = QLatin1String("example@example.com");
+    const QString displayName = QStringLiteral("Интернет-компания example");
+    const QString mailbox = QStringLiteral("example@example.com");
     Composer *composer = new Composer;
     fillComposerData(composer);
     composer->infoPart()->setTo(QStringList() << (displayName + QLatin1String(" <") + mailbox + QLatin1String(">")));

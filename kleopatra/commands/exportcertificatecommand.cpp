@@ -41,9 +41,9 @@
 #include <utils/classify.h>
 #include <utils/filedialog.h>
 
-#include <kleo/cryptobackend.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/exportjob.h>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/ExportJob>
 
 #include <gpgme++/key.h>
 
@@ -192,7 +192,7 @@ bool ExportCertificateCommand::Private::requestFileNames(GpgME::Protocol protoco
         applyWindowID(dlg);
         dlg->setOpenPgpExportFileName(fileNames[OpenPGP]);
         dlg->setCmsExportFileName(fileNames[CMS]);
-        const bool accepted = dlg->exec() == QDialog::Accepted && dlg ;
+        const bool accepted = dlg->exec() == QDialog::Accepted && dlg;
         if (accepted) {
             fileNames[OpenPGP] = dlg->openPgpExportFileName();
             fileNames[CMS] = dlg->cmsExportFileName();
@@ -219,7 +219,7 @@ bool ExportCertificateCommand::Private::requestFileNames(GpgME::Protocol protoco
 
     const QString fname = FileDialog::getSaveFileNameEx(parentWidgetOrView(),
                           i18n("Export Certificates"),
-                          QLatin1String("imp"),
+                          QStringLiteral("imp"),
                           proposedFileName,
                           protocol == GpgME::OpenPGP
                           ? i18n("OpenPGP Certificates") + QLatin1String(" (*.asc *.gpg *.pgp)")
@@ -236,16 +236,16 @@ void ExportCertificateCommand::Private::startExportJob(GpgME::Protocol protocol,
     assert(backend);
     const QString fileName = fileNames[protocol];
     const bool binary = protocol == GpgME::OpenPGP
-                        ? fileName.endsWith(QLatin1String(".gpg"), Qt::CaseInsensitive) || fileName.endsWith(QLatin1String(".pgp"), Qt::CaseInsensitive)
-                        : fileName.endsWith(QLatin1String(".der"), Qt::CaseInsensitive) ;
-    std::auto_ptr<ExportJob> job(backend->publicKeyExportJob(!binary));
+                        ? fileName.endsWith(QStringLiteral(".gpg"), Qt::CaseInsensitive) || fileName.endsWith(QStringLiteral(".pgp"), Qt::CaseInsensitive)
+                        : fileName.endsWith(QStringLiteral(".der"), Qt::CaseInsensitive);
+    std::unique_ptr<ExportJob> job(backend->publicKeyExportJob(!binary));
     assert(job.get());
 
     connect(job.get(), SIGNAL(result(GpgME::Error,QByteArray)),
             q, SLOT(exportResult(GpgME::Error,QByteArray)));
 
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
 
     QStringList fingerprints;
     Q_FOREACH (const Key &i, keys) {

@@ -37,7 +37,6 @@
 #include <QPointer>
 #include <QString>
 
-#include <klibloader.h>
 #include <kmimetypetrader.h>
 #include <ktoolbarpopupaction.h>
 #include <QUrl>
@@ -101,7 +100,7 @@ public:
     bool doPost;
     QString pageReferrer;
 
-    HistoryEntry() : id(idCounter++) {}
+    HistoryEntry() : id(idCounter++), doPost(false) {}
 
     bool operator==(const HistoryEntry &other) const
     {

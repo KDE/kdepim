@@ -50,11 +50,11 @@
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiWidgets/agenttypedialog.h>
 
-#include <KUrl>
 #include <KLocalizedString>
 #include <kcolorutils.h>
 #include <KIconLoader>
 
+#include <QUrl>
 #include <QApplication>
 #include <QFileInfo>
 #include <QTimer>
@@ -118,11 +118,11 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 
     if (!mTextIcon)
     {
-        mTextIcon    = new QPixmap(SmallIcon(QStringLiteral("dialog-information")));
-        mFileIcon    = new QPixmap(SmallIcon(QStringLiteral("document-open")));
-        mCommandIcon = new QPixmap(SmallIcon(QStringLiteral("system-run")));
-        mEmailIcon   = new QPixmap(SmallIcon(QStringLiteral("mail-message-unread")));
-        mAudioIcon   = new QPixmap(SmallIcon(QStringLiteral("audio-x-generic")));
+        mTextIcon    = new QPixmap(QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(16, 16));
+        mFileIcon    = new QPixmap(QIcon::fromTheme(QStringLiteral("document-open")).pixmap(16, 16));
+        mCommandIcon = new QPixmap(QIcon::fromTheme(QStringLiteral("system-run")).pixmap(16, 16));
+        mEmailIcon   = new QPixmap(QIcon::fromTheme(QStringLiteral("mail-message-unread")).pixmap(16, 16));
+        mAudioIcon   = new QPixmap(QIcon::fromTheme(QStringLiteral("audio-x-generic")).pixmap(16, 16));
         mIconSize = mTextIcon->size().expandedTo(mFileIcon->size()).expandedTo(mCommandIcon->size()).expandedTo(mEmailIcon->size()).expandedTo(mAudioIcon->size());
     }
 
@@ -130,7 +130,7 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 #warning Only want to monitor collection properties, not content, when this becomes possible
 #endif
     connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
-    connect(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), SLOT(slotCollectionRemoved(Akonadi::Collection)));
+    connect(monitor, &Monitor::collectionRemoved, this, &AkonadiModel::slotCollectionRemoved);
     initCalendarMigrator();
     MinuteTimer::connect(this, SLOT(slotUpdateTimeTo()));
     Preferences::connect(SIGNAL(archivedColourChanged(QColor)), this, SLOT(slotUpdateArchivedColour(QColor)));
@@ -140,7 +140,7 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 
     connect(this, &AkonadiModel::rowsInserted, this, &AkonadiModel::slotRowsInserted);
     connect(this, &AkonadiModel::rowsAboutToBeRemoved, this, &AkonadiModel::slotRowsAboutToBeRemoved);
-    connect(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotMonitoredItemChanged(Akonadi::Item,QSet<QByteArray>)));
+    connect(monitor, &Monitor::itemChanged, this, &AkonadiModel::slotMonitoredItemChanged);
 
     connect(ServerManager::self(), &ServerManager::stateChanged, this, &AkonadiModel::checkResources);
     checkResources(ServerManager::state());
@@ -196,9 +196,9 @@ void AkonadiModel::checkResources(ServerManager::State state)
 void AkonadiModel::initCalendarMigrator()
 {
     CalendarMigrator::reset();
-    connect(CalendarMigrator::instance(), SIGNAL(creating(QString,Akonadi::Collection::Id,bool)),
-                                          SLOT(slotCollectionBeingCreated(QString,Akonadi::Collection::Id,bool)));
-    connect(CalendarMigrator::instance(), SIGNAL(destroyed(QObject*)), SLOT(slotMigrationCompleted()));
+    connect(CalendarMigrator::instance(), &CalendarMigrator::creating,
+                                          this, &AkonadiModel::slotCollectionBeingCreated);
+    connect(CalendarMigrator::instance(), &QObject::destroyed, this, &AkonadiModel::slotMigrationCompleted);
 }
 
 /******************************************************************************
@@ -414,13 +414,13 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
                             break;
                         case Qt::DisplayRole:
                             if (event.commandError() != KAEvent::CMD_NO_ERROR)
-                                return QString::fromLatin1("!");
+                                return QLatin1String("!");
                             break;
                         case SortRole:
                         {
                             const unsigned i = (event.actionTypes() == KAEvent::ACT_DISPLAY)
                                                ? event.bgColour().rgb() : 0;
-                            return QString::fromLatin1("%1").arg(i, 6, 10, QLatin1Char('0'));
+                            return QStringLiteral("%1").arg(i, 6, 10, QLatin1Char('0'));
                         }
                         default:
                             break;
@@ -450,7 +450,7 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
                         case ValueRole:
                             return static_cast<int>(event.actionSubType());
                         case SortRole:
-                            return QString::fromLatin1("%1").arg(event.actionSubType(), 2, 10, QLatin1Char('0'));
+                            return QStringLiteral("%1").arg(event.actionSubType(), 2, 10, QLatin1Char('0'));
                     }
                     break;
                 case TextColumn:
@@ -547,7 +547,7 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
             case Qt::BackgroundRole:
             {
                 const QColor colour = value.value<QColor>();
-                attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
+                attr = collection.attribute<CollectionAttribute>(Collection::AddIfMissing);
                 if (attr->backgroundColor() == colour)
                     return true;   // no change
                 attr->setBackgroundColor(colour);
@@ -557,7 +557,7 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
             case EnabledTypesRole:
             {
                 const CalEvent::Types types = static_cast<CalEvent::Types>(value.toInt());
-                attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
+                attr = collection.attribute<CollectionAttribute>(Collection::AddIfMissing);
                 if (attr->enabled() == types)
                     return true;   // no change
                 qCDebug(KALARM_LOG) << "Set enabled:" << types << ", was=" << attr->enabled();
@@ -570,7 +570,7 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
                 &&  isCompatible(collection))
                 {
                     const CalEvent::Types types = static_cast<CalEvent::Types>(value.toInt());
-                    attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
+                    attr = collection.attribute<CollectionAttribute>(Collection::AddIfMissing);
                     qCDebug(KALARM_LOG)<<"Set standard:"<<types<<", was="<<attr->standard();
                     attr->setStandard(types);
                     updateCollection = true;
@@ -579,7 +579,7 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
             case KeepFormatRole:
             {
                 const bool keepFormat = value.toBool();
-                attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
+                attr = collection.attribute<CollectionAttribute>(Collection::AddIfMissing);
                 if (attr->keepFormat() == keepFormat)
                     return true;   // no change
                 attr->setKeepFormat(keepFormat);
@@ -597,7 +597,7 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
             // for applications. So create a new Collection instance and only set a
             // value for CollectionAttribute.
             Collection c(collection.id());
-            CollectionAttribute* att = c.attribute<CollectionAttribute>(Entity::AddIfMissing);
+            CollectionAttribute* att = c.attribute<CollectionAttribute>(Collection::AddIfMissing);
             *att = *attr;
             CollectionModifyJob* job = new CollectionModifyJob(c, this);
             connect(job, &CollectionModifyJob::result, this, &AkonadiModel::modifyCollectionJobDone);
@@ -625,7 +625,7 @@ bool AkonadiModel::setData(const QModelIndex& index, const QVariant& value, int 
                         {
                             if (err == KAEvent::CMD_NO_ERROR  &&  !item.hasAttribute<EventAttribute>())
                                 return true;   // no change
-                            EventAttribute* attr = item.attribute<EventAttribute>(Entity::AddIfMissing);
+                            EventAttribute* attr = item.attribute<EventAttribute>(Item::AddIfMissing);
                             if (attr->commandError() == err)
                                 return true;   // no change
                             attr->setCommandError(err);
@@ -919,7 +919,7 @@ QString AkonadiModel::displayName(Akonadi::Collection& collection) const
 */
 QString AkonadiModel::storageType(const Akonadi::Collection& collection) const
 {
-    const KUrl url = collection.remoteId();
+    const QUrl url = QUrl::fromUserInput(collection.remoteId(), QString(), QUrl::AssumeLocalFile);
     return !url.isLocalFile()                     ? i18nc("@info", "URL")
            : QFileInfo(url.toLocalFile()).isDir() ? i18nc("@info Directory in filesystem", "Directory")
            :                                        i18nc("@info", "File");
@@ -932,9 +932,9 @@ QString AkonadiModel::storageType(const Akonadi::Collection& collection) const
 QString AkonadiModel::tooltip(const Collection& collection, CalEvent::Types types) const
 {
     const QString name = QLatin1Char('@') + collection.displayName();   // insert markers for stripping out name
-    const KUrl url = collection.remoteId();
+    const QUrl url = QUrl::fromUserInput(collection.remoteId(), QString(), QUrl::AssumeLocalFile);
     const QString type = QLatin1Char('@') + storageType(collection);   // file/directory/URL etc.
-    const QString locn = url.pathOrUrl();
+    const QString locn = url.toDisplayString(QUrl::PreferLocalFile);
     const bool inactive = !collection.hasAttribute<CollectionAttribute>()
                        || !(collection.attribute<CollectionAttribute>()->enabled() & types);
     const QString disabled = i18nc("@info", "Disabled");
@@ -1025,7 +1025,7 @@ QString AkonadiModel::repeatOrder(const KAEvent& event) const
                 break;
         }
     }
-    return QString::fromLatin1("%1%2").arg(static_cast<char>('0' + repeatOrder)).arg(repeatInterval, 8, 10, QLatin1Char('0'));
+    return QStringLiteral("%1%2").arg(static_cast<char>('0' + repeatOrder)).arg(repeatInterval, 8, 10, QLatin1Char('0'));
 }
 
 /******************************************************************************
@@ -1382,7 +1382,7 @@ bool AkonadiModel::updateEvent(KAEvent& event)
     qCDebug(KALARM_LOG) << "ID:" << event.id();
     return updateEvent(event.itemId(), event);
 }
-bool AkonadiModel::updateEvent(Akonadi::Entity::Id itemId, KAEvent& newEvent)
+bool AkonadiModel::updateEvent(Akonadi::Item::Id itemId, KAEvent& newEvent)
 {
 qCDebug(KALARM_LOG)<<"item id="<<itemId;
     const QModelIndex ix = itemIndex(itemId);
@@ -1408,7 +1408,7 @@ bool AkonadiModel::deleteEvent(const KAEvent& event)
 {
     return deleteEvent(event.itemId());
 }
-bool AkonadiModel::deleteEvent(Akonadi::Entity::Id itemId)
+bool AkonadiModel::deleteEvent(Akonadi::Item::Id itemId)
 {
     qCDebug(KALARM_LOG) << itemId;
     const QModelIndex ix = itemIndex(itemId);
@@ -1479,8 +1479,8 @@ void AkonadiModel::queueItemModifyJob(const Item& item)
 */
 void AkonadiModel::itemJobDone(KJob* j)
 {
-    const QMap<KJob*, Entity::Id>::iterator it = mPendingItemJobs.find(j);
-    Entity::Id itemId = -1;
+    const QMap<KJob*, Item::Id>::iterator it = mPendingItemJobs.find(j);
+    Item::Id itemId = -1;
     if (it != mPendingItemJobs.end())
     {
         itemId = it.value();
@@ -1784,7 +1784,7 @@ void AkonadiModel::slotMonitoredItemChanged(const Akonadi::Item& item, const QSe
             Collection c = data(index, ParentCollectionRole).value<Collection>();
             evnt.setCollectionId(c.id());
             mPendingEventChanges.enqueue(Event(evnt, c));
-            QTimer::singleShot(0, this, SLOT(slotEmitEventChanged()));
+            QTimer::singleShot(0, this, &AkonadiModel::slotEmitEventChanged);
             break;
         }
     }

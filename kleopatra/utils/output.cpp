@@ -40,7 +40,7 @@
 #include "log.h"
 #include "cached.h"
 
-#include <kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -111,9 +111,9 @@ public:
     explicit TemporaryFile(QObject *parent) : QTemporaryFile(parent) {}
     explicit TemporaryFile(const QString &templateName, QObject *parent) : QTemporaryFile(templateName, parent) {}
 
-    /* reimp */ void close()
-    {
-        if (isOpen()) {
+    void close() Q_DECL_OVERRIDE {
+        if (isOpen())
+        {
             m_oldFileName = fileName();
         }
         QTemporaryFile::close();
@@ -193,28 +193,26 @@ public:
 
     }
 
-    /* reimp */ QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel;
     }
-    /* reimp */ void setLabel(const QString &label)
-    {
+    void setLabel(const QString &label) Q_DECL_OVERRIDE {
         m_customLabel = label;
     }
     void setDefaultLabel(const QString &l)
     {
         m_defaultLabel = l;
     }
-    /* reimp */ void setBinaryOpt(bool value)
-    {
+    void setBinaryOpt(bool value) Q_DECL_OVERRIDE {
         m_binaryOpt = value;
     }
-    /* reimp */ bool binaryOpt() const
+    bool binaryOpt() const Q_DECL_OVERRIDE
     {
         return m_binaryOpt;
     }
 
-    /* reimp */ QString errorString() const
+    QString errorString() const Q_DECL_OVERRIDE
     {
         if (m_errorString.dirty()) {
             m_errorString = doErrorString();
@@ -222,36 +220,39 @@ public:
         return m_errorString;
     }
 
-    /* reimp */ bool isFinalized() const
+    bool isFinalized() const Q_DECL_OVERRIDE
     {
         return m_isFinalized;
     }
-    /* reimp */ void finalize()
-    {
+    void finalize() Q_DECL_OVERRIDE {
         qCDebug(KLEOPATRA_LOG) << this;
-        if (m_isFinalized || m_isFinalizing) {
+        if (m_isFinalized || m_isFinalizing)
+        {
             return;
         }
         m_isFinalizing = true;
         try {
             doFinalize();
-        } catch (...) {
+        } catch (...)
+        {
             m_isFinalizing = false;
             throw;
         }
         m_isFinalizing = false;
         m_isFinalized = true;
-        if (m_cancelPending) {
+        if (m_cancelPending)
+        {
             cancel();
         }
     }
 
-    /* reimp */ void cancel()
-    {
+    void cancel() Q_DECL_OVERRIDE {
         qCDebug(KLEOPATRA_LOG) << this;
-        if (m_isFinalizing) {
+        if (m_isFinalizing)
+        {
             m_cancelPending = true;
-        } else if (!m_canceled) {
+        } else if (!m_canceled)
+        {
             m_isFinalizing = true;
             try {
                 doCancel();
@@ -288,16 +289,14 @@ class PipeOutput : public OutputImplBase
 public:
     explicit PipeOutput(assuan_fd_t fd);
 
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_io;
     }
-    /* reimp */ void doFinalize()
-    {
+    void doFinalize() Q_DECL_OVERRIDE {
         m_io->reallyClose();
     }
-    /* reimp */ void doCancel()
-    {
+    void doCancel() Q_DECL_OVERRIDE {
         doFinalize();
     }
 private:
@@ -309,12 +308,11 @@ class ProcessStdInOutput : public OutputImplBase
 public:
     explicit ProcessStdInOutput(const QString &cmd, const QStringList &args, const QDir &wd);
 
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_proc;
     }
-    /* reimp */ void doFinalize()
-    {
+    void doFinalize() Q_DECL_OVERRIDE {
         /*
           Make sure the data is written in the output here. If this
           is not done the output will be written in small chunks
@@ -324,23 +322,23 @@ public:
           take ~30 seconds to write out a 10MB file in the 512 byte
           chunks gpgme serves. */
         qCDebug(KLEOPATRA_LOG) << "Waiting for " << m_proc->bytesToWrite()
-                               << " Bytes to be written";
+        << " Bytes to be written";
         while (m_proc->waitForBytesWritten(PROCESS_MAX_RUNTIME_TIMEOUT));
 
-        if (!m_proc->isClosed()) {
+        if (!m_proc->isClosed())
+        {
             m_proc->close();
         }
         m_proc->waitForFinished(PROCESS_MAX_RUNTIME_TIMEOUT);
     }
-    /* reimp */ void doCancel()
-    {
+    void doCancel() Q_DECL_OVERRIDE {
         m_proc->terminate();
-        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, m_proc.get(), SLOT(kill()));
+        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, m_proc.get(), &QProcess::kill);
     }
-    /* reimp */ QString label() const;
+    QString label() const Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ QString doErrorString() const;
+    QString doErrorString() const Q_DECL_OVERRIDE;
 
 private:
     const QString m_command;
@@ -357,17 +355,16 @@ public:
         qCDebug(KLEOPATRA_LOG) << this;
     }
 
-    /* reimp */ QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return QFileInfo(m_fileName).fileName();
     }
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_tmpFile;
     }
-    /* reimp */ void doFinalize();
-    /* reimp */ void doCancel()
-    {
+    void doFinalize() Q_DECL_OVERRIDE;
+    void doCancel() Q_DECL_OVERRIDE {
         qCDebug(KLEOPATRA_LOG) << this;
     }
 private:
@@ -385,16 +382,16 @@ class ClipboardOutput : public OutputImplBase
 public:
     explicit ClipboardOutput(QClipboard::Mode mode);
 
-    /* reimp */ QString label() const;
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    QString label() const Q_DECL_OVERRIDE;
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_buffer;
     }
-    /* reimp */ void doFinalize();
-    /* reimp */ void doCancel() {}
+    void doFinalize() Q_DECL_OVERRIDE;
+    void doCancel() Q_DECL_OVERRIDE {}
 
 private:
-    /* reimp */ QString doErrorString() const
+    QString doErrorString() const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -493,7 +490,7 @@ void FileOutput::doFinalize()
     m_tmpFile.reset(); // really close the file - needed on Windows for renaming :/
     kleo_assert(!guard);   // if this triggers, we need to audit for holder of shared_ptr<QIODevice>s.
 
-    qCDebug(KLEOPATRA_LOG) << this << " renaming " << tmpFileName << "->" << m_fileName ;
+    qCDebug(KLEOPATRA_LOG) << this << " renaming " << tmpFileName << "->" << m_fileName;
 
     if (QFile::rename(tmpFileName, m_fileName)) {
         qCDebug(KLEOPATRA_LOG) << this << "succeeded";
@@ -506,7 +503,7 @@ void FileOutput::doFinalize()
         throw Exception(gpg_error(GPG_ERR_CANCELED),
                         i18n("Overwriting declined"));
 
-    qCDebug(KLEOPATRA_LOG) << this << "going to overwrite" << m_fileName ;
+    qCDebug(KLEOPATRA_LOG) << this << "going to overwrite" << m_fileName;
 
     if (!QFile::remove(m_fileName))
         throw Exception(errno ? gpg_error_from_errno(errno) : gpg_error(GPG_ERR_EIO),
@@ -565,7 +562,7 @@ QString ProcessStdInOutput::label() const
         return OutputImplBase::label();
     }
     // output max. 3 arguments
-    const QString cmdline = (QStringList(m_command) + m_arguments.mid(0, 3)).join(QLatin1String(" "));
+    const QString cmdline = (QStringList(m_command) + m_arguments.mid(0, 3)).join(QStringLiteral(" "));
     if (m_arguments.size() > 3) {
         return i18nc("e.g. \"Input to tar xf - file1 ...\"", "Input to %1 ...", cmdline);
     } else {

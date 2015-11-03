@@ -1,128 +1,87 @@
-include_directories( ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
-if (KDEPIM_ONLY_KLEO)
-  add_definitions( -DKDEPIM_ONLY_KLEO )
-endif ()
+cmake_minimum_required(VERSION 2.8.12)
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libkleopatra\")
+project(libkleo)
 
-#add_definitions( -DQT_NO_CAST_FROM_ASCII )
-#add_definitions( -DQT_NO_CAST_TO_ASCII )
-
-kde_enable_exceptions()
-
-add_definitions( -DGPGMEPP_ERR_SOURCE_DEFAULT=13 ) # 13 is GPG_ERR_SOURCE_KLEO, even if gpg-error's too old to know about
-#parts of Boost don't build with the gcc pedantic option, so remove that option
-string(REPLACE "-pedantic" "" FOO "${CMAKE_CXX_FLAGS}")
-set(CMAKE_CXX_FLAGS "${FOO}")
-
-add_subdirectory( pics )
-add_subdirectory( backends )
-if (BUILD_TESTING)
-   add_subdirectory( tests )
-endif()
-
-########### next target ###############
-set(libkleo_backend_qgpgme_SRCS
-    backends/qgpgme/gnupgprocessbase.cpp
-    backends/qgpgme/qgpgmeprogresstokenmapper.cpp
-    backends/qgpgme/qgpgmebackend.cpp
-    backends/qgpgme/threadedjobmixin.cpp
-    backends/qgpgme/qgpgmekeylistjob.cpp
-    backends/qgpgme/qgpgmelistallkeysjob.cpp
-    backends/qgpgme/qgpgmekeygenerationjob.cpp
-    backends/qgpgme/qgpgmeimportjob.cpp
-    backends/qgpgme/qgpgmeimportfromkeyserverjob.cpp
-    backends/qgpgme/qgpgmeexportjob.cpp
-    backends/qgpgme/qgpgmesecretkeyexportjob.cpp
-    backends/qgpgme/qgpgmechangeexpiryjob.cpp
-    backends/qgpgme/qgpgmechangeownertrustjob.cpp
-    backends/qgpgme/qgpgmechangepasswdjob.cpp
-    backends/qgpgme/qgpgmedownloadjob.cpp
-    backends/qgpgme/qgpgmedeletejob.cpp
-    backends/qgpgme/qgpgmeencryptjob.cpp
-    backends/qgpgme/qgpgmedecryptjob.cpp
-    backends/qgpgme/qgpgmesignjob.cpp
-    backends/qgpgme/qgpgmesignkeyjob.cpp
-    backends/qgpgme/qgpgmeadduseridjob.cpp
-    backends/qgpgme/qgpgmeverifydetachedjob.cpp
-    backends/qgpgme/qgpgmeverifyopaquejob.cpp
-    backends/qgpgme/qgpgmesignencryptjob.cpp
-    backends/qgpgme/qgpgmedecryptverifyjob.cpp
-    backends/qgpgme/qgpgmecryptoconfig.cpp
-    backends/qgpgme/qgpgmenewcryptoconfig.cpp
-    backends/qgpgme/qgpgmerefreshkeysjob.cpp
-    backends/qgpgme/gpgme_backend_debug.cpp
-    )
+if(${CMAKE_SOURCE_DIR} STREQUAL ${libkleo_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(LIBRARY_NAMELINK)
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
 
-set(libkleo_backend_chiasmus_SRCS
-    backends/chiasmus/config_data.c
-    backends/chiasmus/obtainkeysjob.cpp
-    backends/chiasmus/symcryptrunprocessbase.cpp
-    backends/chiasmus/chiasmusjob.cpp
-    backends/chiasmus/chiasmuslibrary.cpp
-    backends/chiasmus/chiasmusbackend.cpp
-    )
+set(KF5_VERSION "5.16.0")
+set(KDEPIM_LIB_VERSION "5.0.47")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(GPGMEPP_LIB_VERSION "4.80.0")
+set(KDEPIMTEXTEDIT_VERSION "4.88.0")
 
-
-set(libkleo_core_SRCS
-   kleo/checksumdefinition.cpp
-   kleo/cryptobackend.cpp
-   kleo/cryptobackendfactory.cpp
-   kleo/enum.cpp
-   kleo/exception.cpp
-   kleo/dn.cpp
-   kleo/job.cpp
-   kleo/multideletejob.cpp
-   kleo/hierarchicalkeylistjob.cpp
-   kleo/kconfigbasedkeyfilter.cpp
-   kleo/keyfiltermanager.cpp
-   )
-
-set(libkleo_ui_common_SRCS
-   ui/dnattributeorderconfigwidget.cpp
-   ui/kdhorizontalline.cpp
-   ui/filenamerequester.cpp
-   ui/messagebox.cpp
-   ui/cryptoconfigmodule.cpp
-   ui/cryptoconfigdialog.cpp
-   ui/directoryserviceswidget.cpp
-   ui/progressbar.cpp
-   ui/progressdialog.cpp
-   ui/kleo_ui_debug.cpp
-   ui/auditlogviewer.cpp
-   )
-
-set(libkleo_ui_SRCS    # make this a separate lib.
-    ui/keylistview.cpp
-    ui/keyselectiondialog.cpp
-    ui/keyrequester.cpp
-    ui/keyapprovaldialog.cpp
-    )
-
-ki18n_wrap_ui(libkleo_ui_common_SRCS
-    ui/directoryserviceswidget.ui
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools Xml)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5TextWidgets ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Gpgmepp ${GPGMEPP_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimTextEdit ${KDEPIMTEXTEDIT_VERSION} CONFIG REQUIRED)
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKLEO
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libkleo_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkleoConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
-set(kleo_LIB_LIBS  KF5::QGpgme pimcommon)
-if ( NOT KDEPIM_ONLY_KLEO )
-   set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS})
-   set( kleo_LIB_LIBS ${kleo_LIB_LIBS}  KF5::Gpgmepp KF5::I18n KF5::WidgetsAddons KF5::IconThemes KF5::Completion KF5::KDELibs4Support)
-endif ()
+########### Targets ###########
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
+remove_definitions( -DQT_NO_CAST_FROM_ASCII )
+remove_definitions( -DQT_NO_CAST_TO_ASCII )
 
-add_library(kleo ${kleo_LIB_SRCS})
-generate_export_header(kleo BASE_NAME kleo)
-if(WIN32)
-target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Libkleo")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5LibkleoConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkleoConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkleoConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkleoConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5LibkleoTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5LibkleoTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/libkleo_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 else()
-target_link_libraries(kleo ${kleo_LIB_LIBS} )
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKLEO
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libkleo_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkleoConfigVersion.cmake"
+                        SOVERSION 5
+)
 endif()
-set_target_properties(kleo PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
-install(TARGETS kleo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-if ( WIN32 )
-install ( FILES libkleopatrarc-win32.desktop DESTINATION ${KDE_INSTALL_CONFDIR} RENAME libkleopatrarc )
-else ()
-install ( FILES libkleopatrarc.desktop DESTINATION ${KDE_INSTALL_CONFDIR} RENAME libkleopatrarc )
-endif ()
+add_subdirectory(src)

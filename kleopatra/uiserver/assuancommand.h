@@ -261,7 +261,7 @@ public:
 
     GpgME::Protocol checkProtocol(Mode mode, int options = 0) const;
 
-    /* reimp */ void applyWindowID(QWidget *w) const
+    void applyWindowID(QWidget *w) const Q_DECL_OVERRIDE
     {
         doApplyWindowID(w);
     }
@@ -369,7 +369,7 @@ public:
 template <typename Command>
 class GenericAssuanCommandFactory : public AssuanCommandFactory
 {
-    /* reimp */ AssuanCommandFactory::_Handler _handler() const
+    AssuanCommandFactory::_Handler _handler() const Q_DECL_OVERRIDE
     {
         return &GenericAssuanCommandFactory::_handle;
     }
@@ -382,11 +382,11 @@ class GenericAssuanCommandFactory : public AssuanCommandFactory
 #endif
         return AssuanCommandFactory::_handle(_ctx, _line, Command::staticName());
     }
-    /* reimp */ boost::shared_ptr<AssuanCommand> create() const
+    boost::shared_ptr<AssuanCommand> create() const Q_DECL_OVERRIDE
     {
         return make();
     }
-    /* reimp */ const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return Command::staticName();
     }

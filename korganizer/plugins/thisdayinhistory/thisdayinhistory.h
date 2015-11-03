@@ -21,7 +21,7 @@
 #ifndef KORG_PLUGINS_THISDAYINHISTORY_THISDAYINHISTORY_H
 #define KORG_PLUGINS_THISDAYINHISTORY_THISDAYINHISTORY_H
 
-#include <calendarviews/agenda/calendardecoration.h>
+#include <EventViews/CalendarDecoration>
 
 using namespace EventViews::CalendarDecoration;
 
@@ -42,7 +42,7 @@ public:
 class ThisDayInHistoryFactory : public DecorationFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.korganizer.ThisDayInHistory");
+    Q_PLUGIN_METADATA(IID "org.kde.korganizer.ThisDayInHistory")
 public:
     Decoration *createPluginFactory() Q_DECL_OVERRIDE {
         return new ThisDayInHistory;

@@ -17,10 +17,11 @@
 
 #include "exportmailjob.h"
 #include "akonadidatabase.h"
-#include "messageviewer/utils/kcursorsaver.h"
-#include "mailcommon/util/mailutil.h"
-#include "mailcommon/filter/filtermanager.h"
-#include "mailcommon/filter/filterimporterexporter.h"
+
+#include "MailCommon/MailUtil"
+#include "MailCommon/FilterManager"
+#include "MailCommon/FilterImporterExporter"
+#include "importexportprogressindicatorbase.h"
 
 #include <AkonadiCore/AgentManager>
 #include <AkonadiCore/Collection>
@@ -38,11 +39,14 @@
 
 #include <QFile>
 #include <QDir>
+#include <QTimer>
 #include <QStandardPaths>
+#include <exportresourcearchivejob.h>
 
 ExportMailJob::ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep),
-      mArchiveTime(QDateTime::currentDateTime())
+      mArchiveTime(QDateTime::currentDateTime()),
+      mIndexIdentifier(0)
 {
 }
 
@@ -50,6 +54,7 @@ ExportMailJob::~ExportMailJob()
 {
 }
 
+#if 0
 bool ExportMailJob::checkProgram()
 {
     if (QStandardPaths::findExecutable(QStringLiteral("mysqldump")).isEmpty()) {
@@ -58,18 +63,35 @@ bool ExportMailJob::checkProgram()
     }
     return true;
 }
+#endif
+
+bool ExportMailJob::checkBackupType(Utils::StoredType type) const
+{
+    return (mTypeSelected & type);
+}
 
 void ExportMailJob::start()
 {
-    if (!checkProgram()) {
+    Q_EMIT title(i18n("Start export KMail settings..."));
+    createProgressDialog(i18n("Export KMail settings"));
+    if (checkBackupType(Utils::Identity)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupIdentity()));
+    } else if (checkBackupType(Utils::MailTransport)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupMailTransport()));
+    } else if (checkBackupType(Utils::Config)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else if (checkBackupType(Utils::Mails)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupMails()));
+    } else if (checkBackupType(Utils::Resources)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+    } else {
         Q_EMIT jobFinished();
-        return;
     }
+}
 
-    Q_EMIT title(i18n("Start export KNotes settings..."));
-    createProgressDialog();
-
-    if (mTypeSelected & Utils::Identity) {
+void ExportMailJob::slotCheckBackupIdentity()
+{
+    if (checkBackupType(Utils::Identity)) {
         backupIdentity();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -77,7 +99,12 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::MailTransport) {
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupMailTransport()));
+}
+
+void ExportMailJob::slotCheckBackupMailTransport()
+{
+    if (checkBackupType(Utils::MailTransport)) {
         backupTransports();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -85,23 +112,12 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::Mails) {
-        backupMails();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
-    if (mTypeSelected & Utils::Resources) {
-        backupResources();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
-    if (mTypeSelected & Utils::Config) {
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+}
+
+void ExportMailJob::slotCheckBackupConfig()
+{
+    if (checkBackupType(Utils::Config)) {
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -109,23 +125,91 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::AkonadiDb) {
-        backupAkonadiDb();
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupMails()));
+}
+
+void ExportMailJob::slotCheckBackupMails()
+{
+    if (checkBackupType(Utils::Mails)) {
         increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        setProgressDialogLabel(i18n("Backing up Mails..."));
+        QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+        return;
     }
-    Q_EMIT jobFinished();
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+}
+
+void ExportMailJob::slotMailsJobTerminated()
+{
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
+    }
+    mIndexIdentifier++;
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+
+void ExportMailJob::slotWriteNextArchiveResource()
+{
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    if (mIndexIdentifier < list.count()) {
+        const Akonadi::AgentInstance agent = list.at(mIndexIdentifier);
+        const QStringList capabilities(agent.type().capabilities());
+        if (agent.type().mimeTypes().contains(KMime::Message::mimeType())) {
+            if (capabilities.contains(QStringLiteral("Resource")) &&
+                    !capabilities.contains(QStringLiteral("Virtual")) &&
+                    !capabilities.contains(QStringLiteral("MailTransport"))) {
+
+                const QString identifier = agent.identifier();
+                if (identifier.contains(QStringLiteral("akonadi_maildir_resource_")) ||
+                        identifier.contains(QStringLiteral("akonadi_mixedmaildir_resource_"))) {
+                    const QString archivePath = Utils::mailsPath() + identifier + QDir::separator();
+
+                    const QString url = Utils::resourcePath(agent);
+                    if (!mAgentPaths.contains(url)) {
+                        mAgentPaths << url;
+                        if (!url.isEmpty()) {
+                            ExportResourceArchiveJob *resourceJob = new ExportResourceArchiveJob(this);
+                            resourceJob->setArchivePath(archivePath);
+                            resourceJob->setUrl(url);
+                            resourceJob->setIdentifier(identifier);
+                            resourceJob->setArchive(archive());
+                            resourceJob->setArchiveName(QStringLiteral("mail.zip"));
+                            connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportMailJob::error);
+                            connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportMailJob::info);
+                            connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportMailJob::slotMailsJobTerminated);
+                            connect(this, &ExportMailJob::taskCanceled, resourceJob, &ExportResourceArchiveJob::slotTaskCanceled);
+                            resourceJob->start();
+                        }
+                    } else {
+                        QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                    }
+                } else if (identifier.contains(QStringLiteral("akonadi_mbox_resource_"))) {
+                    backupResourceFile(agent, Utils::addressbookPath());
+                    QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                } else {
+                    QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                }
+            } else {
+                QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+            }
+        } else {
+            QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+        }
+    } else {
+        Q_EMIT info(i18n("Resources backup done."));
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+    }
 }
 
 void ExportMailJob::backupTransports()
 {
-    showInfo(i18n("Backing up transports..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    setProgressDialogLabel(i18n("Backing up transports..."));
 
-    const QString mailtransportsStr(QLatin1String("mailtransports"));
+
+    const QString mailtransportsStr(QStringLiteral("mailtransports"));
     const QString maitransportsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + mailtransportsStr;
     if (!QFile(maitransportsrc).exists()) {
         Q_EMIT info(i18n("Transports backup done."));
@@ -147,10 +231,23 @@ void ExportMailJob::backupTransports()
     }
 }
 
+void ExportMailJob::slotCheckBackupResources()
+{
+    if (checkBackupType(Utils::Resources)) {
+        backupResources();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            Q_EMIT jobFinished();
+            return;
+        }
+    }
+    Q_EMIT jobFinished();
+}
+
 void ExportMailJob::backupResources()
 {
-    showInfo(i18n("Backing up resources..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    setProgressDialogLabel(i18n("Backing up resources..."));
+
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
@@ -180,8 +277,8 @@ void ExportMailJob::backupResources()
 
 void ExportMailJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    setProgressDialogLabel(i18n("Backing up config..."));
+
     QList<MailCommon::MailFilter *> lstFilter = MailCommon::FilterManager::instance()->filters();
     if (!lstFilter.isEmpty()) {
         QTemporaryFile tmp;
@@ -197,28 +294,40 @@ void ExportMailJob::backupConfig()
         }
     }
 
-    backupConfigFile(QLatin1String("kabldaprc"));
-    backupConfigFile(QLatin1String("kmailsnippetrc"));
-    backupConfigFile(QLatin1String("sievetemplaterc"));
-    backupConfigFile(QLatin1String("customtemplatesrc"));
-    backupConfigFile(QLatin1String("kontactrc"));
-    backupConfigFile(QLatin1String("kontact_summaryrc"));
-    backupConfigFile(QLatin1String("storageservicerc"));
-    backupConfigFile(QLatin1String("kpimbalooblacklist"));
+    backupUiRcFile(QStringLiteral("sieveeditorui.rc"), QStringLiteral("sieveeditor"));
+    backupUiRcFile(QStringLiteral("storageservicemanagerui.rc"), QStringLiteral("storageservicemanager"));
+    backupUiRcFile(QStringLiteral("kmreadermainwin.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kmcomposerui.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kmmainwin.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kmail_part.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kontactui.rc"), QStringLiteral("kontact"));
+    backupUiRcFile(QStringLiteral("kleopatra.rc"), QStringLiteral("kleopatra"));
+
+    backupConfigFile(QStringLiteral("kabldaprc"));
+    backupConfigFile(QStringLiteral("kmailsnippetrc"));
+    backupConfigFile(QStringLiteral("sievetemplaterc"));
+    backupConfigFile(QStringLiteral("customtemplatesrc"));
+    backupConfigFile(QStringLiteral("kontactrc"));
+    backupConfigFile(QStringLiteral("kontact_summaryrc"));
+    backupConfigFile(QStringLiteral("storageservicerc"));
+    backupConfigFile(QStringLiteral("kpimbalooblacklist"));
+    backupConfigFile(QStringLiteral("kleopatrarc"));
+    backupConfigFile(QStringLiteral("sieveeditorrc"));
+
 
     //Notify file config
-    backupConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
-    backupConfigFile(QLatin1String("akonadi_sendlater_agent.notifyrc"));
-    backupConfigFile(QLatin1String("akonadi_archivemail_agent.notifyrc"));
-    backupConfigFile(QLatin1String("kmail2.notifyrc"));
-    backupConfigFile(QLatin1String("akonadi_newmailnotifier_agent.notifyrc"));
-    backupConfigFile(QLatin1String("akonadi_maildispatcher_agent.notifyrc"));
-    backupConfigFile(QLatin1String("akonadi_followupreminder_agent.notifyrc"));
-    backupConfigFile(QLatin1String("messagevieweradblockrc"));
-    backupConfigFile(QLatin1String("messageviewer.notifyrc"));
+    backupConfigFile(QStringLiteral("akonadi_mailfilter_agent.notifyrc"));
+    backupConfigFile(QStringLiteral("akonadi_sendlater_agent.notifyrc"));
+    backupConfigFile(QStringLiteral("akonadi_archivemail_agent.notifyrc"));
+    backupConfigFile(QStringLiteral("kmail2.notifyrc"));
+    backupConfigFile(QStringLiteral("akonadi_newmailnotifier_agent.notifyrc"));
+    backupConfigFile(QStringLiteral("akonadi_maildispatcher_agent.notifyrc"));
+    backupConfigFile(QStringLiteral("akonadi_followupreminder_agent.notifyrc"));
+    backupConfigFile(QStringLiteral("messagevieweradblockrc"));
+    backupConfigFile(QStringLiteral("messageviewer.notifyrc"));
 
-    const QString archiveMailAgentConfigurationStr(QLatin1String("akonadi_archivemail_agentrc"));
-    const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr ;
+    const QString archiveMailAgentConfigurationStr(QStringLiteral("akonadi_archivemail_agentrc"));
+    const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr;
     if (QFile(archiveMailAgentconfigurationrc).exists()) {
         KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(archiveMailAgentConfigurationStr);
 
@@ -226,12 +335,12 @@ void ExportMailJob::backupConfig()
         tmp.open();
 
         KConfig *archiveConfig = archivemailrc->copyTo(tmp.fileName());
-        const QStringList archiveList = archiveConfig->groupList().filter(QRegExp(QLatin1String("ArchiveMailCollection \\d+")));
-        const QString archiveGroupPattern = QLatin1String("ArchiveMailCollection ");
+        const QStringList archiveList = archiveConfig->groupList().filter(QRegExp(QStringLiteral("ArchiveMailCollection \\d+")));
+        const QString archiveGroupPattern = QStringLiteral("ArchiveMailCollection ");
 
         Q_FOREACH (const QString &str, archiveList) {
             bool found = false;
-            const int collectionId = str.right(str.length() - archiveGroupPattern.length()).toInt(&found);
+            const int collectionId = str.rightRef(str.length() - archiveGroupPattern.length()).toInt(&found);
             if (found) {
                 KConfigGroup oldGroup = archiveConfig->group(str);
                 const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
@@ -239,7 +348,7 @@ void ExportMailJob::backupConfig()
                     const QString collectionPath(archiveGroupPattern + realPath);
                     KConfigGroup newGroup(archiveConfig, collectionPath);
                     oldGroup.copyTo(&newGroup);
-                    newGroup.writeEntry(QLatin1String("saveCollectionId"), collectionPath);
+                    newGroup.writeEntry(QStringLiteral("saveCollectionId"), collectionPath);
                 }
                 oldGroup.deleteGroup();
             }
@@ -250,7 +359,7 @@ void ExportMailJob::backupConfig()
         delete archiveConfig;
     }
 
-    const QString templatesconfigurationrcStr(QLatin1String("templatesconfigurationrc"));
+    const QString templatesconfigurationrcStr(QStringLiteral("templatesconfigurationrc"));
     const QString templatesconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + templatesconfigurationrcStr;
     if (QFile(templatesconfigurationrc).exists()) {
         KSharedConfigPtr templaterc = KSharedConfig::openConfig(templatesconfigurationrcStr);
@@ -259,11 +368,11 @@ void ExportMailJob::backupConfig()
         tmp.open();
 
         KConfig *templateConfig = templaterc->copyTo(tmp.fileName());
-        const QString templateGroupPattern = QLatin1String("Templates #");
-        const QStringList templateList = templateConfig->groupList().filter(QRegExp(QLatin1String("Templates #\\d+")));
+        const QString templateGroupPattern = QStringLiteral("Templates #");
+        const QStringList templateList = templateConfig->groupList().filter(QRegExp(QStringLiteral("Templates #\\d+")));
         Q_FOREACH (const QString &str, templateList) {
             bool found = false;
-            const int collectionId = str.right(str.length() - templateGroupPattern.length()).toInt(&found);
+            const int collectionId = str.rightRef(str.length() - templateGroupPattern.length()).toInt(&found);
             if (found) {
                 KConfigGroup oldGroup = templateConfig->group(str);
                 const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
@@ -280,7 +389,7 @@ void ExportMailJob::backupConfig()
         delete templateConfig;
     }
 
-    const QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/")) ;
+    const QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/"));
     if (themeDirectory.exists()) {
         const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String("messageviewer/themes/"));
         if (!themeDirAdded) {
@@ -288,20 +397,20 @@ void ExportMailJob::backupConfig()
         }
     }
 
-    const QDir autocorrectDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/")) ;
+    const QDir autocorrectDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/"));
     if (autocorrectDirectory.exists()) {
         const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList() << QStringLiteral("*.xml"), QDir::Files);
         const int listSize(listFileInfo.size());
         for (int i = 0; i < listSize; ++i) {
-            backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String("autocorrect/") , listFileInfo.at(i).fileName());
+            backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String("autocorrect/"), listFileInfo.at(i).fileName());
         }
     }
-    const QString adblockFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/adblockrules_local") ;
+    const QString adblockFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/adblockrules_local");
     if (!adblockFilePath.isEmpty()) {
-        backupFile(adblockFilePath, Utils::dataPath() + QLatin1String("kmail2/") , QStringLiteral("adblockrules_local"));
+        backupFile(adblockFilePath, Utils::dataPath() + QLatin1String("kmail2/"), QStringLiteral("adblockrules_local"));
     }
 
-    const QString kmailStr(QLatin1String("kmail2rc"));
+    const QString kmailStr(QStringLiteral("kmail2rc"));
     const QString kmail2rc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kmailStr;
     if (QFile(kmail2rc).exists()) {
         KSharedConfigPtr kmailrc = KSharedConfig::openConfig(kmail2rc);
@@ -310,11 +419,11 @@ void ExportMailJob::backupConfig()
         tmp.open();
 
         KConfig *kmailConfig = kmailrc->copyTo(tmp.fileName());
-        const QString folderGroupPattern = QLatin1String("Folder-");
-        const QStringList folderList = kmailConfig->groupList().filter(QRegExp(QLatin1String("Folder-\\d+")));
+        const QString folderGroupPattern = QStringLiteral("Folder-");
+        const QStringList folderList = kmailConfig->groupList().filter(QRegExp(QStringLiteral("Folder-\\d+")));
         Q_FOREACH (const QString &str, folderList) {
             bool found = false;
-            const int collectionId = str.right(str.length() - folderGroupPattern.length()).toInt(&found);
+            const int collectionId = str.rightRef(str.length() - folderGroupPattern.length()).toInt(&found);
             if (found) {
                 KConfigGroup oldGroup = kmailConfig->group(str);
                 const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
@@ -325,10 +434,10 @@ void ExportMailJob::backupConfig()
                 oldGroup.deleteGroup();
             }
         }
-        const QString composerStr(QLatin1String("Composer"));
+        const QString composerStr(QStringLiteral("Composer"));
         if (kmailConfig->hasGroup(composerStr)) {
             KConfigGroup composerGroup = kmailConfig->group(composerStr);
-            const QString previousStr(QLatin1String("previous-fcc"));
+            const QString previousStr(QStringLiteral("previous-fcc"));
             if (composerGroup.hasKey(previousStr)) {
                 const int collectionId = composerGroup.readEntry(previousStr, -1);
                 if (collectionId != -1) {
@@ -338,10 +447,10 @@ void ExportMailJob::backupConfig()
             }
         }
 
-        const QString generalStr(QLatin1String("General"));
+        const QString generalStr(QStringLiteral("General"));
         if (kmailConfig->hasGroup(generalStr)) {
             KConfigGroup generalGroup = kmailConfig->group(generalStr);
-            const QString startupFolderStr(QLatin1String("startupFolder"));
+            const QString startupFolderStr(QStringLiteral("startupFolder"));
             if (generalGroup.hasKey(startupFolderStr)) {
                 const int collectionId = generalGroup.readEntry(startupFolderStr, -1);
                 if (collectionId != -1) {
@@ -351,14 +460,14 @@ void ExportMailJob::backupConfig()
             }
         }
 
-        const QString storageModelSelectedMessageStr(QLatin1String("MessageListView::StorageModelSelectedMessages"));
+        const QString storageModelSelectedMessageStr(QStringLiteral("MessageListView::StorageModelSelectedMessages"));
         if (kmailConfig->hasGroup(storageModelSelectedMessageStr)) {
             KConfigGroup storageGroup = kmailConfig->group(storageModelSelectedMessageStr);
-            const QString storageModelSelectedPattern(QLatin1String("MessageUniqueIdForStorageModel"));
-            const QStringList storageList = storageGroup.keyList().filter(QRegExp(QLatin1String("MessageUniqueIdForStorageModel\\d+")));
+            const QString storageModelSelectedPattern(QStringLiteral("MessageUniqueIdForStorageModel"));
+            const QStringList storageList = storageGroup.keyList().filter(QRegExp(QStringLiteral("MessageUniqueIdForStorageModel\\d+")));
             Q_FOREACH (const QString &str, storageList) {
                 bool found = false;
-                const int collectionId = str.right(str.length() - storageModelSelectedPattern.length()).toInt(&found);
+                const int collectionId = str.rightRef(str.length() - storageModelSelectedPattern.length()).toInt(&found);
                 const QString oldValue = storageGroup.readEntry(str);
                 if (found) {
                     const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
@@ -370,22 +479,22 @@ void ExportMailJob::backupConfig()
             }
         }
 
-        const QString collectionFolderViewStr(QLatin1String("CollectionFolderView"));
+        const QString collectionFolderViewStr(QStringLiteral("CollectionFolderView"));
         if (kmailConfig->hasGroup(collectionFolderViewStr)) {
             KConfigGroup favoriteGroup = kmailConfig->group(collectionFolderViewStr);
 
-            const QString currentKey(QLatin1String("Current"));
+            const QString currentKey(QStringLiteral("Current"));
             Utils::convertCollectionToRealPath(favoriteGroup, currentKey);
 
-            const QString expensionKey(QLatin1String("Expansion"));
+            const QString expensionKey(QStringLiteral("Expansion"));
             Utils::convertCollectionListToRealPath(favoriteGroup, expensionKey);
         }
 
-        const QString favoriteCollectionStr(QLatin1String("FavoriteCollections"));
+        const QString favoriteCollectionStr(QStringLiteral("FavoriteCollections"));
         if (kmailConfig->hasGroup(favoriteCollectionStr)) {
             KConfigGroup favoriteGroup = kmailConfig->group(favoriteCollectionStr);
 
-            const QString favoriteCollectionIdsStr(QLatin1String("FavoriteCollectionIds"));
+            const QString favoriteCollectionIdsStr(QStringLiteral("FavoriteCollectionIds"));
             Utils::convertCollectionIdsToRealPath(favoriteGroup, favoriteCollectionIdsStr);
         }
 
@@ -399,9 +508,9 @@ void ExportMailJob::backupConfig()
 
 void ExportMailJob::backupIdentity()
 {
-    showInfo(i18n("Backing up identity..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString emailidentitiesStr(QLatin1String("emailidentities"));
+    setProgressDialogLabel(i18n("Backing up identity..."));
+
+    const QString emailidentitiesStr(QStringLiteral("emailidentities"));
     const QString emailidentitiesrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + emailidentitiesStr;
     if (QFile(emailidentitiesrc).exists()) {
 
@@ -411,22 +520,22 @@ void ExportMailJob::backupIdentity()
         tmp.open();
 
         KConfig *identityConfig = identity->copyTo(tmp.fileName());
-        const QStringList accountList = identityConfig->groupList().filter(QRegExp(QLatin1String("Identity #\\d+")));
+        const QStringList accountList = identityConfig->groupList().filter(QRegExp(QStringLiteral("Identity #\\d+")));
         Q_FOREACH (const QString &account, accountList) {
             KConfigGroup group = identityConfig->group(account);
-            const QString fcc = QLatin1String("Fcc");
+            const QString fcc = QStringLiteral("Fcc");
             if (group.hasKey(fcc)) {
                 group.writeEntry(fcc, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(fcc).toLongLong())));
             }
-            const QString draft = QLatin1String("Drafts");
+            const QString draft = QStringLiteral("Drafts");
             if (group.hasKey(draft)) {
                 group.writeEntry(draft, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(draft).toLongLong())));
             }
-            const QString templates = QLatin1String("Templates");
+            const QString templates = QStringLiteral("Templates");
             if (group.hasKey(templates)) {
                 group.writeEntry(templates, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(templates).toLongLong())));
             }
-            const QString vcard = QLatin1String("VCardFile");
+            const QString vcard = QStringLiteral("VCardFile");
             if (group.hasKey(vcard)) {
                 const QString vcardFileName = group.readEntry(vcard);
                 if (!vcardFileName.isEmpty()) {
@@ -455,75 +564,11 @@ void ExportMailJob::backupIdentity()
     }
 }
 
-void ExportMailJob::backupMails()
-{
-    showInfo(i18n("Backing up Mails..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
-    const Akonadi::AgentInstance::List list = manager->instances();
-    foreach (const Akonadi::AgentInstance &agent, list) {
-        const QStringList capabilities(agent.type().capabilities());
-        if (agent.type().mimeTypes().contains(KMime::Message::mimeType())) {
-            if (capabilities.contains(QStringLiteral("Resource")) &&
-                    !capabilities.contains(QStringLiteral("Virtual")) &&
-                    !capabilities.contains(QStringLiteral("MailTransport"))) {
-                const QString identifier = agent.identifier();
-                const QString archivePath = Utils::mailsPath() + identifier + QDir::separator();
-                if (identifier.contains(QStringLiteral("akonadi_mbox_resource_"))) {
-                    backupResourceFile(agent, Utils::mailsPath());
-                } else if (identifier.contains(QStringLiteral("akonadi_maildir_resource_")) ||
-                           identifier.contains(QStringLiteral("akonadi_mixedmaildir_resource_"))) {
-                    //Store akonadi agent config
-                    QUrl url = Utils::resourcePath(agent);
-
-                    const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("mail.zip"));
-                    if (fileAdded) {
-                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                        if (!errorStr.isEmpty()) {
-                            Q_EMIT error(errorStr);
-                        }
-                        url = Utils::akonadiAgentConfigPath(identifier);
-                        if (!url.isEmpty()) {
-                            const QString filename = url.fileName();
-                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                            if (fileAdded) {
-                                Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                            } else {
-                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Q_EMIT info(i18n("Mails backup done."));
-}
-
-void ExportMailJob::writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive)
-{
-    QDir dir(path);
-    QString currentPath(path);
-    currentPath = currentPath.remove(relativePath);
-    mailArchive->writeDir(currentPath, QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime);
-
-    const QFileInfoList lst = dir.entryInfoList(QDir::NoDot | QDir::NoDotDot | QDir::Dirs | QDir::AllDirs | QDir::Hidden | QDir::Files);
-    const int numberItems(lst.count());
-    for (int i = 0; i < numberItems; ++i) {
-        const QString filename(lst.at(i).fileName());
-        if (lst.at(i).isDir()) {
-            writeDirectory(relativePath + path + QLatin1Char('/') + filename, relativePath, mailArchive);
-        } else {
-            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(), currentPath + QLatin1Char('/') + filename);
-        }
-    }
-}
-
+#if 0
 void ExportMailJob::backupAkonadiDb()
 {
-    showInfo(i18n("Backing up Akonadi Database..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    setProgressDialogLabel(i18n("Backing up Akonadi Database..."));
+
     AkonadiDataBase akonadiDataBase;
     const QString dbDriver(akonadiDataBase.driver());
 
@@ -572,13 +617,4 @@ void ExportMailJob::backupAkonadiDb()
         Q_EMIT info(i18n("Akonadi Database backup done."));
     }
 }
-
-QUrl ExportMailJob::subdirPath(const QUrl &url) const
-{
-    const QString filename(url.fileName());
-    QString path = url.path();
-    const int parentDirEndIndex = path.lastIndexOf(filename);
-    path = path.left(parentDirEndIndex);
-    path.append(QLatin1Char('.') + filename + QLatin1String(".directory"));
-    return QUrl(path);
-}
+#endif

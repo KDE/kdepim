@@ -94,8 +94,8 @@ private:
             okButton = buttonBox->button(QDialogButtonBox::Ok);
             okButton->setDefault(true);
             okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-            q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
-            q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+            q->connect(buttonBox, &QDialogButtonBox::accepted, q, &QDialog::accept);
+            q->connect(buttonBox, &QDialogButtonBox::rejected, q, &QDialog::reject);
             mainLayout->addWidget(buttonBox);
         }
 

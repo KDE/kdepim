@@ -28,12 +28,11 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("pimsettingexporter"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("pimsettingexporterrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("pimsettingexporter.rc"));
     migrate.migrate();
-    KLocalizedString::setApplicationDomain("pimsettingexporter");
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact")));
 
     PimSettingCommandLineOption parser;
@@ -43,8 +42,8 @@ int main(int argc, char *argv[])
 
     PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
     parser.setExportWindow(backupMailWin);
-    QObject::connect(&service, SIGNAL(activateRequested(QStringList,QString)),
-                     &parser, SLOT(slotActivateRequested(QStringList,QString)));
+    QObject::connect(&service, &KDBusService::activateRequested,
+                     &parser, &PimSettingCommandLineOption::slotActivateRequested);
     backupMailWin->show();
     parser.handleCommandLine();
 

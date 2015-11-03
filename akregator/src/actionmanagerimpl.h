@@ -26,7 +26,7 @@
 #define AKREGATOR_ACTIONMANAGERIMPL_H
 
 #include "actionmanager.h"
-#include "pimcommon/shareserviceurl/shareserviceurlmanager.h"
+#include "PimCommon/ShareServiceUrlManager"
 class QAction;
 class KActionCollection;
 
@@ -57,8 +57,8 @@ public:
     explicit ActionManagerImpl(Part *part, QObject *parent = Q_NULLPTR);
     virtual ~ActionManagerImpl();
 
-    virtual QAction *action(const char *name);
-    virtual QWidget *container(const char *name);
+    QAction *action(const char *name) Q_DECL_OVERRIDE;
+    QWidget *container(const char *name) Q_DECL_OVERRIDE;
 
     void initMainWidget(MainWidget *mainWidget);
     void initArticleViewer(ArticleViewer *articleViewer);

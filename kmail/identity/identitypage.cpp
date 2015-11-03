@@ -27,11 +27,11 @@
 #include "newidentitydialog.h"
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
 #include "kmkernel.h"
-#include "settings/globalsettings.h"
+#include "settings/kmailsettings.h"
 #endif
 
-#include <mailcommon/kernel/mailkernel.h>
-#include <messageviewer/utils/autoqpointer.h>
+#include <MailCommon/MailKernel>
+
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 
@@ -61,12 +61,12 @@ IdentityPage::IdentityPage(QWidget *parent)
     mIPage.setupUi(this);
     mIPage.mIdentityList->setIdentityManager(mIdentityManager);
 
-    connect(mIPage.mIdentityList, SIGNAL(itemSelectionChanged()), SLOT(slotIdentitySelectionChanged()));
+    connect(mIPage.mIdentityList, &QTreeWidget::itemSelectionChanged, this, &IdentityPage::slotIdentitySelectionChanged);
     connect(this, SIGNAL(changed(bool)),
             SLOT(slotIdentitySelectionChanged()));
     connect(mIPage.mIdentityList, SIGNAL(rename(KMail::IdentityListViewItem*,QString)),  SLOT(slotRenameIdentity(KMail::IdentityListViewItem*,QString)));
     connect(mIPage.mIdentityList, &QTreeWidget::itemDoubleClicked,  this, &IdentityPage::slotModifyIdentity);
-    connect(mIPage.mIdentityList, SIGNAL(contextMenu(KMail::IdentityListViewItem*,QPoint)), SLOT(slotContextMenu(KMail::IdentityListViewItem*,QPoint)));
+    connect(mIPage.mIdentityList, &IdentityListView::contextMenu, this, &IdentityPage::slotContextMenu);
     // ### connect dragged(...), ...
 
     connect(mIPage.mButtonAdd, &QPushButton::clicked, this, &IdentityPage::slotNewIdentity);
@@ -112,16 +112,16 @@ void IdentityPage::save()
     if (mOldNumberOfIdentities < 2 && mIPage.mIdentityList->topLevelItemCount() > 1) {
         // have more than one identity, so better show the combo in the
         // composer now:
-        int showHeaders = GlobalSettings::self()->headers();
+        int showHeaders = KMailSettings::self()->headers();
         showHeaders |= KMail::Composer::HDR_IDENTITY;
-        GlobalSettings::self()->setHeaders(showHeaders);
+        KMailSettings::self()->setHeaders(showHeaders);
     }
     // and now the reverse
     if (mOldNumberOfIdentities > 1 && mIPage.mIdentityList->topLevelItemCount() < 2) {
         // have only one identity, so remove the combo in the composer:
-        int showHeaders = GlobalSettings::self()->headers();
+        int showHeaders = KMailSettings::self()->headers();
         showHeaders &= ~KMail::Composer::HDR_IDENTITY;
-        GlobalSettings::self()->setHeaders(showHeaders);
+        KMailSettings::self()->setHeaders(showHeaders);
     }
 #endif
 }
@@ -130,7 +130,7 @@ void IdentityPage::slotNewIdentity()
 {
     Q_ASSERT(!mIdentityDialog);
 
-    MessageViewer::AutoQPointer<NewIdentityDialog> dialog(new NewIdentityDialog(
+    QScopedPointer<NewIdentityDialog> dialog(new NewIdentityDialog(
                 mIdentityManager, this));
     dialog->setObjectName(QStringLiteral("new"));
 
@@ -152,7 +152,7 @@ void IdentityPage::slotNewIdentity()
             break;
         case NewIdentityDialog::Empty:
             mIdentityManager->newFromScratch(identityName);
-        default: ;
+        default:;
         }
 
         //
@@ -256,7 +256,7 @@ void IdentityPage::slotRenameIdentity()
     mIPage.mIdentityList->editItem(item);
 }
 
-void IdentityPage::slotRenameIdentity(KMail::IdentityListViewItem *item , const QString &text)
+void IdentityPage::slotRenameIdentity(KMail::IdentityListViewItem *item, const QString &text)
 {
     if (!item) {
         return;

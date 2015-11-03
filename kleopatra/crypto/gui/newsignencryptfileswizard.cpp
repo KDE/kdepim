@@ -43,15 +43,15 @@
 #include <view/searchbar.h>
 
 #include <models/keycache.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 #include <models/keylistmodel.h>
 
 #include <utils/archivedefinition.h>
 #include <utils/path-helper.h>
 #include <utils/gui-helper.h>
 
-#include <kleo/stl_util.h>
-#include <ui/filenamerequester.h>
+#include <Libkleo/Stl_Util>
+#include <libkleo/filenamerequester.h>
 
 #include <KLocalizedString>
 #include <QIcon>
@@ -96,7 +96,7 @@ enum Page {
 
 static void enable_disable(QAbstractButton &button, const QAbstractItemView *view)
 {
-    const QItemSelectionModel *ism = view ? view->selectionModel() : 0 ;
+    const QItemSelectionModel *ism = view ? view->selectionModel() : 0;
     button.setEnabled(ism && ism->hasSelection());
 }
 
@@ -174,8 +174,8 @@ public:
     explicit ObjectsLabel(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QLabel(parent, f), m_dialog(), m_files(dummyFiles())
     {
-        connect(this, SIGNAL(linkActivated(QString)),
-                this, SLOT(slotLinkActivated()));
+        connect(this, &QLabel::linkActivated,
+                this, &ObjectsLabel::slotLinkActivated);
         updateText();
         // updateGeometry() doesn't seem to reset the
         // minimumSizeHint(), using max-height dummy text here
@@ -185,8 +185,8 @@ public:
     explicit ObjectsLabel(const QStringList &files, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QLabel(parent, f), m_dialog(), m_files(files)
     {
-        connect(this, SIGNAL(linkActivated(QString)),
-                this, SLOT(slotLinkActivated()));
+        connect(this, &QLabel::linkActivated,
+                this, &ObjectsLabel::slotLinkActivated);
         updateText();
     }
 
@@ -221,7 +221,7 @@ private:
     static QStringList dummyFiles()
     {
         QStringList dummy;
-        for (int i = 0 ; i < MaxLinesShownInline + 1 ; ++i) {
+        for (int i = 0; i < MaxLinesShownInline + 1; ++i) {
             dummy.push_back(QString::number(i));
         }
         return dummy;
@@ -232,7 +232,7 @@ private:
             return QLatin1String("<p>") + i18n("No files selected.") + QLatin1String("</p>");
         }
         QString html = QLatin1String("<p>") + i18np("Selected file:", "Selected files:", m_files.size()) + QLatin1String("</p>")
-                       + QLatin1String("<ul><li>") + join_max(m_files, MaxLinesShownInline, QStringLiteral("</li><li>")) + QLatin1String("</li></ul>") ;
+                       + QLatin1String("<ul><li>") + join_max(m_files, MaxLinesShownInline, QStringLiteral("</li><li>")) + QLatin1String("</li></ul>");
         if (m_files.size() > MaxLinesShownInline) {
             html += QLatin1String("<p><a href=\"link:/\">") + i18nc("@action", "More...") + QLatin1String("</a></p>");
         }
@@ -268,8 +268,8 @@ public Q_SLOTS:
         if (ad == m_archiveDefinition) {
             return;
         }
-        const QString oldExt = m_archiveDefinition ? m_archiveDefinition->extensions(m_protocol).front() : QString() ;
-        const QString newExt = ad                  ? ad->extensions(m_protocol).front()                  : QString() ;
+        const QString oldExt = m_archiveDefinition ? m_archiveDefinition->extensions(m_protocol).front() : QString();
+        const QString newExt = ad                  ? ad->extensions(m_protocol).front()                  : QString();
         QString fn = fileName();
         if (fn.endsWith(oldExt)) {
             fn.chop(oldExt.size() + 1);
@@ -282,7 +282,7 @@ public Q_SLOTS:
     }
     void setFileName(const QString &fn)
     {
-        const QString ext = m_archiveDefinition ? m_archiveDefinition->extensions(m_protocol).front() : QString() ;
+        const QString ext = m_archiveDefinition ? m_archiveDefinition->extensions(m_protocol).front() : QString();
         if (m_archiveDefinition && !fn.endsWith(ext)) {
             FileNameRequester::setFileName(fn + QLatin1Char('.') + ext);
         } else {
@@ -307,42 +307,42 @@ public:
 
     bool isArchiveRequested() const
     {
-        return field(QLatin1String("archive")).toBool();
+        return field(QStringLiteral("archive")).toBool();
     }
 
     QString archiveName(Protocol p) const
     {
-        return field(p == OpenPGP ? QLatin1String("archive-name-pgp") : QLatin1String("archive-name-cms")).toString();
+        return field(p == OpenPGP ? QStringLiteral("archive-name-pgp") : QStringLiteral("archive-name-cms")).toString();
     }
 
     bool isRemoveUnencryptedFilesEnabled() const
     {
-        return field(QLatin1String("remove")).toBool();
+        return field(QStringLiteral("remove")).toBool();
     }
 
     bool isSignOnlySelected() const
     {
-        return field(QLatin1String("sign")).toBool();
+        return field(QStringLiteral("sign")).toBool();
     }
 
     bool isEncryptOnlySelected() const
     {
-        return field(QLatin1String("encrypt")).toBool();
+        return field(QStringLiteral("encrypt")).toBool();
     }
 
     bool isSignEncryptSelected() const
     {
-        return field(QLatin1String("signencrypt")).toBool() ;
+        return field(QStringLiteral("signencrypt")).toBool();
     }
 
     bool isSigningSelected() const
     {
-        return isSignOnlySelected() || isSignEncryptSelected() ;
+        return isSignOnlySelected() || isSignEncryptSelected();
     }
 
     bool isEncryptionSelected() const
     {
-        return isEncryptOnlySelected() || isSignEncryptSelected() ;
+        return isEncryptOnlySelected() || isSignEncryptSelected();
     }
 
     Protocol protocol() const
@@ -480,25 +480,25 @@ public:
         connect(&m_archive, SIGNAL(currentIndexChanged(int)),
                 this, SLOT(slotArchiveDefinitionChanged()));
 
-        connect(&m_signencrypt, SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_encrypt,     SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_sign,        SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_archiveCB,   SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_archiveNamePgp, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()));
-        connect(&m_archiveNameCms, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()));
+        connect(&m_signencrypt, &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_encrypt,     &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_sign,        &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_archiveCB,   &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_archiveNamePgp, &FileNameRequester::fileNameChanged, this, &QWizardPage::completeChanged);
+        connect(&m_archiveNameCms, &FileNameRequester::fileNameChanged, this, &QWizardPage::completeChanged);
 
-        connect(&m_sign, SIGNAL(toggled(bool)),
-                &m_removeSource, SLOT(setDisabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archive, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNamePgpLB, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNamePgp, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNameCmsLB, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNameCms, SLOT(setEnabled(bool)));
+        connect(&m_sign, &QAbstractButton::toggled,
+                &m_removeSource, &QWidget::setDisabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archive, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNamePgpLB, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNamePgp, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNameCmsLB, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNameCms, &QWidget::setEnabled);
 
         const shared_ptr<ArchiveDefinition> ad = archiveDefinition();
         m_archiveNamePgp.setArchiveDefinition(ad);
@@ -585,37 +585,35 @@ public:
         updateSignEncryptArchiveWidgetStates();
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
-        return (!isArchiveRequested() || !archiveName(OpenPGP).isEmpty() && !archiveName(CMS).isEmpty())       // ### make more permissive
-               && (isSigningSelected() || isEncryptionSelected()) ;
+        return (!isArchiveRequested() || (!archiveName(OpenPGP).isEmpty() && !archiveName(CMS).isEmpty()))       // ### make more permissive
+               && (isSigningSelected() || isEncryptionSelected());
     }
 
-    /* reimp */ bool validatePage()
-    {
+    bool validatePage() Q_DECL_OVERRIDE {
         if (isSignOnlySelected() && isArchiveRequested())
             return KMessageBox::warningContinueCancel(this,
-                    xi18nc("@info",
-                           "<para>Archiving in combination with sign-only currently requires what are known as opaque signatures - "
-                           "unlike detached ones, these embed the content in the signature.</para>"
-                           "<para>This format is rather unusual. You might want to archive the files separately, "
-                           "and then sign the archive as one file with Kleopatra.</para>"
-                           "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>"),
-                    i18nc("@title:window", "Unusual Signature Warning"),
-                    KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                    QLatin1String("signencryptfileswizard-archive+sign-only-warning"))
-                   == KMessageBox::Continue ;
+            xi18nc("@info",
+            "<para>Archiving in combination with sign-only currently requires what are known as opaque signatures - "
+            "unlike detached ones, these embed the content in the signature.</para>"
+            "<para>This format is rather unusual. You might want to archive the files separately, "
+            "and then sign the archive as one file with Kleopatra.</para>"
+            "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>"),
+            i18nc("@title:window", "Unusual Signature Warning"),
+            KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
+            QStringLiteral("signencryptfileswizard-archive+sign-only-warning"))
+            == KMessageBox::Continue;
         else {
             return true;
         }
     }
 
-    /* reimp */ int nextId() const
+    int nextId() const Q_DECL_OVERRIDE
     {
-        return isEncryptionSelected() ? RecipientsPageId : SignerPageId ;
+        return isEncryptionSelected() ? RecipientsPageId : SignerPageId;
     }
-    /* reimp */ void doSetPresetProtocol()
-    {
+    void doSetPresetProtocol() Q_DECL_OVERRIDE {
         updateSignEncryptArchiveWidgetStates();
     }
 
@@ -651,15 +649,15 @@ private:
     {
         m_archiveCB.setEnabled(m_archiveUserMutable);
 
-        const bool mustEncrypt = m_encryptionPreset && !m_encryptionUserMutable ;
-        const bool mustSign    = m_signingPreset    && !m_signingUserMutable    ;
+        const bool mustEncrypt = m_encryptionPreset && !m_encryptionUserMutable;
+        const bool mustSign    = m_signingPreset    && !m_signingUserMutable;
 
-        const bool mayEncrypt  = m_encryptionPreset || m_encryptionUserMutable  ;
-        const bool maySign     = m_signingPreset    || m_signingUserMutable     ;
+        const bool mayEncrypt  = m_encryptionPreset || m_encryptionUserMutable;
+        const bool maySign     = m_signingPreset    || m_signingUserMutable;
 
-        const bool canSignEncrypt = protocol() != CMS && mayEncrypt && maySign ;
-        const bool canSignOnly    = maySign && !mustEncrypt ;
-        const bool canEncryptOnly = mayEncrypt && !mustSign ;
+        const bool canSignEncrypt = protocol() != CMS && mayEncrypt && maySign;
+        const bool canSignOnly    = maySign && !mustEncrypt;
+        const bool canEncryptOnly = mayEncrypt && !mustSign;
 
         m_signencrypt.setEnabled(canSignEncrypt);
         m_encrypt.setEnabled(canEncryptOnly);
@@ -743,21 +741,21 @@ public:
         xconnect(&m_searchbar, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
                  &m_unselectedKTV, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)));
 
-        connect(m_unselectedKTV.view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                this, SLOT(slotUnselectedSelectionChanged()));
-        connect(m_selectedKTV.view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                this, SLOT(slotSelectedSelectionChanged()));
+        connect(m_unselectedKTV.view()->selectionModel(), &QItemSelectionModel::selectionChanged,
+                this, &RecipientsPage::slotUnselectedSelectionChanged);
+        connect(m_selectedKTV.view()->selectionModel(), &QItemSelectionModel::selectionChanged,
+                this, &RecipientsPage::slotSelectedSelectionChanged);
 
-        connect(&m_selectPB, SIGNAL(clicked()), this, SLOT(select()));
-        connect(&m_unselectPB, SIGNAL(clicked()), this, SLOT(unselect()));
+        connect(&m_selectPB, &QAbstractButton::clicked, this, &RecipientsPage::select);
+        connect(&m_unselectPB, &QAbstractButton::clicked, this, &RecipientsPage::unselect);
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !m_selectedKTV.keys().empty();
     }
 
-    /* reimp */ int nextId() const
+    int nextId() const Q_DECL_OVERRIDE
     {
         if (isSigningSelected()) {
             return SignerPageId;
@@ -779,24 +777,25 @@ public:
 
     static bool need_grep(Protocol now, Protocol then)
     {
-        return now != UnknownProtocol && then == UnknownProtocol ;
+        return now != UnknownProtocol && then == UnknownProtocol;
     }
 
-    /* reimp */ void initializePage()
-    {
+    void initializePage() Q_DECL_OVERRIDE {
 
         setCommitPage(!isSigningSelected());
 
         const Protocol currentEffectiveProtocol = effectiveProtocol();
 
-        if (need_reload(currentEffectiveProtocol, m_lastEffectiveProtocol)) {
+        if (need_reload(currentEffectiveProtocol, m_lastEffectiveProtocol))
+        {
             std::vector<Key> keys = KeyCache::instance()->keys();
             _detail::grep_can_encrypt(keys);
             if (currentEffectiveProtocol != UnknownProtocol) {
                 _detail::grep_protocol(keys, currentEffectiveProtocol);
             }
             m_unselectedKTV.setKeys(keys);
-        } else if (need_grep(currentEffectiveProtocol, m_lastEffectiveProtocol)) {
+        } else if (need_grep(currentEffectiveProtocol, m_lastEffectiveProtocol))
+        {
             remove_all_keys_not_xyz(m_unselectedKTV, currentEffectiveProtocol);
             remove_all_keys_not_xyz(m_selectedKTV,   currentEffectiveProtocol);
         }
@@ -804,20 +803,20 @@ public:
         m_lastEffectiveProtocol = currentEffectiveProtocol;
     }
 
-    /* reimp */ bool validatePage()
-    {
+    bool validatePage() Q_DECL_OVERRIDE {
         const std::vector<Key> &r = keys();
-        if (_detail::none_of_secret(r)) {
+        if (_detail::none_of_secret(r))
+        {
             if (KMessageBox::warningContinueCancel(this,
-                                                   xi18nc("@info",
-                                                           "<para>None of the recipients you are encrypting to seems to be your own.</para>"
-                                                           "<para>This means that you will not be able to decrypt the data anymore, once encrypted.</para>"
-                                                           "<para>Do you want to continue, or cancel to change the recipient selection?</para>"),
-                                                   i18nc("@title:window", "Encrypt-To-Self Warning"),
-                                                   KStandardGuiItem::cont(),
-                                                   KStandardGuiItem::cancel(),
-                                                   QLatin1String("warn-encrypt-to-non-self"), KMessageBox::Notify | KMessageBox::Dangerous)
-                    == KMessageBox::Cancel) {
+            xi18nc("@info",
+            "<para>None of the recipients you are encrypting to seems to be your own.</para>"
+            "<para>This means that you will not be able to decrypt the data anymore, once encrypted.</para>"
+            "<para>Do you want to continue, or cancel to change the recipient selection?</para>"),
+            i18nc("@title:window", "Encrypt-To-Self Warning"),
+            KStandardGuiItem::cont(),
+            KStandardGuiItem::cancel(),
+            QStringLiteral("warn-encrypt-to-non-self"), KMessageBox::Notify | KMessageBox::Dangerous)
+            == KMessageBox::Cancel) {
                 return false;
             } else if (isRemoveUnencryptedFilesEnabled())
                 if (KMessageBox::warningContinueCancel(this,
@@ -827,7 +826,7 @@ public:
                                                        i18nc("@title:window", "Encrypt-To-Self Warning"),
                                                        KStandardGuiItem::cont(),
                                                        KStandardGuiItem::cancel(),
-                                                       QLatin1String("warn-encrypt-to-non-self-destructive"), KMessageBox::Notify | KMessageBox::Dangerous)
+                                                       QStringLiteral("warn-encrypt-to-non-self-destructive"), KMessageBox::Notify | KMessageBox::Dangerous)
                         == KMessageBox::Cancel) {
                     return false;
                 }
@@ -902,8 +901,8 @@ public:
         // ### connect something to completeChanged()
         // ### deal with widget.rememberAsDefault()
 
-        connect(&pgpCB, SIGNAL(toggled(bool)), this, SLOT(slotSignProtocolToggled()));
-        connect(&cmsCB, SIGNAL(toggled(bool)), this, SLOT(slotSignProtocolToggled()));
+        connect(&pgpCB, &QAbstractButton::toggled, this, &SignerPage::slotSignProtocolToggled);
+        connect(&cmsCB, &QAbstractButton::toggled, this, &SignerPage::slotSignProtocolToggled);
     }
 
     std::vector<Key> keys() const
@@ -928,36 +927,38 @@ public:
         return result;
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !keys().empty();
     }
 
-    /* reimp */ int nextId() const
+    int nextId() const Q_DECL_OVERRIDE
     {
-        return ResultPageId ;
+        return ResultPageId;
     }
 
-    /* reimp */ void initializePage()
-    {
+    void initializePage() Q_DECL_OVERRIDE {
 
-        if (QWizard *wiz = wizard()) {
+        if (QWizard *wiz = wizard())
+        {
             // need to do this here, since wizard() == 0 in the ctor
             const NewSignEncryptFilesWizard *filesWizard = qobject_cast<NewSignEncryptFilesWizard *>(wiz);
-            disconnect(filesWizard, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()));
-            connect(filesWizard, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()));
+            disconnect(filesWizard, &NewSignEncryptFilesWizard::operationPrepared, this, &SignerPage::slotCommitSigningPreferences);
+            connect(filesWizard, &NewSignEncryptFilesWizard::operationPrepared, this, &SignerPage::slotCommitSigningPreferences);
         }
 
         bool pgp = effectiveProtocol() == OpenPGP;
         bool cms = effectiveProtocol() == CMS;
 
-        if (effectiveProtocol() == UnknownProtocol) {
+        if (effectiveProtocol() == UnknownProtocol)
+        {
             pgp = cms = true;
         }
 
         assert(pgp || cms);
 
-        if (isSignOnlySelected()) {
+        if (isSignOnlySelected())
+        {
             // free choice of OpenPGP and/or CMS
             // (except when protocol() requires otherwise):
             pgpCB.setEnabled(pgp);
@@ -971,10 +972,12 @@ public:
             // make up the recipients:
 
             const std::vector<Key> &recipients = resolvedRecipients();
-            if (_detail::none_of_protocol(recipients, OpenPGP)) {
+            if (_detail::none_of_protocol(recipients, OpenPGP))
+            {
                 pgp = false;
             }
-            if (_detail::none_of_protocol(recipients, CMS)) {
+            if (_detail::none_of_protocol(recipients, CMS))
+            {
                 cms = false;
             }
 
@@ -986,10 +989,11 @@ public:
             setButtonText(QWizard::CommitButton, i18nc("@action", "Sign && Encrypt"));
         }
 
-        if (!signPref) {
+        if (!signPref)
+        {
             signPref.reset(new KConfigBasedSigningPreferences(KSharedConfig::openConfig()));
             widget.setSelectedCertificates(signPref->preferredCertificate(OpenPGP),
-                                           signPref->preferredCertificate(CMS));
+            signPref->preferredCertificate(CMS));
         }
     }
 
@@ -1085,8 +1089,8 @@ private:
             if (signingPreset && !encryptionPreset && !encryptionUserMutable) {
                 return SignerPageId;
             }
-            if (encryptionPreset && !signingPreset && !signingUserMutable ||
-                    signingPreset && !signingUserMutable && encryptionPreset && !encryptionUserMutable) {
+            if ((encryptionPreset && !signingPreset && !signingUserMutable) ||
+                    (signingPreset && !signingUserMutable && encryptionPreset && !encryptionUserMutable)) {
                 return RecipientsPageId;
             }
         }
@@ -1141,7 +1145,7 @@ void NewSignEncryptFilesWizard::setCreateArchivePreset(bool preset)
         return;
     }
     d->createArchivePreset = preset;
-    setField(QLatin1String("archive"), preset);
+    setField(QStringLiteral("archive"), preset);
     d->updateStartId();
 }
 
@@ -1151,7 +1155,7 @@ void NewSignEncryptFilesWizard::setCreateArchiveUserMutable(bool mut)
         return;
     }
     d->createArchiveUserMutable = mut;
-    setField(QLatin1String("archive-user-mutable"), mut);
+    setField(QStringLiteral("archive-user-mutable"), mut);
     d->updateStartId();
 }
 
@@ -1166,7 +1170,7 @@ void NewSignEncryptFilesWizard::setSigningPreset(bool preset)
         return;
     }
     d->signingPreset = preset;
-    setField(QLatin1String("signing-preset"), preset);
+    setField(QStringLiteral("signing-preset"), preset);
     d->updateStartId();
 }
 
@@ -1176,7 +1180,7 @@ void NewSignEncryptFilesWizard::setSigningUserMutable(bool mut)
         return;
     }
     d->signingUserMutable = mut;
-    setField(QLatin1String("signing-user-mutable"), mut);
+    setField(QStringLiteral("signing-user-mutable"), mut);
     d->updateStartId();
 }
 
@@ -1186,7 +1190,7 @@ void NewSignEncryptFilesWizard::setEncryptionPreset(bool preset)
         return;
     }
     d->encryptionPreset = preset;
-    setField(QLatin1String("encryption-preset"), preset);
+    setField(QStringLiteral("encryption-preset"), preset);
     d->updateStartId();
 }
 
@@ -1196,38 +1200,38 @@ void NewSignEncryptFilesWizard::setEncryptionUserMutable(bool mut)
         return;
     }
     d->encryptionUserMutable = mut;
-    setField(QLatin1String("encryption-user-mutable"), mut);
+    setField(QStringLiteral("encryption-user-mutable"), mut);
     d->updateStartId();
 }
 
 void NewSignEncryptFilesWizard::setFiles(const QStringList &files)
 {
-    setField(QLatin1String("files"), files);
+    setField(QStringLiteral("files"), files);
 }
 
 bool NewSignEncryptFilesWizard::isSigningSelected() const
 {
-    return field(QLatin1String("sign")).toBool() || field(QLatin1String("signencrypt")).toBool() ;
+    return field(QStringLiteral("sign")).toBool() || field(QStringLiteral("signencrypt")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isEncryptionSelected() const
 {
-    return field(QLatin1String("encrypt")).toBool() || field(QLatin1String("signencrypt")).toBool() ;
+    return field(QStringLiteral("encrypt")).toBool() || field(QStringLiteral("signencrypt")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isAsciiArmorEnabled() const
 {
-    return field(QLatin1String("armor")).toBool();
+    return field(QStringLiteral("armor")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isRemoveUnencryptedFilesEnabled() const
 {
-    return isEncryptionSelected() && field(QLatin1String("remove")).toBool();
+    return isEncryptionSelected() && field(QStringLiteral("remove")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isCreateArchiveSelected() const
 {
-    return field(QLatin1String("archive")).toBool();
+    return field(QStringLiteral("archive")).toBool();
 }
 
 shared_ptr<ArchiveDefinition> NewSignEncryptFilesWizard::selectedArchiveDefinition() const

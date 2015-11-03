@@ -25,18 +25,18 @@
 #include "kmreaderwin.h" //for inline actions
 #include "kmkernel.h" // for access to config
 
-#include "foldertreewidget.h"
+#include "mailcommon/foldertreewidget.h"
 
 #include <kxmlguiclient.h>
 #include "messageactions.h"
 #include <kactioncollection.h>
-#include <foldercollection.h>
+#include <mailcommon/foldercollection.h>
 
 #include <QPointer>
 #include <QTimer>
 #include <Akonadi/KMime/StandardMailActionManager>
 #include <AkonadiCore/tag.h>
-#include <messagelist/core/view.h>
+#include <MessageList/View>
 
 namespace MailTransport
 {
@@ -84,7 +84,6 @@ class FolderShortcutActionManager;
 namespace KSieveUi
 {
 class SieveDebugDialog;
-class Vacation;
 class ManageSieveScriptsDialog;
 class VacationManager;
 }
@@ -126,15 +125,9 @@ public:
     void writeReaderConfig();
 
     /** Easy access to main components of the window. */
-    KMReaderWin *messageView() const
-    {
-        return mMsgView;
-    }
+    KMReaderWin *messageView() const;
     /** Access to the header list pane. */
-    CollectionPane *messageListPane() const
-    {
-        return mMessagePane;
-    }
+    CollectionPane *messageListPane() const;
 
     QSharedPointer<MailCommon::FolderCollection> currentFolder() const;
 
@@ -377,7 +370,7 @@ protected Q_SLOTS:
     void slotSendQueued();
     void slotSendQueuedVia(MailTransport::Transport *transport);
     void slotOnlineStatus();
-    void slotUpdateOnlineStatus(GlobalSettings::EnumNetworkState::type);
+    void slotUpdateOnlineStatus(KMailSettings::EnumNetworkState::type);
     void slotMessagePopup(const Akonadi::Item &, const QUrl &, const QUrl &imageUrl, const QPoint &);
     void slotContactSearchJobForMessagePopupDone(KJob *job);
     void slotMarkAll();
@@ -442,7 +435,7 @@ protected Q_SLOTS:
     */
     void showOfflinePage();
     void showResourceOfflinePage();
-    void updateVacationScriptStatus(bool active , const QString &serverName = QString());
+    void updateVacationScriptStatus(bool active, const QString &serverName = QString());
 
     void slotItemAdded(const Akonadi::Item &, const Akonadi::Collection &col);
     void slotItemRemoved(const Akonadi::Item &);
@@ -465,7 +458,7 @@ private:
 
     void updateAllToTrashAction(int statistics);
 
-    /** Get Q_DECL_OVERRIDE character encoding. */
+    /** Get override character encoding. */
     QString overrideEncoding() const;
 
     void moveMessageSelected(MessageList::Core::MessageItemSetReference ref, const Akonadi::Collection &dest, bool confirmOnDeletion = true);
@@ -519,7 +512,7 @@ private:
 
     void openFilterDialog(const QByteArray &field, const QString &value);
 
-    void showMessagePopup(const Akonadi::Item &msg , const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound);
+    void showMessagePopup(const Akonadi::Item &msg, const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPoint, bool contactAlreadyExists, bool uniqueContactFound);
 
 private Q_SLOTS:
     void slotMoveMessageToTrash();
@@ -554,6 +547,8 @@ private Q_SLOTS:
     void slotCollectionRemoved(const Akonadi::Collection &col);
     void slotCcFilter();
     void slotBandwidth(bool b);
+    void slotDeleteMessages();
+
 private:
     // Message actions
     QAction *mDeleteAction;
@@ -591,7 +586,9 @@ private:
     Akonadi::FavoriteCollectionsModel *mFavoritesModel;
     QWidget      *mSearchAndTree;
     KMReaderWin  *mMsgView;
-    QSplitter    *mSplitter1, *mSplitter2, *mFolderViewSplitter;
+    QSplitter    *mSplitter1;
+    QSplitter *mSplitter2;
+    QSplitter *mFolderViewSplitter;
     Akonadi::Collection mTemplateFolder;
     bool          mLongFolderList;
     bool          mStartupDone;
@@ -606,10 +603,11 @@ private:
 
     QPointer<KMail::SearchWindow> mSearchWin;
 
-    QAction *mExpireFolderAction,
-            *mFolderMailingListPropertiesAction,
-            *mShowFolderShortcutDialogAction,
-            *mArchiveFolderAction, *mMessageNewList;
+    QAction *mExpireFolderAction;
+    QAction *mFolderMailingListPropertiesAction;
+    QAction *mShowFolderShortcutDialogAction;
+    QAction *mArchiveFolderAction;
+    QAction *mMessageNewList;
     KToggleAction *mPreferHtmlLoadExtAction;
 
     QTimer *menutimer;

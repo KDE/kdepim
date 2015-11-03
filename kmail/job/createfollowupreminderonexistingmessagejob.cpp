@@ -17,7 +17,7 @@
 
 #include "createfollowupreminderonexistingmessagejob.h"
 #include "kmail_debug.h"
-#include "../followupreminder/followupremindercreatejob.h"
+#include "MessageComposer/FollowupReminderCreateJob"
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 #include <KMime/Message>
@@ -45,7 +45,7 @@ void CreateFollowupReminderOnExistingMessageJob::start()
 
 void CreateFollowupReminderOnExistingMessageJob::doStart()
 {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mMessageItem , this);
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mMessageItem, this);
     job->fetchScope().fetchFullPayload(true);
     connect(job, &KJob::result, this, &CreateFollowupReminderOnExistingMessageJob::itemFetchJobDone);
 }

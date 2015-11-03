@@ -31,7 +31,6 @@
 
 #include <kalarmcal/kaevent.h>
 
-#include <kglobal.h>
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <kconfiggroup.h>
@@ -51,13 +50,14 @@ WakeFromSuspendDlg* WakeFromSuspendDlg::create(QWidget* parent)
 }
 
 WakeFromSuspendDlg::WakeFromSuspendDlg(QWidget* parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
-    setCaption(i18nc("@title:window", "Wake From Suspend"));
-    setButtons(Close);
+    setWindowTitle(i18nc("@title:window", "Wake From Suspend"));
+
+
     mUi = new Ui_WakeFromSuspendDlgWidget;
-    mUi->setupUi(mainWidget());
+    mUi->setupUi(this);
     mUi->advanceWakeTime->setValue(Preferences::wakeFromSuspendAdvance());
 
     mMainWindow = qobject_cast<MainWindow*>(parent);
@@ -77,8 +77,9 @@ WakeFromSuspendDlg::WakeFromSuspendDlg(QWidget* parent)
     connect(mUi->showWakeButton, &QPushButton::clicked, this, &WakeFromSuspendDlg::showWakeClicked);
     connect(mUi->useWakeButton, &QPushButton::clicked, this, &WakeFromSuspendDlg::useWakeClicked);
     connect(mUi->cancelWakeButton, &QPushButton::clicked, this, &WakeFromSuspendDlg::cancelWakeClicked);
-    
-    connect(theApp(), SIGNAL(alarmEnabledToggled(bool)), SLOT(enableDisableUseButton()));
+    connect(mUi->buttonBox, &QDialogButtonBox::rejected, this, &WakeFromSuspendDlg::close);
+
+    connect(theApp(), &KAlarmApp::alarmEnabledToggled, this, &WakeFromSuspendDlg::enableDisableUseButton);
 }
 
 WakeFromSuspendDlg::~WakeFromSuspendDlg()

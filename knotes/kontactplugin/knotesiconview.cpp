@@ -16,10 +16,10 @@
 */
 
 #include "knotesiconview.h"
-#include "noteshared/akonadi/notesakonaditreemodel.h"
-#include "noteshared/attributes/notedisplayattribute.h"
-#include "noteshared/attributes/notelockattribute.h"
-#include "noteshared/noteutils.h"
+#include "NoteShared/NotesAkonadiTreeModel"
+#include "NoteShared/NoteDisplayAttribute"
+#include "NoteShared/NoteLockAttribute"
+#include "noteutils.h"
 #include "knotes/notes/knotedisplaysettings.h"
 #include "utils/knoteutils.h"
 
@@ -106,7 +106,7 @@ KNotesIconViewItem *KNotesIconView::iconView(Akonadi::Item::Id id) const
     return Q_NULLPTR;
 }
 
-QHash<Akonadi::Entity::Id, KNotesIconViewItem *> KNotesIconView::noteList() const
+QHash<Akonadi::Item::Id, KNotesIconViewItem *> KNotesIconView::noteList() const
 {
     return mNoteList;
 }
@@ -159,7 +159,7 @@ void KNotesIconViewItem::setReadOnly(bool b, bool save)
         }
     } else {
         if (mReadOnly) {
-            mItem.attribute<NoteShared::NoteLockAttribute>(Akonadi::Entity::AddIfMissing);
+            mItem.attribute<NoteShared::NoteLockAttribute>(Akonadi::Item::AddIfMissing);
         }
     }
     if (save) {
@@ -194,11 +194,11 @@ void KNotesIconViewItem::setChangeIconTextAndDescription(const QString &iconText
 
 void KNotesIconViewItem::setIconText(const QString &text, bool save)
 {
-    QString replaceText ;
+    QString replaceText;
     if (text.count() > 50) {
         replaceText = text.left(50) + QLatin1String("...");
     } else {
-        replaceText = text ;
+        replaceText = text;
     }
 
     setText(replaceText);
@@ -294,7 +294,8 @@ void KNotesIconViewItem::saveNoteContent(const QString &subject, const QString &
     }
 
     if (position >= 0) {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-Cursor-Position", message.get(), QString::number(position), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-Cursor-Position");
+        header->fromUnicodeString(QString::number(position), "utf-8");
         message->setHeader(header);
     }
 

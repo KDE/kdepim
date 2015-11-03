@@ -42,7 +42,7 @@ class QPushButton;
   The filter log dialog allows a continued observation of the
   filter log of MailFilterAgent.
 */
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -70,7 +70,7 @@ private:
     void readConfig();
     void writeConfig();
 private:
-    PimCommon::PlainTextEditorWidget *mTextEdit;
+    KPIMTextEdit::PlainTextEditorWidget *mTextEdit;
     QCheckBox *mLogActiveBox;
     QGroupBox *mLogDetailsBox;
     QCheckBox *mLogPatternDescBox;

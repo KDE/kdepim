@@ -123,7 +123,7 @@ private:
     mutable bool m_dirty;
 };
 
-KConfigBasedRecipientPreferences::Private::Private(KSharedConfigPtr config , KConfigBasedRecipientPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
+KConfigBasedRecipientPreferences::Private::Private(KSharedConfigPtr config, KConfigBasedRecipientPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
 {
     assert(m_config);
 }
@@ -161,7 +161,7 @@ void KConfigBasedRecipientPreferences::Private::ensurePrefsParsed() const
     if (m_parsed) {
         return;
     }
-    const QStringList groups = m_config->groupList().filter(QRegExp(QLatin1String("^EncryptionPreference_\\d+$")));
+    const QStringList groups = m_config->groupList().filter(QRegExp(QStringLiteral("^EncryptionPreference_\\d+$")));
 
     Q_FOREACH (const QString &i, groups) {
         const KConfigGroup group(m_config, i);
@@ -223,7 +223,7 @@ private:
     mutable bool m_dirty;
 };
 
-KConfigBasedSigningPreferences::Private::Private(KSharedConfigPtr config , KConfigBasedSigningPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
+KConfigBasedSigningPreferences::Private::Private(KSharedConfigPtr config, KConfigBasedSigningPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
 {
     assert(m_config);
 }

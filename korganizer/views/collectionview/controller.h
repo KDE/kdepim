@@ -27,9 +27,9 @@
 #include <AkonadiCore/EntityTreeModel>
 #include <AkonadiCore/Collection>
 #include "reparentingmodel.h"
-#include <libkdepim/job/person.h>
+#include <Libkdepim/Person>
 
-#include <libkdepim/ldap/ldapclientsearch.h>
+#include <Libkdepim/LdapClientSearch>
 
 enum DataRoles {
     PersonRole = Akonadi::EntityTreeModel::UserRole + 1,
@@ -46,7 +46,7 @@ enum NodeTypeRoles {
 };
 
 /**
- * We need to emit signals in the subclass but don't want to make the parent a QObject
+ * We need to Q_EMIT signals in the subclass but don't want to make the parent a QObject
  */
 class Emitter : public QObject
 {
@@ -54,12 +54,12 @@ class Emitter : public QObject
 public:
     void emitEnabled(bool state, const KPIM::Person &person)
     {
-        emit enabled(state, person);
+        Q_EMIT enabled(state, person);
     }
 
     void emitEnabled(bool state, const Akonadi::Collection &collection)
     {
-        emit enabled(state, collection);
+        Q_EMIT enabled(state, collection);
     }
 
 Q_SIGNALS:
@@ -161,7 +161,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void onCollectionsFound(KJob *job);
-    void onPersonsFound(const QList<KPIM::Person> &persons);
+    void onPersonsFound(const QVector<KPIM::Person> &persons);
     void onPersonUpdate(const KPIM::Person &person);
     void onPersonsFound(KJob *job);
     void onPersonCollectionsFetched(KJob *job);

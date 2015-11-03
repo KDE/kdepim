@@ -8,9 +8,6 @@ set(mailreader_SRCS
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
-  ${CMAKE_SOURCE_DIR}/messagelist
-  ${CMAKE_SOURCE_DIR}/messageviewer
-  ${Boost_INCLUDE_DIRS}
 )
 
 ki18n_wrap_ui(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)
@@ -22,12 +19,12 @@ add_executable(akonadimailreader ${mailreader_SRCS})
 target_link_libraries(akonadimailreader
   KF5::AkonadiMime
   KF5::AkonadiCore
-  
-  kdepim
-  kleo
-  kpgp
-  messagelist
-  messageviewer
+  KF5::XmlGui
+  KF5::IconThemes  
+  KF5::Libkdepim
+  KF5::Libkleo
+  KF5::MessageList
+  KF5::MessageViewer
 )
 
 install(TARGETS akonadimailreader ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

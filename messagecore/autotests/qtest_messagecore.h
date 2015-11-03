@@ -27,7 +27,6 @@
  * Similar to QVERIFY( job->exec() ) but includes the job error message
  * in the output in case of a failure.
  */
-// TODO move to qtest_kde...
 #define VERIFYEXEC( job ) \
     QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
 

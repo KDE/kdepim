@@ -63,7 +63,7 @@ static std::string hexencode(const std::string &in)
 
     static const char hex[] = "0123456789ABCDEF";
 
-    for (std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it)
+    for (std::string::const_iterator it = in.begin(), end = in.end(); it != end; ++it)
         switch (const unsigned char ch = *it) {
         default:
             if ((ch >= '!' && ch <= '~') || ch > 0xA0) {
@@ -129,8 +129,8 @@ Command::~Command()
 
 void Command::Private::init()
 {
-    connect(this, SIGNAL(started()),  q, SIGNAL(started()));
-    connect(this, SIGNAL(finished()), q, SIGNAL(finished()));
+    connect(this, &QThread::started,  q, &Command::started);
+    connect(this, &QThread::finished, q, &Command::finished);
 }
 
 void Command::setParentWId(WId wid)
@@ -457,7 +457,7 @@ static QString get_default_socket_name()
     if (homeDir.isEmpty()) {
         return QString();
     }
-    return QDir(homeDir).absoluteFilePath(QLatin1String("S.uiserver"));
+    return QDir(homeDir).absoluteFilePath(QStringLiteral("S.uiserver"));
 }
 
 static QString default_socket_name()
@@ -619,7 +619,7 @@ void Command::Private::run()
         }
 
         // give it a bit of time to start up and try a couple of times
-        for (int i = 0 ; err && i < 20 ; ++i) {
+        for (int i = 0; err && i < 20; ++i) {
             msleep(500);
 #ifndef HAVE_ASSUAN2
             err = assuan_socket_connect(&naked_ctx, QFile::encodeName(socketName).constData(), -1);
@@ -670,7 +670,7 @@ void Command::Private::run()
         }
     }
 
-    for (std::map<std::string, Option>::const_iterator it = in.options.begin(), end = in.options.end() ; it != end ; ++it)
+    for (std::map<std::string, Option>::const_iterator it = in.options.begin(), end = in.options.end(); it != end; ++it)
         if ((err = send_option(ctx, it->first.c_str(), it->second.hasValue ? it->second.value.toString() : QVariant()))) {
             if (it->second.isCritical) {
                 out.errorString = i18n("Failed to send critical option %1: %2", QString::fromLatin1(it->first.c_str()), to_error_string(err));

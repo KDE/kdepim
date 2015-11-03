@@ -38,13 +38,14 @@ using namespace KCalUtils;
 #include <KLocale>
 
 #include <QDate>
+#include <QLocale>
 #include <QStringList>
 
 bool SummaryEventInfo::mShowBirthdays = true;
 bool SummaryEventInfo::mShowAnniversaries = true;
 
 typedef QHash<QString, KDateTime> DateTimeByUidHash;
-Q_GLOBAL_STATIC(DateTimeByUidHash, sDateTimeByUid);
+Q_GLOBAL_STATIC(DateTimeByUidHash, sDateTimeByUid)
 
 static bool eventLessThan(const KCalCore::Event::Ptr &event1, const KCalCore::Event::Ptr &event2)
 {
@@ -294,8 +295,8 @@ SummaryEventInfo::List SummaryEventInfo::eventsForRange(const QDate &start, cons
                 }
             }
             str = i18nc("Time from - to", "%1 - %2",
-                        KLocale::global()->formatTime(sST),
-                        KLocale::global()->formatTime(sET));
+                        QLocale::system().toString(sST, QLocale::ShortFormat),
+                        QLocale::system().toString(sET, QLocale::ShortFormat));
             summaryEvent->timeRange = str;
         }
 

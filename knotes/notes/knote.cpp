@@ -20,8 +20,8 @@
 #include "config-kdepim.h"
 #include "knotes_debug.h"
 #include "knote.h"
-#include "noteshared/noteutils.h"
-#include "alarms/notealarmdialog.h"
+#include "noteutils.h"
+#include "NoteShared/NoteAlarmDialog"
 #include "configdialog/knotesimpleconfigdialog.h"
 #include "print/knoteprintselectthemedialog.h"
 #include "knotes/notes/knotebutton.h"
@@ -34,11 +34,11 @@
 
 #include "knotedisplaysettings.h"
 
-#include "noteshared/attributes/notelockattribute.h"
-#include "noteshared/attributes/notedisplayattribute.h"
-#include "noteshared/attributes/notealarmattribute.h"
+#include "NoteShared/NoteLockAttribute"
+#include "NoteShared/NoteDisplayAttribute"
+#include "NoteShared/NoteAlarmAttribute"
 
-#include "pimcommon/baloodebug/baloodebugdialog.h"
+#include <AkonadiSearch/Debug/akonadisearchdebugdialog.h>
 
 #include <KMime/KMimeMessage>
 
@@ -177,7 +177,7 @@ void KNote::saveNote(bool force, bool sync)
         return;
     }
     bool needToSave = false;
-    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Item::AddIfMissing);
     const QPoint notePosition = pos();
     if (attribute->position() != notePosition) {
         needToSave = true;
@@ -304,7 +304,7 @@ void KNote::slotUpdateReadOnly()
         }
     } else {
         if (readOnly) {
-            mItem.attribute<NoteShared::NoteLockAttribute>(Akonadi::Entity::AddIfMissing);
+            mItem.attribute<NoteShared::NoteLockAttribute>(Akonadi::Item::AddIfMissing);
         }
     }
     if (!mBlockSave) {
@@ -350,7 +350,7 @@ void KNote::slotUpdateReadOnly()
 void KNote::updateAllAttributes()
 {
 #if KDEPIM_HAVE_X11
-    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Item::AddIfMissing);
     KWindowInfo info(winId(), NET::WMDesktop);
     const int count = KWindowSystem::numberOfDesktops();
     for (int n = 1; n <= count; ++n) {
@@ -390,7 +390,7 @@ void KNote::slotSetAlarm()
         bool needToModify = true;
         QDateTime dateTime = dlg->alarm();
         if (dateTime.isValid()) {
-            NoteShared::NoteAlarmAttribute *attribute =  mItem.attribute<NoteShared::NoteAlarmAttribute>(Akonadi::Entity::AddIfMissing);
+            NoteShared::NoteAlarmAttribute *attribute =  mItem.attribute<NoteShared::NoteAlarmAttribute>(Akonadi::Item::AddIfMissing);
             attribute->setDateTime(dateTime);
         } else {
             if (mItem.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
@@ -423,7 +423,8 @@ void KNote::saveNoteContent()
     message->date(true)->setDateTime(QDateTime::currentDateTime());
     message->mainBodyPart()->fromUnicodeString(text().isEmpty() ? QStringLiteral(" ") : text());
 
-    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-Cursor-Position", message.get(), QString::number(m_editor->cursorPositionFromStart()), "utf-8");
+    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-Cursor-Position");
+    header->fromUnicodeString(QString::number(m_editor->cursorPositionFromStart()), "utf-8");
     message->setHeader(header);
 
     message->assemble();
@@ -435,7 +436,7 @@ void KNote::slotPreferences()
 {
     // create a new preferences dialog...
     QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog(name(), this);
-    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Item::AddIfMissing);
     attribute->setSize(QSize(width(), height()));
 
     dialog->load(mItem, m_editor->acceptRichText());
@@ -579,7 +580,7 @@ void KNote::slotKeepAbove()
     if (m_keepBelow->isChecked()) {
         m_keepBelow->setChecked(false);
     }
-    slotUpdateKeepAboveBelow();
+    updateKeepAboveBelow();
 }
 
 void KNote::slotKeepBelow()
@@ -587,17 +588,17 @@ void KNote::slotKeepBelow()
     if (m_keepAbove->isChecked()) {
         m_keepAbove->setChecked(false);
     }
-    slotUpdateKeepAboveBelow();
+    updateKeepAboveBelow();
 }
 
-void KNote::slotUpdateKeepAboveBelow(bool save)
+void KNote::updateKeepAboveBelow(bool save)
 {
 #if KDEPIM_HAVE_X11
     NET::States state = KWindowInfo(KWindowSystem::windowInfo(winId(), NET::WMState)).state();
 #else
     NET::States state = 0; // neutral state, TODO
 #endif
-    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Item::AddIfMissing);
     if (m_keepAbove->isChecked()) {
         attribute->setKeepAbove(true);
         attribute->setKeepBelow(false);
@@ -640,7 +641,6 @@ void KNote::slotUpdateDesktopActions()
 
     QAction *act = m_toDesktop->addAction(i18n("&All Desktops"));
     KWindowInfo info(winId(), NET::WMDesktop);
-
 
     if (info.onAllDesktops()) {
         act->setChecked(true);
@@ -743,7 +743,7 @@ void KNote::createActions()
     m_toDesktop  = new KSelectAction(i18n("To Desktop"), this);
     actionCollection()->addAction(QStringLiteral("to_desktop"), m_toDesktop);
     connect(m_toDesktop, static_cast<void (KSelectAction::*)(QAction *)>(&KSelectAction::triggered), this, &KNote::slotPopupActionToDesktop);
-    connect(m_toDesktop->menu(), SIGNAL(aboutToShow()), SLOT(slotUpdateDesktopActions()));
+    connect(m_toDesktop->menu(), &QMenu::aboutToShow, this, &KNote::slotUpdateDesktopActions);
     // initially populate it, otherwise stays disabled
     slotUpdateDesktopActions();
 #endif
@@ -799,7 +799,7 @@ void KNote::createNoteHeader()
 
 void KNote::createNoteEditor(const QString &configFile)
 {
-    m_editor = new KNoteEdit(configFile, actionCollection(), this);
+    m_editor = new KNoteEdit(actionCollection(), this);
     m_noteLayout->addWidget(m_editor);
     m_editor->setNote(this);
     m_editor->installEventFilter(this);   // receive focus events for modified
@@ -925,7 +925,7 @@ void KNote::prepare()
         m_keepBelow->setChecked(false);
     }
 
-    slotUpdateKeepAboveBelow();
+    updateKeepAboveBelow();
     // HACK: update the icon color - again after showing the note, to make kicker
     // aware of the new colors
     KIconEffect effect;
@@ -1084,11 +1084,11 @@ void KNote::showEvent(QShowEvent *)
 {
     if (mDisplayAttribute->isHidden()) {
         // KWin does not preserve these properties for hidden windows
-        slotUpdateKeepAboveBelow(false);
+        updateKeepAboveBelow(false);
         slotUpdateShowInTaskbar();
         toDesktop(mDisplayAttribute->desktop());
         move(mDisplayAttribute->position());
-        NoteShared::NoteDisplayAttribute *attr =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+        NoteShared::NoteDisplayAttribute *attr =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Item::AddIfMissing);
         saveNoteContent();
         attr->setIsHidden(false);
         if (!mBlockSave) {
@@ -1133,7 +1133,7 @@ void KNote::dropEvent(QDropEvent *e)
     if (md->hasColor()) {
         const QColor bg =  qvariant_cast<QColor>(md->colorData());
 
-        NoteShared::NoteDisplayAttribute *attr =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+        NoteShared::NoteDisplayAttribute *attr =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Item::AddIfMissing);
         saveNoteContent();
         attr->setBackgroundColor(bg);
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
@@ -1176,32 +1176,14 @@ bool KNote::eventFilter(QObject *o, QEvent *ev)
                 slotRename();
             }
         }
-        if (ev->type() == QEvent::MouseButtonPress &&
+        if (ev->type() == QEvent::MouseMove &&
                 (e->button() == Qt::LeftButton || e->button() == Qt::MidButton)) {
-            //move(e->globalPos());
-#if 0 //QT5
-#if KDEPIM_HAVE_X11
-            e->button() == Qt::LeftButton ? KWindowSystem::raiseWindow(winId())
-            : KWindowSystem::lowerWindow(winId());
-
-            XUngrabPointer(QX11Info::display(), QX11Info::appTime());
-            NETRootInfo wm_root(QX11Info::display(), NET::WMMoveResize);
-            wm_root.moveResizeRequest(winId(), e->globalX(), e->globalY(),
-                                      NET::Move);
-#endif
-#endif
+            move(e->globalPos());
             return true;
         }
 
         if (ev->type() == QEvent::MouseButtonRelease) {
             move(e->globalPos());
-#if 0 //QT5
-#if KDEPIM_HAVE_X11
-            NETRootInfo wm_root(QX11Info::display(), NET::WMMoveResize);
-            wm_root.moveResizeRequest(winId(), e->globalX(), e->globalY(),
-                                      NET::MoveResizeCancel);
-#endif
-#endif
             return false;
         }
         return false;
@@ -1234,10 +1216,10 @@ Akonadi::Item KNote::item() const
 
 void KNote::slotDebugBaloo()
 {
-    QPointer<PimCommon::BalooDebugDialog> dlg = new PimCommon::BalooDebugDialog;
+    QPointer<Akonadi::Search::AkonadiSearchDebugDialog> dlg = new Akonadi::Search::AkonadiSearchDebugDialog;
     dlg->setAkonadiId(mItem.id());
     dlg->setAttribute(Qt::WA_DeleteOnClose);
-    dlg->setSearchType(PimCommon::BalooDebugSearchPathComboBox::Notes);
+    dlg->setSearchType(Akonadi::Search::AkonadiSearchDebugSearchPathComboBox::Notes);
     dlg->doSearch();
     dlg->show();
 }

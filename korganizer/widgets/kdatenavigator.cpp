@@ -29,7 +29,6 @@
 #include "widgets/navigatorbar.h"
 
 #include <KCalendarSystem>
-#include <KGlobal>
 #include <QEvent>
 #include <QGridLayout>
 #include <QLabel>
@@ -107,7 +106,7 @@ void KDateNavigator::setCalendar(const Akonadi::ETMCalendar::Ptr &calendar)
     mCalendar = calendar;
 
     if (mCalendar) {
-        connect(mCalendar.data(), SIGNAL(calendarChanged()), SLOT(setUpdateNeeded()));
+        connect(mCalendar.data(), &Akonadi::ETMCalendar::calendarChanged, this, &KDateNavigator::setUpdateNeeded);
     }
 
     mDayMatrix->setCalendar(calendar);

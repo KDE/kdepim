@@ -22,7 +22,7 @@
 #define SIEVEEDITORPAGEWIDGET_H
 #include <QWidget>
 #include <QUrl>
-#include "ksieveui/editor/sieveeditorwidget.h"
+#include "ksieveui/sieveeditorwidget.h"
 namespace KManageSieve
 {
 class SieveJob;
@@ -79,6 +79,9 @@ public:
     QUrl currentHelpUrl() const;
     void openBookmarkUrl(const QUrl &url);
     void debugSieveScript();
+    void zoomReset();
+    void wordWrap(bool state);
+    bool isWordWrap() const;
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

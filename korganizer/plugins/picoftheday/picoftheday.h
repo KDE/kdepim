@@ -21,7 +21,7 @@
 #ifndef KORG_PLUGINS_PICOFTHEDAY_PICOFTHEDAY_H
 #define KORG_PLUGINS_PICOFTHEDAY_PICOFTHEDAY_H
 
-#include <calendarviews/agenda/calendardecoration.h>
+#include <EventViews/CalendarDecoration>
 using namespace EventViews::CalendarDecoration;
 
 #include <KIO/Job>
@@ -46,7 +46,7 @@ private:
 class PicofthedayFactory : public DecorationFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.korganizer.Picoftheday");
+    Q_PLUGIN_METADATA(IID "org.kde.korganizer.Picoftheday")
 public:
     Decoration *createPluginFactory() Q_DECL_OVERRIDE {
         return new Picoftheday;

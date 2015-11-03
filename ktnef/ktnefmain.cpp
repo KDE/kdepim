@@ -184,11 +184,11 @@ void KTNEFMain::setupTNEF()
 
     setCentralWidget(mView);
 
-    connect(mView, SIGNAL(itemSelectionChanged()),
-            SLOT(viewSelectionChanged()));
+    connect(mView, &QTreeWidget::itemSelectionChanged,
+            this, &KTNEFMain::viewSelectionChanged);
 
-    connect(mView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-            SLOT(viewDoubleClicked(QTreeWidgetItem*)));
+    connect(mView, &QTreeWidget::itemDoubleClicked,
+            this, &KTNEFMain::viewDoubleClicked);
 
 //PORTME:  connect( mView, SIGNAL(dragRequested(QList<KTNEFAttach*>)),
 //PORTME:           SLOT(viewDragRequested(QList<KTNEFAttach*>)) );
@@ -303,7 +303,7 @@ void KTNEFMain::extractFile()
 
 void KTNEFMain::extractFileTo()
 {
-    QString dir = QFileDialog::getExistingDirectory(this , QString(),  mLastDir);
+    QString dir = QFileDialog::getExistingDirectory(this, QString(),  mLastDir);
     if (!dir.isEmpty()) {
         extractTo(dir);
         mLastDir = dir;
@@ -312,7 +312,7 @@ void KTNEFMain::extractFileTo()
 
 void KTNEFMain::extractAllFiles()
 {
-    QString dir = QFileDialog::getExistingDirectory(this , QString(),  mLastDir);
+    QString dir = QFileDialog::getExistingDirectory(this, QString(),  mLastDir);
     if (!dir.isEmpty()) {
         mLastDir = dir;
         dir.append(QLatin1String("/"));
@@ -341,7 +341,7 @@ void KTNEFMain::propertiesFile()
 
 void KTNEFMain::optionDefaultDir()
 {
-    const QString dirname = QFileDialog::getExistingDirectory(this , QString(),  mDefaultDir);
+    const QString dirname = QFileDialog::getExistingDirectory(this, QString(),  mDefaultDir);
     if (!dirname.isEmpty()) {
         mDefaultDir = dirname;
 
@@ -487,7 +487,7 @@ void KTNEFMain::slotEditToolbars()
 
 void KTNEFMain::slotNewToolbarConfig()
 {
-    createGUI(QLatin1String("ktnefui.rc"));
+    createGUI(QStringLiteral("ktnefui.rc"));
     applyMainWindowSettings(KSharedConfig::openConfig()->group("MainWindow"));
 }
 
@@ -528,7 +528,7 @@ void KTNEFMain::slotSaveMessageText()
     }
 
     QString rtf = mParser->message()->rtfString();
-    QString filename = QFileDialog::getSaveFileName(this , QString(), QString(), QString());
+    QString filename = QFileDialog::getSaveFileName(this, QString(), QString(), QString());
     if (!filename.isEmpty()) {
         QFile f(filename);
         if (f.open(QIODevice::WriteOnly)) {
@@ -588,7 +588,7 @@ void KTNEFMain::createOpenWithMenu(QMenu *topMenu)
     if (!offers.isEmpty()) {
         QMenu *menu = topMenu;
         QActionGroup *actionGroup = new QActionGroup(menu);
-        connect(actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)));
+        connect(actionGroup, &QActionGroup::triggered, this, &KTNEFMain::slotOpenWithAction);
 
         if (offers.count() > 1) { // submenu 'open with'
             menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
@@ -614,12 +614,12 @@ void KTNEFMain::createOpenWithMenu(QMenu *topMenu)
         }
         QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
-        connect(openWithAct, SIGNAL(triggered()), this, SLOT(viewFileAs()));
+        connect(openWithAct, &QAction::triggered, this, &KTNEFMain::viewFileAs);
         menu->addAction(openWithAct);
     } else { // no app offers -> Open With...
         QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
-        connect(act, SIGNAL(triggered()), this, SLOT(viewFileAs()));
+        connect(act, &QAction::triggered, this, &KTNEFMain::viewFileAs);
         topMenu->addAction(act);
     }
 }

@@ -25,7 +25,8 @@
 #include "akonadiconsole_debug.h"
 #include <QIcon>
 #include <KLocalizedString>
-#include <akonadi/private/protocol_p.h>
+#include <akonadi/private/instance_p.h>
+#include <akonadi/private/dbus_p.h>
 
 #include <QApplication>
 #include <QDBusConnection>
@@ -114,13 +115,18 @@ void InstanceSelector::slotReject()
 
 QStringList InstanceSelector::instances()
 {
+    const QString currentInstance = Akonadi::Instance::identifier();
+    Akonadi::Instance::setIdentifier(QString());
+    const QString lockService = Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock);
+    Akonadi::Instance::setIdentifier(currentInstance);
+
     const QStringList allServices = QDBusConnection::sessionBus().interface()->registeredServiceNames();
     QStringList insts;
     foreach (const QString &service, allServices) {
-        if (!service.startsWith(QStringLiteral(AKONADI_DBUS_CONTROL_SERVICE_LOCK))) {
+        if (!service.startsWith(lockService)) {
             continue;
         }
-        insts.push_back(service.mid(qstrlen(AKONADI_DBUS_CONTROL_SERVICE_LOCK) + 1));
+        insts.push_back(service.mid(lockService.length() + 1));
     }
     return insts;
 }

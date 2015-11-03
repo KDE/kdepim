@@ -119,7 +119,6 @@
          </item>
         </layout>
         <zorder>lstEntriesList</zorder>
-        <zorder></zorder>
        </widget>
        <widget class="QWidget" name="pgCat">
         <property name="geometry">
@@ -264,7 +263,7 @@
             </widget>
            </item>
            <item>
-            <widget class="KComboBox" name="comboOptionsStatus">
+            <widget class="QComboBox" name="comboOptionsStatus">
              <property name="enabled">
               <bool>false</bool>
              </property>
@@ -482,7 +481,7 @@
           </widget>
          </item>
          <item>
-          <widget class="PimCommon::CustomTextEdit" name="txtSummary">
+          <widget class="KTextEdit" name="txtSummary">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -604,11 +603,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
@@ -617,11 +611,6 @@
    <class>KTextEdit</class>
    <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>PimCommon::CustomTextEdit</class>
-   <extends>KTextEdit</extends>
-   <header>pimcommon/widgets/customtextedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

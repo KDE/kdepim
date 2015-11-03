@@ -18,6 +18,10 @@ endif()
 set_source_files_properties(command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
 qt5_generate_moc(command_p.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp")
 qt5_generate_moc(command.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp")
+set(_kleopatraclientcore_common_SRCS)
+
+ecm_qt_declare_logging_category(_kleopatraclientcore_common_SRCS HEADER libkleopatraclientcore_debug.h IDENTIFIER LIBKLEOPATRACLIENTCORE_LOG CATEGORY_NAME log_libkleopatraclientcore)
+
 add_library(kleopatraclientcore
   ${_kleopatraclientcore_extra_SRCS}
   initialization.cpp
@@ -25,7 +29,7 @@ add_library(kleopatraclientcore
   selectcertificatecommand.cpp
   signencryptfilescommand.cpp
   decryptverifyfilescommand.cpp
-  libkleopatraclientcore_debug.cpp
+  ${_kleopatraclientcore_common_SRCS}
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp"
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp"
 )

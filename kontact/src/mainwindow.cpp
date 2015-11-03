@@ -31,9 +31,9 @@ using namespace Kontact;
 
 #include <unistd.h>
 
-#include <libkdepim/misc/broadcaststatus.h>
-#include <libkdepim/progresswidget/progressstatusbarwidget.h>
-#include <libkdepim/progresswidget/statusbarprogresswidget.h>
+#include <Libkdepim/BroadcastStatus>
+#include <Libkdepim/ProgressStatusBarWidget>
+#include <Libkdepim/StatusbarProgressWidget>
 
 #include <KontactInterface/Core>
 
@@ -55,10 +55,9 @@ using namespace Kontact;
 #include <KShortcutsDialog>
 #include <KSqueezedTextLabel>
 #include <KStandardAction>
-#include <KTipDialog>
 #include <KToolBar>
 #include <KParts/PartManager>
-#include <KSettings/Dispatcher>
+#include <ksettings/Dispatcher>
 #include <KSycoca>
 #include <KIconLoader>
 #include <KLocalizedString>
@@ -77,6 +76,10 @@ using namespace Kontact;
 #include <QHBoxLayout>
 #include <QApplication>
 #include <KAboutData>
+#include <QFontDatabase>
+
+#include <grantleetheme/grantleethememanager.h>
+#include <grantleetheme/grantleetheme.h>
 
 // Define the maximum time Kontact waits for KSycoca to become available.
 static const int KSYCOCA_WAIT_TIMEOUT = 10;
@@ -148,7 +151,7 @@ MainWindow::MainWindow()
     new ServiceStarter(&mPlugins);
 
     QDBusConnection::sessionBus().registerObject(
-        QLatin1String("/KontactInterface"), this, QDBusConnection::ExportScriptableSlots);
+        QStringLiteral("/KontactInterface"), this, QDBusConnection::ExportScriptableSlots);
 
     // Set this to be the group leader for all subdialogs - this means
     // modal subdialogs will only affect this dialog, not the other windows
@@ -177,7 +180,7 @@ void MainWindow::initGUI()
 
     KStandardAction::keyBindings(this, SLOT(configureShortcuts()), actionCollection());
     KStandardAction::configureToolbars(this, SLOT(configureToolbars()), actionCollection());
-    setXMLFile(QLatin1String("kontactui.rc"));
+    setXMLFile(QStringLiteral("kontactui.rc"));
 
     setStandardToolBarMenuEnabled(true);
 
@@ -224,8 +227,8 @@ void MainWindow::initObject()
         waitForKSycoca();
     }
     KService::List offers = KServiceTypeTrader::self()->query(
-                                QString::fromLatin1("Kontact/Plugin"),
-                                QString::fromLatin1("[X-KDE-KontactPluginVersion] == %1").arg(KONTACT_PLUGIN_VERSION));
+                                QStringLiteral("Kontact/Plugin"),
+                                QStringLiteral("[X-KDE-KontactPluginVersion] == %1").arg(KONTACT_PLUGIN_VERSION));
     mPluginInfos = KPluginInfo::fromServices(
                        offers, KConfigGroup(Prefs::self()->config(), "Plugins"));
     KPluginInfo::List::Iterator it;
@@ -250,8 +253,6 @@ void MainWindow::initObject()
 
     statusBar()->show();
 
-    QTimer::singleShot(200, this, SLOT(slotShowTipOnStart()));
-
     // done initializing
     slotShowStatusMsg(QString());
 
@@ -264,7 +265,7 @@ void MainWindow::initObject()
         selectPlugin(mCurrentPlugin);
     }
 
-    paintAboutScreen(introductionString());
+    paintAboutScreen(QStringLiteral("introduction_kontact.html"), introductionData());
     Prefs::setLastVersionSeen(KAboutData::applicationData().version());
 }
 
@@ -273,7 +274,7 @@ MainWindow::~MainWindow()
     if (mCurrentPlugin) {
         KConfigGroup grp(
             KSharedConfig::openConfig()->group(
-                QString::fromLatin1("MainWindow%1").arg(mCurrentPlugin->identifier())));
+                QStringLiteral("MainWindow%1").arg(mCurrentPlugin->identifier())));
         saveMainWindowSettings(grp);
     }
 
@@ -363,12 +364,7 @@ void MainWindow::initWidgets()
 
     initAboutScreen();
 
-    const QString loading =
-        i18nc("@item",
-              "<h2 style='text-align:center; margin-top: 0px; margin-bottom: 0px'>%1</h2>",
-              i18nc("@item:intext", "Loading Kontact..."));
-
-    paintAboutScreen(loading);
+    paintAboutScreen(QStringLiteral("loading_kontact.html"), QVariantHash());
 
     KPIM::ProgressStatusBarWidget *progressStatusBarWidget = new KPIM::ProgressStatusBarWidget(statusBar(), this);
 
@@ -383,31 +379,20 @@ void MainWindow::initWidgets()
     mSplitter->setCollapsible(1, false);
 }
 
-void MainWindow::paintAboutScreen(const QString &msg)
+void MainWindow::paintAboutScreen(const QString &templateName, const QVariantHash &data)
 {
-    QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kontact/about/main.html"));
-    QFile f(location);
-    if (!f.open(QIODevice::ReadOnly)) {
-        qCWarning(KONTACT_LOG) << "Failed to load about page: " << f.errorString();
-        return;
-    }
-    QString content = QString::fromLocal8Bit(f.readAll());
-    f.close();
-    content = content.arg(QLatin1String("file:") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage.css")));
-    if (QApplication::isRightToLeft()) {
-        content =
-            content.arg(QLatin1String("@import \"%1\";")).
-            arg(QLatin1String("file:") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage_rtl.css")));
+    GrantleeTheme::ThemeManager manager(QStringLiteral("splashPage"),
+                                        QStringLiteral("splash.theme"),
+                                        Q_NULLPTR,
+                                        QStringLiteral("messageviewer/about/"));
+    GrantleeTheme::Theme theme = manager.theme(QStringLiteral("default"));
+    if (!theme.isValid()) {
+        qCDebug(KONTACT_LOG) << "Theme error: failed to find splash theme";
     } else {
-        content = content.arg(QString());
+        mIntroPart->setHtml(theme.render(templateName, data),
+                            QUrl::fromLocalFile(theme.absolutePath() + QLatin1Char('/')));
     }
 
-    mIntroPart->setHtml(
-        content.arg(QFont().pointSize() + 2).
-        arg(i18nc("@item:intext", "KDE Kontact")).
-        arg(i18nc("@item:intext", "Get Organized!")).
-        arg(i18nc("@item:intext", "The KDE Personal Information Management Suite")).
-        arg(msg));
 }
 
 void MainWindow::initAboutScreen()
@@ -426,6 +411,11 @@ void MainWindow::initAboutScreen()
     mIntroPart->settings()->setAttribute(QWebSettings::JavaEnabled, false);
     mIntroPart->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
 
+    const QFontInfo font(QFontDatabase().systemFont(QFontDatabase::GeneralFont));
+    mIntroPart->settings()->setFontFamily(QWebSettings::StandardFont, font.family());
+    mIntroPart->settings()->setFontSize(QWebSettings::DefaultFontSize, font.pixelSize());
+
+
     connect(mIntroPart->page(), &QWebPage::linkClicked, this, &MainWindow::slotOpenUrl, Qt::QueuedConnection);
 }
 
@@ -442,7 +432,7 @@ void MainWindow::setupActions()
     // If the user is using disconnected imap mail folders as groupware, we add
     // plugins' Synchronize actions to the toolbar which trigger an imap sync.
     // Otherwise it's redundant and misleading.
-    KConfig _config(QLatin1String("kmail2rc"));
+    KConfig _config(QStringLiteral("kmail2rc"));
     KConfigGroup config(&_config, "Groupware");
 #if defined(KDEPIM_ENTERPRISE_BUILD)
     bool defGW = config.readEntry("Enabled", true);
@@ -482,17 +472,6 @@ void MainWindow::setupActions()
     actionCollection()->addAction(QStringLiteral("help_introduction"), action);
     connect(action, &QAction::triggered, this, &MainWindow::slotShowIntroduction);
 
-    action =
-        new QAction(QIcon::fromTheme(QStringLiteral("ktip")),
-                    i18nc("@action:inmenu", "&Tip of the Day"), this);
-
-    setHelpText(action, i18nc("@info:status", "Show the Tip-of-the-Day dialog"));
-    action->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "You will be presented with a dialog showing small tips to help "
-              "you use this program more effectively."));
-    actionCollection()->addAction(QStringLiteral("help_tipofday"), action);
-    connect(action, &QAction::triggered, this, &MainWindow::slotShowTip);
     //TODO 4.12: add description
     QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_F9), this);
     connect(shortcut, &QShortcut::activated, this, &MainWindow::slotShowHideSideBar);
@@ -623,7 +602,7 @@ void MainWindow::updateShortcuts()
     int i = 0;
     for (it = mActionPlugins.constBegin(); it != end; ++it) {
         QAction *action = static_cast<QAction *>(*it);
-        const QString shortcut = QString::fromLatin1("Ctrl+%1").arg(mActionPlugins.count() - i);
+        const QString shortcut = QStringLiteral("Ctrl+%1").arg(mActionPlugins.count() - i);
         actionCollection()->setDefaultShortcut(action, QKeySequence(shortcut));
         ++i;
     }
@@ -717,7 +696,7 @@ void MainWindow::addPlugin(KontactInterface::Plugin *plugin)
     int i = 0;
     foreach (QAction *qaction, mActionPlugins) {
         QAction *action = static_cast<QAction *>(qaction);
-        QString shortcut = QString::fromLatin1("Ctrl+%1").arg(mActionPlugins.count() - i);
+        QString shortcut = QStringLiteral("Ctrl+%1").arg(mActionPlugins.count() - i);
         actionCollection()->setDefaultShortcut(action, QKeySequence(shortcut));
         ++i;
     }
@@ -808,7 +787,7 @@ void MainWindow::selectPlugin(KontactInterface::Plugin *plugin)
 
     if (mCurrentPlugin) {
         KConfigGroup grp = KSharedConfig::openConfig()->group(
-                               QString::fromLatin1("MainWindow%1").arg(mCurrentPlugin->identifier()));
+                               QStringLiteral("MainWindow%1").arg(mCurrentPlugin->identifier()));
         saveMainWindowSettings(grp);
     }
 
@@ -940,7 +919,7 @@ void MainWindow::selectPlugin(KontactInterface::Plugin *plugin)
     }
 
     applyMainWindowSettings(KSharedConfig::openConfig()->group(
-                                QString::fromLatin1("MainWindow%1").arg(plugin->identifier())));
+                                QStringLiteral("MainWindow%1").arg(plugin->identifier())));
 
     QApplication::restoreOverrideCursor();
 }
@@ -998,33 +977,9 @@ void MainWindow::saveSettings()
     }
 }
 
-void MainWindow::slotShowTip()
-{
-    showTip(true);
-}
-
-void MainWindow::slotShowTipOnStart()
-{
-    showTip(false);
-}
-
 void MainWindow::slotShowIntroduction()
 {
     mPartsStack->setCurrentIndex(0);
-}
-
-void MainWindow::showTip(bool force)
-{
-    QStringList tips;
-    PluginList::ConstIterator end = mPlugins.constEnd();
-    for (PluginList::ConstIterator it = mPlugins.constBegin(); it != end; ++it) {
-        const QString file = (*it)->tipFile();
-        if (!file.isEmpty()) {
-            tips.append(file);
-        }
-    }
-
-    KTipDialog::showMultiTip(this, tips, force);
 }
 
 void MainWindow::slotQuit()
@@ -1066,7 +1021,7 @@ void MainWindow::slotPreferences()
 
 void MainWindow::pluginsChanged()
 {
-    unplugActionList(QLatin1String("navigator_actionlist"));
+    unplugActionList(QStringLiteral("navigator_actionlist"));
     unloadPlugins();
     loadPlugins();
     mSidePane->updatePlugins();
@@ -1114,7 +1069,7 @@ void MainWindow::configureToolbars()
 {
     if (mCurrentPlugin) {
         KConfigGroup grp(KSharedConfig::openConfig()->group(
-                             QString::fromLatin1("MainWindow%1").arg(mCurrentPlugin->identifier())));
+                             QStringLiteral("MainWindow%1").arg(mCurrentPlugin->identifier())));
         saveMainWindowSettings(grp);
     }
     QPointer<KEditToolBar> edit = new KEditToolBar(factory());
@@ -1131,7 +1086,7 @@ void MainWindow::slotNewToolbarConfig()
     if (mCurrentPlugin) {
         applyMainWindowSettings(
             KSharedConfig::openConfig()->group(
-                QString::fromLatin1("MainWindow%1").arg(mCurrentPlugin->identifier())));
+                QStringLiteral("MainWindow%1").arg(mCurrentPlugin->identifier())));
     }
     updateShortcuts(); // for the plugActionList call
 }
@@ -1145,10 +1100,10 @@ void MainWindow::slotOpenUrl(const QUrl &url)
                 mPartsStack->setCurrentIndex(mPartsStack->indexOf(mCurrentPlugin->part()->widget()));
             }
         } else if (path == QLatin1String("/accountwizard")) {
-            KRun::runCommand(QLatin1String("accountwizard"), this);
+            KRun::runCommand(QStringLiteral("accountwizard"), this);
             slotQuit();
         } else if (path.startsWith(QStringLiteral("/help"))) {
-            QString app(QLatin1String("kontact"));
+            QString app(QStringLiteral("kontact"));
             if (!url.query().isEmpty()) {
                 app = url.query().mid(1);
             }
@@ -1219,56 +1174,31 @@ void MainWindow::slotShowStatusMsg(const QString &msg)
     mStatusMsgLabel->setText(msg);
 }
 
-QString MainWindow::introductionString()
+QVariantHash MainWindow::introductionData()
 {
-    KIconLoader *iconloader = KIconLoader::global();
-    const int iconSize = iconloader->currentSize(KIconLoader::Desktop);
+    QVariantHash data;
+    data[QStringLiteral("icon")] = QStringLiteral("kontact");
+    data[QStringLiteral("name")] = i18n("Kontact");
+    data[QStringLiteral("subtitle")] = i18n("The KDE Personal Information Management Suite.");
+    data[QStringLiteral("version")] = KAboutData::applicationData().version();
 
-    const QString handbook_icon_path = iconloader->iconPath(QStringLiteral("help-contents"), KIconLoader::Desktop);
-    const QString html_icon_path = iconloader->iconPath(QStringLiteral("kontact"), KIconLoader::Desktop);
-    const QString wizard_icon_path = iconloader->iconPath(QStringLiteral("tools-wizard"), KIconLoader::Desktop);
+    QVariantList links = {
+        QVariantHash{ { QStringLiteral("url"), QStringLiteral("exec:/help?kontact") },
+                      { QStringLiteral("icon"), QStringLiteral("help-contents") },
+                      { QStringLiteral("title"), i18n("Read Manual") },
+                      { QStringLiteral("subtext"), i18n("Learn more about Kontact and its components") } },
+        QVariantHash{ { QStringLiteral("url"), QStringLiteral("http://kontact.org") },
+                      { QStringLiteral("icon"), QStringLiteral("kontact") },
+                      { QStringLiteral("title"), i18n("Visit Kontact Website") },
+                      { QStringLiteral("subtext"), i18n("Access online resources and tutorials") } },
+        QVariantHash{ { QStringLiteral("url"), QStringLiteral("exec:/accountwizard") },
+                      { QStringLiteral("icon"), QStringLiteral("tools-wizard") },
+                      { QStringLiteral("title"), i18n("Setup your Accounts") },
+                      { QStringLiteral("subtext"), i18n("Prepare Kontact for use") } }
+    };
+    data[QStringLiteral("links")] = links;
 
-    QString info =
-        ki18nc(
-            "@info",
-            "<h2 style='text-align:center; margin-top: 0px;'>Welcome to Kontact %1</h2>"
-            "<p align=\"center\">%2</p>"
-            "<table align=\"center\">"
-            "<tr><td><a href=\"%3\"><img width=\"%4\" height=\"%5\" src=\"%6\" /></a></td>"
-            "<td><a href=\"%7\">%8</a><br /><span id=\"subtext\"><nobr>%9</nobr></span></td></tr>"
-            "<tr><td><a href=\"%10\"><img width=\"%11\" height=\"%12\" src=\"%13\" /></a></td>"
-            "<td><a href=\"%14\">%15</a><br /><span id=\"subtext\"><nobr>%16</nobr></span></td></tr>"
-            "<tr><td><a href=\"%17\"><img width=\"%18\" height=\"%19\" src=\"%20\" /></a></td>"
-            "<td><a href=\"%21\">%22</a><br /><span id=\"subtext\"><nobr>%23</nobr></span></td></tr>"
-            "</table>"
-            "<p style=\"margin-bottom: 0px\"> <a href=\"%24\">Skip this introduction</a></p>").
-        subs(KAboutData::applicationData().version()).
-        subs(i18nc("@item:intext",
-                   "Kontact handles your e-mail, address book, calendar, to-do list and more.")).
-        subs(QStringLiteral("exec:/help?kontact")).
-        subs(iconSize).
-        subs(iconSize).
-        subs(QLatin1String("file:") + handbook_icon_path).
-        subs(QLatin1String("exec:/help?kontact")).
-        subs(i18nc("@item:intext", "Read Manual")).
-        subs(i18nc("@item:intext", "Learn more about Kontact and its components")).
-        subs(QLatin1String("http://kontact.org")).
-        subs(iconSize).
-        subs(iconSize).
-        subs(QLatin1String("file:") + html_icon_path).
-        subs(QLatin1String("http://kontact.org")).
-        subs(i18nc("@item:intext", "Visit Kontact Website")).
-        subs(i18nc("@item:intext", "Access online resources and tutorials")).
-        subs(QLatin1String("exec:/accountwizard")).
-        subs(iconSize).
-        subs(iconSize).
-        subs(QLatin1String("file:") + wizard_icon_path).
-        subs(QLatin1String("exec:/accountwizard")).
-        subs(i18nc("@item:intext", "Setup your Accounts")).
-        subs(i18nc("@item:intext", "Prepare Kontact for use")).
-        subs(QLatin1String("exec:/switch")).
-        toString();
-    return info;
+    return data;
 }
 
 void MainWindow::slotShowHideSideBar()

@@ -1,7 +1,5 @@
 ########### next target ###############
 
-include_directories(${Boost_INCLUDE_DIR})
-
 set(akregatorinterfaces_LIB_SRCS
   command.cpp
   feedlistmanagementinterface.cpp
@@ -15,9 +13,11 @@ add_library(akregatorinterfaces ${akregatorinterfaces_LIB_SRCS})
 generate_export_header(akregatorinterfaces BASE_NAME akregatorinterfaces)
 
 target_link_libraries(akregatorinterfaces
-  kdepim
-  KF5::Syndication
+  KF5::ConfigGui
+  Qt5::Widgets
 )
+
+target_include_directories(akregatorinterfaces PUBLIC "$<BUILD_INTERFACE:${akregator_SOURCE_DIR}/interfaces;${akregator_BINARY_DIR}/interfaces>")
 
 set_target_properties(akregatorinterfaces PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
