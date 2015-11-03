@@ -79,7 +79,7 @@ void ImportAddressbookJob::restoreResources()
     setProgressDialogLabel(i18n("Restore resources..."));
     increaseProgressDialog();
     QStringList listResource;
-    listResource << restoreResourceFile(QStringLiteral("akonadi_vcard_resource"), Utils::addressbookPath(), QDir::homePath() + QLatin1String("/.local/share/kaddressbook/"));
+    listResource << restoreResourceFile(QStringLiteral("akonadi_vcard_resource"), Utils::addressbookPath(), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/share/kaddressbook/"));
 
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -103,7 +103,7 @@ void ImportAddressbookJob::restoreResources()
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     //TODO fix default path
-                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, QLatin1String("/.local/share/contacts/"));
+                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/share/contacts/"));
                     QFileInfo newUrlInfo(newUrl);
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
