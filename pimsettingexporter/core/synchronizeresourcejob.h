@@ -30,6 +30,7 @@ public:
 
     void start();
     void setListResources(const QStringList &resources);
+    void setSynchronizeOnlyCollection(bool onlyCollection);
 
 Q_SIGNALS:
     void synchronizationFinished();
@@ -43,6 +44,7 @@ private:
     void nextSync();
     QStringList mListResources;
     int mIndex;
+    bool mOnlyCollection;
 };
 
 #endif // SYNCHRONIZERESOURCEJOB_H

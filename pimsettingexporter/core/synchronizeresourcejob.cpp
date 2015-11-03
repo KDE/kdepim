@@ -23,19 +23,16 @@
 
 #include <QStringList>
 #include "pimsettingexportcore_debug.h"
-#include <QApplication>
-#include <QCursor>
 
 SynchronizeResourceJob::SynchronizeResourceJob(QObject *parent)
     : QObject(parent),
-      mIndex(0)
+      mIndex(0),
+      mOnlyCollection(true)
 {
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 }
 
 SynchronizeResourceJob::~SynchronizeResourceJob()
 {
-    QApplication::restoreOverrideCursor();
 }
 
 void SynchronizeResourceJob::start()
@@ -53,7 +50,7 @@ void SynchronizeResourceJob::nextSync()
         const Akonadi::AgentInstance resource = Akonadi::AgentManager::self()->instance(mListResources.at(mIndex));
         qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " resource.name" << resource.name();
         Akonadi::ResourceSynchronizationJob *job = new Akonadi::ResourceSynchronizationJob(resource);
-        job->setCollectionTreeOnly(true);
+        job->setCollectionTreeOnly(mOnlyCollection);
         connect(job, &Akonadi::ResourceSynchronizationJob::result, this, &SynchronizeResourceJob::slotSynchronizationFinished);
         job->start();
     } else {
