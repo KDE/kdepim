@@ -103,7 +103,7 @@ void ImportAddressbookJob::restoreResources()
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     //TODO fix default path
-                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/share/contacts/"));
+                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/share/contacts"));
                     QFileInfo newUrlInfo(newUrl);
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
