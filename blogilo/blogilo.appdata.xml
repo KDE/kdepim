@@ -6,6 +6,7 @@
   <name>Blogilo</name>
   <name xml:lang="bs">Blogilo</name>
   <name xml:lang="ca">Blogilo</name>
+  <name xml:lang="ca-valencia">Blogilo</name>
   <name xml:lang="cs">Blogilo</name>
   <name xml:lang="da">Blogilo</name>
   <name xml:lang="de">Blogilo</name>
@@ -41,6 +42,7 @@
   <summary xml:lang="ar">عميل تدوين لكدي</summary>
   <summary xml:lang="bs">KDE klijent za bloganje</summary>
   <summary xml:lang="ca">Un client de blogs pel KDE</summary>
+  <summary xml:lang="ca-valencia">Un client de blogs pel KDE</summary>
   <summary xml:lang="de">Ein Blogging-Programm für KDE</summary>
   <summary xml:lang="en-GB">A KDE Blogging Client</summary>
   <summary xml:lang="es">Un cliente de blogueo para KDE</summary>
@@ -73,6 +75,7 @@
   <description>
     <p>Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
     <p xml:lang="ca">El Blogilo és un client de blogs pel KDE, el qual és compatible amb diverses API de blogs.</p>
+    <p xml:lang="ca-valencia">El Blogilo és un client de blogs pel KDE, el qual és compatible amb diverses API de blogs.</p>
     <p xml:lang="de">Blogilo ist ein Blogging-Programm für KDE, das verschiedene Programmier-Schnittstellen (APIs) für Blog-Systeme unterstützt.</p>
     <p xml:lang="en-GB">Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
     <p xml:lang="es">Blogilo en un cliente de blogueo para KDE, que implementa varias API de blogueo.</p>
@@ -104,6 +107,7 @@
     <p xml:lang="ar">الميزات:</p>
     <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
+    <p xml:lang="ca-valencia">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
     <p xml:lang="de">Funktionen:</p>
     <p xml:lang="en-GB">Features:</p>
@@ -138,6 +142,7 @@
       <li>A full featured WYSIWYG editor + An HTML editor</li>
       <li xml:lang="ar">محرّر WYSIWYG بكامل المزايا ومحرّر HTML</li>
       <li xml:lang="ca">Un complet editor WYSIWYG + editor d'HTML</li>
+      <li xml:lang="ca-valencia">Un complet editor WYSIWYG + editor d'HTML</li>
       <li xml:lang="de">Ein leistungsfähiger WYSIWYG-Editor für HTML</li>
       <li xml:lang="en-GB">A full featured WYSIWYG editor + An HTML editor</li>
       <li xml:lang="es">Un completo editor WYSIWYG + un editor HTML</li>
@@ -168,6 +173,7 @@
       <li>Previewing your post with your blog style</li>
       <li xml:lang="ar">عرض تدوينتك بنمط مدوّنتك</li>
       <li xml:lang="ca">Vista prèvia del vostre article amb l'estil del vostre blog</li>
+      <li xml:lang="ca-valencia">Vista prèvia del vostre article amb l'estil del vostre blog</li>
       <li xml:lang="de">Vorschau Ihrer Posts im Stil Ihres Blogs</li>
       <li xml:lang="en-GB">Previewing your post with your blog style</li>
       <li xml:lang="es">Previsualiza su envío con su estilo de blog</li>
@@ -197,6 +203,7 @@
       <li xml:lang="zh-TW">以您的部落格的樣式來預覽您的文章</li>
       <li>Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="ca">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots aquests!) i Google GData (usada al blog Blogspot.com)</li>
+      <li xml:lang="ca-valencia">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots estos!) i Google GData (usada al blog Blogspot.com)</li>
       <li xml:lang="de">Unterstützung für die Programmier-Schnittstellen (APIs) von Blogger1.0, MetaWeblog, MovableType (alle von Wordpress verwendet) und Google GData (verwendet auf Blogspot.com blogs)</li>
       <li xml:lang="en-GB">Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="es">Reconoce las API Blogger1.0, MetaWeblog, MovableType (¡Wordpress reconoce todos esos!) y Google GData (usado en blogs de Blogspot.com b)</li>
@@ -227,6 +234,7 @@
       <li>Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="ar">دعم إنشاء التّدوينات وتعديلها وحذفها.</li>
       <li xml:lang="ca">Implementa la creació/modificació/eliminació dels articles.</li>
+      <li xml:lang="ca-valencia">Implementa la creació/modificació/eliminació dels articles.</li>
       <li xml:lang="de">Unterstützung für das Erstellen/Verändern/Löschen von Posts.</li>
       <li xml:lang="en-GB">Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="es">Implementa creación/modificación/borrado de envíos.</li>
@@ -257,6 +265,7 @@
       <li>Support for creating drafts and scheduled posts</li>
       <li xml:lang="ar">دعم إنشاء المسودّات والتّدوينات المجدولة</li>
       <li xml:lang="ca">Implementa la creació d'esborranys i articles programats</li>
+      <li xml:lang="ca-valencia">Implementa la creació d'esborranys i articles programats</li>
       <li xml:lang="de">Unterstützung für das Erstellen von Entwürfen und geplanten Posts</li>
       <li xml:lang="en-GB">Support for creating drafts and scheduled posts</li>
       <li xml:lang="es">Implementa la creación de borradores y envíos planificados</li>
@@ -286,6 +295,7 @@
       <li xml:lang="zh-TW">支援建立草稿與排程發布。</li>
       <li>Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="ca">Implementa la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="ca-valencia">Implementa la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
       <li xml:lang="de">Unterstützung für das Hochladen von Medien zu Ihrem Blog, nur z. B. für MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa la subida de archivos multimedia a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
@@ -316,6 +326,7 @@
       <li>Support for Fetching your recent blog entries.</li>
       <li xml:lang="ar">دعم جلب أحدث مدخلات المدوّنة.</li>
       <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog.</li>
+      <li xml:lang="ca-valencia">Implementa l'obtenció de les vostres entrades recents al blog.</li>
       <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen</li>
       <li xml:lang="en-GB">Support for Fetching your recent blog entries.</li>
       <li xml:lang="es">Implementa la recuperación de sus entradas recientes de blog.</li>
@@ -345,6 +356,7 @@
       <li xml:lang="zh-TW">支援抓取您最近的部落格文章。</li>
       <li>Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="ca">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="ca-valencia">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
       <li xml:lang="de">Unterstützung für das Hinzufügen von Bildern von Ihrem System zu Ihren Posts. Die Bilder werden beim Hochladen zusammen mit Ihrem Text zum Blog hochgeladen, das funktioniert nur bei unterstützten Programmier-Schnittstellen (APIs) wie MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa el añadido de imágenes al envió desde su sistema. Las cargará al aplicar los envíos a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
@@ -375,6 +387,7 @@
       <li>Support for saving local entries before publishing.</li>
       <li xml:lang="ar">دعم حفظ مدخلات محليّة قبل النّشر.</li>
       <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les.</li>
+      <li xml:lang="ca-valencia">Implementa el guardat de les entrades locals abans de publicar-les.</li>
       <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung</li>
       <li xml:lang="en-GB">Support for saving local entries before publishing.</li>
       <li xml:lang="es">Implementa el guardado de entradas locales antes de publicarlas.</li>
@@ -405,6 +418,7 @@
       <li>Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="ar">حفظ نسخة عمل لتجنّب فقدان البيانات، عند فترات يمكن ضبطها.</li>
       <li xml:lang="ca">Desa una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables.</li>
+      <li xml:lang="ca-valencia">Guarda una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables.</li>
       <li xml:lang="de">Speicherung einer Kopie Ihrer Texte in einstellbaren Intervallen, um Datenverlust zu verhindern</li>
       <li xml:lang="en-GB">Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="es">Salvado de su copia escrita para evitar pérdidas de datos, a intervalos configurables.</li>
@@ -435,6 +449,7 @@
       <li>Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="ar">مدقّق إملاء آليّ داخليّ. (مدقّق كدي الإملائيّ مستخدم لذا أغلب اللغات مدعومة)</li>
       <li xml:lang="ca">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
+      <li xml:lang="ca-valencia">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
       <li xml:lang="de">Interne automatische Rechtschreibprüfung, dabei wird die KDE-Rechtschreibprüfung verwendet und damit viele Sprachen unterstützt</li>
       <li xml:lang="en-GB">Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="es">Auto corrector ortográfico interno. (El corrector ortográfico de KDE usado para la mayoría de idiomas está reconocido)</li>

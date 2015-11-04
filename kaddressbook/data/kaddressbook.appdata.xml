@@ -7,6 +7,7 @@
   <name xml:lang="ar">دفتر عناوينك</name>
   <name xml:lang="bs">KAddressBook</name>
   <name xml:lang="ca">KAddressBook</name>
+  <name xml:lang="ca-valencia">KAddressBook</name>
   <name xml:lang="cs">KAddressBook</name>
   <name xml:lang="da">KAddressBook</name>
   <name xml:lang="de">KAddressBook</name>
@@ -43,6 +44,7 @@
     <p>KAddressBook stores all the personal details of your family, friends and other contacts.</p>
     <p xml:lang="ar">يخزّن دفتر عناوينك كلّ التّفاصيل الشّخصيّة عن عائلتك، وأصدقائك ومتراسليك الآخرين.</p>
     <p xml:lang="ca">El KAddressBook emmagatzema totes les dades personals de la vostra família, amics i altres contactes.</p>
+    <p xml:lang="ca-valencia">El KAddressBook emmagatzema totes les dades personals de la vostra família, amics i altres contactes.</p>
     <p xml:lang="de">KAddressBook speichert alle persönlichen Kontaktdaten Ihrer Familie, Freunde und anderer Kontakte.</p>
     <p xml:lang="en-GB">KAddressBook stores all the personal details of your family, friends and other contacts.</p>
     <p xml:lang="es">KAddressBook almacena todos los detalles personales de su familia, amigos y otros contactos.</p>
@@ -76,6 +78,7 @@
     <p xml:lang="ar">الميزات:</p>
     <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
+    <p xml:lang="ca-valencia">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
     <p xml:lang="de">Funktionen:</p>
     <p xml:lang="en-GB">Features:</p>
@@ -110,6 +113,7 @@
     <ul>
       <li>Imports and exports to nearly every address book standard</li>
       <li xml:lang="ca">Importa i exporta a gairebé tots els estàndards de la llibreta d'adreces</li>
+      <li xml:lang="ca-valencia">Importa i exporta a gairebé tots els estàndards de la llibreta d'adreces</li>
       <li xml:lang="de">Import und Export fast aller Adressbuch-Standards</li>
       <li xml:lang="en-GB">Imports and exports to nearly every address book standard</li>
       <li xml:lang="es">Importa y exporta a casi todas las libretas de direcciones estándar</li>
@@ -142,6 +146,7 @@
       <li>Reads .vcf format files, and can import and export vCards and csv format files</li>
       <li xml:lang="ar">قراءة ملفّات النّسق ‎.vcf، وإمكانيّة استيراد بطاقات vCard وملفّات النّسق csv وتصديرها</li>
       <li xml:lang="ca">Llegeix el format de fitxer .vcf, i pot importar i exportar els formats de fitxer vCard i CSV</li>
+      <li xml:lang="ca-valencia">Llig el format de fitxer .vcf, i pot importar i exportar els formats de fitxer vCard i CSV</li>
       <li xml:lang="de">Lesen von Dateien im Format „vcf“ und Import und Export von Dateien im Format vCard und CSV</li>
       <li xml:lang="en-GB">Reads .vcf format files, and can import and export vCards and csv format files</li>
       <li xml:lang="es">Lee archivos de formato .vcf, y puede importar y exportar formatos de archivo vCard y csv</li>
@@ -172,6 +177,7 @@
       <li xml:lang="zh-TW">讀取 .vcf 格式檔案，並可匯入與匯出 vCards 與 csv 格式檔案。</li>
       <li>Can use multiple LDAP servers</li>
       <li xml:lang="ca">Pot usar múltiples servidors LDAP</li>
+      <li xml:lang="ca-valencia">Pot usar múltiples servidors LDAP</li>
       <li xml:lang="de">Kann mehrere LDAP-Server verwenden</li>
       <li xml:lang="en-GB">Can use multiple LDAP servers</li>
       <li xml:lang="es">Usted puede usar varios servidores LDAP</li>
@@ -200,6 +206,7 @@
       <li>Configurable filters and powerful search capabilities</li>
       <li xml:lang="ar">مرشّحات يمكن ضبطها وإمكانيّات بحث قويّة</li>
       <li xml:lang="ca">Filtres configurables i potents capacitats de cerca</li>
+      <li xml:lang="ca-valencia">Filtres configurables i potents capacitats de cerca</li>
       <li xml:lang="de">Einstellbare Filter und leistungsfähige Suchfunktionen</li>
       <li xml:lang="en-GB">Configurable filters and powerful search capabilities</li>
       <li xml:lang="es">Filtros configurables y poderosas capacidades de búsqueda</li>
@@ -231,6 +238,7 @@
       <li>Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
       <li xml:lang="ar">التّكامل مع مكوّنات متراسلك الأخرى، كتصدير تذكير تواريخ الميلاد إلى منظّمك</li>
       <li xml:lang="ca">S'integra amb els altres components del Kontact, p. ex., l'exportació dels recordatoris d'aniversari pel KOrganizer</li>
+      <li xml:lang="ca-valencia">S'integra amb els altres components del Kontact, p. ex., l'exportació dels recordatoris d'aniversari pel KOrganizer</li>
       <li xml:lang="de">Integration mit anderen Komponenten von Kontact wie zum Beispiel der Export von Erinnerungen an Geburtstage zu KOrganizer</li>
       <li xml:lang="en-GB">Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
       <li xml:lang="es">Se integra con otros componentes de Kontact, p. ej., exportación de recordatorios de cumpleaños a KOrganizer</li>
@@ -261,6 +269,7 @@
       <li xml:lang="zh-TW">可與其它的 Kontact 組件整合，如匯出生日提醒到 KOrganizer</li>
       <li>Capable of groupware integration</li>
       <li xml:lang="ca">Capaç d'integrar-se amb el treball en grup</li>
+      <li xml:lang="ca-valencia">Capaç d'integrar-se amb el treball en grup</li>
       <li xml:lang="de">Einbindung in Groupware ist möglich</li>
       <li xml:lang="en-GB">Capable of groupware integration</li>
       <li xml:lang="es">Capaz de integración con herramientas de colaboración</li>
@@ -292,6 +301,7 @@
       <li>Powered by Akonadi</li>
       <li xml:lang="ar">يدعمه أكونادي</li>
       <li xml:lang="ca">Desenvolupat per a l'Akonadi</li>
+      <li xml:lang="ca-valencia">Desenvolupat per a l'Akonadi</li>
       <li xml:lang="de">Unterstützt durch Akonadi</li>
       <li xml:lang="en-GB">Powered by Akonadi</li>
       <li xml:lang="es">Basado en Akonadi</li>
