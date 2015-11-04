@@ -18,9 +18,15 @@
 
 #include "synchronizeresourcedialog.h"
 #include <KLocalizedString>
+#include <KListWidgetSearchLine>
+
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QListWidget>
+#include <QLabel>
+#include <KConfigGroup>
+#include <KSharedConfig>
 
 SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
     : QDialog(parent)
@@ -33,16 +39,28 @@ SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    mListResourceWidget = new QListWidget(this);
+    mListResourceWidget->setObjectName(QStringLiteral("listresourcewidget"));
+    KListWidgetSearchLine *listWidgetSearchLine = new KListWidgetSearchLine(this, mListResourceWidget);
+    listWidgetSearchLine->setObjectName(QStringLiteral("listwidgetsearchline"));
+
+    QLabel *lab = new QLabel(i18n("Some resources were added but data were not sync. Select resource that you want to sync:"));
+    lab->setWordWrap(true);
+    lab->setObjectName(QStringLiteral("label"));
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SynchronizeResourceDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SynchronizeResourceDialog::reject);
     okButton->setDefault(true);
     setModal(true);
+
+    topLayout->addWidget(listWidgetSearchLine);
+    topLayout->addWidget(mListResourceWidget);
     topLayout->addWidget(buttonBox);
+    readConfig();
 }
 
 SynchronizeResourceDialog::~SynchronizeResourceDialog()
 {
-
+    writeConfig();
 }
 
 void SynchronizeResourceDialog::setResources(const QStringList &resources)
@@ -50,7 +68,27 @@ void SynchronizeResourceDialog::setResources(const QStringList &resources)
     //TODO
 }
 
+QStringList SynchronizeResourceDialog::resources() const
+{
+    return QStringList();
+}
+
 void SynchronizeResourceDialog::slotAccepted()
 {
     accept();
+}
+
+void SynchronizeResourceDialog::readConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "SynchronizeResourceDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
+    }
+}
+
+void SynchronizeResourceDialog::writeConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "SynchronizeResourceDialog");
+    group.writeEntry("Size", size());
 }

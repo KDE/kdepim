@@ -19,11 +19,16 @@
 #include "../dialog/synchronizeresourcedialog.h"
 #include <QDialogButtonBox>
 #include <QTest>
+#include <QListWidget>
+#include <KListWidgetSearchLine>
+#include <QStandardPaths>
+
+#include <QLabel>
 
 SynchronizeResourceDialogTest::SynchronizeResourceDialogTest(QObject *parent)
     : QObject(parent)
 {
-
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 SynchronizeResourceDialogTest::~SynchronizeResourceDialogTest()
@@ -36,6 +41,16 @@ void SynchronizeResourceDialogTest::shouldHaveDefaultValue()
     SynchronizeResourceDialog dlg;
     QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
+
+    QListWidget *listWidget = dlg.findChild<QListWidget *>(QStringLiteral("listresourcewidget"));
+    QVERIFY(listWidget);
+
+    KListWidgetSearchLine *searchLine = dlg.findChild<KListWidgetSearchLine *>(QStringLiteral("listwidgetsearchline"));
+    QVERIFY(searchLine);
+
+    QLabel *label = dlg.findChild<QLabel *>(QStringLiteral("label"));
+    QVERIFY(label);
+    QVERIFY(label->wordWrap());
 }
 
 QTEST_MAIN(SynchronizeResourceDialogTest)

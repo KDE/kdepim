@@ -20,7 +20,7 @@
 #define SYNCHRONIZERESOURCEDIALOG_H
 
 #include <QDialog>
-
+class QListWidget;
 class SynchronizeResourceDialog : public QDialog
 {
     Q_OBJECT
@@ -29,9 +29,15 @@ public:
     ~SynchronizeResourceDialog();
 
     void setResources(const QStringList &resources);
+    QStringList resources() const;
 
 private Q_SLOTS:
     void slotAccepted();
+
+private:
+    void readConfig();
+    void writeConfig();
+    QListWidget *mListResourceWidget;
 };
 
 #endif // SYNCHRONIZERESOURCEDIALOG_H
