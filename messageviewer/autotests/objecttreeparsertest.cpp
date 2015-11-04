@@ -62,8 +62,8 @@ void ObjectTreeParserTester::test_parsePlainMessage()
     otp.parseObjectTree(msg.data());
 
     // Check that the textual content and the charset have the expected values
-    QCOMPARE(otp.plainTextContent(), QStringLiteral("This is the message text."));
-    QCOMPARE(otp.convertedTextContent().toLatin1().data(), "This is the message text.\n");
+    QCOMPARE(otp.plainTextContent(), QStringLiteral("This is the message text.\n"));
+    QCOMPARE(otp.convertedTextContent().toLatin1().data(), "This is the message text.\n\n");
     QVERIFY(otp.htmlContent().isEmpty());
     QCOMPARE(otp.plainTextContentCharset().toLower(), QByteArray("iso-8859-15"));
 
@@ -110,7 +110,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
     QCOMPARE(msg->contents().at(1)->contents().first()->contents().at(1)->contents().size(), 0);
 
     // Check that the textual content and the charset have the expected values
-    QCOMPARE(otp.plainTextContent(), QStringLiteral("This is the encapsulating message."));
+    QCOMPARE(otp.plainTextContent(), QStringLiteral("This is the first encapsulating message.\n"));
     QCOMPARE(otp.plainTextContentCharset().toLower(), QByteArray("iso-8859-15"));
     QVERIFY(otp.htmlContent().isEmpty());
 

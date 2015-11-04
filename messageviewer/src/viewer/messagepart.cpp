@@ -21,14 +21,20 @@
 #include "messageviewer_debug.h"
 #include "objecttreeparser.h"
 
+#include <MessageCore/StringUtil>
+
+#include <libkleo/importjob.h>
+
 #include <interfaces/htmlwriter.h>
 #include <htmlwriter/queuehtmlwriter.h>
 #include <kmime/kmime_content.h>
 #include <gpgme++/key.h>
 #include <gpgme.h>
-#include <KLocalizedString>
 
 #include <QTextCodec>
+#include <QApplication>
+
+#include <KLocalizedString>
 
 using namespace MessageViewer;
 
@@ -102,6 +108,60 @@ void AttachmentMarkBlock::internalExit()
 
     mWriter->queue(QStringLiteral("</div>"));
     entered = false;
+}
+
+
+TextBlock::TextBlock(MessageViewer::HtmlWriter *writer, MessageViewer::NodeHelper *nodeHelper, KMime::Content *node, bool link)
+    : mWriter(writer)
+    , mNodeHelper(nodeHelper)
+    , mNode(node)
+    , mLink(link)
+{
+    internalEnter();
+}
+
+TextBlock::~TextBlock()
+{
+    internalExit();
+}
+
+void TextBlock::internalEnter()
+{
+    if (!mWriter || entered) {
+        return;
+    }
+    entered = true;
+
+    const QString label = MessageCore::StringUtil::quoteHtmlChars(NodeHelper::fileName(mNode), true);
+
+    const QString comment =
+    MessageCore::StringUtil::quoteHtmlChars(mNode->contentDescription()->asUnicodeString(), true);
+
+    const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
+
+    mWriter->queue(QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">"
+    "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">"));
+    if (!mLink)
+         mWriter->queue(QLatin1String("<a href=\"") + mNodeHelper->asHREF(mNode, QStringLiteral("body")) + QLatin1String("\">")
+        + label + QLatin1String("</a>"));
+    else {
+         mWriter->queue(label);
+    }
+    if (!comment.isEmpty()) {
+        mWriter->queue(QLatin1String("<br/>") + comment);
+    }
+    mWriter->queue(QLatin1String("</td></tr><tr class=\"textAtmB\"><td>"));
+}
+
+void TextBlock::internalExit()
+{
+    if (!entered) {
+        return;
+    }
+
+    entered = false;
+
+    mWriter->queue(QStringLiteral("</td></tr></table>"));
 }
 
 //------MessagePart-----------------------

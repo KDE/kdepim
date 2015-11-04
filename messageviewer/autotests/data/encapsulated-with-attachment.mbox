@@ -12,7 +12,7 @@ Content-Type: text/plain;
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-This is the encapsulating message.
+This is the first encapsulating message.
 
 --Boundary-00=_zmUeKB+A8hGfCVZ
 Content-Type: message/rfc822;
@@ -37,7 +37,7 @@ Content-Disposition: inline
 
 
 
-This is the encapsulated message.
+This is the second encapsulated message.
 
 --Boundary-00=_WmUeKQpGb0DHyx1
 Content-Type: text/plain;

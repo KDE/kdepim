@@ -1017,51 +1017,22 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
     const bool bDrawFrame = !isFirstTextPart
                             && !showOnlyOneMimePart()
                             && !label.isEmpty();
-    if (bDrawFrame && htmlWriter()) {
-        label = StringUtil::quoteHtmlChars(label, true);
+    const QString fileName = mNodeHelper->writeNodeToTempFile(curNode);
 
-        const QString comment =
-            StringUtil::quoteHtmlChars(curNode->contentDescription()->asUnicodeString(), true);
-
-        const QString fileName;
-        mNodeHelper->writeNodeToTempFile(curNode);
-        const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
-
-        QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">"
-                                        "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
-        if (!fileName.isEmpty())
-            htmlStr += QLatin1String("<a href=\"") + mNodeHelper->asHREF(curNode, QStringLiteral("body")) + QLatin1String("\">")
-                       + label + QLatin1String("</a>");
-        else {
-            htmlStr += label;
-        }
-        if (!comment.isEmpty()) {
-            htmlStr += QLatin1String("<br/>") + comment;
-        }
-        htmlStr += QLatin1String("</td></tr><tr class=\"textAtmB\"><td>");
-
-        htmlWriter()->queue(htmlStr);
-    }
     // process old style not-multipart Mailman messages to
     // enable verification of the embedded messages' signatures
     if (!isMailmanMessage(curNode) ||
             !processMailmanMessage(curNode)) {
-        const QString oldPlainText = mPlainTextContent;
-        writeBodyString(curNode->decodedContent(), NodeHelper::fromAsString(curNode),
-                        codecFor(curNode), result, !bDrawFrame);
 
-        // Revert changes to mPlainTextContent made by writeBodyString if this is not the first
-        // text part. The plain text content shall not contain any text/plain attachment, as it is content
-        // of the main text node.
-        if (!isFirstTextPart) {
-            mPlainTextContent = oldPlainText;
+        TextMessagePart mp(this, curNode, bDrawFrame, !fileName.isEmpty());
+        mp.html(!bDrawFrame);
+
+        if (isFirstTextPart) {
+            mPlainTextContent = mp.text();
         }
+
         mNodeHelper->setNodeDisplayedEmbedded(curNode, true);
     }
-    if (bDrawFrame && htmlWriter()) {
-        htmlWriter()->queue(QStringLiteral("</td></tr></table>"));
-    }
-
     return true;
 }
 

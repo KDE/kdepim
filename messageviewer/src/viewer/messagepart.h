@@ -46,6 +46,8 @@ class NodeHelper;
 class HTMLBlock
 {
 public:
+    typedef QSharedPointer<HTMLBlock> Ptr;
+
     HTMLBlock()
         : entered(false)
     { }
@@ -92,6 +94,22 @@ private:
 
     KMime::Content *mNode;
     HtmlWriter *mWriter;
+};
+
+class TextBlock : public HTMLBlock
+{
+public:
+    TextBlock(MessageViewer::HtmlWriter* writer, MessageViewer::NodeHelper* nodeHelper, KMime::Content* node, bool link);
+    virtual ~TextBlock();
+private:
+    void internalEnter();
+    void internalExit();
+private:
+    HtmlWriter* mWriter;
+    NodeHelper *mNodeHelper;
+    KMime::Content* mNode;
+    QString mFileName;
+    bool mLink;
 };
 
 class MessagePart
