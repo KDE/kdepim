@@ -45,6 +45,11 @@ SynchronizeResourceDialog::~SynchronizeResourceDialog()
 
 }
 
+void SynchronizeResourceDialog::setResources(const QStringList &resources)
+{
+    //TODO
+}
+
 void SynchronizeResourceDialog::slotAccepted()
 {
     accept();

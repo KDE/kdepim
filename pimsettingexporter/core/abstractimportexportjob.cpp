@@ -497,6 +497,7 @@ void AbstractImportExportJob::slotNextStep()
 
 void AbstractImportExportJob::startSynchronizeResources(const QStringList &listResourceToSync)
 {
+    Q_EMIT info(i18n("Start synchronizing..."));
     SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
     job->setListResources(listResourceToSync);
     connect(job, &SynchronizeResourceJob::synchronizationFinished, this, &AbstractImportExportJob::slotAllResourceSynchronized);

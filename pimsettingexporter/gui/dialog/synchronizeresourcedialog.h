@@ -28,6 +28,8 @@ public:
     explicit SynchronizeResourceDialog(QWidget *parent = Q_NULLPTR);
     ~SynchronizeResourceDialog();
 
+    void setResources(const QStringList &resources);
+
 private Q_SLOTS:
     void slotAccepted();
 };
