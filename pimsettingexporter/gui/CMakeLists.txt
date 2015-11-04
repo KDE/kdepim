@@ -52,5 +52,6 @@ install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${KDE_INSTALL_AP
 
 if(BUILD_TESTING)
     add_subdirectory(tests)
+    add_subdirectory(autotests)
 endif()
 
