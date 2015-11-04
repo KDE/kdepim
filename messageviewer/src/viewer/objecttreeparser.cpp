@@ -1217,7 +1217,7 @@ MessagePart::Ptr ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content 
     return mp;
 }
 
-MessagePart::Ptr ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content* node, ProcessResult& result)
+MessagePart::Ptr ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result)
 {
     KMime::Content *child = MessageCore::NodeHelper::firstChild(node);
     if (!child) {
@@ -1259,8 +1259,8 @@ MessagePart::Ptr ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Conte
     mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
 
     CryptoMessagePart::Ptr mp(new CryptoMessagePart(this,
-                         data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
-                         NodeHelper::fromAsString(data), node));
+                              data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
+                              NodeHelper::fromAsString(data), node));
 
     PartMetaData *messagePart(mp->partMetaData());
     if (!mSource->decryptMessage()) {

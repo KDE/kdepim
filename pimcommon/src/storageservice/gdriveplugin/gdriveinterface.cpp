@@ -42,7 +42,6 @@ bool GDriveInterface::isConfigurated() const
     return true;
 }
 
-
 void GDriveInterface::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
 

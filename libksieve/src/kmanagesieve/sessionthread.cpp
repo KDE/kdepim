@@ -163,7 +163,6 @@ void SessionThread::doSendData(const QByteArray &data)
     m_socket->write("\r\n");
 }
 
-
 // Called in secondary thread
 void SessionThread::slotDataReceived()
 {
@@ -245,7 +244,6 @@ void SessionThread::doFeedBack(const QByteArray &data)
     }
 }
 
-
 // Called in main thread
 void SessionThread::startAuthentication()
 {
@@ -305,7 +303,7 @@ void SessionThread::doStartAuthentication()
 
 // Called in main thread
 void SessionThread::continueAuthentication(const Response &response,
-                                           const QByteArray &data)
+        const QByteArray &data)
 {
     QMetaObject::invokeMethod(this, "doContinueAuthentication",
                               Qt::QueuedConnection,
@@ -315,7 +313,7 @@ void SessionThread::continueAuthentication(const Response &response,
 
 // Called in secondary thread
 void SessionThread::doContinueAuthentication(const Response &response,
-                                             const QByteArray &data)
+        const QByteArray &data)
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
@@ -336,7 +334,6 @@ void SessionThread::doContinueAuthentication(const Response &response,
         }
     }
 }
-
 
 // Called in secondary thread
 bool SessionThread::saslInteract(void *in)

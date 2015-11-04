@@ -64,13 +64,13 @@ Session::Session(QObject *parent) :
     connect(m_thread, &SessionThread::sslDone,
             this, &Session::sslDone);
     connect(m_thread, &SessionThread::socketConnected,
-            [=]() {
-                m_connected = true;
-            });
+    [ = ]() {
+        m_connected = true;
+    });
     connect(m_thread, &SessionThread::socketDisconnected,
-            [=]() {
-                m_connected = false;
-            });
+    [ = ]() {
+        m_connected = false;
+    });
 }
 
 Session::~Session()
@@ -81,7 +81,7 @@ Session::~Session()
 
 void Session::connectToHost(const QUrl &url)
 {
-    qCDebug(KMANAGERSIEVE_LOG) << "connect to host url: "<<url;
+    qCDebug(KMANAGERSIEVE_LOG) << "connect to host url: " << url;
     m_url = url;
     m_thread->connectToHost(url);
     m_state = PreTlsCapabilities;

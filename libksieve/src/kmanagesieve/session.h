@@ -42,7 +42,6 @@ struct AuthDetails {
     bool valid;
 };
 
-
 /** A network session with a manage sieve server.
  * @internal
  */

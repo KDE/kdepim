@@ -31,7 +31,8 @@
 
 class QTimer;
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 
 class Session;
 

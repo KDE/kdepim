@@ -107,7 +107,7 @@ void SieveDebugDialog::slotDiagNextAccount()
         mShutDownJob->setSingleShot(true);
         connect(mShutDownJob, &QTimer::timeout, this, &SieveDebugDialog::slotShutDownJob);
     }
-    mShutDownJob->start(30*1000); // 30 seconds
+    mShutDownJob->start(30 * 1000); // 30 seconds
     QString ident = mResourceIdentifier.first();
 
     mEdit->editor()->appendPlainText(i18n("Collecting data for account '%1'...\n", ident));
@@ -115,7 +115,7 @@ void SieveDebugDialog::slotDiagNextAccount()
 
     // Detect URL for this IMAP account
     const QUrl url = KSieveUi::Util::findSieveUrlForAccount(ident);
-    qDebug()<<" url "<<url;
+    qDebug() << " url " << url;
     if (!url.isValid()) {
         mEdit->editor()->appendPlainText(i18n("(Account does not support Sieve)\n\n"));
     } else {
