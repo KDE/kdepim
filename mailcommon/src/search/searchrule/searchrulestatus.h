@@ -50,24 +50,6 @@ static const MessageStatusInfo StatusValues[] = {
     { I18N_NOOP2("message status", "Has Attachment"), "mail-attachment"     }  //must be last
 };
 
-// If you change the ordering here; also do it in the array above
-enum StatusValueTypes {
-    StatusImportant = 0,
-    StatusToAct = 1,
-    StatusUnread = 2,
-    StatusRead = 3,
-    StatusDeleted = 4,
-    StatusReplied = 5,
-    StatusForwarded = 6,
-    StatusQueued = 7,
-    StatusSent = 8,
-    StatusWatched = 9,
-    StatusIgnored = 10,
-    StatusSpam = 11,
-    StatusHam = 12,
-    StatusHasAttachment = 13 //must be last
-};
-
 static const int StatusValueCount =
     sizeof(StatusValues) / sizeof(MessageStatusInfo);
 // we want to show all status entries in the quick search bar, but only the
