@@ -37,7 +37,7 @@ void TemplatesSyntaxHighlighterRules::init()
     const QStringList keywords = QStringList() << Util::keywords();
 
     Q_FOREACH (const QString &s, keywords) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
+        const QRegularExpression regex(s, QRegularExpression::CaseInsensitiveOption);
         mRules.append(KPIMTextEdit::Rule(regex, keywordFormat));
     }
 
@@ -46,7 +46,7 @@ void TemplatesSyntaxHighlighterRules::init()
     const QStringList keywordsWithArgs = QStringList() << Util::keywordsWithArgsForCompleter();
 
     Q_FOREACH (const QString &s, keywordsWithArgs) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
+        const QRegularExpression regex(s, QRegularExpression::CaseInsensitiveOption);
         mRules.append(KPIMTextEdit::Rule(regex, keywordWithArgsFormat));
     }
 

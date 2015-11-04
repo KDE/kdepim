@@ -33,22 +33,22 @@ void AdBlockSyntaxHighlighter::init()
 {
     QTextCharFormat commentFormat;
     commentFormat.setForeground(Qt::darkYellow);
-    QRegExp commentRegex(QStringLiteral("^!.*"));
+    QRegularExpression commentRegex(QStringLiteral("^!.*"));
     m_rules.append(KPIMTextEdit::Rule(commentRegex, commentFormat));
 
     QTextCharFormat exceptionFormat;
     exceptionFormat.setForeground(Qt::magenta);
-    QRegExp exceptionRegex(QStringLiteral("^@@.*"));
+    QRegularExpression exceptionRegex(QStringLiteral("^@@.*"));
     m_rules.append(KPIMTextEdit::Rule(exceptionRegex, exceptionFormat));
 
     QTextCharFormat headerFormat;
     headerFormat.setForeground(Qt::red);
-    QRegExp headerRegex(QStringLiteral("^\\[.*"));
+    QRegularExpression headerRegex(QStringLiteral("^\\[.*"));
     m_rules.append(KPIMTextEdit::Rule(headerRegex, headerFormat));
 
     QTextCharFormat elementFormat;
     elementFormat.setForeground(Qt::blue);
-    QRegExp elementRegex(QStringLiteral(".*##.*"));
+    QRegularExpression elementRegex(QStringLiteral(".*##.*"));
     m_rules.append(KPIMTextEdit::Rule(elementRegex, elementFormat));
 }
 

@@ -38,7 +38,7 @@ void XMLPrintingSyntaxHighLighter::init()
     testType << QStringLiteral("require");
 
     Q_FOREACH (const QString &s, testType) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
+        const QRegularExpression regex(s, QRegularExpression::CaseInsensitiveOption);
         m_rules.append(KPIMTextEdit::Rule(regex, testFormat));
     }
 
@@ -48,7 +48,7 @@ void XMLPrintingSyntaxHighLighter::init()
     QStringList quoteType;
     quoteType << QStringLiteral("quoted") << QStringLiteral("hash") << QStringLiteral("bracket") << QStringLiteral("multiline");
     Q_FOREACH (const QString &s, quoteType) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
+        const QRegularExpression regex(s, QRegularExpression::CaseInsensitiveOption);
         m_rules.append(KPIMTextEdit::Rule(regex, quoteFormat));
     }
 
@@ -59,13 +59,13 @@ void XMLPrintingSyntaxHighLighter::init()
     miscType << QStringLiteral("control") << QStringLiteral("block") << QStringLiteral("script") << QStringLiteral("action") << QStringLiteral("comment");
     miscType << QStringLiteral("num") << QStringLiteral("tag") << QStringLiteral("list") << QStringLiteral("str") << QStringLiteral("test") << QStringLiteral("crlf/");
     Q_FOREACH (const QString &s, miscType) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
+        const QRegularExpression regex(s, QRegularExpression::CaseInsensitiveOption);
         m_rules.append(KPIMTextEdit::Rule(regex, misc));
     }
 
     QTextCharFormat header;
     header.setForeground(Qt::black);
     header.setFontWeight(QFont::Bold);
-    m_rules.append(KPIMTextEdit::Rule(QRegExp(QStringLiteral("<\\?xml.*"), Qt::CaseInsensitive), header));
+    m_rules.append(KPIMTextEdit::Rule(QRegularExpression(QStringLiteral("<\\?xml.*"), QRegularExpression::CaseInsensitiveOption), header));
 }
 
