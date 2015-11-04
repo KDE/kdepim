@@ -212,7 +212,7 @@ find_package(KF5KDGantt2 ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5ComposerEditorNG ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5KdepimDBusInterfaces ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5LibKSieve ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5Gravatar ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Gravatar ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 endif()
 
 if (NOT APPLE)
@@ -225,8 +225,6 @@ configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdepim.h
 
 # Extra package
 find_package(KF5GAPI "4.72.0" CONFIG)
-
-include(GenerateExportHeader)
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
