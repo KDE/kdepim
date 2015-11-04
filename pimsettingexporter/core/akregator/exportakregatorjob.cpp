@@ -17,10 +17,7 @@
 
 #include "exportakregatorjob.h"
 
-
-
 #include <AkonadiCore/AgentManager>
-
 #include <KLocalizedString>
 #include <KZip>
 
