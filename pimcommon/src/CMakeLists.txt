@@ -299,6 +299,7 @@ if (BUILD_TESTING)
    add_subdirectory(storageservice/dropbox/icons/)
    add_subdirectory(storageservice/autotests)
    add_subdirectory(customtools/autotests)
+   add_subdirectory(autotests)
 endif()
 
 if( LibKGAPI2_FOUND )
