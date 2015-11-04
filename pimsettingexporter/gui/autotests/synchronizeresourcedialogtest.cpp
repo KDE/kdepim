@@ -16,6 +16,8 @@
 */
 
 #include "synchronizeresourcedialogtest.h"
+#include "../dialog/synchronizeresourcedialog.h"
+#include <QDialogButtonBox>
 #include <QTest>
 
 SynchronizeResourceDialogTest::SynchronizeResourceDialogTest(QObject *parent)
@@ -27,6 +29,13 @@ SynchronizeResourceDialogTest::SynchronizeResourceDialogTest(QObject *parent)
 SynchronizeResourceDialogTest::~SynchronizeResourceDialogTest()
 {
 
+}
+
+void SynchronizeResourceDialogTest::shouldHaveDefaultValue()
+{
+    SynchronizeResourceDialog dlg;
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
+    QVERIFY(buttonBox);
 }
 
 QTEST_MAIN(SynchronizeResourceDialogTest)

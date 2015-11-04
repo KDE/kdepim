@@ -18,16 +18,34 @@
 
 #include "synchronizeresourcedialog.h"
 #include <KLocalizedString>
+#include <QPushButton>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 
 SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
     : QDialog(parent)
 {
-
+    setWindowTitle(i18n("Synchronize Resources"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    buttonBox->setObjectName(QStringLiteral("buttonbox"));
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SynchronizeResourceDialog::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SynchronizeResourceDialog::reject);
+    okButton->setDefault(true);
+    setModal(true);
+    topLayout->addWidget(buttonBox);
 }
 
 SynchronizeResourceDialog::~SynchronizeResourceDialog()
 {
 
+}
+
+void SynchronizeResourceDialog::slotAccepted()
+{
+    accept();
 }

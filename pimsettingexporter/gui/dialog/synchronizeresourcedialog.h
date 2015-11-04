@@ -27,6 +27,9 @@ class SynchronizeResourceDialog : public QDialog
 public:
     explicit SynchronizeResourceDialog(QWidget *parent = Q_NULLPTR);
     ~SynchronizeResourceDialog();
+
+private Q_SLOTS:
+    void slotAccepted();
 };
 
 #endif // SYNCHRONIZERESOURCEDIALOG_H

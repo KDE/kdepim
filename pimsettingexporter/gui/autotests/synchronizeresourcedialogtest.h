@@ -26,6 +26,8 @@ class SynchronizeResourceDialogTest : public QObject
 public:
     explicit SynchronizeResourceDialogTest(QObject *parent = Q_NULLPTR);
     ~SynchronizeResourceDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SYNCHRONIZERESOURCEDIALOGTEST_H
