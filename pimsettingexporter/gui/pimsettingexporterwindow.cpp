@@ -291,7 +291,6 @@ void PimSettingExporterWindow::slotShowStructureInfos()
     delete dlg;
 }
 
-
 void PimSettingExporterWindow::slotShowCurrentArchiveInformations()
 {
     if (!mLastArchiveFileName.isEmpty()) {

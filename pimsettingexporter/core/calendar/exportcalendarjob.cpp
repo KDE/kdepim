@@ -17,8 +17,6 @@
 
 #include "exportcalendarjob.h"
 
-
-
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
@@ -88,7 +86,6 @@ void ExportCalendarJob::slotCalendarJobTerminated()
     QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }
 
-
 void ExportCalendarJob::slotWriteNextArchiveResource()
 {
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
@@ -132,7 +129,6 @@ void ExportCalendarJob::slotWriteNextArchiveResource()
 void ExportCalendarJob::backupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
-
 
     const QString korganizerStr(QStringLiteral("korganizerrc"));
     const QString korganizerrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerStr;

@@ -21,7 +21,6 @@
 #include <KLocalizedString>
 #include <KZip>
 
-
 #include <QDir>
 #include <QStandardPaths>
 #include <QTimer>

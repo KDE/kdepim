@@ -149,7 +149,6 @@ void ExportMailJob::slotMailsJobTerminated()
     QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }
 
-
 void ExportMailJob::slotWriteNextArchiveResource()
 {
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
@@ -208,7 +207,6 @@ void ExportMailJob::backupTransports()
 {
     setProgressDialogLabel(i18n("Backing up transports..."));
 
-
     const QString mailtransportsStr(QStringLiteral("mailtransports"));
     const QString maitransportsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + mailtransportsStr;
     if (!QFile(maitransportsrc).exists()) {
@@ -247,7 +245,6 @@ void ExportMailJob::slotCheckBackupResources()
 void ExportMailJob::backupResources()
 {
     setProgressDialogLabel(i18n("Backing up resources..."));
-
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
@@ -313,7 +310,6 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("kpimbalooblacklist"));
     backupConfigFile(QStringLiteral("kleopatrarc"));
     backupConfigFile(QStringLiteral("sieveeditorrc"));
-
 
     //Notify file config
     backupConfigFile(QStringLiteral("akonadi_mailfilter_agent.notifyrc"));

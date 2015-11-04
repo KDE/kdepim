@@ -17,8 +17,6 @@
 
 #include "exportalarmjob.h"
 
-
-
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
@@ -27,7 +25,6 @@
 #include <QTimer>
 #include <KConfigGroup>
 #include <KZip>
-
 
 #include <QFile>
 #include <QDir>
@@ -127,7 +124,6 @@ void ExportAlarmJob::slotWriteNextArchiveResource()
         QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
     }
 }
-
 
 void ExportAlarmJob::backupConfig()
 {

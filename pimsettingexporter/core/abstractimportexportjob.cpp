@@ -110,7 +110,7 @@ void AbstractImportExportJob::backupUiRcFile(const QString &configFileName, cons
 {
     const QString configrcStr(configFileName);
     const QString configrc = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kxmlgui5/") + application + QLatin1Char('/') + configrcStr;
-    qDebug()<<" configrc"<<configrc << " configFileName "<<configFileName;
+    qDebug() << " configrc" << configrc << " configFileName " << configFileName;
     if (QFile(configrc).exists()) {
         backupFile(configrc, Utils::configsPath(), configrcStr);
     }
@@ -280,7 +280,6 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
         Q_EMIT info(i18n("\"%1\" was restored.", filename));
     }
 }
-
 
 void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {

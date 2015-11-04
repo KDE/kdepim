@@ -72,7 +72,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotAllResourceSynchronized();
     void slotSynchronizeInstanceDone(const QString &);
-    void slotSynchronizeInstanceFailed(const QString &instance);    
+    void slotSynchronizeInstanceFailed(const QString &instance);
     void slotTaskCanceled();
 
 protected:

@@ -29,12 +29,12 @@ PimSettingBackupThread::PimSettingBackupThread(KZip *zip, const QString &url, co
       mArchiveName(archivename),
       mZip(zip)
 {
-    qDebug()<<" PimSettingBackupThread::PimSettingBackupThread"<<this;
+    qDebug() << " PimSettingBackupThread::PimSettingBackupThread" << this;
 }
 
 PimSettingBackupThread::~PimSettingBackupThread()
 {
-    qDebug()<<" PimSettingBackupThread::~PimSettingBackupThread()"<<this;
+    qDebug() << " PimSettingBackupThread::~PimSettingBackupThread()" << this;
 }
 
 void PimSettingBackupThread::run()

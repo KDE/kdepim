@@ -43,7 +43,6 @@ Q_SIGNALS:
     void info(const QString &str);
     void terminated();
 
-
 private Q_SLOTS:
     void slotTerminated(bool success);
 

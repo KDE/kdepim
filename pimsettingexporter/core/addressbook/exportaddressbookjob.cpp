@@ -18,7 +18,6 @@
 #include "exportaddressbookjob.h"
 #include "exportresourcearchivejob.h"
 
-
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
@@ -26,7 +25,6 @@
 #include <QTemporaryFile>
 #include <KConfigGroup>
 #include <KZip>
-
 
 #include <QDir>
 #include <QStandardPaths>
@@ -128,7 +126,6 @@ void ExportAddressbookJob::slotWriteNextArchiveResource()
 void ExportAddressbookJob::backupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
-
 
     const QString kaddressbookStr(QStringLiteral("kaddressbookrc"));
     const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;

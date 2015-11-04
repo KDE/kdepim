@@ -101,7 +101,7 @@ void ExportResourceArchiveJob::slotTerminated(bool success)
 
 void ExportResourceArchiveJob::slotTaskCanceled()
 {
-    qDebug()<<" void ExportResourceArchiveJob::slotTaskCanceled()";
+    qDebug() << " void ExportResourceArchiveJob::slotTaskCanceled()";
     //TODO
     if (mThread) {
         mThread->exit();

@@ -24,8 +24,6 @@
 #include "MailCommon/MailUtil"
 #include "PimCommon/CreateResource"
 
-
-
 #include <MailTransport/mailtransport/transportmanager.h>
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
@@ -101,7 +99,7 @@ void ImportMailJob::slotNextStep()
         } else if (type == Utils::AkonadiDb) {
             restoreAkonadiDb();
         } else {
-            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << Q_FUNC_INFO << " not supported type "<< type;
+            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << Q_FUNC_INFO << " not supported type " << type;
             slotNextStep();
         }
     } else {
@@ -168,7 +166,7 @@ void ImportMailJob::restoreTransports()
         Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
     } else {
         Q_EMIT info(i18n("Restore transports..."));
-        
+
         const KArchiveEntry *transport = mArchiveDirectory->entry(path);
         if (transport && transport->isFile()) {
             const KArchiveFile *fileTransport = static_cast<const KArchiveFile *>(transport);
@@ -258,7 +256,7 @@ void ImportMailJob::restoreResources()
     increaseProgressDialog();
     setProgressDialogLabel(i18n("Restore resources..."));
     Q_EMIT info(i18n("Restore resources..."));
-    
+
     QDir dir(mTempDirName);
     dir.mkdir(Utils::resourcesPath());
     Q_FOREACH (const QString &filename, mFileList) {
@@ -473,7 +471,7 @@ void ImportMailJob::restoreMails()
     setProgressDialogLabel(i18n("Restore mails..."));
     QStringList listResourceToSync;
     Q_EMIT info(i18n("Restore mails..."));
-    
+
     QDir dir(mTempDirName);
     dir.mkdir(Utils::mailsPath());
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::mailsPath());
@@ -794,7 +792,6 @@ void ImportMailJob::restoreConfig()
     restoreUiRcFile(QStringLiteral("kontactui.rc"), QStringLiteral("kontact"));
     restoreUiRcFile(QStringLiteral("kleopatra.rc"), QStringLiteral("kleopatra"));
 
-
     restoreConfigFile(QStringLiteral("kontactrc"));
 
     restoreConfigFile(QStringLiteral("kontact_summaryrc"));
@@ -883,7 +880,7 @@ void ImportMailJob::restoreIdentity()
         Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
     } else {
         Q_EMIT info(i18n("Restore identities..."));
-        
+
         const KArchiveEntry *identity = mArchiveDirectory->entry(path);
         if (identity && identity->isFile()) {
             const KArchiveFile *fileIdentity = static_cast<const KArchiveFile *>(identity);
@@ -975,7 +972,6 @@ void ImportMailJob::restoreAkonadiDb()
         Q_EMIT error(i18n("Akonadi database file could not be found in the archive."));
     } else {
         Q_EMIT info(i18n("Restore Akonadi Database..."));
-        
 
         const KArchiveEntry *akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
         if (akonadiDataBaseEntry && akonadiDataBaseEntry->isFile()) {
