@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Tine 2.0 Groupware Server
 Name[ca]=Servidor de treball en grup Tine 2.0
+Name[ca@valencia]=Servidor de treball en grup Tine 2.0
 Name[cs]=Groupware Server Tine 2.0
 Name[de]=Tine 2.0 Groupware-Server
 Name[en_GB]=Tine 2.0 Groupware Server
@@ -30,6 +31,7 @@ Name[zh_TW]=Tine 2.0 群組伺服器
 Icon=applications-internet
 Comment=Tine 2.0 Groupware Server
 Comment[ca]=Servidor de treball en grup Tine 2.0
+Comment[ca@valencia]=Servidor de treball en grup Tine 2.0
 Comment[cs]=Groupware Server Tine 2.0
 Comment[de]=Tine 2.0 Groupware-Server
 Comment[en_GB]=Tine 2.0 Groupware Server

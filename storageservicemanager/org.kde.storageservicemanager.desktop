@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Cloud Storage Manager
 Name[ca]=Gestor de l'emmagatzematge al núvol
+Name[ca@valencia]=Gestor de l'emmagatzematge al núvol
 Name[cs]=Správce úložiště Cloudu
 Name[da]=Håndtering af cloud-lagring
 Name[de]=Cloud-Speicherverwaltung
@@ -36,6 +37,7 @@ Icon=kmail
 X-DocPath=storageservicemanager/index.html
 GenericName=Cloud Storage Manager
 GenericName[ca]=Gestor de l'emmagatzematge al núvol
+GenericName[ca@valencia]=Gestor de l'emmagatzematge al núvol
 GenericName[cs]=Správce úložiště Cloudu
 GenericName[da]=Håndtering af cloud-lagring
 GenericName[de]=Cloud-Speicherverwaltung

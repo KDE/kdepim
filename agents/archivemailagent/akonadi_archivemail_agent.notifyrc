@@ -180,6 +180,7 @@ Action=Popup
 [Event/archivemailfolderdoesntexist]
 Name=Directory does not exist
 Name[ca]=El directori no existeix
+Name[ca@valencia]=El directori no existeix
 Name[cs]=Adresář neexistuje
 Name[da]=Mappen findes ikke
 Name[de]=Der Ordner existiert nicht
