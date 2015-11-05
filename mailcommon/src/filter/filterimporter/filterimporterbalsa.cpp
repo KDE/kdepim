@@ -24,6 +24,7 @@
 
 #include <QFile>
 #include <QDir>
+#include <QRegularExpression>
 
 using namespace MailCommon;
 
@@ -51,7 +52,7 @@ QString FilterImporterBalsa::defaultFiltersSettingsPath()
 
 void FilterImporterBalsa::readConfig(KConfig *config)
 {
-    const QStringList filterList = config->groupList().filter(QRegExp(QStringLiteral("filter-\\d+")));
+    const QStringList filterList = config->groupList().filter(QRegularExpression(QStringLiteral("filter-\\d+")));
     Q_FOREACH (const QString &filter, filterList) {
         KConfigGroup grp = config->group(filter);
         parseFilter(grp);
