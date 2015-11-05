@@ -29,6 +29,8 @@
 #include <KConfigGroup>
 #include <QFile>
 
+#include <QRegularExpression>
+
 ClawsMailSettings::ClawsMailSettings(ImportWizard *parent)
     : SylpheedSettings(parent)
 {
@@ -56,7 +58,7 @@ void ClawsMailSettings::importSettings(const QString &filename, const QString &p
         }
     }
     KConfig config(filename);
-    const QStringList accountList = config.groupList().filter(QRegExp("Account: \\d+"));
+    const QStringList accountList = config.groupList().filter(QRegularExpression(QStringLiteral("Account: \\d+")));
     const QStringList::const_iterator end(accountList.constEnd());
     for (QStringList::const_iterator it = accountList.constBegin(); it != end; ++it) {
         KConfigGroup group = config.group(*it);

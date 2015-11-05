@@ -53,6 +53,7 @@
 
 #include <QRegExp>
 #include <QFileDialog>
+#include <QRegularExpression>
 
 using namespace MailCommon;
 
@@ -102,7 +103,7 @@ void FilterImporterExporter::writeFiltersToConfig(const QList<MailFilter *> &fil
 {
     // first, delete all filter groups:
     const QStringList filterGroups =
-        config->groupList().filter(QRegExp(QLatin1String("Filter #\\d+")));
+        config->groupList().filter(QRegularExpression(QStringLiteral("Filter #\\d+")));
 
     foreach (const QString &group, filterGroups) {
         config->deleteGroup(group);

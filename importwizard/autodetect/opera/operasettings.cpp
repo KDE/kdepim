@@ -28,6 +28,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
+#include <QRegularExpression>
 
 OperaSettings::OperaSettings(const QString &filename, ImportWizard *parent)
     : AbstractSettings(parent)
@@ -36,7 +37,7 @@ OperaSettings::OperaSettings(const QString &filename, ImportWizard *parent)
         KConfig config(filename);
         KConfigGroup grp = config.group(QStringLiteral("Accounts"));
         readGlobalAccount(grp);
-        const QStringList accountList = config.groupList().filter(QRegExp("Account\\d+"));
+        const QStringList accountList = config.groupList().filter(QRegularExpression(QStringLiteral("Account\\d+")));
         const QStringList::const_iterator end(accountList.constEnd());
         for (QStringList::const_iterator it = accountList.constBegin(); it != end; ++it) {
             KConfigGroup group = config.group(*it);

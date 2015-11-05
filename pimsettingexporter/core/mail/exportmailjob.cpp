@@ -42,6 +42,7 @@
 #include <QTimer>
 #include <QStandardPaths>
 #include <exportresourcearchivejob.h>
+#include <QRegularExpression>
 
 ExportMailJob::ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep),
@@ -331,7 +332,7 @@ void ExportMailJob::backupConfig()
         tmp.open();
 
         KConfig *archiveConfig = archivemailrc->copyTo(tmp.fileName());
-        const QStringList archiveList = archiveConfig->groupList().filter(QRegExp(QLatin1String("ArchiveMailCollection \\d+")));
+        const QStringList archiveList = archiveConfig->groupList().filter(QRegularExpression(QLatin1String("ArchiveMailCollection \\d+")));
         const QString archiveGroupPattern = QStringLiteral("ArchiveMailCollection ");
 
         Q_FOREACH (const QString &str, archiveList) {
@@ -460,7 +461,7 @@ void ExportMailJob::backupConfig()
         if (kmailConfig->hasGroup(storageModelSelectedMessageStr)) {
             KConfigGroup storageGroup = kmailConfig->group(storageModelSelectedMessageStr);
             const QString storageModelSelectedPattern(QStringLiteral("MessageUniqueIdForStorageModel"));
-            const QStringList storageList = storageGroup.keyList().filter(QRegExp(QLatin1String("MessageUniqueIdForStorageModel\\d+")));
+            const QStringList storageList = storageGroup.keyList().filter(QRegularExpression(QLatin1String("MessageUniqueIdForStorageModel\\d+")));
             Q_FOREACH (const QString &str, storageList) {
                 bool found = false;
                 const int collectionId = str.rightRef(str.length() - storageModelSelectedPattern.length()).toInt(&found);

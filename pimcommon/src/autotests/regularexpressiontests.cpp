@@ -152,4 +152,79 @@ void RegularExpressionTests::shouldVerifyQStringListFilterTwoConversion()
     QCOMPARE(newList, expected);
 }
 
+//QRegExp("Account: \\d+") see clawsmailsettings
+void RegularExpressionTests::shouldVerifyQStringListFilterDoublePointConversion_data()
+{
+    QTest::addColumn<QStringList>("input");
+    QTest::addColumn<QStringList>("expected");
+    QTest::addColumn<QString>("regexp");
+    const QString regExpStr = QStringLiteral("Account: \\d+");
+    QTest::newRow("empty") <<  QStringList() << QStringList() << regExpStr;
+    QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << regExpStr;
+    QTest::newRow("catch") << (QStringList() << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QStringLiteral("Account: 8") )
+                           << (QStringList() << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QStringLiteral("Account: 8") ) << regExpStr;
+    QTest::newRow("catch with empty") << (QStringList() << QString() << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QString() << QStringLiteral("Account: 8") )
+                                      << (QStringList() << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QStringLiteral("Account: 8") ) << regExpStr;
+
+
+    QTest::newRow("catch with not invalid string") << (QStringList() << QStringLiteral("mailbox12") << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QString() << QStringLiteral("Account: 8") )
+                                      << (QStringList() << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QStringLiteral("Account: 8") ) << regExpStr;
+
+    QTest::newRow("lower") << (QStringList() << QStringLiteral("account: 12") << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QString() << QStringLiteral("Account: 8") )
+                               << (QStringList() << QStringLiteral("Account: 12") << QStringLiteral("Account: 5") << QStringLiteral("Account: 8") ) << regExpStr;
+
+    QTest::newRow("invalid") << (QStringList() << QStringLiteral("Account: AA") << QStringLiteral("Account: 5") << QString() << QStringLiteral("Account: 8") )
+                               << (QStringList() << QStringLiteral("Account: 5") << QStringLiteral("Account: 8") ) << regExpStr;
+}
+
+void RegularExpressionTests::shouldVerifyQStringListFilterDoublePointConversion()
+{
+    QFETCH(QStringList, input);
+    QFETCH(QStringList, expected);
+    QFETCH(QString, regexp);
+
+    QStringList newList = input.filter(QRegExp(regexp));
+    QCOMPARE(newList, expected);
+    newList = input.filter(QRegularExpression(regexp));
+    QCOMPARE(newList, expected);
+}
+
+//QRegExp("Filter #\\d+") see filterimporterexporter.cpp
+void RegularExpressionTests::shouldVerifyQStringListFilterWithSharpConversion_data()
+{
+    QTest::addColumn<QStringList>("input");
+    QTest::addColumn<QStringList>("expected");
+    QTest::addColumn<QString>("regexp");
+    const QString regExpStr = QStringLiteral("Filter #\\d+");
+    QTest::newRow("empty") <<  QStringList() << QStringList() << regExpStr;
+    QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << regExpStr;
+    QTest::newRow("catch") << (QStringList() << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") )
+                           << (QStringList() << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
+    QTest::newRow("catch with empty") << (QStringList() << QString() << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QString() << QStringLiteral("Filter #8") )
+                                      << (QStringList() << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
+
+
+    QTest::newRow("catch with not invalid string") << (QStringList() << QStringLiteral("mailbox12") << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QString() << QStringLiteral("Filter #8") )
+                                      << (QStringList() << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
+
+    QTest::newRow("lower") << (QStringList() << QStringLiteral("filter #12") << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QString() << QStringLiteral("Filter #8") )
+                               << (QStringList() << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
+
+    QTest::newRow("invalid") << (QStringList() << QStringLiteral("Filter #AA") << QStringLiteral("Filter #5") << QString() << QStringLiteral("Filter #8") )
+                               << (QStringList() << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
+}
+
+void RegularExpressionTests::shouldVerifyQStringListFilterWithSharpConversion()
+{
+    QFETCH(QStringList, input);
+    QFETCH(QStringList, expected);
+    QFETCH(QString, regexp);
+
+    QStringList newList = input.filter(QRegExp(regexp));
+    QCOMPARE(newList, expected);
+    newList = input.filter(QRegularExpression(regexp));
+    QCOMPARE(newList, expected);
+}
+
+
 QTEST_MAIN(RegularExpressionTests)

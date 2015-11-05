@@ -27,9 +27,9 @@
 #include <KConfigGroup>
 #include "importwizard_debug.h"
 
-#include <QRegExp>
 #include <QStringList>
 #include <QFile>
+#include <QRegularExpression>
 
 SylpheedSettings::SylpheedSettings(ImportWizard *parent)
     : AbstractSettings(parent)
@@ -58,7 +58,7 @@ void SylpheedSettings::importSettings(const QString &filename, const QString &pa
         }
     }
     KConfig config(filename);
-    const QStringList accountList = config.groupList().filter(QRegExp(QLatin1String("Account: \\d+")));
+    const QStringList accountList = config.groupList().filter(QRegularExpression(QStringLiteral("Account: \\d+")));
     const QStringList::const_iterator end(accountList.constEnd());
     for (QStringList::const_iterator it = accountList.constBegin(); it != end; ++it) {
         KConfigGroup group = config.group(*it);
