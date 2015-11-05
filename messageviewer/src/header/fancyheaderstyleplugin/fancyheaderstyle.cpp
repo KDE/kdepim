@@ -36,7 +36,6 @@
 #include <QBitmap>
 #include <QImage>
 #include <QApplication>
-#include <QRegExp>
 #include <QFontMetrics>
 
 #include <kmime/kmime_message.h>
