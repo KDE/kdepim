@@ -54,9 +54,9 @@ class ItemDelegate : public QItemDelegate
 {
     Q_OBJECT
 public:
-    explicit ItemDelegate(QObject *p = 0)
+    explicit ItemDelegate(QObject *p = Q_NULLPTR)
         : QItemDelegate(p), m_rx() {}
-    explicit ItemDelegate(const QRegExp &rx, QObject *p = 0)
+    explicit ItemDelegate(const QRegExp &rx, QObject *p = Q_NULLPTR)
         : QItemDelegate(p), m_rx(rx) {}
 
     void setRegExpFilter(const QRegExp &rx)

@@ -53,6 +53,7 @@
 #include <QDir>
 #include <QMutex>
 #include <QCoreApplication>
+#include <QRegularExpression>
 
 #include <boost/shared_ptr.hpp>
 #include <QStandardPaths>
@@ -398,7 +399,7 @@ std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefini
 {
     std::vector< shared_ptr<ArchiveDefinition> > result;
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
-        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Archive Definition #")));
+        const QStringList groups = config->groupList().filter(QRegularExpression(QStringLiteral("^Archive Definition #")));
         result.reserve(groups.size());
         Q_FOREACH (const QString &group, groups)
             try {
