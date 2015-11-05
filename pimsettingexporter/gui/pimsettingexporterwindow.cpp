@@ -92,6 +92,12 @@ void PimSettingExporterWindow::initializeBackupRestoreUi()
     connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::jobFinished, this, &PimSettingExporterWindow::slotJobFinished);
     connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::backupDone, this, &PimSettingExporterWindow::slotShowBackupFinishDialogInformation);
     connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::jobFailed, this, &PimSettingExporterWindow::slotJobFailed);
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestoreUI::needSyncResource, this, &PimSettingExporterWindow::slotAddResourceToSync);
+}
+
+void PimSettingExporterWindow::slotAddResourceToSync(const QString &identifier)
+{
+    mNeedToSyncResources << identifier;
 }
 
 void PimSettingExporterWindow::slotJobFinished()
@@ -106,6 +112,7 @@ void PimSettingExporterWindow::slotJobFailed()
 
 void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
 {
+    //TODO add info to sync resources here.
     KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QStringLiteral("setProgressDialogLabelBackupInfos"));
 }
 
@@ -273,6 +280,7 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
     dialog->loadTemplate(templateFile);
     if (dialog->exec()) {
         mLogWidget->clear();
+        mNeedToSyncResources.clear();
         initializeBackupRestoreUi();
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;

@@ -50,6 +50,7 @@ Q_SIGNALS:
     void jobFinished();
     void backupDone();
     void jobFailed();
+    void needSyncResource(const QString &identifier);
 
 protected:
     virtual bool continueToRestore();

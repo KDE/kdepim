@@ -49,6 +49,7 @@ private Q_SLOTS:
     void slotJobFailed();
     void slotJobFinished();
     void slotShowCurrentArchiveInformations();
+    void slotAddResourceToSync(const QString &identifier);
 private:
     void initializeBackupRestoreUi();
     void backupData(const QString &filename, const QString &templateFile = QString());
@@ -64,6 +65,7 @@ private:
     QAction *mShowArchiveInformationsAboutCurrentArchiveAction;
     PimSettingsBackupRestoreUI *mPimSettingsBackupRestoreUI;
     QString mLastArchiveFileName;
+    QStringList mNeedToSyncResources;
 };
 
 #endif /* PIMSETTINGEXPORTERWINDOW_H */

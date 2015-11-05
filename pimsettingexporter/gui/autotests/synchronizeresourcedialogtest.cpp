@@ -51,6 +51,8 @@ void SynchronizeResourceDialogTest::shouldHaveDefaultValue()
     QLabel *label = dlg.findChild<QLabel *>(QStringLiteral("label"));
     QVERIFY(label);
     QVERIFY(label->wordWrap());
+
+    QVERIFY(dlg.resources().isEmpty());
 }
 
 QTEST_MAIN(SynchronizeResourceDialogTest)
