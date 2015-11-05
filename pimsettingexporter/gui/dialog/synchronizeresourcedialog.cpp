@@ -43,7 +43,7 @@ SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
     KListWidgetSearchLine *listWidgetSearchLine = new KListWidgetSearchLine(this, mListResourceWidget);
     listWidgetSearchLine->setObjectName(QStringLiteral("listwidgetsearchline"));
 
-    QLabel *lab = new QLabel(i18n("Some resources were added but data were not sync. Select resource that you want to sync:"));
+    QLabel *lab = new QLabel(i18n("Some resources were added but data were not sync. Select resources that you want to sync:"));
     lab->setWordWrap(true);
     lab->setObjectName(QStringLiteral("label"));
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SynchronizeResourceDialog::slotAccepted);
@@ -51,6 +51,7 @@ SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
     okButton->setDefault(true);
     setModal(true);
 
+    topLayout->addWidget(lab);
     topLayout->addWidget(listWidgetSearchLine);
     topLayout->addWidget(mListResourceWidget);
     topLayout->addWidget(buttonBox);
@@ -64,12 +65,24 @@ SynchronizeResourceDialog::~SynchronizeResourceDialog()
 
 void SynchronizeResourceDialog::setResources(const QStringList &resources)
 {
-    //TODO
+    Q_FOREACH(const QString &resource, resources) {
+        QListWidgetItem *item = new QListWidgetItem(mListResourceWidget);
+        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        item->setCheckState(Qt::Unchecked);
+        item->setText(resource);
+    }
 }
 
 QStringList SynchronizeResourceDialog::resources() const
 {
-    return QStringList();
+    QStringList lst;
+    for (int i = 0; i < mListResourceWidget->count(); ++i) {
+        QListWidgetItem *item = mListResourceWidget->item(i);
+        if (item->checkState() == Qt::Checked) {
+            lst << item->text();
+        }
+    }
+    return lst;
 }
 
 void SynchronizeResourceDialog::slotAccepted()
