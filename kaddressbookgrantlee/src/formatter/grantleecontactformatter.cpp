@@ -41,9 +41,9 @@
 #include <akonadi/contact/improtocols.h>
 
 #include <QSet>
-#include <QRegExp>
 #include <QTextDocument>
 #include <QLocale>
+#include <QRegularExpression>
 
 using namespace KAddressBookGrantlee;
 
@@ -199,7 +199,8 @@ static QVariantHash addressHash(const KContacts::Address &address, int counter)
     }
 
     if (!formattedAddress.isEmpty()) {
-        formattedAddress = formattedAddress.replace(QRegExp(QLatin1String("\n+")), QStringLiteral("<br/>"));
+        //Replace all \n by only one <br/>
+        formattedAddress = formattedAddress.replace(QRegularExpression(QStringLiteral("\n+")), QStringLiteral("<br/>"));
 
         const QString link = QStringLiteral("<a href=\"address:?index=%1\">%2</a>").
                              arg(counter);

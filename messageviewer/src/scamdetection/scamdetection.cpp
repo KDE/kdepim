@@ -22,6 +22,7 @@
 
 #include <KLocalizedString>
 
+#include <QRegularExpression>
 #include <QWebElement>
 #include <QWebFrame>
 
@@ -87,8 +88,7 @@ void ScamDetection::scanPage(QWebFrame *frame)
 bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 {
     bool foundScam = false;
-    QRegExp ip4regExp;
-    ip4regExp.setPattern(IPv4_PATTERN);
+    QRegularExpression ip4regExp(IPv4_PATTERN);
     const QWebElementCollection allAnchor = rootElement.findAll(QStringLiteral("a"));
     Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
         //1) detect if title has a url and title != href

@@ -276,6 +276,9 @@ void RegularExpressionTests::shouldReplaceString_data()
     QTest::addColumn<QString>("replacewith");
     QTest::addColumn<QString>("regexp");
     QTest::newRow("email with at") << QStringLiteral("foo (at) kde.org") << QStringLiteral("foo@kde.org") << QStringLiteral("@") << QStringLiteral("\\s*\\(at\\)\\s*");
+    QTest::newRow("endline one") << QStringLiteral("\n") << QStringLiteral("<br/>") << QStringLiteral("<br/>") << QStringLiteral("\n+");
+    QTest::newRow("endline multiple") << QStringLiteral("\n\n") << QStringLiteral("<br/>") << QStringLiteral("<br/>") << QStringLiteral("\n+");
+    QTest::newRow("endline multiple with space") << QStringLiteral("\n  \n") << QStringLiteral("<br/>  <br/>") << QStringLiteral("<br/>") << QStringLiteral("\n+");
 }
 
 void RegularExpressionTests::shouldReplaceString()
@@ -287,6 +290,60 @@ void RegularExpressionTests::shouldReplaceString()
 
     QCOMPARE(input.replace(QRegExp(regexp), replacewith), expected);
     QCOMPARE(input.replace(QRegularExpression(regexp), replacewith), expected);
+}
+
+//QRegExp("WinPMail Identity - *") see pmailsettings
+void RegularExpressionTests::shouldVerifyQStringListFilterWithPmailSettingsConversion_data()
+{
+    QTest::addColumn<QStringList>("input");
+    QTest::addColumn<QStringList>("expected");
+    QTest::addColumn<QString>("regexp");
+    const QString regExpStr = QStringLiteral("WinPMail Identity - *");
+    QTest::newRow("empty") <<  QStringList() << QStringList() << regExpStr;
+    QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << regExpStr;
+    QTest::newRow("catch") << (QStringList() << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QStringLiteral("WinPMail Identity - 8") )
+                           << (QStringList() << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QStringLiteral("WinPMail Identity - 8") ) << regExpStr;
+    QTest::newRow("catch with empty") << (QStringList() << QString() << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QString() << QStringLiteral("WinPMail Identity - 8") )
+                                      << (QStringList() << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QStringLiteral("WinPMail Identity - 8") ) << regExpStr;
+
+
+    QTest::newRow("catch with not invalid string") << (QStringList() << QStringLiteral("mailbox12") << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QString() << QStringLiteral("WinPMail Identity - 8") )
+                                      << (QStringList() << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QStringLiteral("WinPMail Identity - 8") ) << regExpStr;
+
+    QTest::newRow("lower") << (QStringList() << QStringLiteral("winPMail Identity - 12") << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QString() << QStringLiteral("WinPMail Identity - 8") )
+                               << (QStringList() << QStringLiteral("WinPMail Identity - 12") << QStringLiteral("WinPMail Identity - 5") << QStringLiteral("WinPMail Identity - 8") ) << regExpStr;
+
+}
+
+void RegularExpressionTests::shouldContainsString_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<bool>("contains");
+    QTest::addColumn<QString>("regexp");
+    QTest::newRow("valid ipv4") << QStringLiteral("123.125.44.12") << true << QStringLiteral("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
+    QTest::newRow("not valid ipv4") << QStringLiteral("NOVALID") << false << QStringLiteral("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
+}
+
+void RegularExpressionTests::shouldContainsString()
+{
+    QFETCH(QString, input);
+    QFETCH(bool, contains);
+    QFETCH(QString, regexp);
+    QCOMPARE(contains, input.contains(QRegExp(regexp)));
+    QCOMPARE(contains, input.contains(QRegularExpression(regexp)));
+}
+
+
+void RegularExpressionTests::shouldVerifyQStringListFilterWithPmailSettingsConversion()
+{
+    QFETCH(QStringList, input);
+    QFETCH(QStringList, expected);
+    QFETCH(QString, regexp);
+
+    QStringList newList = input.filter(QRegExp(regexp));
+    QCOMPARE(newList, expected);
+    newList = input.filter(QRegularExpression(regexp));
+    QCOMPARE(newList, expected);
 }
 
 

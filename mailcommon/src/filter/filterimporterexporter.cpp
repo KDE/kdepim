@@ -51,7 +51,6 @@
 #include <QPushButton>
 #include <QFileDialog>
 
-#include <QRegExp>
 #include <QFileDialog>
 #include <QRegularExpression>
 

@@ -48,6 +48,13 @@ private Q_SLOTS:
 
     void shouldVerifyQStringListFilterWithStartCharAndEndConversion_data();
     void shouldVerifyQStringListFilterWithStartCharAndEndConversion();
+
+    void shouldVerifyQStringListFilterWithPmailSettingsConversion();
+    void shouldVerifyQStringListFilterWithPmailSettingsConversion_data();
+
+    void shouldContainsString_data();
+    void shouldContainsString();
+
 };
 
 #endif // REGULAREXPRESSIONTESTS_H

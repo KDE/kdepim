@@ -27,6 +27,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
+#include <QRegularExpression>
 
 PMailSettings::PMailSettings(const QString &filename, ImportWizard *parent)
     : AbstractSettings(parent)
@@ -34,7 +35,7 @@ PMailSettings::PMailSettings(const QString &filename, ImportWizard *parent)
     if (QFile(filename).exists()) {
         KConfig config(filename);
 
-        const QStringList accountList = config.groupList().filter(QRegExp("WinPMail Identity - *"));
+        const QStringList accountList = config.groupList().filter(QRegularExpression(QStringLiteral("WinPMail Identity - *")));
         const QStringList::const_iterator end(accountList.constEnd());
         for (QStringList::const_iterator it = accountList.constBegin(); it != end; ++it) {
             KConfigGroup group = config.group(*it);

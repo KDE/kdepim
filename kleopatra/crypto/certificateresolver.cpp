@@ -40,6 +40,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <QRegularExpression>
 
 #include <QByteArray>
 #include <QHash>
@@ -161,7 +162,7 @@ void KConfigBasedRecipientPreferences::Private::ensurePrefsParsed() const
     if (m_parsed) {
         return;
     }
-    const QStringList groups = m_config->groupList().filter(QRegExp(QLatin1String("^EncryptionPreference_\\d+$")));
+    const QStringList groups = m_config->groupList().filter(QRegularExpression(QStringLiteral("^EncryptionPreference_\\d+$")));
 
     Q_FOREACH (const QString &i, groups) {
         const KConfigGroup group(m_config, i);
