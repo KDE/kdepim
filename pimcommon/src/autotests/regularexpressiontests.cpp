@@ -19,6 +19,8 @@
 #include "regularexpressiontests.h"
 
 #include <QTest>
+#include <QRegExp>
+#include <QRegularExpression>
 
 RegularExpressionTests::RegularExpressionTests(QObject *parent)
     : QObject(parent)
@@ -29,6 +31,27 @@ RegularExpressionTests::RegularExpressionTests(QObject *parent)
 RegularExpressionTests::~RegularExpressionTests()
 {
 
+}
+
+void RegularExpressionTests::shouldVerifyQStringListFilterConversion_data()
+{
+    QTest::addColumn<QStringList>("input");
+    QTest::addColumn<QStringList>("expected");
+    QTest::addColumn<QString>("regexp");
+    QTest::newRow("empty") <<  QStringList() << QStringList() << QStringLiteral("ArchiveMailCollection \\d+");
+    QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << QStringLiteral("ArchiveMailCollection \\d+");
+}
+
+void RegularExpressionTests::shouldVerifyQStringListFilterConversion()
+{
+    QFETCH(QStringList, input);
+    QFETCH(QStringList, expected);
+    QFETCH(QString, regexp);
+
+    QStringList newList = input.filter(QRegExp(regexp));
+    QCOMPARE(newList, expected);
+    newList = input.filter(QRegularExpression(regexp));
+    QCOMPARE(newList, expected);
 }
 
 QTEST_MAIN(RegularExpressionTests)
