@@ -109,7 +109,7 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
 void FollowUpReminderInfoWidget::load()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern()));
+    const QStringList filterGroups = config->groupList().filter(QRegularExpression(followUpItemPattern()));
     const int numberOfItem = filterGroups.count();
     for (int i = 0; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
@@ -162,7 +162,7 @@ bool FollowUpReminderInfoWidget::save()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
-    const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern()));
+    const QStringList filterGroups = config->groupList().filter(QRegularExpression(followUpItemPattern()));
 
     foreach (const QString &group, filterGroups) {
         config->deleteGroup(group);

@@ -47,6 +47,7 @@
 #include <QFile>
 #include <QDateTime>
 #include <QWebFrame>
+#include <QRegularExpression>
 
 using namespace MessageViewer;
 QWeakPointer<AdBlockManager> AdBlockManager::s_adBlockManager;
@@ -109,7 +110,7 @@ void AdBlockManager::loadSettings()
     QDateTime today = QDateTime::currentDateTime();
     const int days = MessageViewer::MessageViewerSettings::self()->adBlockUpdateInterval();
 
-    const QStringList itemList = config.groupList().filter(QRegExp(QStringLiteral("FilterList \\d+")));
+    const QStringList itemList = config.groupList().filter(QRegularExpression(QStringLiteral("FilterList \\d+")));
     Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QStringLiteral("FilterEnabled"), false);

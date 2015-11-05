@@ -2840,7 +2840,7 @@ QString ObjectTreeParser::convertedHtmlContent() const
         QString convertedHtml = mPlainTextContent.toHtmlEscaped();
         convertedHtml.append(QStringLiteral("</body></html>"));
         convertedHtml.prepend(QStringLiteral("<html><head></head><body>"));
-        htmlContent = convertedHtml.replace(QRegExp(QStringLiteral("\n")), QStringLiteral("<br />"));
+        htmlContent = convertedHtml.replace(QStringLiteral("\n"), QStringLiteral("<br />"));
     }
     return htmlContent.append(QLatin1Char('\n'));
 }

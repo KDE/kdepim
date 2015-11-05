@@ -1659,7 +1659,7 @@ QString TemplateParser::plainToHtml(const QString &body) const
 {
     QString str = body;
     str = str.toHtmlEscaped();
-    str.replace(QRegExp(QStringLiteral("\n")), QStringLiteral("<br />\n"));
+    str.replace(QStringLiteral("\n"), QStringLiteral("<br />\n"));
     return str;
 }
 

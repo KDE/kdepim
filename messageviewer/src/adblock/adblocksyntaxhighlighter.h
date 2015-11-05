@@ -20,7 +20,6 @@
 
 #include <KPIMTextEdit/SyntaxHighlighterBase>
 #include <QList>
-#include <QRegExp>
 
 namespace MessageViewer
 {
