@@ -33,6 +33,7 @@ RegularExpressionTests::~RegularExpressionTests()
 
 }
 
+// verify all pattern used as <word><space><a less one digit> => QStringLiteral("ArchiveMailCollection \\d+");
 void RegularExpressionTests::shouldVerifyQStringListFilterConversion_data()
 {
     QTest::addColumn<QStringList>("input");
