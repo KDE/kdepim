@@ -33,6 +33,8 @@ private Q_SLOTS:
 
     void shouldVerifyQStringListFilterTwoConversion_data();
     void shouldVerifyQStringListFilterTwoConversion();
+    void shouldVerifyQStringListFilterSpaceConversion();
+    void shouldVerifyQStringListFilterSpaceConversion_data();
 };
 
 #endif // REGULAREXPRESSIONTESTS_H

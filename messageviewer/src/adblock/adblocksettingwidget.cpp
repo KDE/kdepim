@@ -53,6 +53,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <QPointer>
 #include <QTextStream>
 #include <QStandardPaths>
+#include <QRegularExpression>
 
 using namespace MessageViewer;
 AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
@@ -202,7 +203,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     // automatic filters
     KConfig config(QStringLiteral("messagevieweradblockrc"));
 
-    const QStringList itemList = config.groupList().filter(QRegExp(QStringLiteral("FilterList \\d+")));
+    const QStringList itemList = config.groupList().filter(QRegularExpression(QStringLiteral("FilterList \\d+")));
     Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QStringLiteral("FilterEnabled"), false);
@@ -260,7 +261,7 @@ void AdBlockSettingWidget::save()
 
     // automatic filters
     KConfig config(QStringLiteral("messagevieweradblockrc"));
-    const QStringList list = config.groupList().filter(QRegExp(QStringLiteral("FilterList \\d+")));
+    const QStringList list = config.groupList().filter(QRegularExpression(QStringLiteral("FilterList \\d+")));
     foreach (const QString &group, list) {
         config.deleteGroup(group);
     }

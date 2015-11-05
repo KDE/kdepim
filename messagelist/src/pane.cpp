@@ -34,6 +34,7 @@
 #include <QToolButton>
 #include <QMouseEvent>
 #include <QHeaderView>
+#include <QRegularExpression>
 
 #include "storagemodel.h"
 #include "core/widgets/quicksearchline.h"
@@ -1084,7 +1085,7 @@ void Pane::writeConfig(bool restoreSession)
     KConfigGroup conf(MessageList::MessageListSettings::self()->config(), "MessageListPane");
 
     // Delete list before
-    const QStringList list = MessageList::MessageListSettings::self()->config()->groupList().filter(QRegExp(QStringLiteral("MessageListTab\\d+")));
+    const QStringList list = MessageList::MessageListSettings::self()->config()->groupList().filter(QRegularExpression(QStringLiteral("MessageListTab\\d+")));
     foreach (const QString &group, list) {
         MessageList::MessageListSettings::self()->config()->deleteGroup(group);
     }

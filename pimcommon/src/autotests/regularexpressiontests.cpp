@@ -43,6 +43,8 @@ void RegularExpressionTests::shouldVerifyQStringListFilterConversion_data()
     QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << QStringLiteral("ArchiveMailCollection \\d+");
     QTest::newRow("catch") << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
                            << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << QStringLiteral("ArchiveMailCollection \\d+");
+    QTest::newRow("catch with several space") << (QStringList() << QStringLiteral("ArchiveMailCollection   12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << QStringLiteral("ArchiveMailCollection \\d+");
     QTest::newRow("catch with empty") << (QStringList() << QString() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
                            << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << QStringLiteral("ArchiveMailCollection \\d+");
 
@@ -60,6 +62,47 @@ void RegularExpressionTests::shouldVerifyQStringListFilterConversion_data()
 }
 
 void RegularExpressionTests::shouldVerifyQStringListFilterConversion()
+{
+    QFETCH(QStringList, input);
+    QFETCH(QStringList, expected);
+    QFETCH(QString, regexp);
+
+    QStringList newList = input.filter(QRegExp(regexp));
+    QCOMPARE(newList, expected);
+    newList = input.filter(QRegularExpression(regexp));
+    QCOMPARE(newList, expected);
+}
+
+// verify all pattern used as <word><space><a less one digit> => QStringLiteral("ArchiveMailCollection\\s\\d+");
+void RegularExpressionTests::shouldVerifyQStringListFilterSpaceConversion_data()
+{
+    QTest::addColumn<QStringList>("input");
+    QTest::addColumn<QStringList>("expected");
+    QTest::addColumn<QString>("regexp");
+    const QString regExpStr = QStringLiteral("ArchiveMailCollection\\s\\d+");
+    QTest::newRow("empty") <<  QStringList() << QStringList() << regExpStr;
+    QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << QStringLiteral("ArchiveMailCollection \\d+");
+    QTest::newRow("catch") << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << regExpStr;
+    QTest::newRow("catch with several space") << (QStringList() << QStringLiteral("ArchiveMailCollection   12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << QStringLiteral("ArchiveMailCollection \\d+");
+    QTest::newRow("catch with empty") << (QStringList() << QString() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << regExpStr;
+
+    QTest::newRow("catch with not invalid string") << (QStringList() << QStringLiteral("rchiveMailCollection 54") << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << regExpStr;
+
+    QTest::newRow("lowercase") << (QStringList() << QStringLiteral("archiveMailCollection 54") << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << regExpStr;
+
+    QTest::newRow("invalid") << (QStringList() << QStringLiteral("ArchiveMailCollection VV") << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << regExpStr;
+
+    QTest::newRow("missing space") << (QStringList() << QStringLiteral("ArchiveMailCollection55") << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78") )
+                           << (QStringList() << QStringLiteral("ArchiveMailCollection 12") << QStringLiteral("ArchiveMailCollection 58") << QStringLiteral("ArchiveMailCollection 78")) << regExpStr;
+}
+
+void RegularExpressionTests::shouldVerifyQStringListFilterSpaceConversion()
 {
     QFETCH(QStringList, input);
     QFETCH(QStringList, expected);

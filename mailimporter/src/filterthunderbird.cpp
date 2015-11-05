@@ -24,6 +24,7 @@
 #include <KConfig>
 #include <QFile>
 #include <QPointer>
+#include <QRegularExpression>
 
 using namespace MailImporter;
 
@@ -77,7 +78,7 @@ QMap<QString, QString> FilterThunderbird::listProfile(QString &currentProfile, c
     if (profiles.exists()) {
         //ini file.
         KConfig config(thunderbirdPath);
-        const QStringList profileList = config.groupList().filter(QRegExp(QStringLiteral("Profile\\d+")));
+        const QStringList profileList = config.groupList().filter(QRegularExpression(QStringLiteral("Profile\\d+")));
         const bool uniqProfile = (profileList.count() == 1);
         if (uniqProfile) {
             KConfigGroup group = config.group(profileList.at(0));
