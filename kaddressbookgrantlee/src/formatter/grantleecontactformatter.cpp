@@ -199,7 +199,7 @@ static QVariantHash addressHash(const KContacts::Address &address, int counter)
     }
 
     if (!formattedAddress.isEmpty()) {
-        formattedAddress = formattedAddress.replace(QRegExp(QStringLiteral("\n+")), QStringLiteral("<br/>"));
+        formattedAddress = formattedAddress.replace(QRegExp(QLatin1String("\n+")), QStringLiteral("<br/>"));
 
         const QString link = QStringLiteral("<a href=\"address:?index=%1\">%2</a>").
                              arg(counter);

@@ -133,7 +133,7 @@ bool GrantleeThemeTest::compareHtml(const QString &themePath, const QString &nam
         }
         QString content = QString::fromUtf8(f.readAll());
         f.close();
-        content.replace(QRegExp(QStringLiteral("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
+        content.replace(QRegExp(QLatin1String("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
         if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             return false;
         }

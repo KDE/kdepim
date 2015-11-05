@@ -38,7 +38,7 @@ QValidator::State EmailValidator::validate(QString &str, int &pos) const
 
     // we'll say any string that doesn't have whitespace
     // is an intermediate email string
-    if (QRegExp(QStringLiteral("\\s")).indexIn(str) > -1) {
+    if (QRegExp(QLatin1String("\\s")).indexIn(str) > -1) {
         return QValidator::Invalid;
     }
 

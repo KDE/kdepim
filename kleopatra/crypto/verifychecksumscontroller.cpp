@@ -531,7 +531,7 @@ static QStringList c_lang_environment()
     QStringList env = QProcess::systemEnvironment();
     env.erase(std::remove_if(env.begin(), env.end(),
                              boost::bind(&QRegExp::exactMatch,
-                                         QRegExp(QStringLiteral("^LANG=.*"), fs_cs), _1)),
+                                         QRegExp(QLatin1String("^LANG=.*"), fs_cs), _1)),
               env.end());
     env.push_back(QStringLiteral("LANG=C"));
     return env;

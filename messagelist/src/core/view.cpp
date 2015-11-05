@@ -2500,7 +2500,7 @@ bool View::event(QEvent *e)
             if (d->mAggregation->threading() != Aggregation::NoThreading) {
                 switch (d->mAggregation->threadLeader()) {
                 case Aggregation::TopmostMessage:
-                    if (ghi->label().contains(QRegExp(QStringLiteral("[0-9]"))))
+                    if (ghi->label().contains(QRegExp(QLatin1String("[0-9]"))))
                         description = i18nc(
                                           "@info:tooltip Formats to something like 'Threads started on 2008-12-21'",
                                           "Threads started on %1",
@@ -2521,7 +2521,7 @@ bool View::event(QEvent *e)
                     break;
                 }
             } else {
-                if (ghi->label().contains(QRegExp(QStringLiteral("[0-9]")))) {
+                if (ghi->label().contains(QRegExp(QLatin1String("[0-9]")))) {
                     if (storageModel()->containsOutboundMessages())
                         description = i18nc(
                                           "@info:tooltip Formats to something like 'Messages sent on 2008-12-21'",

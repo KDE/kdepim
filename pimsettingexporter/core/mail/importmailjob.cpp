@@ -180,7 +180,7 @@ void ImportMailJob::restoreTransports()
                 defaultTransport = group.readEntry(QStringLiteral("default-transport"), -1);
             }
 
-            const QStringList transportList = transportConfig->groupList().filter(QRegExp(QStringLiteral("Transport \\d+")));
+            const QStringList transportList = transportConfig->groupList().filter(QRegExp(QLatin1String("Transport \\d+")));
             Q_FOREACH (const QString &transport, transportList) {
                 KConfigGroup group = transportConfig->group(transport);
                 const int transportId = group.readEntry(QStringLiteral("id"), -1);
@@ -605,7 +605,7 @@ void ImportMailJob::restoreConfig()
             fileFilter->copyTo(mTempDirName);
             const QString filterFileName(mTempDirName + QLatin1Char('/') + QLatin1String("filters"));
             KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(filterFileName);
-            const QStringList filterList = filtersConfig->groupList().filter(QRegExp(QStringLiteral("Filter #\\d+")));
+            const QStringList filterList = filtersConfig->groupList().filter(QRegExp(QLatin1String("Filter #\\d+")));
             Q_FOREACH (const QString &filterStr, filterList) {
                 KConfigGroup group = filtersConfig->group(filterStr);
                 const QString accountStr(QStringLiteral("accounts-set"));
@@ -889,7 +889,7 @@ void ImportMailJob::restoreIdentity()
             KConfigGroup general = identityConfig->group(QStringLiteral("General"));
             const int defaultIdentity = general.readEntry(QStringLiteral("Default Identity"), -1);
 
-            const QStringList identityList = identityConfig->groupList().filter(QRegExp(QStringLiteral("Identity #\\d+")));
+            const QStringList identityList = identityConfig->groupList().filter(QRegExp(QLatin1String("Identity #\\d+")));
             Q_FOREACH (const QString &identityStr, identityList) {
                 KConfigGroup group = identityConfig->group(identityStr);
                 int oldUid = -1;
@@ -1045,7 +1045,7 @@ void ImportMailJob::importFolderArchiveConfig(const KArchiveFile *archiveconfigu
     copyToFile(archiveconfiguration, archiveconfigurationrc, filename, prefix);
     KSharedConfig::Ptr archiveConfig = KSharedConfig::openConfig(archiveconfigurationrc);
 
-    const QStringList archiveList = archiveConfig->groupList().filter(QRegExp(QStringLiteral("FolderArchiveAccount ")));
+    const QStringList archiveList = archiveConfig->groupList().filter(QRegExp(QLatin1String("FolderArchiveAccount ")));
 
     Q_FOREACH (const QString &str, archiveList) {
         KConfigGroup oldGroup = archiveConfig->group(str);

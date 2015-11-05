@@ -85,7 +85,7 @@ public:
 inline QIcon loadIcon(const QString &s)
 {
     QString ss = s;
-    return QIcon::fromTheme(ss.replace(QRegExp(QStringLiteral("[^a-zA-Z0-9_]")), QStringLiteral("-")));
+    return QIcon::fromTheme(ss.replace(QRegExp(QLatin1String("[^a-zA-Z0-9_]")), QStringLiteral("-")));
 }
 
 static unsigned int num_components_with_options(const Kleo::CryptoConfig *config)
@@ -893,7 +893,7 @@ Kleo::CryptoConfigEntryKeyserver::CryptoConfigEntryKeyserver(
 
 Kleo::ParsedKeyserver Kleo::parseKeyserver(const QString &str)
 {
-    const QStringList list = str.split(QRegExp(QStringLiteral("[\\s,]")), QString::SkipEmptyParts);
+    const QStringList list = str.split(QRegExp(QLatin1String("[\\s,]")), QString::SkipEmptyParts);
     if (list.empty()) {
         return Kleo::ParsedKeyserver();
     }

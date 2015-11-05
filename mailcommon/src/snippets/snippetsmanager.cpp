@@ -412,7 +412,7 @@ QString SnippetsManager::Private::replaceVariables(const QString &text)
 
     do {
         //find the next variable by this QRegExp
-        iFound = text.indexOf(QRegExp(QStringLiteral("\\$[A-Za-z-_0-9\\s]*\\$")), iEnd + 1);
+        iFound = text.indexOf(QRegExp(QLatin1String("\\$[A-Za-z-_0-9\\s]*\\$")), iEnd + 1);
         if (iFound >= 0) {
             iEnd = text.indexOf(QLatin1Char('$'), iFound + 1) + 1;
 

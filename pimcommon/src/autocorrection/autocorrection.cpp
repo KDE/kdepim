@@ -927,7 +927,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
 {
     KLocale *locale = KLocale::global();
     QString kdelang = locale->languageList().at(0);
-    kdelang.remove(QRegExp(QStringLiteral("@.*")));
+    kdelang.remove(QRegExp(QLatin1String("@.*")));
 
     mUpperCaseExceptions.clear();
     mAutocorrectEntries.clear();
@@ -944,7 +944,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
                 LocalFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
             }
             if (LocalFile.isEmpty() && kdelang.contains(QStringLiteral("_"))) {
-                kdelang.remove(QRegExp(QStringLiteral("_.*")));
+                kdelang.remove(QRegExp(QLatin1String("_.*")));
                 LocalFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
             }
         }
@@ -962,7 +962,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
             fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
         if (fname.isEmpty() && kdelang.contains(QStringLiteral("_"))) {
-            kdelang.remove(QRegExp(QStringLiteral("_.*")));
+            kdelang.remove(QRegExp(QLatin1String("_.*")));
             fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
     }

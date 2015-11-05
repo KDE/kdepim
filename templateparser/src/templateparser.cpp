@@ -730,7 +730,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
             } else if (cmd.startsWith(QStringLiteral("HEADER( "))) {
                 // insert specified content of header from current message
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: HEADER(";
-                QRegExp re = QRegExp(QStringLiteral("^HEADER\\((.+)\\)"));
+                QRegExp re = QRegExp(QLatin1String("^HEADER\\((.+)\\)"));
                 re.setMinimal(true);
                 int res = re.indexIn(cmd);
                 if (res != 0) {
@@ -1192,7 +1192,7 @@ QString TemplateParser::getHtmlSignature() const
 
     if (!signature.isInlinedHtml()) {
         signature = signature.rawText().toHtmlEscaped();
-        return signature.rawText().replace(QRegExp(QStringLiteral("\n")), QStringLiteral("<br />"));
+        return signature.rawText().replace(QRegExp(QLatin1String("\n")), QStringLiteral("<br />"));
     }
     return signature.rawText();
 }
@@ -1592,7 +1592,7 @@ QString TemplateParser::quotedPlainText(const QString &selection) const
 {
     QString content = selection;
     // Remove blank lines at the beginning:
-    const int firstNonWS = content.indexOf(QRegExp(QStringLiteral("\\S")));
+    const int firstNonWS = content.indexOf(QRegExp(QLatin1String("\\S")));
     const int lineStart = content.lastIndexOf(QLatin1Char('\n'), firstNonWS);
     if (lineStart >= 0) {
         content.remove(0, static_cast<unsigned int>(lineStart));

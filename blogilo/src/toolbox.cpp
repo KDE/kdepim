@@ -368,7 +368,7 @@ void Toolbox::setSelectedCategories(const QStringList &list)
 
 QStringList Toolbox::currentTags()
 {
-    QStringList t = txtCatTags->text().split(QRegExp(QStringLiteral(",|،")), QString::SkipEmptyParts);
+    QStringList t = txtCatTags->text().split(QRegExp(QLatin1String(",|،")), QString::SkipEmptyParts);
     for (int i = 0; i < t.count(); ++i) {
         t[i] = t[i].trimmed();
     }

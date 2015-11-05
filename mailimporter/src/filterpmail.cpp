@@ -230,8 +230,8 @@ void FilterPMail::importUnixMailFolder(const QString &file)
     int n = 0, l = 0;
 
     /** Get the folder name */
-    s.replace(QRegExp(QStringLiteral("mbx$")), QStringLiteral("pmg"));
-    s.replace(QRegExp(QStringLiteral("MBX$")), QStringLiteral("PMG"));
+    s.replace(QRegExp(QLatin1String("mbx$")), QStringLiteral("pmg"));
+    s.replace(QRegExp(QLatin1String("MBX$")), QStringLiteral("PMG"));
     f.setFileName(s);
     if (! f.open(QIODevice::ReadOnly)) {
         filterInfo()->alert(i18n("Unable to open %1, skipping", s));

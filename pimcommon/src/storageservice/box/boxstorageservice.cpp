@@ -612,7 +612,7 @@ QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
 
 QRegExp BoxStorageService::disallowedSymbols() const
 {
-    return QRegExp(QStringLiteral("[/:?*\\|]"));
+    return QRegExp(QLatin1String("[/:?*\\|]"));
 }
 
 QString BoxStorageService::disallowedSymbolsStr() const

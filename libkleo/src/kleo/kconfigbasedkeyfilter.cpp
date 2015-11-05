@@ -260,7 +260,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter(const KConfigGroup &config)
         { "appearance", Appearance },
         { "filtering", Filtering },
     };
-    const QStringList contexts = config.readEntry("match-contexts", "any").toLower().split(QRegExp(QStringLiteral("[^a-zA-Z0-9_-!]+")), QString::SkipEmptyParts);
+    const QStringList contexts = config.readEntry("match-contexts", "any").toLower().split(QRegExp(QLatin1String("[^a-zA-Z0-9_-!]+")), QString::SkipEmptyParts);
     mMatchContexts = NoMatchContext;
     Q_FOREACH (const QString &ctx, contexts) {
         bool found = false;

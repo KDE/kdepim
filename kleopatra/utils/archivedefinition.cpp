@@ -163,7 +163,7 @@ static void parse_command(QString cmdline, const QString &id, const QString &whi
     .replace(INSTALLPATH_PLACEHOLDER, QStringLiteral("__path_goes_here__"));
     l = KShell::splitArgs(cmdline, KShell::AbortOnMeta | KShell::TildeExpand, &errors);
     l = l.replaceInStrings(QStringLiteral("__files_go_here__"), FILE_PLACEHOLDER);
-    if (l.indexOf(QRegExp(QStringLiteral(".*__path_goes_here__.*"))) >= 0) {
+    if (l.indexOf(QRegExp(QLatin1String(".*__path_goes_here__.*"))) >= 0) {
         l = l.replaceInStrings(QStringLiteral("__path_goes_here__"), ArchiveDefinition::installPath());
     }
     if (errors == KShell::BadQuoting) {
@@ -398,7 +398,7 @@ std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefini
 {
     std::vector< shared_ptr<ArchiveDefinition> > result;
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
-        const QStringList groups = config->groupList().filter(QRegExp(QStringLiteral("^Archive Definition #")));
+        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Archive Definition #")));
         result.reserve(groups.size());
         Q_FOREACH (const QString &group, groups)
             try {

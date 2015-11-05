@@ -109,7 +109,7 @@ private Q_SLOTS:
             QVERIFY(f.open(QIODevice::ReadOnly));
             QString content = QString::fromUtf8(f.readAll());
             f.close();
-            content.replace(QRegExp(QStringLiteral("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
+            content.replace(QRegExp(QLatin1String("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
             QVERIFY(f.open(QIODevice::WriteOnly | QIODevice::Truncate));
             f.write(content.toUtf8());
             f.close();

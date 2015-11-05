@@ -127,8 +127,8 @@ QString KXFace::fromImage(const QImage &image)
             tmp[i - 1] = t;
         }
     }
-    tmp.replace(QRegExp(QStringLiteral("(\\w{12})")), QStringLiteral("\\1\n"));
-    tmp.replace(QRegExp(QStringLiteral("(\\w{4})")), QStringLiteral("0x\\1,"));
+    tmp.replace(QRegExp(QLatin1String("(\\w{12})")), QStringLiteral("\\1\n"));
+    tmp.replace(QRegExp(QLatin1String("(\\w{4})")), QStringLiteral("0x\\1,"));
     len = tmp.length();
     char *fbuf = (char *)malloc(len + 1);
     strncpy(fbuf, (const char *)tmp.toLatin1(), len);

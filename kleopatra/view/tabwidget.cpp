@@ -871,7 +871,7 @@ QTreeView *TabWidget::Private::addView(Page *page, Page *columnReference)
 
 static QStringList extractViewGroups(const KConfig *config)
 {
-    return config ? config->groupList().filter(QRegExp(QStringLiteral("^View #\\d+$"))) : QStringList();
+    return config ? config->groupList().filter(QRegExp(QLatin1String("^View #\\d+$"))) : QStringList();
 }
 
 // work around deleteGroup() not deleting groups out of groupList():

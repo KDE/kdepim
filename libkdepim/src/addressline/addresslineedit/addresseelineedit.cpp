@@ -222,11 +222,11 @@ void AddresseeLineEdit::insert(const QString &t)
     }
 
     // remove newlines in the to-be-pasted string
-    QStringList lines = newText.split(QRegExp(QStringLiteral("\r?\n")), QString::SkipEmptyParts);
+    QStringList lines = newText.split(QRegExp(QLatin1String("\r?\n")), QString::SkipEmptyParts);
     QStringList::iterator end(lines.end());
     for (QStringList::iterator it = lines.begin(); it != end; ++it) {
         // remove trailing commas and whitespace
-        (*it).remove(QRegExp(QStringLiteral(",?\\s*$")));
+        (*it).remove(QRegExp(QLatin1String(",?\\s*$")));
     }
     newText = lines.join(QStringLiteral(", "));
 
@@ -238,7 +238,7 @@ void AddresseeLineEdit::insert(const QString &t)
         newText.replace(QStringLiteral(" at "), QStringLiteral("@"));
         newText.replace(QStringLiteral(" dot "), QStringLiteral("."));
     } else if (newText.indexOf(QStringLiteral("(at)")) != -1) {
-        newText.replace(QRegExp(QStringLiteral("\\s*\\(at\\)\\s*")), QStringLiteral("@"));
+        newText.replace(QRegExp(QLatin1String("\\s*\\(at\\)\\s*")), QStringLiteral("@"));
     }
 
     QString contents = text();

@@ -91,7 +91,7 @@ QUrl DropBoxPlugin::serviceUrl() const
 
 QRegExp DropBoxPlugin::disallowedSymbols() const
 {
-    return QRegExp(QStringLiteral("[/:?*<>\"|]"));
+    return QRegExp(QLatin1String("[/:?*<>\"|]"));
 }
 
 QString DropBoxPlugin::disallowedSymbolsStr() const

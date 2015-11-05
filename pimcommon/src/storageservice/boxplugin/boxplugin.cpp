@@ -89,7 +89,7 @@ QUrl BoxPlugin::serviceUrl() const
 
 QRegExp BoxPlugin::disallowedSymbols() const
 {
-    return QRegExp(QStringLiteral("[/:?*\\|]"));
+    return QRegExp(QLatin1String("[/:?*\\|]"));
 }
 
 QString BoxPlugin::disallowedSymbolsStr() const

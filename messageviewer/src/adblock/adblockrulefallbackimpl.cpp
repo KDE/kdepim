@@ -148,34 +148,34 @@ QString AdBlockRuleFallbackImpl::convertPatternToRegExp(const QString &wildcardP
     QString pattern = wildcardPattern;
 
     // remove multiple wildcards
-    pattern.replace(QRegExp(QStringLiteral("\\*+")), QStringLiteral("*"));
+    pattern.replace(QRegExp(QLatin1String("\\*+")), QStringLiteral("*"));
 
     // remove anchors following separator placeholder
-    pattern.replace(QRegExp(QStringLiteral("\\^\\|$")), QStringLiteral("^"));
+    pattern.replace(QRegExp(QLatin1String("\\^\\|$")), QStringLiteral("^"));
 
     // remove leading wildcards
-    pattern.replace(QRegExp(QStringLiteral("^(\\*)")), QStringLiteral(""));
+    pattern.replace(QRegExp(QLatin1String("^(\\*)")), QStringLiteral(""));
 
     // remove trailing wildcards
-    pattern.replace(QRegExp(QStringLiteral("(\\*)$")), QStringLiteral(""));
+    pattern.replace(QRegExp(QLatin1String("(\\*)$")), QStringLiteral(""));
 
     // escape special symbols
-    pattern.replace(QRegExp(QStringLiteral("(\\W)")), QStringLiteral("\\\\1"));
+    pattern.replace(QRegExp(QLatin1String("(\\W)")), QStringLiteral("\\\\1"));
 
     // process extended anchor at expression start
-    pattern.replace(QRegExp(QStringLiteral("^\\\\\\|\\\\\\|")), QStringLiteral("^[\\w\\-]+:\\/+(?!\\/)(?:[^\\/]+\\.)?"));
+    pattern.replace(QRegExp(QLatin1String("^\\\\\\|\\\\\\|")), QStringLiteral("^[\\w\\-]+:\\/+(?!\\/)(?:[^\\/]+\\.)?"));
 
     // process separator placeholders
-    pattern.replace(QRegExp(QStringLiteral("\\\\\\^")), QStringLiteral("(?:[^\\w\\d\\-.%]|$)"));
+    pattern.replace(QRegExp(QLatin1String("\\\\\\^")), QStringLiteral("(?:[^\\w\\d\\-.%]|$)"));
 
     // process anchor at expression start
-    pattern.replace(QRegExp(QStringLiteral("^\\\\\\|")), QStringLiteral("^"));
+    pattern.replace(QRegExp(QLatin1String("^\\\\\\|")), QStringLiteral("^"));
 
     // process anchor at expression end
-    pattern.replace(QRegExp(QStringLiteral("\\\\\\|$")), QStringLiteral("$"));
+    pattern.replace(QRegExp(QLatin1String("\\\\\\|$")), QStringLiteral("$"));
 
     // replace wildcards by .*
-    pattern.replace(QRegExp(QStringLiteral("\\\\\\*")), QStringLiteral(".*"));
+    pattern.replace(QRegExp(QLatin1String("\\\\\\*")), QStringLiteral(".*"));
 
     // Finally, return...
     return pattern;
