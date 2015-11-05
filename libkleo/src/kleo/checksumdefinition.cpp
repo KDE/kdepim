@@ -48,6 +48,7 @@
 #include <QByteArray>
 #include <QMutex>
 #include <QCoreApplication>
+#include <QRegularExpression>
 
 #include <boost/shared_ptr.hpp>
 #include <KSharedConfig>
@@ -381,7 +382,7 @@ std::vector< shared_ptr<ChecksumDefinition> > ChecksumDefinition::getChecksumDef
 {
     std::vector< shared_ptr<ChecksumDefinition> > result;
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
-        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Checksum Definition #")));
+        const QStringList groups = config->groupList().filter(QRegularExpression(QStringLiteral("^Checksum Definition #")));
         result.reserve(groups.size());
         Q_FOREACH (const QString &group, groups)
             try {

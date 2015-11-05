@@ -58,6 +58,7 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QVBoxLayout>
+#include <QRegularExpression>
 
 #include <map>
 #include <vector>
@@ -871,7 +872,7 @@ QTreeView *TabWidget::Private::addView(Page *page, Page *columnReference)
 
 static QStringList extractViewGroups(const KConfig *config)
 {
-    return config ? config->groupList().filter(QRegExp(QLatin1String("^View #\\d+$"))) : QStringList();
+    return config ? config->groupList().filter(QRegularExpression(QStringLiteral("^View #\\d+$"))) : QStringList();
 }
 
 // work around deleteGroup() not deleting groups out of groupList():

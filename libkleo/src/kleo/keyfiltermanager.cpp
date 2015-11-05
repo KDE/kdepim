@@ -43,7 +43,7 @@
 #include <QDebug>
 
 #include <QCoreApplication>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QAbstractListModel>
 #include <QModelIndex>
@@ -232,7 +232,7 @@ void KeyFilterManager::reload()
     d->filters = defaultFilters();
 
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
-        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Key Filter #\\d+$")));
+        const QStringList groups = config->groupList().filter(QRegularExpression(QLatin1String("^Key Filter #\\d+$")));
         for (QStringList::const_iterator it = groups.begin(); it != groups.end(); ++it) {
             const KConfigGroup cfg(config, *it);
             d->filters.push_back(shared_ptr<KeyFilter>(new KConfigBasedKeyFilter(cfg)));

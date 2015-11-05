@@ -189,6 +189,47 @@ void RegularExpressionTests::shouldVerifyQStringListFilterDoublePointConversion(
     QCOMPARE(newList, expected);
 }
 
+
+//QRegExp("^ServerSieve (.+)$") see sieveeditorutils
+void RegularExpressionTests::shouldVerifyQStringListFilterWithStartCharAndEndConversion_data()
+{
+    QTest::addColumn<QStringList>("input");
+    QTest::addColumn<QStringList>("expected");
+    QTest::addColumn<QString>("regexp");
+    const QString regExpStr = QStringLiteral("^ServerSieve (.+)$");
+    QTest::newRow("empty") <<  QStringList() << QStringList() << regExpStr;
+    QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << regExpStr;
+    QTest::newRow("catch") << (QStringList() << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QStringLiteral("ServerSieve 8") )
+                           << (QStringList() << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QStringLiteral("ServerSieve 8") ) << regExpStr;
+    QTest::newRow("catch with empty") << (QStringList() << QString() << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QString() << QStringLiteral("ServerSieve 8") )
+                                      << (QStringList() << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QStringLiteral("ServerSieve 8") ) << regExpStr;
+
+
+    QTest::newRow("catch with not invalid string") << (QStringList() << QStringLiteral("mailbox12") << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QString() << QStringLiteral("ServerSieve 8") )
+                                      << (QStringList() << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QStringLiteral("ServerSieve 8") ) << regExpStr;
+
+    QTest::newRow("lower") << (QStringList() << QStringLiteral("serverSieve 12") << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QString() << QStringLiteral("ServerSieve 8") )
+                               << (QStringList() << QStringLiteral("ServerSieve 12") << QStringLiteral("ServerSieve 5") << QStringLiteral("ServerSieve 8") ) << regExpStr;
+
+    QTest::newRow("invalid") << (QStringList() << QStringLiteral("erverSieve AA") << QStringLiteral("ServerSieve 5") << QString() << QStringLiteral("ServerSieve 8") )
+                               << (QStringList() << QStringLiteral("ServerSieve 5") << QStringLiteral("ServerSieve 8") ) << regExpStr;
+    QTest::newRow("text before start") << (QStringList() << QStringLiteral("  ServerSieve AA") << QStringLiteral("ServerSieve 5") << QString() << QStringLiteral("ServerSieve 8") )
+                               << (QStringList() << QStringLiteral("ServerSieve 5") << QStringLiteral("ServerSieve 8") ) << regExpStr;
+}
+
+void RegularExpressionTests::shouldVerifyQStringListFilterWithStartCharAndEndConversion()
+{
+    QFETCH(QStringList, input);
+    QFETCH(QStringList, expected);
+    QFETCH(QString, regexp);
+
+    QStringList newList = input.filter(QRegExp(regexp));
+    QCOMPARE(newList, expected);
+    newList = input.filter(QRegularExpression(regexp));
+    QCOMPARE(newList, expected);
+}
+
+
 //QRegExp("Filter #\\d+") see filterimporterexporter.cpp
 void RegularExpressionTests::shouldVerifyQStringListFilterWithSharpConversion_data()
 {

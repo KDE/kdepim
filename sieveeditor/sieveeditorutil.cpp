@@ -27,7 +27,7 @@
 
 #include <KConfigGroup>
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <KSharedConfig>
 
 QUrl SieveEditorUtil::SieveServerConfig::url() const
@@ -72,7 +72,7 @@ QVector<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConf
 {
     QVector<SieveServerConfig> lstConfig;
     KSharedConfigPtr cfg = KSharedConfig::openConfig();
-    QRegExp re(QStringLiteral("^ServerSieve (.+)$"));
+    QRegularExpression re(QStringLiteral("^ServerSieve (.+)$"));
     const QStringList groups = cfg->groupList().filter(re);
     KWallet::Wallet *wallet = SieveServerSettings::self()->wallet();
     if (wallet && !wallet->setFolder(QStringLiteral("sieveeditor"))) {
@@ -100,7 +100,7 @@ QVector<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConf
 void SieveEditorUtil::writeServerSieveConfig(const QVector<SieveServerConfig> &lstConfig)
 {
     KSharedConfigPtr cfg = KSharedConfig::openConfig();
-    const QRegExp re(QStringLiteral("^ServerSieve (.+)$"));
+    const QRegularExpression re(QStringLiteral("^ServerSieve (.+)$"));
     //Delete Old Group
     const QStringList groups = cfg->groupList().filter(re);
     Q_FOREACH (const QString &conf, groups) {
@@ -149,7 +149,7 @@ void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerCon
         wallet->setFolder(QStringLiteral("sieveeditor"));
     }
     KSharedConfigPtr cfg = KSharedConfig::openConfig();
-    const QRegExp re(QStringLiteral("^ServerSieve (.+)$"));
+    const QRegularExpression re(QStringLiteral("^ServerSieve (.+)$"));
     const QStringList groups = cfg->groupList().filter(re);
 
     writeSieveSettings(wallet, cfg, conf, groups.count());

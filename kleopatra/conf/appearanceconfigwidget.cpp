@@ -57,10 +57,11 @@
 #include <QColor>
 #include <QFont>
 #include <QString>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QApplication>
 #include <QColorDialog>
 #include <QFontDialog>
+#include <QRegularExpression>
 
 #include <boost/range.hpp>
 #include <boost/bind.hpp>
@@ -473,7 +474,7 @@ void AppearanceConfigWidget::load()
     if (!config) {
         return;
     }
-    const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Key Filter #\\d+$")));
+    const QStringList groups = config->groupList().filter(QRegularExpression(QStringLiteral("^Key Filter #\\d+$")));
     Q_FOREACH (const QString &group, groups) {
         //QListWidgetItem * item = new QListWidgetItem( d->categoriesLV );
         apply_config(KConfigGroup(config, group), new QListWidgetItem(d->categoriesLV));
@@ -502,7 +503,7 @@ void AppearanceConfigWidget::save()
     }
     // We know (assume) that the groups in the config object haven't changed,
     // so we just iterate over them and over the listviewitems, and map one-to-one.
-    const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Key Filter #\\d+$")));
+    const QStringList groups = config->groupList().filter(QRegularExpression(QStringLiteral("^Key Filter #\\d+$")));
 #if 0
     if (groups.isEmpty()) {
         // If we created the default categories ourselves just now, then we need to make up their list
