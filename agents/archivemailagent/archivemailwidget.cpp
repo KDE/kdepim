@@ -145,7 +145,7 @@ void ArchiveMailWidget::needReloadConfig()
 void ArchiveMailWidget::load()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    const QStringList collectionList = config->groupList().filter(QRegExp(archiveMailCollectionPattern()));
+    const QStringList collectionList = config->groupList().filter(QRegularExpression(archiveMailCollectionPattern()));
     const int numberOfCollection = collectionList.count();
     for (int i = 0; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
@@ -199,7 +199,7 @@ void ArchiveMailWidget::save()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
-    const QStringList filterGroups = config->groupList().filter(QRegExp(archiveMailCollectionPattern()));
+    const QStringList filterGroups = config->groupList().filter(QRegularExpression(archiveMailCollectionPattern()));
 
     foreach (const QString &group, filterGroups) {
         config->deleteGroup(group);

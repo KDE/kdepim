@@ -31,6 +31,7 @@
 #include <knotification.h>
 #include <KLocalizedString>
 #include <KIconLoader>
+#include <QRegularExpression>
 using namespace FollowUpReminder;
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
@@ -51,7 +52,7 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
     if (forceReloadConfig) {
         mConfig->reparseConfiguration();
     }
-    const QStringList itemList = mConfig->groupList().filter(QRegExp(QStringLiteral("FollowupReminderItem \\d+")));
+    const QStringList itemList = mConfig->groupList().filter(QRegularExpression(QStringLiteral("FollowupReminderItem \\d+")));
     const int numberOfItems = itemList.count();
     QList<FollowUpReminder::FollowUpReminderInfo *> noAnswerList;
     for (int i = 0; i < numberOfItems; ++i) {

@@ -19,7 +19,7 @@
 #define FOLLOWUPREMINDERCONFIGTEST_H
 
 #include <QObject>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <KSharedConfig>
 
 class FollowUpReminderConfigTest : public QObject
@@ -43,7 +43,7 @@ private Q_SLOTS:
 
 private:
     KSharedConfig::Ptr mConfig;
-    QRegExp mFollowupRegExpFilter;
+    QRegularExpression mFollowupRegExpFilter;
 };
 
 #endif // FOLLOWUPREMINDERCONFIGTEST_H

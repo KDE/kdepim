@@ -20,6 +20,7 @@
 #include "FollowupReminder/FollowUpReminderInfo"
 #include <qtest.h>
 #include <KSharedConfig>
+#include <QRegularExpression>
 
 FollowUpReminderConfigTest::FollowUpReminderConfigTest(QObject *parent)
     : QObject(parent)
@@ -35,7 +36,7 @@ FollowUpReminderConfigTest::~FollowUpReminderConfigTest()
 void FollowUpReminderConfigTest::init()
 {
     mConfig = KSharedConfig::openConfig(QStringLiteral("test-followupreminder.rc"), KConfig::SimpleConfig);
-    mFollowupRegExpFilter = QRegExp(QStringLiteral("FollowupReminderItem \\d+"));
+    mFollowupRegExpFilter = QRegularExpression(QStringLiteral("FollowupReminderItem \\d+"));
     cleanup();
 }
 

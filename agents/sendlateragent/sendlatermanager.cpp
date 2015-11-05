@@ -29,6 +29,7 @@
 #include <KLocalizedString>
 #include "sendlateragent_debug.h"
 
+#include <QRegularExpression>
 #include <QStringList>
 #include <QTimer>
 
@@ -64,7 +65,7 @@ void SendLaterManager::load(bool forcereload)
         mConfig->reparseConfiguration();
     }
 
-    const QStringList itemList = mConfig->groupList().filter(QRegExp(QStringLiteral("SendLaterItem \\d+")));
+    const QStringList itemList = mConfig->groupList().filter(QRegularExpression(QStringLiteral("SendLaterItem \\d+")));
     const int numberOfItems = itemList.count();
     for (int i = 0; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));

@@ -31,6 +31,7 @@
 #include <QDate>
 #include <QFile>
 #include <QDir>
+#include <QRegularExpression>
 
 ArchiveMailManager::ArchiveMailManager(QObject *parent)
     : QObject(parent)
@@ -62,7 +63,7 @@ void ArchiveMailManager::load()
     qDeleteAll(mListArchiveInfo);
     mListArchiveInfo.clear();
 
-    const QStringList collectionList = mConfig->groupList().filter(QRegExp(QStringLiteral("ArchiveMailCollection \\d+")));
+    const QStringList collectionList = mConfig->groupList().filter(QRegularExpression(QStringLiteral("ArchiveMailCollection \\d+")));
     const int numberOfCollection = collectionList.count();
     for (int i = 0; i < numberOfCollection; ++i) {
         KConfigGroup group = mConfig->group(collectionList.at(i));
@@ -187,7 +188,7 @@ QString ArchiveMailManager::infoToStr(ArchiveMailInfo *info) const
 QString ArchiveMailManager::printArchiveListInfo()
 {
     QString infoStr;
-    const QStringList collectionList = mConfig->groupList().filter(QRegExp(QStringLiteral("ArchiveMailCollection \\d+")));
+    const QStringList collectionList = mConfig->groupList().filter(QRegularExpression(QStringLiteral("ArchiveMailCollection \\d+")));
     const int numberOfCollection = collectionList.count();
     for (int i = 0; i < numberOfCollection; ++i) {
         KConfigGroup group = mConfig->group(collectionList.at(i));

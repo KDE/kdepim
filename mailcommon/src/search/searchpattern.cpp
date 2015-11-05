@@ -38,7 +38,6 @@ using MailCommon::FilterLog;
 #include <KLocalizedString>
 
 #include <QDataStream>
-#include <QRegExp>
 
 #include <algorithm>
 #include <boost/bind.hpp>

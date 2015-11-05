@@ -26,7 +26,6 @@
 #include <KConfigGroup>
 
 #include <QDataStream>
-#include <QRegExp>
 
 #include <algorithm>
 #include <boost/bind.hpp>

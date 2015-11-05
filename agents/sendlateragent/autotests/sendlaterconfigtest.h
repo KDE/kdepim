@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include <KSharedConfig>
-#include <QRegExp>
+#include <QRegularExpression>
 
 class SendLaterConfigTest : public QObject
 {
@@ -38,7 +38,7 @@ private Q_SLOTS:
     void shouldNotAddInvalidItem();
 private:
     KSharedConfig::Ptr mConfig;
-    QRegExp mSendlaterRegExpFilter;
+    QRegularExpression mSendlaterRegExpFilter;
 };
 
 #endif // SENDLATERCONFIGTEST_H
