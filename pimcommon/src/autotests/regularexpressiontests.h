@@ -42,6 +42,9 @@ private Q_SLOTS:
 
     void shouldVerifyQStringListFilterWithSharpConversion();
     void shouldVerifyQStringListFilterWithSharpConversion_data();
+
+    void shouldReplaceString_data();
+    void shouldReplaceString();
 };
 
 #endif // REGULAREXPRESSIONTESTS_H

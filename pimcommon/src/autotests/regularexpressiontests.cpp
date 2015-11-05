@@ -211,8 +211,9 @@ void RegularExpressionTests::shouldVerifyQStringListFilterWithSharpConversion_da
                                << (QStringList() << QStringLiteral("Filter #12") << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
 
     QTest::newRow("invalid") << (QStringList() << QStringLiteral("Filter #AA") << QStringLiteral("Filter #5") << QString() << QStringLiteral("Filter #8") )
-                               << (QStringList() << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
+                             << (QStringList() << QStringLiteral("Filter #5") << QStringLiteral("Filter #8") ) << regExpStr;
 }
+
 
 void RegularExpressionTests::shouldVerifyQStringListFilterWithSharpConversion()
 {
@@ -224,6 +225,27 @@ void RegularExpressionTests::shouldVerifyQStringListFilterWithSharpConversion()
     QCOMPARE(newList, expected);
     newList = input.filter(QRegularExpression(regexp));
     QCOMPARE(newList, expected);
+}
+
+
+void RegularExpressionTests::shouldReplaceString_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("expected");
+    QTest::addColumn<QString>("replacewith");
+    QTest::addColumn<QString>("regexp");
+    QTest::newRow("email with at") << QStringLiteral("foo (at) kde.org") << QStringLiteral("foo@kde.org") << QStringLiteral("@") << QStringLiteral("\\s*\\(at\\)\\s*");
+}
+
+void RegularExpressionTests::shouldReplaceString()
+{
+    QFETCH(QString, input);
+    QFETCH(QString, expected);
+    QFETCH(QString, replacewith);
+    QFETCH(QString, regexp);
+
+    QCOMPARE(input.replace(QRegExp(regexp), replacewith), expected);
+    QCOMPARE(input.replace(QRegularExpression(regexp), replacewith), expected);
 }
 
 

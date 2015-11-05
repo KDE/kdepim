@@ -366,7 +366,7 @@ void ExportMailJob::backupConfig()
 
         KConfig *templateConfig = templaterc->copyTo(tmp.fileName());
         const QString templateGroupPattern = QStringLiteral("Templates #");
-        const QStringList templateList = templateConfig->groupList().filter(QRegExp(QLatin1String("Templates #\\d+")));
+        const QStringList templateList = templateConfig->groupList().filter(QRegularExpression(QStringLiteral("Templates #\\d+")));
         Q_FOREACH (const QString &str, templateList) {
             bool found = false;
             const int collectionId = str.rightRef(str.length() - templateGroupPattern.length()).toInt(&found);
@@ -417,7 +417,7 @@ void ExportMailJob::backupConfig()
 
         KConfig *kmailConfig = kmailrc->copyTo(tmp.fileName());
         const QString folderGroupPattern = QStringLiteral("Folder-");
-        const QStringList folderList = kmailConfig->groupList().filter(QRegExp(QLatin1String("Folder-\\d+")));
+        const QStringList folderList = kmailConfig->groupList().filter(QRegularExpression(QStringLiteral("Folder-\\d+")));
         Q_FOREACH (const QString &str, folderList) {
             bool found = false;
             const int collectionId = str.rightRef(str.length() - folderGroupPattern.length()).toInt(&found);
@@ -517,7 +517,7 @@ void ExportMailJob::backupIdentity()
         tmp.open();
 
         KConfig *identityConfig = identity->copyTo(tmp.fileName());
-        const QStringList accountList = identityConfig->groupList().filter(QRegExp(QLatin1String("Identity #\\d+")));
+        const QStringList accountList = identityConfig->groupList().filter(QRegularExpression(QStringLiteral("Identity #\\d+")));
         Q_FOREACH (const QString &account, accountList) {
             KConfigGroup group = identityConfig->group(account);
             const QString fcc = QStringLiteral("Fcc");

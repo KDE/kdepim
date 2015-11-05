@@ -29,6 +29,7 @@
 #include "ldap/ldapclientsearch.h"
 
 #include <Job>
+#include <QRegularExpression>
 #include <QUrl>
 #include <kconfiggroup.h>
 
@@ -238,7 +239,7 @@ void AddresseeLineEdit::insert(const QString &t)
         newText.replace(QStringLiteral(" at "), QStringLiteral("@"));
         newText.replace(QStringLiteral(" dot "), QStringLiteral("."));
     } else if (newText.indexOf(QStringLiteral("(at)")) != -1) {
-        newText.replace(QRegExp(QLatin1String("\\s*\\(at\\)\\s*")), QStringLiteral("@"));
+        newText.replace(QRegularExpression(QStringLiteral("\\s*\\(at\\)\\s*")), QStringLiteral("@"));
     }
 
     QString contents = text();
