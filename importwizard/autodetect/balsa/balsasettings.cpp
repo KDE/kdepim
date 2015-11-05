@@ -41,7 +41,7 @@ BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
         autoCheckDelay = grp.readEntry(QStringLiteral("AutoDelay"), -1);
     }
 
-    const QStringList mailBoxList = config.groupList().filter(QRegExp("mailbox-\\+d"));
+    const QStringList mailBoxList = config.groupList().filter(QRegExp("mailbox-"));
     Q_FOREACH (const QString &mailBox, mailBoxList) {
         KConfigGroup grp = config.group(mailBox);
         readAccount(grp, autoCheck, autoCheckDelay);
