@@ -71,4 +71,42 @@ void RegularExpressionTests::shouldVerifyQStringListFilterConversion()
     QCOMPARE(newList, expected);
 }
 
+
+//QRegExp("mailbox-") //balsasettings.cpp
+void RegularExpressionTests::shouldVerifyQStringListFilterTwoConversion_data()
+{
+    QTest::addColumn<QStringList>("input");
+    QTest::addColumn<QStringList>("expected");
+    QTest::addColumn<QString>("regexp");
+    const QString regExpStr = QStringLiteral("mailbox-");
+    QTest::newRow("empty") <<  QStringList() << QStringList() << regExpStr;
+    QTest::newRow("nocatcher") << (QStringList() << QStringLiteral("ArchiveMailCollection DD") << QStringLiteral("ArchiveMailCollection") << QStringLiteral("ArchiveMailCollection ") << QString() ) << QStringList() << regExpStr;
+    QTest::newRow("catch") << (QStringList() << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QStringLiteral("mailbox-8") )
+                           << (QStringList() << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QStringLiteral("mailbox-8") ) << regExpStr;
+    QTest::newRow("catch with empty") << (QStringList() << QString() << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QString() << QStringLiteral("mailbox-8") )
+                                      << (QStringList() << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QStringLiteral("mailbox-8") ) << regExpStr;
+
+
+    QTest::newRow("catch with not invalid string") << (QStringList() << QStringLiteral("mailbox12") << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QString() << QStringLiteral("mailbox-8") )
+                                      << (QStringList() << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QStringLiteral("mailbox-8") ) << regExpStr;
+
+    QTest::newRow("uppercase") << (QStringList() << QStringLiteral("Mailbox-12") << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QString() << QStringLiteral("mailbox-8") )
+                               << (QStringList() << QStringLiteral("mailbox-12") << QStringLiteral("mailbox-5") << QStringLiteral("mailbox-8") ) << regExpStr;
+
+    QTest::newRow("invalid") << (QStringList() << QStringLiteral("Mailbox-AA") << QStringLiteral("mailbox-5") << QString() << QStringLiteral("mailbox-8") )
+                               << (QStringList() << QStringLiteral("mailbox-5") << QStringLiteral("mailbox-8") ) << regExpStr;
+}
+
+void RegularExpressionTests::shouldVerifyQStringListFilterTwoConversion()
+{
+    QFETCH(QStringList, input);
+    QFETCH(QStringList, expected);
+    QFETCH(QString, regexp);
+
+    QStringList newList = input.filter(QRegExp(regexp));
+    QCOMPARE(newList, expected);
+    newList = input.filter(QRegularExpression(regexp));
+    QCOMPARE(newList, expected);
+}
+
 QTEST_MAIN(RegularExpressionTests)
