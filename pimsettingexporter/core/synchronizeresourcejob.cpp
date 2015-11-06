@@ -22,6 +22,7 @@
 #include <AkonadiCore/AgentManager>
 
 #include <QStringList>
+#include <QTimer>
 #include "pimsettingexportcore_debug.h"
 
 SynchronizeResourceJob::SynchronizeResourceJob(QObject *parent)
@@ -38,13 +39,13 @@ SynchronizeResourceJob::~SynchronizeResourceJob()
 void SynchronizeResourceJob::start()
 {
     if (!mListResources.isEmpty()) {
-        nextSync();
+        QTimer::singleShot(0, this, &SynchronizeResourceJob::slotNextSync);
     } else {
         Q_EMIT synchronizationFinished();
     }
 }
 
-void SynchronizeResourceJob::nextSync()
+void SynchronizeResourceJob::slotNextSync()
 {
     if (mIndex < mListResources.count()) {
         const Akonadi::AgentInstance resource = Akonadi::AgentManager::self()->instance(mListResources.at(mIndex));
@@ -68,7 +69,7 @@ void SynchronizeResourceJob::slotSynchronizationFinished(KJob *job)
         Q_EMIT synchronizationInstanceDone(instanceName);
     }
     ++mIndex;
-    nextSync();
+    QTimer::singleShot(0, this, &SynchronizeResourceJob::slotNextSync);
 }
 
 void SynchronizeResourceJob::setListResources(const QStringList &resources)

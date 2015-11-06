@@ -40,9 +40,9 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void slotSynchronizationFinished(KJob *);
+    void slotNextSync();
 
 private:
-    void nextSync();
     QStringList mListResources;
     int mIndex;
     bool mOnlyCollection;
