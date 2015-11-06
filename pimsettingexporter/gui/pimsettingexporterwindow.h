@@ -50,6 +50,9 @@ private Q_SLOTS:
     void slotJobFinished();
     void slotShowCurrentArchiveInformations();
     void slotAddResourceToSync(const QString &identifier);
+    void slotFullSyncFinished();
+    void slotFullSyncInstanceDone(const QString &identifier);
+    void slotFullSyncInstanceFailed(const QString &identifier);
 private:
     void initializeBackupRestoreUi();
     void backupData(const QString &filename, const QString &templateFile = QString());

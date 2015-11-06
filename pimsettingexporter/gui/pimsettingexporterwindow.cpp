@@ -20,6 +20,7 @@
 #include "importexportprogressindicatorgui.h"
 #include "widgets/logwidget.h"
 #include "pimsettingexportgui_debug.h"
+#include "fullsynchronizeresourcesjob.h"
 
 #include "pimsettingexporterkernel.h"
 #include "dialog/selectiontypedialog.h"
@@ -124,12 +125,33 @@ void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
         if (list.isEmpty()) {
             showFinishInformation();
         } else {
-            //TODO sync
+            FullSynchronizeResourcesJob *job = new FullSynchronizeResourcesJob(this);
+            job->setWindowParent(this);
+            job->setResources(list);
+            connect(job, &FullSynchronizeResourcesJob::synchronizeFinished, this, &PimSettingExporterWindow::slotFullSyncFinished);
+            connect(job, &FullSynchronizeResourcesJob::synchronizeInstanceDone, this, &PimSettingExporterWindow::slotFullSyncInstanceDone);
+            connect(job, &FullSynchronizeResourcesJob::synchronizeInstanceFailed, this, &PimSettingExporterWindow::slotFullSyncInstanceFailed);
+            job->start();
         }
 
     } else {
         showFinishInformation();
     }
+}
+
+void PimSettingExporterWindow::slotFullSyncFinished()
+{
+    showFinishInformation();
+}
+
+void PimSettingExporterWindow::slotFullSyncInstanceDone(const QString &identifier)
+{
+    slotAddInfo(i18n("Full sync for \"%1\" done.", identifier));
+}
+
+void PimSettingExporterWindow::slotFullSyncInstanceFailed(const QString &identifier)
+{
+    slotAddError(i18n("Full sync for \"%1\" failed.", identifier));
 }
 
 void PimSettingExporterWindow::showFinishInformation()
