@@ -60,7 +60,7 @@ public:
     virtual QString description() const = 0;
     virtual QUrl serviceUrl() const = 0;
 
-    virtual QRegExp disallowedSymbols() const;
+    virtual QString disallowedSymbols() const;
     virtual QString disallowedSymbolsStr() const;
     virtual qlonglong maximumUploadFileSize() const;
 };

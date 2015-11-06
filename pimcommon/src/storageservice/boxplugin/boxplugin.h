@@ -35,7 +35,7 @@ public:
     StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
     QString description() const Q_DECL_OVERRIDE;
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
-    QRegExp disallowedSymbols() const Q_DECL_OVERRIDE;
+    QString disallowedSymbols() const Q_DECL_OVERRIDE;
     QString disallowedSymbolsStr() const Q_DECL_OVERRIDE;
 
     QString boxClientId() const;

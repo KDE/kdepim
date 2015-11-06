@@ -61,7 +61,7 @@ public:
     QMap<QString, QString> itemInformation(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
 
     QIcon icon() const Q_DECL_OVERRIDE;
-    QRegExp disallowedSymbols() const Q_DECL_OVERRIDE;
+    QString disallowedSymbols() const Q_DECL_OVERRIDE;
     QString disallowedSymbolsStr() const Q_DECL_OVERRIDE;
     qlonglong maximumUploadFileSize() const Q_DECL_OVERRIDE;
 

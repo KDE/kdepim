@@ -268,7 +268,7 @@ void StorageServiceTreeWidget::slotRenameFile()
 
 bool StorageServiceTreeWidget::checkName(const QString &name)
 {
-    const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
+    const QRegExp disallowedSymbols = QRegExp(mStorageService->disallowedSymbols());
     if (!disallowedSymbols.isEmpty()) {
         if (name.contains(disallowedSymbols)) {
             KMessageBox::error(this, i18n("The following characters aren't allowed by %1:\n%2", mStorageService->storageServiceName(), mStorageService->disallowedSymbolsStr()), i18n("Create folder"));
@@ -384,7 +384,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
 {
     const QString filename = QFileDialog::getOpenFileName(this);
     if (!filename.isEmpty()) {
-        const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
+        const QRegExp disallowedSymbols = QRegExp(mStorageService->disallowedSymbols());
         const qlonglong maximumLimit =  mStorageService->maximumUploadFileSize();
         qCDebug(STORAGESERVICEMANAGER_LOG) << " maximumLimit" << maximumLimit;
         QFileInfo info(filename);

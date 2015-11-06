@@ -87,9 +87,9 @@ QUrl BoxPlugin::serviceUrl() const
     return QUrl(QStringLiteral("https://app.box.com/"));
 }
 
-QRegExp BoxPlugin::disallowedSymbols() const
+QString BoxPlugin::disallowedSymbols() const
 {
-    return QRegExp(QLatin1String("[/:?*\\|]"));
+    return QLatin1String("[/:?*\\|]");
 }
 
 QString BoxPlugin::disallowedSymbolsStr() const

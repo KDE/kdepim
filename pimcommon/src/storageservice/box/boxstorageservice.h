@@ -65,7 +65,7 @@ public:
     QString fileIdentifier(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
     QString fileShareRoot(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
 
-    QRegExp disallowedSymbols() const Q_DECL_OVERRIDE;
+    QString disallowedSymbols() const Q_DECL_OVERRIDE;
     QString disallowedSymbolsStr() const Q_DECL_OVERRIDE;
 
     void shutdownService() Q_DECL_OVERRIDE;

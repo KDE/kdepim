@@ -551,9 +551,9 @@ QIcon DropBoxStorageService::icon() const
     return QIcon::fromTheme(iconName());
 }
 
-QRegExp DropBoxStorageService::disallowedSymbols() const
+QString DropBoxStorageService::disallowedSymbols() const
 {
-    return QRegExp(QLatin1String("[/:?*<>\"|]"));
+    return QLatin1String("[/:?*<>\"|]");
 }
 
 QString DropBoxStorageService::disallowedSymbolsStr() const

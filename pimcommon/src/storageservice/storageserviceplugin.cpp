@@ -36,9 +36,9 @@ QIcon StorageServicePlugin::icon() const
     return QIcon();
 }
 
-QRegExp StorageServicePlugin::disallowedSymbols() const
+QString StorageServicePlugin::disallowedSymbols() const
 {
-    return QRegExp();
+    return QString();
 }
 
 QString StorageServicePlugin::disallowedSymbolsStr() const

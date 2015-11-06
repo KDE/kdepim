@@ -135,7 +135,7 @@ public:
 
     virtual void shutdownService() = 0;
 
-    virtual QRegExp disallowedSymbols() const;
+    virtual QString disallowedSymbols() const;
     virtual QString disallowedSymbolsStr() const;
     virtual qlonglong maximumUploadFileSize() const;
 

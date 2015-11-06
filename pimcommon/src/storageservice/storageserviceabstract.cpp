@@ -243,9 +243,9 @@ void StorageServiceAbstract::copyFolder(const QString &source, const QString &de
     storageServiceCopyFolder(source, destination);
 }
 
-QRegExp StorageServiceAbstract::disallowedSymbols() const
+QString StorageServiceAbstract::disallowedSymbols() const
 {
-    return QRegExp();
+    return QString();
 }
 
 QString StorageServiceAbstract::disallowedSymbolsStr() const

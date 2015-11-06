@@ -238,7 +238,7 @@ void StorageServiceManager::slotShareFile()
                 const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR, i18n("File to upload"));
                 if (!fileName.isEmpty()) {
                     QFileInfo info(fileName);
-                    const QRegExp disallowedSymbols = service->disallowedSymbols();
+                    const QRegExp disallowedSymbols = QRegExp(service->disallowedSymbols());
                     QString newName = info.fileName();
                     if (!disallowedSymbols.isEmpty()) {
                         if (newName.contains(disallowedSymbols)) {

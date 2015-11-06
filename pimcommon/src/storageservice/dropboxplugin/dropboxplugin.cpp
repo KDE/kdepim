@@ -89,9 +89,9 @@ QUrl DropBoxPlugin::serviceUrl() const
     return QUrl(QStringLiteral("https://www.dropbox.com/"));
 }
 
-QRegExp DropBoxPlugin::disallowedSymbols() const
+QString DropBoxPlugin::disallowedSymbols() const
 {
-    return QRegExp(QLatin1String("[/:?*<>\"|]"));
+    return QLatin1String("[/:?*<>\"|]");
 }
 
 QString DropBoxPlugin::disallowedSymbolsStr() const

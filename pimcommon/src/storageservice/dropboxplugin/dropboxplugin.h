@@ -40,7 +40,7 @@ public:
     QString dropboxOauthConsumerKey() const;
     QString dropboxOauthSignature() const;
     QString dropboxRootPath() const;
-    QRegExp disallowedSymbols() const Q_DECL_OVERRIDE;
+    QString disallowedSymbols() const Q_DECL_OVERRIDE;
     QString disallowedSymbolsStr() const Q_DECL_OVERRIDE;
     qlonglong maximumUploadFileSize() const Q_DECL_OVERRIDE;
 
