@@ -36,6 +36,12 @@ public:
     void start();
 Q_SIGNALS:
     void synchronizeFinished();
+    void synchronizeInstanceDone(const QString &instance);
+    void synchronizeInstanceFailed(const QString &instance);
+
+private Q_SLOTS:
+    void slotSynchronizeInstanceFailed(const QString &identifier);
+    void slotSynchronizeInstanceDone(const QString &identifier);
 
 private:
     QStringList mResources;

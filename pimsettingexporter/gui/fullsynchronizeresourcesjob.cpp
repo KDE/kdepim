@@ -18,6 +18,8 @@
 
 #include "fullsynchronizeresourcesjob.h"
 
+#include <synchronizeresourcejob.h>
+
 FullSynchronizeResourcesJob::FullSynchronizeResourcesJob(QObject *parent)
     : QObject(parent),
       mWindowParent(Q_NULLPTR)
@@ -47,5 +49,24 @@ void FullSynchronizeResourcesJob::setWindowParent(QWidget *parent)
 
 void FullSynchronizeResourcesJob::start()
 {
-    //TODO
+    SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
+    //Full synch
+    job->setSynchronizeOnlyCollection(false);
+    job->setListResources(mResources);
+    connect(job, &SynchronizeResourceJob::synchronizationFinished, this, &FullSynchronizeResourcesJob::synchronizeFinished);
+    connect(job, &SynchronizeResourceJob::synchronizationInstanceDone, this, &FullSynchronizeResourcesJob::slotSynchronizeInstanceDone);
+    connect(job, &SynchronizeResourceJob::synchronizationInstanceFailed, this, &FullSynchronizeResourcesJob::slotSynchronizeInstanceFailed);
+    job->start();
+}
+
+void FullSynchronizeResourcesJob::slotSynchronizeInstanceDone(const QString &identifier)
+{
+    Q_EMIT synchronizeInstanceDone(identifier);
+    //TODO increase progress indicator
+}
+
+void FullSynchronizeResourcesJob::slotSynchronizeInstanceFailed(const QString &identifier)
+{
+    Q_EMIT synchronizeInstanceFailed(identifier);
+    //TODO increase progress indicator
 }

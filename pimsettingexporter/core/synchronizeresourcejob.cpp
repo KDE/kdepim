@@ -76,3 +76,8 @@ void SynchronizeResourceJob::setListResources(const QStringList &resources)
     mListResources = resources;
 }
 
+void SynchronizeResourceJob::setSynchronizeOnlyCollection(bool onlyCollection)
+{
+    mOnlyCollection = onlyCollection;
+}
+
