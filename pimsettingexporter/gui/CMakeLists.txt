@@ -24,6 +24,7 @@ set(pimsettingexporter_SRCS
     importexportprogressindicatorgui.cpp
     pimsettingexporterwindow.cpp
     pimsettingcommandlineoption.cpp
+    fullsynchronizeresourcesjob.cpp
     main.cpp)
 
 qt5_add_resources(pimsettingexporter_SRCS pimsettingexporter.qrc)
