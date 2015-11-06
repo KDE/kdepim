@@ -17,7 +17,6 @@
 
 #include <KLocalizedString>
 #include <qfiledialog.h>
-#include <QRegExp>
 #include <QPointer>
 #include <QTemporaryFile>
 #include <QRegularExpression>
