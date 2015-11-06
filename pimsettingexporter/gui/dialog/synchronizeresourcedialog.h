@@ -31,7 +31,9 @@ public:
     QStringList resources() const;
 
 private Q_SLOTS:
-    void slotAccepted();
+    void slotAccepted();    
+    void slotSelectAll();
+    void slotUnselectAll();
 
 private:
     enum DataType {
@@ -40,6 +42,7 @@ private:
 
     void readConfig();
     void writeConfig();
+    void selectItem(bool state);
     QListWidget *mListResourceWidget;
 };
 

@@ -24,6 +24,7 @@
 #include <QStandardPaths>
 
 #include <QLabel>
+#include <QPushButton>
 
 SynchronizeResourceDialogTest::SynchronizeResourceDialogTest(QObject *parent)
     : QObject(parent)
@@ -51,6 +52,13 @@ void SynchronizeResourceDialogTest::shouldHaveDefaultValue()
     QLabel *label = dlg.findChild<QLabel *>(QStringLiteral("label"));
     QVERIFY(label);
     QVERIFY(label->wordWrap());
+
+
+    QPushButton *selectAll = dlg.findChild<QPushButton *>(QStringLiteral("selectall_button"));
+    QVERIFY(selectAll);
+
+    QPushButton *unselectAll = dlg.findChild<QPushButton *>(QStringLiteral("unselectall_button"));
+    QVERIFY(unselectAll);
 
     QVERIFY(dlg.resources().isEmpty());
 }
