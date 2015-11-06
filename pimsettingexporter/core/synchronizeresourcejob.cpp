@@ -51,6 +51,7 @@ void SynchronizeResourceJob::slotNextSync()
         const Akonadi::AgentInstance resource = Akonadi::AgentManager::self()->instance(mListResources.at(mIndex));
         qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " resource.name" << resource.name();
         Akonadi::ResourceSynchronizationJob *job = new Akonadi::ResourceSynchronizationJob(resource);
+        job->setTimeoutCountLimit(10);
         job->setCollectionTreeOnly(mOnlyCollection);
         connect(job, &Akonadi::ResourceSynchronizationJob::result, this, &SynchronizeResourceJob::slotSynchronizationFinished);
         job->start();
