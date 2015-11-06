@@ -279,6 +279,8 @@ void RegularExpressionTests::shouldReplaceString_data()
     QTest::newRow("endline one") << QStringLiteral("\n") << QStringLiteral("<br/>") << QStringLiteral("<br/>") << QStringLiteral("\n+");
     QTest::newRow("endline multiple") << QStringLiteral("\n\n") << QStringLiteral("<br/>") << QStringLiteral("<br/>") << QStringLiteral("\n+");
     QTest::newRow("endline multiple with space") << QStringLiteral("\n  \n") << QStringLiteral("<br/>  <br/>") << QStringLiteral("<br/>") << QStringLiteral("\n+");
+    QTest::newRow("replace end file") << QStringLiteral("foo.mbx") << QStringLiteral("foo.png") << QStringLiteral("png") << QStringLiteral("mbx$");
+    QTest::newRow("replace end file invalid") << QStringLiteral("foo.mbx1") << QStringLiteral("foo.mbx1") << QStringLiteral("png") << QStringLiteral("mbx$");
 }
 
 void RegularExpressionTests::shouldReplaceString()

@@ -20,6 +20,7 @@
 #include <QRegExp>
 #include <QPointer>
 #include <QTemporaryFile>
+#include <QRegularExpression>
 #include "mailimporter_debug.h"
 
 #include "filterpmail.h"
@@ -230,8 +231,8 @@ void FilterPMail::importUnixMailFolder(const QString &file)
     int n = 0, l = 0;
 
     /** Get the folder name */
-    s.replace(QRegExp(QLatin1String("mbx$")), QStringLiteral("pmg"));
-    s.replace(QRegExp(QLatin1String("MBX$")), QStringLiteral("PMG"));
+    s.replace(QRegularExpression(QStringLiteral("mbx$")), QStringLiteral("pmg"));
+    s.replace(QRegularExpression(QStringLiteral("MBX$")), QStringLiteral("PMG"));
     f.setFileName(s);
     if (! f.open(QIODevice::ReadOnly)) {
         filterInfo()->alert(i18n("Unable to open %1, skipping", s));
