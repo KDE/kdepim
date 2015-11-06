@@ -63,6 +63,15 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
     if (act->isEnabled()) {
         menu.addAction(act);
     }
+
+    act = pageAction(QWebPage::SelectAll);
+    if (act->isEnabled()) {
+        menu.addAction(act);
+    }
+    act = pageAction(QWebPage::CopyLinkToClipboard);
+    if (act->isEnabled()) {
+        menu.addAction(act);
+    }
     menu.exec(ev->globalPos());
 }
 
