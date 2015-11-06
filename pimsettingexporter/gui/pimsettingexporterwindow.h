@@ -70,7 +70,8 @@ private:
     QAction *mShowArchiveInformationsAboutCurrentArchiveAction;
     PimSettingsBackupRestoreUI *mPimSettingsBackupRestoreUI;
     QString mLastArchiveFileName;
-    QStringList mNeedToSyncResources;
+    // Name, identifier
+    QHash<QString, QString> mNeedToSyncResources;
 };
 
 #endif /* PIMSETTINGEXPORTERWINDOW_H */

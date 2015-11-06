@@ -27,13 +27,17 @@ public:
     explicit SynchronizeResourceDialog(QWidget *parent = Q_NULLPTR);
     ~SynchronizeResourceDialog();
 
-    void setResources(const QStringList &resources);
+    void setResources(const QHash<QString, QString> &resources);
     QStringList resources() const;
 
 private Q_SLOTS:
     void slotAccepted();
 
 private:
+    enum DataType {
+        ResourceIdentifier = Qt::UserRole + 1
+    };
+
     void readConfig();
     void writeConfig();
     QListWidget *mListResourceWidget;

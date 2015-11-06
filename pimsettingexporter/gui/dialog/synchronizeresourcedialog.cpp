@@ -63,13 +63,16 @@ SynchronizeResourceDialog::~SynchronizeResourceDialog()
     writeConfig();
 }
 
-void SynchronizeResourceDialog::setResources(const QStringList &resources)
+void SynchronizeResourceDialog::setResources(const QHash<QString, QString> &resources)
 {
-    Q_FOREACH(const QString &resource, resources) {
+    QHashIterator<QString, QString> i(resources);
+    while (i.hasNext()) {
+        i.next();
         QListWidgetItem *item = new QListWidgetItem(mListResourceWidget);
         item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
         item->setCheckState(Qt::Unchecked);
-        item->setText(resource);
+        item->setText(i.key());
+        item->setData(ResourceIdentifier, i.value());
     }
 }
 
@@ -79,7 +82,7 @@ QStringList SynchronizeResourceDialog::resources() const
     for (int i = 0; i < mListResourceWidget->count(); ++i) {
         QListWidgetItem *item = mListResourceWidget->item(i);
         if (item->checkState() == Qt::Checked) {
-            lst << item->text();
+            lst << item->data(ResourceIdentifier).toString();
         }
     }
     return lst;

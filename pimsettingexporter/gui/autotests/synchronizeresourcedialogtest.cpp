@@ -59,9 +59,9 @@ void SynchronizeResourceDialogTest::shouldNotEmptyList()
 {
     SynchronizeResourceDialog dlg;
     QListWidget *listWidget = dlg.findChild<QListWidget *>(QStringLiteral("listresourcewidget"));
-    QStringList lst;
-    lst << QStringLiteral("foo");
-    lst << QStringLiteral("faa");
+    QHash<QString, QString> lst;
+    lst.insert(QStringLiteral("foo"), QStringLiteral("foo"));
+    lst.insert(QStringLiteral("faa"), QStringLiteral("faa"));
     dlg.setResources(lst);
     QCOMPARE(dlg.resources().count(), 0);
     QCOMPARE(listWidget->count(), lst.count());

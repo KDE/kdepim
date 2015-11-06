@@ -100,8 +100,7 @@ void PimSettingExporterWindow::initializeBackupRestoreUi()
 
 void PimSettingExporterWindow::slotAddResourceToSync(const QString &name, const QString &identifier)
 {
-    Q_UNUSED(name);
-    mNeedToSyncResources << identifier;
+    mNeedToSyncResources.insert(name, identifier);
 }
 
 void PimSettingExporterWindow::slotJobFinished()
