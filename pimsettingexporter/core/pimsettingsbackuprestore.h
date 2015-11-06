@@ -51,7 +51,7 @@ Q_SIGNALS:
     void backupDone();
     void restoreDone();
     void jobFailed();
-    void needSyncResource(const QString &identifier);
+    void needSyncResource(const QString &name, const QString &identifier);
 
 protected:
     virtual bool continueToRestore();

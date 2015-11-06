@@ -66,12 +66,12 @@ Q_SIGNALS:
     void error(const QString &);
     void title(const QString &);
     void endLine();
-    void needSynchronizeResource(const QString &identifier);
+    void needSynchronizeResource(const QString &name, const QString &identifier);
     void jobFinished();
 
 private Q_SLOTS:
     void slotAllResourceSynchronized();
-    void slotSynchronizeInstanceDone(const QString &);
+    void slotSynchronizeInstanceDone(const QString &, const QString &identifier);
     void slotSynchronizeInstanceFailed(const QString &instance);
     void slotTaskCanceled();
 

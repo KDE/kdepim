@@ -49,7 +49,7 @@ private Q_SLOTS:
     void slotJobFailed();
     void slotJobFinished();
     void slotShowCurrentArchiveInformations();
-    void slotAddResourceToSync(const QString &identifier);
+    void slotAddResourceToSync(const QString &name, const QString &identifier);
     void slotFullSyncFinished();
     void slotFullSyncInstanceDone(const QString &identifier);
     void slotFullSyncInstanceFailed(const QString &identifier);

@@ -66,7 +66,7 @@ void SynchronizeResourceJob::slotSynchronizationFinished(KJob *job)
     if (job->error()) {
         Q_EMIT synchronizationInstanceFailed(instanceName);
     } else {
-        Q_EMIT synchronizationInstanceDone(instanceName);
+        Q_EMIT synchronizationInstanceDone(instanceName, resourceSync->resource().identifier());
     }
     ++mIndex;
     QTimer::singleShot(0, this, &SynchronizeResourceJob::slotNextSync);

@@ -98,8 +98,9 @@ void PimSettingExporterWindow::initializeBackupRestoreUi()
     connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::restoreDone, this, &PimSettingExporterWindow::slotRestoreDone);
 }
 
-void PimSettingExporterWindow::slotAddResourceToSync(const QString &identifier)
+void PimSettingExporterWindow::slotAddResourceToSync(const QString &name, const QString &identifier)
 {
+    Q_UNUSED(name);
     mNeedToSyncResources << identifier;
 }
 
@@ -124,6 +125,7 @@ void PimSettingExporterWindow::slotRestoreDone()
         }
         delete dlg;
         if (!list.isEmpty()) {
+            slotAddInfo(i18n("Full sync starts..."));
             FullSynchronizeResourcesJob *job = new FullSynchronizeResourcesJob(this);
             job->setWindowParent(this);
             job->setResources(list);
@@ -145,6 +147,7 @@ void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
 void PimSettingExporterWindow::slotFullSyncFinished()
 {
     slotUpdateActions(false);
+    slotAddInfo(i18n("Full sync finished."));
 }
 
 void PimSettingExporterWindow::slotFullSyncInstanceDone(const QString &identifier)

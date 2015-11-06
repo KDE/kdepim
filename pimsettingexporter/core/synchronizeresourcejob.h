@@ -35,7 +35,7 @@ public:
 
 Q_SIGNALS:
     void synchronizationFinished();
-    void synchronizationInstanceDone(const QString &);
+    void synchronizationInstanceDone(const QString &name, const QString &identifier);
     void synchronizationInstanceFailed(const QString &);
 
 private Q_SLOTS:
