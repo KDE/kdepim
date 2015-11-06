@@ -278,6 +278,11 @@ void MailFilter::folderRemoved(const Akonadi::Collection &aFolder, const Akonadi
     }
 }
 
+void MailFilter::clearApplyOnAccount()
+{
+    mAccounts.clear();
+}
+
 void MailFilter::setApplyOnAccount(const QString &id, bool aApply)
 {
     if (aApply && !mAccounts.contains(id)) {

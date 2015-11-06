@@ -590,6 +590,7 @@ void KMFilterDialog::slotApplicabilityChanged()
         mFilter->setApplyOnExplicit(mApplyOnCtrlJ->isChecked());
         if (mApplyOnForAll->isChecked()) {
             mFilter->setApplicability(MailFilter::All);
+            mFilter->clearApplyOnAccount();
         } else if (mApplyOnForTraditional->isChecked()) {
             mFilter->setApplicability(MailFilter::ButImap);
         } else if (mApplyOnForChecked->isChecked()) {

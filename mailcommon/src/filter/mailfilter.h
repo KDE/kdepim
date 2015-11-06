@@ -313,6 +313,7 @@ public:
 
     void generateSieveScript(QStringList &requires, QString &code);
 
+    void clearApplyOnAccount();
 private:
     QString mIdentifier;
     SearchPattern mPattern;
