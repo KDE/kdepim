@@ -348,5 +348,25 @@ void RegularExpressionTests::shouldVerifyQStringListFilterWithPmailSettingsConve
     QCOMPARE(newList, expected);
 }
 
+void RegularExpressionTests::shouldRemoveString_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("expected");
+    QTest::addColumn<QString>("regexp");
+    QTest::newRow("email at") << QStringLiteral("foo@kde.org") << QStringLiteral("foo") << QStringLiteral("@.*");
+    QTest::newRow("email at not valid") << QStringLiteral("foo(at)kde.org") << QStringLiteral("foo(at)kde.org") << QStringLiteral("@.*");
+    QTest::newRow("email with underscore") << QStringLiteral("foo_blable") << QStringLiteral("foo") << QStringLiteral("_.*");
+}
+
+void RegularExpressionTests::shouldRemoveString()
+{
+    QFETCH(QString, input);
+    QFETCH(QString, expected);
+    QFETCH(QString, regexp);
+
+    QCOMPARE(input.remove(QRegExp(regexp)), expected);
+    QCOMPARE(input.remove(QRegularExpression(regexp)), expected);
+}
+
 
 QTEST_MAIN(RegularExpressionTests)

@@ -46,6 +46,9 @@ private Q_SLOTS:
     void shouldReplaceString_data();
     void shouldReplaceString();
 
+    void shouldRemoveString_data();
+    void shouldRemoveString();
+
     void shouldVerifyQStringListFilterWithStartCharAndEndConversion_data();
     void shouldVerifyQStringListFilterWithStartCharAndEndConversion();
 
