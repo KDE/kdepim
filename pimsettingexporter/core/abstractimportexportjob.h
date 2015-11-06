@@ -66,7 +66,7 @@ Q_SIGNALS:
     void error(const QString &);
     void title(const QString &);
     void endLine();
-
+    void needSynchronizeResource(const QString &identifier);
     void jobFinished();
 
 private Q_SLOTS:

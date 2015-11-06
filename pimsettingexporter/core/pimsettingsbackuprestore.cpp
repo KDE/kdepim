@@ -315,6 +315,7 @@ void PimSettingsBackupRestore::executeJob()
     connect(mImportExportData, &AbstractImportExportJob::title, this, &PimSettingsBackupRestore::addTitle);
     connect(mImportExportData, &AbstractImportExportJob::endLine, this, &PimSettingsBackupRestore::addEndLine);
     connect(mImportExportData, &AbstractImportExportJob::jobFinished, this, &PimSettingsBackupRestore::jobFinished);
+    connect(mImportExportData, &AbstractImportExportJob::needSynchronizeResource, this, &PimSettingsBackupRestore::needSyncResource);
     mImportExportData->start();
 }
 

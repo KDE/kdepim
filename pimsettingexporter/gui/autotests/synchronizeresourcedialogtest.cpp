@@ -55,4 +55,16 @@ void SynchronizeResourceDialogTest::shouldHaveDefaultValue()
     QVERIFY(dlg.resources().isEmpty());
 }
 
+void SynchronizeResourceDialogTest::shouldNotEmptyList()
+{
+    SynchronizeResourceDialog dlg;
+    QListWidget *listWidget = dlg.findChild<QListWidget *>(QStringLiteral("listresourcewidget"));
+    QStringList lst;
+    lst << QStringLiteral("foo");
+    lst << QStringLiteral("faa");
+    dlg.setResources(lst);
+    QCOMPARE(dlg.resources().count(), 0);
+    QCOMPARE(listWidget->count(), lst.count());
+}
+
 QTEST_MAIN(SynchronizeResourceDialogTest)

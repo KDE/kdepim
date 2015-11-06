@@ -25,6 +25,7 @@
 #include "dialog/selectiontypedialog.h"
 #include "utils.h"
 #include "pimsettingsbackuprestoreui.h"
+#include "dialog/synchronizeresourcedialog.h"
 
 #include "dialog/backupfilestructureinfodialog.h"
 
@@ -112,7 +113,27 @@ void PimSettingExporterWindow::slotJobFailed()
 
 void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
 {
-    //TODO add info to sync resources here.
+    if (!mNeedToSyncResources.isEmpty()) {
+        QPointer<SynchronizeResourceDialog> dlg = new SynchronizeResourceDialog(this);
+        dlg->setResources(mNeedToSyncResources);
+        QStringList list;
+        if (dlg->exec()) {
+            list = dlg->resources();
+        }
+        delete dlg;
+        if (list.isEmpty()) {
+            showFinishInformation();
+        } else {
+            //TODO sync
+        }
+
+    } else {
+        showFinishInformation();
+    }
+}
+
+void PimSettingExporterWindow::showFinishInformation()
+{
     KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QStringLiteral("setProgressDialogLabelBackupInfos"));
 }
 

@@ -28,6 +28,7 @@ public:
     ~SynchronizeResourceDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldNotEmptyList();
 };
 
 #endif // SYNCHRONIZERESOURCEDIALOGTEST_H

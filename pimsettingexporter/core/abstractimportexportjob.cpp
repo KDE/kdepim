@@ -481,6 +481,7 @@ void AbstractImportExportJob::slotSynchronizeInstanceFailed(const QString &insta
 void AbstractImportExportJob::slotSynchronizeInstanceDone(const QString &instance)
 {
     Q_EMIT info(i18n("Resource %1 synchronized.", instance));
+    Q_EMIT needSynchronizeResource(instance);
 }
 
 void AbstractImportExportJob::slotAllResourceSynchronized()

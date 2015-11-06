@@ -55,6 +55,7 @@ private:
     void backupData(const QString &filename, const QString &templateFile = QString());
     void loadData(const QString &filename, const QString &templateFile = QString());
     void setupActions(bool canZipFile);
+    void showFinishInformation();
     LogWidget *mLogWidget;
     KRecentFilesAction *mRecentFilesAction;
     QAction *mBackupAction;
