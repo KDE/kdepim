@@ -22,6 +22,7 @@
 #include <QStringList>
 
 class QWidget;
+class QProgressDialog;
 class FullSynchronizeResourcesJob : public QObject
 {
     Q_OBJECT
@@ -41,11 +42,12 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void slotSynchronizeInstanceFailed(const QString &identifier);
-    void slotSynchronizeInstanceDone(const QString &identifier);
-
+    void slotSynchronizeInstanceDone(const QString &identifier);    
+    void slotSynchronizeFinished();
 private:
     QStringList mResources;
     QWidget *mWindowParent;
+    QProgressDialog *mProgressDialog;
 };
 
 #endif // FULLSYNCHRONIZERESOURCESJOB_H
