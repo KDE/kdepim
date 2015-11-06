@@ -40,8 +40,8 @@
 #include <sys/ioctl.h>
 #endif
 
-namespace MessageViewer
-{
+using namespace MessageViewer;
+
 EditorWatcher::EditorWatcher(const QUrl &url, const QString &mimeType, OpenWithOption option,
                              QObject *parent, QWidget *parentWidget) :
     QObject(parent),
@@ -225,5 +225,4 @@ void EditorWatcher::checkEditDone()
 
     Q_EMIT editDone(this);
     deleteLater();
-}
 }
