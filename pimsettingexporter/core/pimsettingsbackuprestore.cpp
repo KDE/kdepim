@@ -303,7 +303,7 @@ void PimSettingsBackupRestore::restoreFinished()
     mArchiveStorage = Q_NULLPTR;
     delete mImportExportData;
     mImportExportData = Q_NULLPTR;
-    Q_EMIT updateActions(false);
+    Q_EMIT restoreDone();
     deleteLater();
 }
 

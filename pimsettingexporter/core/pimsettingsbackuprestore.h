@@ -49,6 +49,7 @@ Q_SIGNALS:
     void addTitle(const QString &);
     void jobFinished();
     void backupDone();
+    void restoreDone();
     void jobFailed();
     void needSyncResource(const QString &identifier);
 

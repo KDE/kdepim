@@ -95,6 +95,7 @@ void PimSettingExporterWindow::initializeBackupRestoreUi()
     connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::backupDone, this, &PimSettingExporterWindow::slotShowBackupFinishDialogInformation);
     connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::jobFailed, this, &PimSettingExporterWindow::slotJobFailed);
     connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestoreUI::needSyncResource, this, &PimSettingExporterWindow::slotAddResourceToSync);
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::restoreDone, this, &PimSettingExporterWindow::slotRestoreDone);
 }
 
 void PimSettingExporterWindow::slotAddResourceToSync(const QString &identifier)
@@ -112,7 +113,7 @@ void PimSettingExporterWindow::slotJobFailed()
     mPimSettingsBackupRestoreUI->closeArchive();
 }
 
-void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
+void PimSettingExporterWindow::slotRestoreDone()
 {
     if (!mNeedToSyncResources.isEmpty()) {
         QPointer<SynchronizeResourceDialog> dlg = new SynchronizeResourceDialog(this);
@@ -122,9 +123,7 @@ void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
             list = dlg->resources();
         }
         delete dlg;
-        if (list.isEmpty()) {
-            showFinishInformation();
-        } else {
+        if (!list.isEmpty()) {
             FullSynchronizeResourcesJob *job = new FullSynchronizeResourcesJob(this);
             job->setWindowParent(this);
             job->setResources(list);
@@ -133,15 +132,19 @@ void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
             connect(job, &FullSynchronizeResourcesJob::synchronizeInstanceFailed, this, &PimSettingExporterWindow::slotFullSyncInstanceFailed);
             job->start();
         }
-
     } else {
-        showFinishInformation();
+        slotUpdateActions(false);
     }
+}
+
+void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
+{
+    showFinishInformation();
 }
 
 void PimSettingExporterWindow::slotFullSyncFinished()
 {
-    showFinishInformation();
+    slotUpdateActions(false);
 }
 
 void PimSettingExporterWindow::slotFullSyncInstanceDone(const QString &identifier)

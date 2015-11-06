@@ -53,6 +53,7 @@ private Q_SLOTS:
     void slotFullSyncFinished();
     void slotFullSyncInstanceDone(const QString &identifier);
     void slotFullSyncInstanceFailed(const QString &identifier);
+    void slotRestoreDone();
 private:
     void initializeBackupRestoreUi();
     void backupData(const QString &filename, const QString &templateFile = QString());
