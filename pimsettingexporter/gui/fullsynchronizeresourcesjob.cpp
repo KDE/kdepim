@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "fullsynchronizeresourcesjob.h"
 
 #include <KLocalizedString>
@@ -73,18 +72,18 @@ void FullSynchronizeResourcesJob::start()
 void FullSynchronizeResourcesJob::slotSynchronizeInstanceDone(const QString &identifier)
 {
     Q_EMIT synchronizeInstanceDone(identifier);
-    mProgressDialog->setValue(mProgressDialog->value()+1);
+    mProgressDialog->setValue(mProgressDialog->value() + 1);
 }
 
 void FullSynchronizeResourcesJob::slotSynchronizeInstanceFailed(const QString &identifier)
 {
     Q_EMIT synchronizeInstanceFailed(identifier);
-    mProgressDialog->setValue(mProgressDialog->value()+1);
+    mProgressDialog->setValue(mProgressDialog->value() + 1);
 }
 
 void FullSynchronizeResourcesJob::slotSynchronizeFinished()
 {
-    mProgressDialog->setValue(mProgressDialog->value()+1);
+    mProgressDialog->setValue(mProgressDialog->value() + 1);
     Q_EMIT synchronizeFinished();
     deleteLater();
 }

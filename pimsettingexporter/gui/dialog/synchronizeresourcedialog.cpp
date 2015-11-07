@@ -38,8 +38,6 @@ SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
     lab->setWordWrap(true);
     lab->setObjectName(QStringLiteral("label"));
 
-
-
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -49,7 +47,6 @@ SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
     mListResourceWidget->setObjectName(QStringLiteral("listresourcewidget"));
     KListWidgetSearchLine *listWidgetSearchLine = new KListWidgetSearchLine(this, mListResourceWidget);
     listWidgetSearchLine->setObjectName(QStringLiteral("listwidgetsearchline"));
-
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *selectAll = new QPushButton(i18n("Select All"));

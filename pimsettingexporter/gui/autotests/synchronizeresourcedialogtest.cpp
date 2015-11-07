@@ -53,7 +53,6 @@ void SynchronizeResourceDialogTest::shouldHaveDefaultValue()
     QVERIFY(label);
     QVERIFY(label->wordWrap());
 
-
     QPushButton *selectAll = dlg.findChild<QPushButton *>(QStringLiteral("selectall_button"));
     QVERIFY(selectAll);
 

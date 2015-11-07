@@ -42,7 +42,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void slotSynchronizeInstanceFailed(const QString &identifier);
-    void slotSynchronizeInstanceDone(const QString &identifier);    
+    void slotSynchronizeInstanceDone(const QString &identifier);
     void slotSynchronizeFinished();
 private:
     QStringList mResources;

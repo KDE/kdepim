@@ -31,7 +31,7 @@ public:
     QStringList resources() const;
 
 private Q_SLOTS:
-    void slotAccepted();    
+    void slotAccepted();
     void slotSelectAll();
     void slotUnselectAll();
 
