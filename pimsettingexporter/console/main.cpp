@@ -17,6 +17,7 @@
 
 #include "kdepim-version.h"
 #include "pimsettingexporterconsole.h"
+#include "pimsettingexportconsole_debug.h"
 #include <kaboutdata.h>
 #include <KLocalizedString>
 
@@ -60,17 +61,21 @@ int main(int argc, char *argv[])
     QString templateFile;
     if (parser.isSet(QStringLiteral("template"))) {
         templateFile = parser.value(QStringLiteral("template"));
+        qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Template file " << templateFile;
     }
     if (parser.isSet(QStringLiteral("logfile"))) {
         logFile = parser.value(QStringLiteral("logfile"));
+        qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Log file " << logFile;
     }
 
     PimSettingExporterConsole *console = new PimSettingExporterConsole;
     if (!importFile.isEmpty()) {
         console->setMode(PimSettingExporterConsole::Import);
+        qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Import Mode" << importFile;
         console->setImportExportFileName(importFile);
     } else if (!exportFile.isEmpty()) {
         console->setMode(PimSettingExporterConsole::Export);
+        qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Export Mode" << exportFile;
         console->setImportExportFileName(exportFile);
     }
     if (!logFile.isEmpty()) {

@@ -122,10 +122,16 @@ void PimSettingExporterConsole::start()
     }
     switch (mMode) {
     case Import:
-        mPimSettingsBackupRestore->restoreStart(mImportExportFileName);
+        if (!mPimSettingsBackupRestore->restoreStart(mImportExportFileName)) {
+            qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Unable to start restore.";
+            Q_EMIT finished();
+        }
         break;
     case Export:
-        mPimSettingsBackupRestore->backupStart(mImportExportFileName);
+        if (!mPimSettingsBackupRestore->backupStart(mImportExportFileName)) {
+            qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Unable to start backup.";
+            Q_EMIT finished();
+        }
         break;
     }
 }
