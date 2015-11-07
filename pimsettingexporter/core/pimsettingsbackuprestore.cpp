@@ -81,7 +81,6 @@ bool PimSettingsBackupRestore::backupStart(const QString &filename)
 {
     qDebug()<<" bool PimSettingsBackupRestore::backupStart(const QString &filename)" << mStored.isEmpty();
     if (mStored.isEmpty()) {
-
         addDate();
         Q_EMIT addInfo(i18n("No data selected."));
         Q_EMIT jobFailed();

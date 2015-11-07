@@ -31,7 +31,7 @@ LogInfo::~LogInfo()
 
 void LogInfo::addInfoLogEntry(const QString &log)
 {
-    addLogLine(log, AddEndLine);
+    addLogLine(log, AddInfo);
 }
 
 void LogInfo::addErrorLogEntry(const QString &log)
