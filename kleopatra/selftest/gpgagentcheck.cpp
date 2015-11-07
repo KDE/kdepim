@@ -72,7 +72,7 @@ public:
 
         m_skipped = true;
 
-        if (!hasFeature(AssuanEngineFeature)) {
+        if (!hasFeature(AssuanEngineFeature, 0)) {
             m_error = i18n("GpgME library too old");
             m_explaination = i18nc("@info",
                                    "Either the GpgME library itself is too old, "
