@@ -690,6 +690,10 @@ void CSVImportDialog::saveTemplate()
         return;
     }
 
+    const int numberOfColumn(mModel->columnCount());
+    if (numberOfColumn == 0)
+        return;
+
     const QString fileName =
         QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kaddressbook/csv-templates/") +
         QUuid::createUuid().toString() +
@@ -711,7 +715,7 @@ void CSVImportDialog::saveTemplate()
     miscGroup.writeEntry("Name", name);
 
     KConfigGroup columnMapGroup(&config, "csv column map");
-    for (int column = 0; column < mModel->columnCount(); ++column) {
+    for (int column = 0; column < numberOfColumn; ++column) {
         columnMapGroup.writeEntry(QString::number(column),
                                   mModel->data(mModel->index(0, column),
                                                Qt::DisplayRole).toUInt());
