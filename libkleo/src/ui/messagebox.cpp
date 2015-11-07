@@ -67,7 +67,7 @@ void MessageBox::auditLog(QWidget *parent, const Job *job, const QString &captio
         return;
     }
 
-    if (!GpgME::hasFeature(AuditLogFeature) || !job->isAuditLogSupported()) {
+    if (!GpgME::hasFeature(AuditLogFeature, 0) || !job->isAuditLogSupported()) {
         KMessageBox::information(parent, i18n("Your system does not have support for GnuPG Audit Logs"),
                                  i18n("System Error"));
         return;
@@ -228,7 +228,7 @@ bool MessageBox::showAuditLogButton(const Kleo::Job *job)
         qCDebug(KLEO_UI_LOG) << "not showing audit log button (no job instance)";
         return false;
     }
-    if (!GpgME::hasFeature(GpgME::AuditLogFeature)) {
+    if (!GpgME::hasFeature(GpgME::AuditLogFeature, 0)) {
         qCDebug(KLEO_UI_LOG) << "not showing audit log button (gpgme too old)";
         return false;
     }
@@ -259,7 +259,7 @@ void MessageBox::make(QWidget *parent, QMessageBox::Icon icon, const QString &te
     dialog->setObjectName(QStringLiteral("error"));
     dialog->setModal(true);
     KGuiItem::assign(yesButton, KStandardGuiItem::ok());
-    if (GpgME::hasFeature(GpgME::AuditLogFeature)) {
+    if (GpgME::hasFeature(GpgME::AuditLogFeature, 0)) {
         KGuiItem::assign(box->button(QDialogButtonBox::No), KGuiItem(i18n("&Show Audit Log")));
     }
 
