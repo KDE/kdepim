@@ -53,7 +53,8 @@ int main(int argc, char *argv[])
         exportFile = parser.value(QStringLiteral("export"));
     }
     if (importFile.isEmpty() && exportFile.isEmpty()) {
-        return -1;
+        parser.showHelp();
+        return 0;
     }
     QString logFile;
     QString templateFile;
