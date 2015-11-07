@@ -550,11 +550,10 @@ void KTNEFMain::openWith(const KService::Ptr &offer)
         QUrl url = QUrl::fromLocalFile(QLatin1String("file:") + extractTemp(attach));
         QList<QUrl> lst;
         lst.append(url);
-        bool result = false;
         if (offer) {
-            result = KRun::run(*offer, lst, this, false);
+            KRun::runService(*offer, lst, this, false);
         } else {
-            result = KRun::displayOpenWithDialog(lst, this, false);
+            KRun::displayOpenWithDialog(lst, this, false);
         }
     }
 }
