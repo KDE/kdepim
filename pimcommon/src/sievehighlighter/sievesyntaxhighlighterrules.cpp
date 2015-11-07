@@ -42,7 +42,7 @@ void SieveSyntaxHighlighterRulesPrivate::init()
     QRegularExpression commentRegex(QStringLiteral("#.*$"));
     m_rules.append(KPIMTextEdit::Rule(commentRegex, commentFormat));
 
-    commentRegex = QRegularExpression(QStringLiteral("/*.*$*/"));
+    commentRegex = QRegularExpression(QStringLiteral("/*.*/$"));
     m_rules.append(KPIMTextEdit::Rule(commentRegex, commentFormat));
 
     // Keywords
