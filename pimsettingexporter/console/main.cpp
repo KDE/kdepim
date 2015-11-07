@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
     if (!templateFile.isEmpty()) {
         console->setTemplateFileName(templateFile);
     }
-    console->start();
     QObject::connect(console, &PimSettingExporterConsole::finished, &app, &QCoreApplication::quit);
+    console->start();
 
     return app.exec();
 }
