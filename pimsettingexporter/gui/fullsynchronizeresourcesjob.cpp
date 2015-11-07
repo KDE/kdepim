@@ -57,6 +57,7 @@ void FullSynchronizeResourcesJob::start()
     mProgressDialog->setWindowTitle(i18n("Synchronize resources"));
     mProgressDialog->setLabelText(i18n("Synchronize resources... It can take some time."));
     mProgressDialog->setWindowModality(Qt::WindowModal);
+    //Disable cancel button.
     mProgressDialog->setCancelButton(Q_NULLPTR);
 
     SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
