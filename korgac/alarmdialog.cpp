@@ -963,13 +963,14 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer(const Incidence::Ptr &inc
     QDBusReply<int> reply = korganizerObj.call(QStringLiteral("winId"));
     if (reply.isValid()) {
         int window = reply;
-        int desktop = KWindowSystem::windowInfo(window, NET::WMDesktop).desktop();
+        auto winInfo = KWindowInfo(window, NET::WMDesktop);
+        int desktop = winInfo.desktop();
         if (KWindowSystem::currentDesktop() == desktop) {
             KWindowSystem::minimizeWindow(winId(), false);
         } else {
             KWindowSystem::setCurrentDesktop(desktop);
         }
-        KWindowSystem::activateWindow(KWindowSystem::transientFor(window));
+        KWindowSystem::activateWindow(winInfo.transientFor());
     }
 #elif defined(Q_OS_WIN)
     // WId is a typedef to a void* on windows
