@@ -22,6 +22,8 @@
 #include "loginfo.h"
 #include "xml/templateselection.h"
 
+#include <QTimer>
+
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
     : QObject(parent),
       mPimSettingsBackupRestore(new PimSettingsBackupRestore(this)),
@@ -124,13 +126,13 @@ void PimSettingExporterConsole::start()
     case Import:
         if (!mPimSettingsBackupRestore->restoreStart(mImportExportFileName)) {
             qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Unable to start restore.";
-            Q_EMIT finished();
+            QTimer::singleShot(0, this, &PimSettingExporterConsole::finished);
         }
         break;
     case Export:
         if (!mPimSettingsBackupRestore->backupStart(mImportExportFileName)) {
             qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Unable to start backup.";
-            Q_EMIT finished();
+            QTimer::singleShot(0, this, &PimSettingExporterConsole::finished);
         }
         break;
     }

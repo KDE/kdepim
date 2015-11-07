@@ -26,6 +26,8 @@
 #include <QCommandLineOption>
 #include <QDebug>
 
+#include <QtCore/qtimer.h>
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -85,7 +87,7 @@ int main(int argc, char *argv[])
         console->setTemplateFileName(templateFile);
     }
     QObject::connect(console, &PimSettingExporterConsole::finished, &app, &QCoreApplication::quit);
-    console->start();
+    QTimer::singleShot(0, console, &PimSettingExporterConsole::start);
 
     return app.exec();
 }
