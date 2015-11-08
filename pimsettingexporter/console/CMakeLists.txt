@@ -16,7 +16,7 @@ ecm_qt_declare_logging_category(pimsettingexporterconsole_SRCS HEADER pimsetting
 
 add_executable(pimsettingexporterconsole ${pimsettingexporterconsole_SRCS})
 
-target_link_libraries(pimsettingexporterconsole KF5::ConfigCore Qt5::Xml KF5::CoreAddons KF5::I18n KF5::Archive
+target_link_libraries(pimsettingexporterconsole KF5::ConfigCore Qt5::Xml KF5::CoreAddons KF5::I18n KF5::Archive KF5::AkonadiCore   KF5::MailCommon
   pimsettingexporterprivate
 )
 if (BUILD_TESTING)

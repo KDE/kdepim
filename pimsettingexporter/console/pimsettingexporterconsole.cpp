@@ -23,6 +23,9 @@
 #include "xml/templateselection.h"
 
 #include <QTimer>
+#include <pimsettingexporterkernel.h>
+#include <MailCommon/MailKernel>
+#include <MailCommon/FilterManager>
 
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
     : QObject(parent),
@@ -32,6 +35,12 @@ PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
       mMode(Import),
       mInProgress(false)
 {
+    //Initialize filtermanager
+    (void)MailCommon::FilterManager::instance();
+    PimSettingExporterKernel *kernel = new PimSettingExporterKernel(this);
+    CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
+
     initializeLogInFile();
     //TODO initialize akonadi server
 }
