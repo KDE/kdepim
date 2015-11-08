@@ -21,14 +21,19 @@
 #include <QFile>
 
 LogInFile::LogInFile(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mFile(Q_NULLPTR)
 {
-
+    qDebug()<<" LogInFile::LogInFile(QObject *parent)"<<this;
 }
 
 LogInFile::~LogInFile()
 {
-
+    qDebug()<<" LogInFile::~LogInFile"<<this;
+    if (mFile) {
+        mFile->close();
+        delete mFile;
+    }
 }
 
 QString LogInFile::fileName() const
@@ -38,10 +43,15 @@ QString LogInFile::fileName() const
 
 void LogInFile::setFileName(const QString &fileName)
 {
-    if (mFileName.isEmpty()) {
+    if (!fileName.isEmpty()) {
         mFileName = fileName;
-        QFile file(mFileName);
-        mTextStream.setDevice(&file);
+        if (!mFile) {
+            mFile = new QFile(mFileName);
+            if (!mFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+                return;
+            }
+        }
+        mTextStream.setDevice(mFile);
     }
 }
 

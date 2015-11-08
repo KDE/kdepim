@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include <QTextStream>
-
+class QFile;
 class LogInFile : public QObject
 {
     Q_OBJECT
@@ -47,6 +47,7 @@ private:
     void addLogLine(const QString &message, LogType type);
     QString mFileName;
     QTextStream mTextStream;
+    QFile *mFile;
 };
 
 #endif // LOGINFILE_H
