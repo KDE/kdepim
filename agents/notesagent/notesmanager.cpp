@@ -30,13 +30,13 @@
 #include <AkonadiCore/ChangeRecorder>
 
 #include <KMime/KMimeMessage>
-#include <QDateTime>
-#include <ksocketfactory.h>
+
 #include <KNotification>
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <QIcon>
 
+#include <QDateTime>
+#include <QIcon>
 #include <QTcpServer>
 #include <QTimer>
 
@@ -190,8 +190,8 @@ void NotesManager::updateNetworkListener()
 
     if (NoteShared::NoteSharedGlobalConfig::receiveNotes()) {
         // create the socket and start listening for connections
-        mListener = KSocketFactory::listen(QStringLiteral("knotes"), QHostAddress::Any,
-                                           NoteShared::NoteSharedGlobalConfig::port());
+        mListener = new QTcpServer;
+        mListener->listen(QHostAddress::Any, NoteShared::NoteSharedGlobalConfig::port());
         connect(mListener, &QTcpServer::newConnection, this, &NotesManager::slotAcceptConnection);
     }
 }

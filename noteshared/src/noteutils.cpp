@@ -21,7 +21,6 @@
 #include "attributes/notedisplayattribute.h"
 #include "notesharedglobalconfig.h"
 #include <KProcess>
-#include <ksocketfactory.h>
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -29,6 +28,7 @@
 
 #include <QPointer>
 #include <QApplication>
+#include <QSslSocket>
 
 using namespace NoteShared;
 
@@ -82,8 +82,9 @@ void NoteUtils::sendToNetwork(QWidget *parent, const QString &title, const QStri
         }
 
         // Send the note
-        NoteShared::NotesNetworkSender *sender = new NoteShared::NotesNetworkSender(
-            KSocketFactory::connectToHost(QStringLiteral("notes"), host, port));
+        auto socket = new QSslSocket;
+        socket->connectToHost(host, port);
+        NoteShared::NotesNetworkSender *sender = new NoteShared::NotesNetworkSender(socket);
         sender->setSenderId(NoteShared::NoteSharedGlobalConfig::senderID());
         sender->setNote(title, message);   // FIXME: plainText ??
     }
