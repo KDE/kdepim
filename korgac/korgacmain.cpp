@@ -68,8 +68,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     KDBusService service(KDBusService::Unique);
-    KOAlarmClient *client = new KOAlarmClient;
-    //ReminderDaemonApp app;
+    KOAlarmClient client;
     //app.disableSessionManagement();
 
     return app.exec();
