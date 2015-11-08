@@ -57,6 +57,7 @@ private Q_SLOTS:
     void slotJobFailed();
     void slotBackupDone();
     void slotJobFinished();
+    void slotRestoreDone();
 private:
     void initializeLogInFile();
     QString mTemplateFileName;

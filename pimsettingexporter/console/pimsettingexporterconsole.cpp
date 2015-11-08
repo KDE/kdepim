@@ -59,6 +59,13 @@ void PimSettingExporterConsole::initializeLogInFile()
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::jobFinished, this, &PimSettingExporterConsole::slotJobFinished);
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::backupDone, this, &PimSettingExporterConsole::slotBackupDone);
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::jobFailed, this, &PimSettingExporterConsole::slotJobFailed);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::restoreDone, this, &PimSettingExporterConsole::slotRestoreDone);
+}
+
+void PimSettingExporterConsole::slotRestoreDone()
+{
+    qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Restore Done";
+    QTimer::singleShot(0, this, &PimSettingExporterConsole::finished);
 }
 
 void PimSettingExporterConsole::slotJobFailed()
@@ -70,6 +77,7 @@ void PimSettingExporterConsole::slotJobFailed()
 void PimSettingExporterConsole::slotBackupDone()
 {
     qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Backup Done";
+    QTimer::singleShot(0, this, &PimSettingExporterConsole::finished);
 }
 
 void PimSettingExporterConsole::slotJobFinished()
