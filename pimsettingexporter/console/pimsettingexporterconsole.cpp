@@ -33,6 +33,7 @@ PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
       mInProgress(false)
 {
     initializeLogInFile();
+    //TODO initialize akonadi server
 }
 
 PimSettingExporterConsole::~PimSettingExporterConsole()

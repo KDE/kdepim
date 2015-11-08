@@ -35,6 +35,8 @@ TemplateSelection::TemplateSelection(const QString &path)
             } else {
                 mDocument = doc;
             }
+        } else {
+            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "Unable to load file:" << path;
         }
     }
 }
