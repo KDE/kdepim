@@ -83,13 +83,13 @@ void LogInFile::addLogLine(const QString &message, LogType type)
         newMessage = QLatin1Char('\n');
         break;
     case AddInfo:
-        newMessage = QStringLiteral("INFO: %1").arg(message);
+        newMessage = QStringLiteral("INFO: %1\n").arg(message);
         break;
     case AddError:
-        newMessage = QStringLiteral("ERROR: %1").arg(message);
+        newMessage = QStringLiteral("ERROR: %1\n").arg(message);
         break;
     case AddTitle:
-        newMessage = message;
+        newMessage = message + QLatin1Char('\n');
         break;
     }
     mTextStream << newMessage;
