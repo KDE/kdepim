@@ -20,6 +20,7 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 #include "imapresourcesettings.h"
+#include "util/resoucereadconfigfile.h"
 #include "PimCommon/PimUtil"
 #include <AkonadiCore/NewMailNotifierAttribute>
 #include "mailcommon_debug.h"
@@ -225,16 +226,11 @@ void FolderCollection::writeConfig() const
         uint defaultIdentityId = -1;
 
         if (PimCommon::Util::isImapResource(mCollection.resource())) {
-            OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-                PimCommon::Util::createImapSettingsInterface(mCollection.resource());
-
-            if (imapSettingsInterface && imapSettingsInterface->isValid()) {
-                QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
-                if (reply.isValid()) {
-                    defaultIdentityId = static_cast<uint>(reply);
-                }
+            PimCommon::ResouceReadConfigFile resourceFile(mCollection.resource());
+            KConfigGroup grp = resourceFile.group(QStringLiteral("cache"));
+            if (grp.isValid()) {
+                defaultIdentityId = grp.readEntry(QStringLiteral("AccountIdentity"), -1);
             }
-            delete imapSettingsInterface;
         } else {
             defaultIdentityId = KernelIf->identityManager()->defaultIdentity().uoid();
         }
@@ -291,16 +287,15 @@ void FolderCollection::setIdentity(uint identity)
 uint FolderCollection::fallBackIdentity() const
 {
     int identityId = -1;
-    QScopedPointer<OrgKdeAkonadiImapSettingsInterface> imapSettingsInterface(PimCommon::Util::createImapSettingsInterface(mCollection.resource()));
-
-    if (imapSettingsInterface && imapSettingsInterface->isValid()) {
-        QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
-        if (useDefault.isValid() && useDefault.value()) {
+    PimCommon::ResouceReadConfigFile resourceFile(mCollection.resource());
+    KConfigGroup grp = resourceFile.group(QStringLiteral("cache"));
+    if (grp.isValid()) {
+        const bool useDefault = grp.readEntry(QStringLiteral("UseDefaultIdentity"), true);
+        if (useDefault) {
             return mIdentity;
         }
-
-        QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
-        if (remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0) {
+        const int remoteAccountIdent = grp.readEntry(QStringLiteral("AccountIdentity"), -1);
+        if (remoteAccountIdent > 0) {
             identityId = remoteAccountIdent;
         }
     }
