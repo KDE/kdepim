@@ -338,22 +338,22 @@ void RegularExpressionTests::shouldCaptureValue_data()
                            << true;
 
     QTest::newRow("no match") << QStringLiteral("ww timsieved v2.2.12-ww")
-                           << false
-                           << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
-                           << (QStringList())
-                           << true;
+                              << false
+                              << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
+                              << (QStringList())
+                              << true;
 
     QTest::newRow("without name") << QStringLiteral("Cyrus timsieved v2.2.12")
-                           << true
-                           << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
-                           << (QStringList() << QStringLiteral("2") << QStringLiteral("2") << QStringLiteral("12") << QString())
-                           << true;
+                                  << true
+                                  << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
+                                  << (QStringList() << QStringLiteral("2") << QStringLiteral("2") << QStringLiteral("12") << QString())
+                                  << true;
 
     QTest::newRow("insensitive case") << QStringLiteral("CYRUS timsieveD v2.2.12")
-                           << true
-                           << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
-                           << (QStringList() << QStringLiteral("2") << QStringLiteral("2") << QStringLiteral("12") << QString())
-                           << true;
+                                      << true
+                                      << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
+                                      << (QStringList() << QStringLiteral("2") << QStringLiteral("2") << QStringLiteral("12") << QString())
+                                      << true;
 
 }
 

@@ -691,8 +691,9 @@ void CSVImportDialog::saveTemplate()
     }
 
     const int numberOfColumn(mModel->columnCount());
-    if (numberOfColumn == 0)
+    if (numberOfColumn == 0) {
         return;
+    }
 
     const QString fileName =
         QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kaddressbook/csv-templates/") +
