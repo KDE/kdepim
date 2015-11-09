@@ -111,3 +111,4 @@ Root
 |       |---------blogilo/blogilo.db
 |       |---------kaddressbook/viewertemplates/
 |       |---------kaddressbook/csv-templates/
+|       |---------korganizer/designer/

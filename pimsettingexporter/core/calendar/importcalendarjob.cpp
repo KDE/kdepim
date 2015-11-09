@@ -295,6 +295,18 @@ void ImportCalendarJob::restoreConfig()
             qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "template cannot copy to " << templatePath;
         }
     }
+
+    const KArchiveEntry *designerEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("korganizer/designer/"));
+    if (designerEntry && designerEntry->isDirectory()) {
+        const QString templatePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("korganizer/designer/");
+        const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory *>(designerEntry);
+        if (!templateDir->copyTo(templatePath)) {
+            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "template cannot copy to " << templatePath;
+        }
+    }
+
+
+
     restoreUiRcFile(QStringLiteral("korganizerui.rc"), QStringLiteral("korganizer"));
     restoreUiRcFile(QStringLiteral("korganizer_part.rc"), QStringLiteral("korganizer"));
 
