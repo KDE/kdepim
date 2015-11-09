@@ -324,6 +324,77 @@ void RegularExpressionTests::shouldContainsString()
     QCOMPARE(contains, input.contains(QRegularExpression(regexp)));
 }
 
+void RegularExpressionTests::shouldCaptureValue_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<bool>("match");
+    QTest::addColumn<QString>("regexp");
+    QTest::addColumn<QStringList>("matchedElements");
+    QTest::addColumn<bool>("insensitiveCase");
+    QTest::newRow("cyrus") << QStringLiteral("Cyrus timsieved v2.2.12-ww")
+                           << true
+                           << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
+                           << (QStringList() << QStringLiteral("2") << QStringLiteral("2") << QStringLiteral("12") << QStringLiteral("-ww"))
+                           << true;
+
+    QTest::newRow("no match") << QStringLiteral("ww timsieved v2.2.12-ww")
+                           << false
+                           << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
+                           << (QStringList())
+                           << true;
+
+    QTest::newRow("without name") << QStringLiteral("Cyrus timsieved v2.2.12")
+                           << true
+                           << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
+                           << (QStringList() << QStringLiteral("2") << QStringLiteral("2") << QStringLiteral("12") << QString())
+                           << true;
+
+    QTest::newRow("insensitive case") << QStringLiteral("CYRUS timsieveD v2.2.12")
+                           << true
+                           << QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)")
+                           << (QStringList() << QStringLiteral("2") << QStringLiteral("2") << QStringLiteral("12") << QString())
+                           << true;
+
+}
+
+void RegularExpressionTests::shouldCaptureValue()
+{
+    QFETCH(QString, input);
+    QFETCH(bool, match);
+    QFETCH(QString, regexp);
+    QFETCH(QStringList, matchedElements);
+    QFETCH(bool, insensitiveCase);
+
+    QRegExp regExp(regexp, insensitiveCase ? Qt::CaseInsensitive : Qt::CaseSensitive);
+    bool hasMatch = (regExp.indexIn(input) >= 0);
+    QCOMPARE(hasMatch, match);
+    if (match) {
+        const int major = regExp.cap(1).toInt();
+        const int minor = regExp.cap(2).toInt();
+        const int patch = regExp.cap(3).toInt();
+        const QString vendor = regExp.cap(4);
+        QCOMPARE(major, matchedElements.at(0).toInt());
+        QCOMPARE(minor, matchedElements.at(1).toInt());
+        QCOMPARE(patch, matchedElements.at(2).toInt());
+        QCOMPARE(vendor, matchedElements.at(3));
+    }
+
+    QRegularExpression expression(regexp, insensitiveCase ? QRegularExpression::CaseInsensitiveOption : QRegularExpression::NoPatternOption);
+    QRegularExpressionMatch matchExpression = expression.match(input);
+    hasMatch = matchExpression.hasMatch();
+    QCOMPARE(hasMatch, match);
+    if (match) {
+        const int major = matchExpression.captured(1).toInt();
+        const int minor = matchExpression.captured(2).toInt();
+        const int patch = matchExpression.captured(3).toInt();
+        const QString vendor = matchExpression.captured(4);
+        QCOMPARE(major, matchedElements.at(0).toInt());
+        QCOMPARE(minor, matchedElements.at(1).toInt());
+        QCOMPARE(patch, matchedElements.at(2).toInt());
+        QCOMPARE(vendor, matchedElements.at(3));
+    }
+}
+
 void RegularExpressionTests::shouldVerifyQStringListFilterWithPmailSettingsConversion()
 {
     QFETCH(QStringList, input);

@@ -57,6 +57,9 @@ private Q_SLOTS:
     void shouldContainsString_data();
     void shouldContainsString();
 
+    void shouldCaptureValue_data();
+    void shouldCaptureValue();
+
 };
 
 #endif // REGULAREXPRESSIONTESTS_H

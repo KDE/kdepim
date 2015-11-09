@@ -33,6 +33,7 @@
 #include <KPasswordDialog>
 #include <KMessageBox>
 #include <kio/job.h>
+#include <QRegularExpression>
 #include <QTimer>
 
 using namespace KManageSieve;
@@ -236,12 +237,13 @@ bool Session::requestCapabilitiesAfterStartTls() const
     // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
     // not standard conform, but we need to support that anyway.
     // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
-    QRegExp regExp(QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)"), Qt::CaseInsensitive);
-    if (regExp.indexIn(m_implementation) >= 0) {
-        const int major = regExp.cap(1).toInt();
-        const int minor = regExp.cap(2).toInt();
-        const int patch = regExp.cap(3).toInt();
-        const QString vendor = regExp.cap(4);
+    QRegularExpression regExp(QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)"), QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch matchExpression = regExp.match(m_implementation);
+    if (matchExpression.hasMatch()) {
+        const int major = matchExpression.captured(1).toInt();
+        const int minor = matchExpression.captured(2).toInt();
+        const int patch = matchExpression.captured(3).toInt();
+        const QString vendor = matchExpression.captured(4);
         if (major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == QLatin1String("-kolab-nocaps"))) {
             qCDebug(KMANAGERSIEVE_LOG) << "Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"";
             return true;
