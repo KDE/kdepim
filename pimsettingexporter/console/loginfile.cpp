@@ -24,12 +24,10 @@ LogInFile::LogInFile(QObject *parent)
     : QObject(parent),
       mFile(Q_NULLPTR)
 {
-    qDebug()<<" LogInFile::LogInFile(QObject *parent)"<<this;
 }
 
 LogInFile::~LogInFile()
 {
-    qDebug()<<" LogInFile::~LogInFile"<<this;
     if (mFile) {
         mFile->close();
         delete mFile;
