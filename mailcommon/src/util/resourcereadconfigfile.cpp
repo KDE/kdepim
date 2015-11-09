@@ -15,21 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "resoucereadconfigfile.h"
+#include "resourcereadconfigfile.h"
 
 #include <KConfig>
 
 using namespace PimCommon;
 
-class PimCommon::ResouceReadConfigFilePrivate
+class PimCommon::ResourceReadConfigFilePrivate
 {
 public:
-    ResouceReadConfigFilePrivate()
+    ResourceReadConfigFilePrivate()
         : mConfig(Q_NULLPTR)
     {
 
     }
-    ~ResouceReadConfigFilePrivate()
+    ~ResourceReadConfigFilePrivate()
     {
         delete mConfig;
     }
@@ -37,18 +37,18 @@ public:
     KConfig *mConfig;
 };
 
-ResouceReadConfigFile::ResouceReadConfigFile(const QString &resourceName)
-    : d(new PimCommon::ResouceReadConfigFilePrivate)
+ResourceReadConfigFile::ResourceReadConfigFile(const QString &resourceName)
+    : d(new PimCommon::ResourceReadConfigFilePrivate)
 {
     d->mConfig = new KConfig(resourceName + QStringLiteral("rc"));
 }
 
-ResouceReadConfigFile::~ResouceReadConfigFile()
+ResourceReadConfigFile::~ResourceReadConfigFile()
 {
     delete d;
 }
 
-KConfigGroup ResouceReadConfigFile::group(const QString &name) const
+KConfigGroup ResourceReadConfigFile::group(const QString &name) const
 {
     if (d->mConfig) {
         return d->mConfig->group(name);

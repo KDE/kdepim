@@ -24,16 +24,16 @@
 
 namespace PimCommon
 {
-class ResouceReadConfigFilePrivate;
-class PIMCOMMON_EXPORT ResouceReadConfigFile
+class ResourceReadConfigFilePrivate;
+class PIMCOMMON_EXPORT ResourceReadConfigFile
 {
 public:
-    ResouceReadConfigFile(const QString &resourceName);
-    ~ResouceReadConfigFile();
+    ResourceReadConfigFile(const QString &resourceName);
+    ~ResourceReadConfigFile();
 
     KConfigGroup group(const QString &name) const;
 private:
-    ResouceReadConfigFilePrivate *const d;
+    ResourceReadConfigFilePrivate *const d;
 };
 }
 

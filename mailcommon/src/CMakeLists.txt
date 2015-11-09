@@ -149,7 +149,7 @@ set(libmailcommon_mdn_SRCS
 
 set(libmailcommon_util_SRCS
   util/mailutil.cpp
-  util/resoucereadconfigfile.cpp
+  util/resourcereadconfigfile.cpp
 )
 
 set(libmailcommon_SRCS
@@ -255,7 +255,7 @@ ecm_generate_headers(MailCommon_CamelCase_HEADERS
   HEADER_NAMES
   MailUtil
   MetaType
-  ResouceReadConfigFile
+  ResourceReadConfigFile
   REQUIRED_HEADERS MailCommon_HEADERS
   PREFIX MailCommon
   RELATIVE util
