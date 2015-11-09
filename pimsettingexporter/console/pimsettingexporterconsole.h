@@ -60,6 +60,7 @@ private Q_SLOTS:
     void slotRestoreDone();
 private:
     void initializeLogInFile();
+    void closeLogFile();
     QString mTemplateFileName;
     QString mImportExportFileName;
     PimSettingsBackupRestore *mPimSettingsBackupRestore;
