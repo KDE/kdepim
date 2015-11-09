@@ -816,26 +816,8 @@ void ImportMailJob::restoreConfig()
         restoreConfigFile(filename);
     }
 
-    const KArchiveEntry *autocorrectionEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("autocorrect/"));
-    if (autocorrectionEntry && autocorrectionEntry->isDirectory()) {
-        const KArchiveDirectory *autoCorrectionDir = static_cast<const KArchiveDirectory *>(autocorrectionEntry);
-        Q_FOREACH (const QString &entryName, autoCorrectionDir->entries()) {
-            const KArchiveEntry *entry = autoCorrectionDir->entry(entryName);
-            if (entry && entry->isFile()) {
-                const KArchiveFile *autocorrectionFile = static_cast<const KArchiveFile *>(entry);
-                const QString name = autocorrectionFile->name();
-                QString autocorrectionPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("autocorrect/");
-                if (QFile(autocorrectionPath).exists()) {
-                    if (overwriteConfigMessageBox(name)) {
-                        copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + QLatin1String("autocorrect/"));
-                    }
-                } else {
-                    autocorrectionPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("autocorrect/");
-                    copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + QLatin1String("autocorrect/"));
-                }
-            }
-        }
-    }
+    importDirectory(QStringLiteral("/autocorrect/"));
+    importDirectory(QStringLiteral("/gravatar/"));
     const KArchiveEntry *kmail2Entry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("kmail2/adblockrules_local"));
     if (kmail2Entry && kmail2Entry->isFile()) {
         const KArchiveFile *entry = static_cast<const KArchiveFile *>(kmail2Entry);
@@ -870,6 +852,30 @@ void ImportMailJob::restoreConfig()
 
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
+}
+
+void ImportMailJob::importDirectory(const QString &relativePath)
+{
+    const KArchiveEntry *autocorrectionEntry  = mArchiveDirectory->entry(Utils::dataPath() + relativePath);
+    if (autocorrectionEntry && autocorrectionEntry->isDirectory()) {
+        const KArchiveDirectory *autoCorrectionDir = static_cast<const KArchiveDirectory *>(autocorrectionEntry);
+        Q_FOREACH (const QString &entryName, autoCorrectionDir->entries()) {
+            const KArchiveEntry *entry = autoCorrectionDir->entry(entryName);
+            if (entry && entry->isFile()) {
+                const KArchiveFile *autocorrectionFile = static_cast<const KArchiveFile *>(entry);
+                const QString name = autocorrectionFile->name();
+                QString autocorrectionPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath;
+                if (QFile(autocorrectionPath).exists()) {
+                    if (overwriteConfigMessageBox(name)) {
+                        copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + relativePath);
+                    }
+                } else {
+                    autocorrectionPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath;
+                    copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + relativePath);
+                }
+            }
+        }
+    }
 }
 
 void ImportMailJob::restoreIdentity()

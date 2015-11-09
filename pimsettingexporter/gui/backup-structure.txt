@@ -1,4 +1,4 @@
-2015-11-02:
+2015-11-09:
 -----------
 
 2015-1-29: New VERSION for archive => VERSION_2 => knote-akonadi
@@ -112,3 +112,4 @@ Root
 |       |---------kaddressbook/viewertemplates/
 |       |---------kaddressbook/csv-templates/
 |       |---------korganizer/designer/
+|       |---------gravatar/*.png

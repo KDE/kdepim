@@ -394,6 +394,15 @@ void ExportMailJob::backupConfig()
         }
     }
 
+    const QDir gravatarDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/"));
+    if (gravatarDirectory.exists()) {
+        const QFileInfoList listFileInfo = gravatarDirectory.entryInfoList(QStringList() << QStringLiteral("*.png"), QDir::Files);
+        const int listSize(listFileInfo.size());
+        for (int i = 0; i < listSize; ++i) {
+            backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String("gravatar/"), listFileInfo.at(i).fileName());
+        }
+    }
+
     const QDir autocorrectDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/"));
     if (autocorrectDirectory.exists()) {
         const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList() << QStringLiteral("*.xml"), QDir::Files);
