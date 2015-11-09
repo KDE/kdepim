@@ -291,13 +291,11 @@ void FolderCollection::setIdentity(uint identity)
 uint FolderCollection::fallBackIdentity() const
 {
     int identityId = -1;
-    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-        PimCommon::Util::createImapSettingsInterface(mCollection.resource());
+    QScopedPointer<OrgKdeAkonadiImapSettingsInterface> imapSettingsInterface(PimCommon::Util::createImapSettingsInterface(mCollection.resource()));
 
     if (imapSettingsInterface && imapSettingsInterface->isValid()) {
         QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
         if (useDefault.isValid() && useDefault.value()) {
-            delete imapSettingsInterface;
             return mIdentity;
         }
 
@@ -306,7 +304,6 @@ uint FolderCollection::fallBackIdentity() const
             identityId = remoteAccountIdent;
         }
     }
-    delete imapSettingsInterface;
     if (identityId != -1 &&
             !KernelIf->identityManager()->identityForUoid(identityId).isNull()) {
         return identityId;
