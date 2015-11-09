@@ -41,6 +41,7 @@ TemplatesTextEditor::TemplatesTextEditor(QWidget *parent)
     QStringList excludeKeyWord;
     Q_FOREACH (QString str, TemplateParser::Util::keywords()) {
         excludeKeyWord << str.remove(QLatin1Char('%'));
+        excludeKeyWord << str.replace(QStringLiteral("\\("), QStringLiteral("("));
     }
     addIgnoreWords(excludeKeyWord);
     setWordWrapMode(QTextOption::NoWrap);
@@ -79,7 +80,11 @@ void TemplatesTextEditor::createHighlighter()
 void TemplatesTextEditor::initCompleter()
 {
     QStringList listWord;
-    listWord << Util::keywords();
+    QStringList excludeKeyWord;
+    Q_FOREACH (QString str, TemplateParser::Util::keywords()) {
+        excludeKeyWord << str.replace(QStringLiteral("\\("), QStringLiteral("("));
+    }
+    listWord << excludeKeyWord;
     listWord << Util::keywordsWithArgs();
 
     mTextEditorCompleter = new KPIMTextEdit::TextEditorCompleter(this, this);
