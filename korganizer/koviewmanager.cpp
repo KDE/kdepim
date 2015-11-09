@@ -81,6 +81,27 @@ void KOViewManager::readSettings( KConfig *config )
   KConfigGroup generalConfig( config, "General" );
   const QString view = generalConfig.readEntry( "Current View" );
 
+  mRangeMode = RangeMode( generalConfig.readEntry( "Range Mode", int( OTHER_RANGE ) ) );
+
+  switch ( mRangeMode ) {
+    case WORK_WEEK_RANGE:
+      selectWorkWeek();
+      break;
+    case WEEK_RANGE:
+      selectWeek();
+      break;
+    case NEXTX_RANGE:
+      selectNextX();
+      break;
+    case DAY_RANGE:
+      selectDay();
+      break;
+    case NO_RANGE:
+    default:
+      // Someone has been playing with the config file.
+      mRangeMode = OTHER_RANGE;
+  }
+
   if ( view == QLatin1String( "WhatsNext" ) ) {
     showWhatsNextView();
   } else if ( view == QLatin1String( "OldMonth" ) ) {
@@ -101,27 +122,6 @@ void KOViewManager::readSettings( KConfig *config )
     showMonthView();
   } else {
     showAgendaView();
-  }
-
-  mRangeMode = RangeMode( generalConfig.readEntry( "Range Mode", int( OTHER_RANGE ) ) );
-
-  switch ( mRangeMode ) {
-    case WORK_WEEK_RANGE:
-      selectWorkWeek();
-      break;
-    case WEEK_RANGE:
-      selectWeek();
-      break;
-    case NEXTX_RANGE:
-      selectNextX();
-      break;
-    case DAY_RANGE:
-      selectDay();
-      break;
-    case NO_RANGE:
-    default:
-      // Someone has been playing with the config file.
-      mRangeMode = OTHER_RANGE;
   }
 }
 
@@ -215,12 +215,13 @@ void KOViewManager::showView( KOrg::BaseView *view )
           action->setEnabled( view->supportsZoom() );
         }
       }
-
+/*
       for ( int i = 0; i < rangeActions.size(); ++i ) {
         if ( QAction *action = ac->action( rangeActions[i] ) ) {
           action->setEnabled( view->supportsDateRangeSelection() );
         }
       }
+      */
     }
   }
 }
@@ -535,6 +536,7 @@ void KOViewManager::showAgendaView()
 
 void KOViewManager::selectDay()
 {
+  showAgendaView();
   mRangeMode = DAY_RANGE;
   const QDate date = mMainView->activeDate();
   mMainView->dateNavigator()->selectDate( date );
@@ -542,6 +544,7 @@ void KOViewManager::selectDay()
 
 void KOViewManager::selectWorkWeek()
 {
+  showAgendaView();
   if ( KOGlobals::self()->getWorkWeekMask() != 0 ) {
     mRangeMode = WORK_WEEK_RANGE;
     QDate date = mMainView->activeDate();
@@ -556,6 +559,7 @@ void KOViewManager::selectWorkWeek()
 
 void KOViewManager::selectWeek()
 {
+  showAgendaView();
   mRangeMode = WEEK_RANGE;
   QDate date = mMainView->activeDate();
   mMainView->dateNavigator()->selectWeek( date );
@@ -563,6 +567,7 @@ void KOViewManager::selectWeek()
 
 void KOViewManager::selectNextX()
 {
+  showAgendaView();
   mRangeMode = NEXTX_RANGE;
   mMainView->dateNavigator()->selectDates( QDate::currentDate(),
                                            KOPrefs::instance()->mNextXDays );

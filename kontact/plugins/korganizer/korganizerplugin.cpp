@@ -127,6 +127,7 @@ QStringList KOrganizerPlugin::invisibleToolbarActions() const
 
   invisible += QLatin1String("view_todo");
   invisible += QLatin1String("view_journal");
+  invisible += QLatin1String("view_agenda");
   return invisible;
 }
 

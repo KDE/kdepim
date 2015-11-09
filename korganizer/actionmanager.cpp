@@ -492,25 +492,21 @@ void ActionManager::initActions()
 
   action = new KAction( KIcon( QLatin1String("view-calendar-day") ), i18n( "&Day" ), this );
   mACollection->addAction( QLatin1String("select_day"), action );
-  action->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectDay()) );
 
   mNextXDays = new KAction( KIcon( QLatin1String("view-calendar-upcoming-days") ), QString(), this );
-  mNextXDays->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   mACollection->addAction( QLatin1String("select_nextx"), mNextXDays );
   connect( mNextXDays, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectNextX()) );
   mNextXDays->setText( i18np( "&Next Day", "&Next %1 Days", KOPrefs::instance()->mNextXDays ) );
 
   action = new KAction( KIcon( QLatin1String("view-calendar-workweek") ), i18n( "W&ork Week" ), this );
-  action->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   mACollection->addAction( QLatin1String("select_workweek"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectWorkWeek()) );
 
   action = new KAction( KIcon( QLatin1String("view-calendar-week") ), i18n( "&Week" ), this );
-  action->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   mACollection->addAction( QLatin1String("select_week"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectWeek()) );
