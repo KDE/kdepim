@@ -109,3 +109,5 @@ Root
 |       |---------knotes/print/*
 |       |---------akregator/*
 |       |---------blogilo/blogilo.db
+|       |---------kaddressbook/viewertemplates/
+|       |---------kaddressbook/csv-templates/
