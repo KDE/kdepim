@@ -82,7 +82,7 @@ public:
     explicit Private( LookupCertificatesCommand * qq, KeyListController * c );
     ~Private();
 
-    QString fingerPrint;
+    QString query;
     void init();
 
 private:
@@ -100,8 +100,9 @@ private:
 
 private:
     using ImportCertificatesCommand::Private::showError;
-    void showError( QWidget * parent, const KeyListResult & result );
-    void showResult( QWidget * parent, const KeyListResult & result );
+    void showError(QWidget *parent, const KeyListResult &result);
+    void showResult(QWidget *parent, const KeyListResult &result);
+    void showHexPrefixInfo() const;
     void createDialog();
     KeyListJob * createKeyListJob( GpgME::Protocol proto ) const {
         const CryptoBackend::Protocol * const cbp = CryptoBackendFactory::instance()->protocol( proto );
@@ -152,11 +153,11 @@ LookupCertificatesCommand::LookupCertificatesCommand( KeyListController * c )
     d->init();
 }
 
-LookupCertificatesCommand::LookupCertificatesCommand( const QString & fingerPrint, KeyListController * c )
-    : ImportCertificatesCommand( new Private( this, c ) )
+LookupCertificatesCommand::LookupCertificatesCommand(const QString &query, KeyListController *c)
+    : ImportCertificatesCommand(new Private(this, c))
 {
     d->init();
-    d->fingerPrint = fingerPrint;
+    d->query = query;
 }
 
 LookupCertificatesCommand::LookupCertificatesCommand( QAbstractItemView * v, KeyListController * c )
@@ -182,17 +183,15 @@ void LookupCertificatesCommand::doStart() {
     d->createDialog();
     assert( d->dialog );
 
-    // if have prespecified fingerPrint, load into find field
-    // and start search
-    if ( ! d->fingerPrint.isEmpty() ) {
-        if ( !d->fingerPrint.startsWith( QLatin1String("0x") ) )
-            d->fingerPrint = QLatin1String("0x") + d->fingerPrint;
-        d->dialog->setSearchText( d->fingerPrint );
-        // Start Search
-        d->slotSearchTextChanged( d->fingerPrint );
+    // if we have a prespecified query, load it into find field
+    // and start the search
+    if (!d->query.isEmpty()) {
+        d->dialog->setSearchText(d->query);
+        d->slotSearchTextChanged(d->query);
+    } else {
+        d->dialog->setPassive(false);
     }
 
-    d->dialog->setPassive( false );
     d->dialog->show();
 
 }
@@ -223,22 +222,10 @@ void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & 
         dialog->setCertificates( std::vector<Key>() );
     }
 
-    const QRegExp rx( QLatin1String( "(?:0x|0X)?[0-9a-fA-F]{6,}" ) );
-    if ( rx.exactMatch( str ) )
-        information( str.startsWith( QLatin1String( "0x" ), Qt::CaseInsensitive )
-                     ? i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
-                            "<p>Different keyservers expect different ways to search for these. "
-                            "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
-                            "<p>If your search does not yield any results, try removing the 0x prefix from your search.</p>")
-                     : i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
-                            "<p>Different keyservers expect different ways to search for these. "
-                            "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
-                            "<p>If your search does not yield any results, try adding the 0x prefix to your search.</p>"),
-                     i18n("Hex-String Search"),
-                     QLatin1String( "lookup-certificates-warn-0x-prefix" ) );
+    query = str;
 
-    startKeyListJob( CMS,     str );
-    startKeyListJob( OpenPGP, str );
+    startKeyListJob(CMS,     str);
+    startKeyListJob(OpenPGP, str);
 
 }
 
@@ -278,9 +265,13 @@ void LookupCertificatesCommand::Private::slotKeyListResult( const KeyListResult 
     if ( keyListing.result.isTruncated() )
         showResult( dialog, keyListing.result );
 
-    if ( dialog ) {
-        dialog->setPassive( false );
-        dialog->setCertificates( keyListing.keys );
+    if (keyListing.keys.empty()) {
+        showHexPrefixInfo();
+    }
+
+    if (dialog) {
+        dialog->setPassive(false);
+        dialog->setCertificates(keyListing.keys);
     } else {
         finished();
     }
@@ -393,6 +384,24 @@ bool LookupCertificatesCommand::Private::checkConfig() const {
                            "<interface>Settings->Configure Kleopatra</interface>.</para>"),
                      i18nc("@title", "No Directory Servers Configured") );
     return ok;
+}
+
+void LookupCertificatesCommand::Private::showHexPrefixInfo() const
+{
+    const QRegExp rx(QLatin1String("(?:0x|0X)?[0-9a-fA-F]{6,}"));
+    if (rx.exactMatch(query)) {
+        information(query.startsWith(QLatin1String("0x"), Qt::CaseInsensitive)
+                    ? i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
+                           "<p>Different keyservers expect different ways to search for these. "
+                           "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
+                           "<p>If your search does not yield any results, try removing the 0x prefix from your search.</p>")
+                    : i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
+                           "<p>Different keyservers expect different ways to search for these. "
+                           "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
+                           "<p>If your search does not yield any results, try adding the 0x prefix to your search.</p>"),
+                    i18n("Hex-String Search"),
+                    QLatin1String("lookup-certificates-warn-0x-prefix"));
+    }
 }
 
 #undef d

@@ -580,13 +580,8 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
 void Kleo::KeySelectionDialog::slotStartCertificateManager( const QString &query )
 {
   QStringList args;
-  // ### waits for bug 175980 to be fixed, ie. those command line args to be added again
-#if 0
-  // ### port to libkleopatra
   if ( !query.isEmpty() )
-    args << QLatin1String("--external") << QLatin1String("--query") << KUrl::decode_string( query );
-#endif
-  Q_UNUSED( query );
+    args << QLatin1String("--search") << query;
   if( !QProcess::startDetached( QLatin1String("kleopatra"), args ) )
     KMessageBox::error( this,
                         i18n( "Could not start certificate manager; "

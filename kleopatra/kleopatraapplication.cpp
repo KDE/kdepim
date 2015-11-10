@@ -106,6 +106,7 @@ static const struct {
     { "verify",             I18N_NOOP("Verify file/signature"),                   "V" },
     { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify file(s)"),          "D" },
     { "query <fingerprint>",I18N_NOOP("Search for Certificate by fingerprint"),   "q" },
+    { "search <string>"    ,I18N_NOOP("Search for Certificate on Keyserver"),      "" },
     { "parent-windowid <windowId>",   I18N_NOOP("Parent Window Id for dialogs"),   "" },
     //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"),   ""  },
 };
@@ -283,6 +284,34 @@ int KleopatraApplication::newInstance() {
         return 1;
     }
 
+    // Check for Parent Window id
+    WId parentId = 0;
+    if (args->isSet("parent-windowid")) {
+#ifdef Q_OS_WIN
+        // WId is not a portable type as it is a pointer type on Windows.
+        // casting it from an integer is ok though as the values are guranteed to
+        // be compatible in the documentation.
+        parentId = reinterpret_cast<WId>(args->getOption( "parent-windowid").toUInt());
+#else
+        parentId = args->getOption("parent-windowid").toUInt();
+#endif
+    }
+
+
+    if ( args->isSet("search") ) {
+        const QString needle = args->getOption( "search" );
+        if ( needle.isEmpty() ) {
+          kDebug() << "no search string specified: --query";
+          return 1;
+        }
+        LookupCertificatesCommand * const cmd = new LookupCertificatesCommand( needle, 0 );
+        if ( parentId != 0 ) {
+            cmd->setParentWId( parentId );
+        };
+        cmd->start();
+        return 0;
+    }
+
     // Check for --query command
     if ( args->isSet( "query" ) ) {
         const QString fingerPrint = args->getOption( "query" );
@@ -291,24 +320,11 @@ int KleopatraApplication::newInstance() {
           return 1;
         }
 
-        // Check for Parent Window id
-        WId parentId = 0;
-        if ( args->isSet( "parent-windowid" ) ) {
-#ifdef Q_OS_WIN
-            // WId is not a portable type as it is a pointer type on Windows.
-            // casting it from an integer is ok though as the values are guranteed to
-            // be compatible in the documentation.
-            parentId = reinterpret_cast<WId>( args->getOption( "parent-windowid" ).toUInt() );
-#else
-            parentId = args->getOption( "parent-windowid" ).toUInt();
-#endif
-        }
-
         // Search for local keys
         const GpgME::Key &key = Kleo::KeyCache::instance()->findByKeyIDOrFingerprint( fingerPrint.toLocal8Bit().data() );
         if ( key.isNull() ) {
             // Show external search dialog
-            LookupCertificatesCommand * const cmd = new LookupCertificatesCommand( fingerPrint, 0 );
+            LookupCertificatesCommand *const cmd = new LookupCertificatesCommand(fingerPrint, 0);
             if ( parentId != 0 ) {
                 cmd->setParentWId( parentId );
             };
