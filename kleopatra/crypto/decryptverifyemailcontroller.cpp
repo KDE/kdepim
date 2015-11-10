@@ -86,6 +86,10 @@ namespace {
             m_resultPage.setKeepOpenWhenDoneShown( false );
 
             addPage( &m_resultPage );
+
+            const KConfigGroup config( KGlobal::config(), "DecryptVerifyEMailWizard" );
+            const QByteArray geom = config.readEntry( "savedGeometry", QByteArray());
+            restoreGeometry( geom );
         }
 
         void addTaskCollection( const shared_ptr<TaskCollection> & coll ) {
@@ -94,9 +98,9 @@ namespace {
 
     public Q_SLOTS:
         void accept() {
-            EMailOperationsPreferences prefs;
-            prefs.setDecryptVerifyPopupGeometry( geometry() );
-            prefs.writeConfig();
+            KConfigGroup config( KGlobal::config(), "DecryptVerifyEMailWizard" );
+            config.writeEntry( "savedGeometry", saveGeometry() );
+            config.sync();
             QWizard::accept();
         }
 
@@ -251,10 +255,6 @@ DecryptVerifyEMailWizard * DecryptVerifyEMailController::Private::findOrCreateWi
     DecryptVerifyEMailWizard * w = new DecryptVerifyEMailWizard;
     w->setWindowTitle( i18n( "Decrypt/Verify E-Mail" ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
-
-    const QRect preferredGeometry = EMailOperationsPreferences().decryptVerifyPopupGeometry();
-    if ( preferredGeometry.isValid() )
-        w->setGeometry( preferredGeometry );
 
     s_wizards[id] = w;
 
