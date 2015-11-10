@@ -70,7 +70,7 @@ target_link_libraries(KF5NoteShared
 PUBLIC
      KF5::AkonadiCore
 PRIVATE
-     KF5::DNSSD KF5::PimCommon  KF5::Mime KF5::AkonadiNotes KF5::KDELibs4Support KF5::PimTextEdit
+     KF5::DNSSD KF5::PimCommon  KF5::Mime KF5::AkonadiNotes KF5::PimTextEdit KF5::Completion Qt5::DBus
 )
 
 
