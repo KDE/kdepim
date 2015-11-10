@@ -20,8 +20,6 @@
 #include "util/mailutil.h"
 #include "imapresourcesettings.h"
 #include "mailcommon_debug.h"
-#include "pop3settings.h"
-#include "mailcommon_debug.h"
 #include "PimCommon/PimUtil"
 #include "PimCommon/ImapResourceCapabilitiesManager"
 
@@ -30,6 +28,7 @@
 #include <entitymimetypefiltermodel.h>
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 #include <Akonadi/KMime/SpecialMailCollectionsDiscoveryJob>
+#include <util/resourcereadconfigfile.h>
 
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityManager>
@@ -395,17 +394,16 @@ bool Kernel::folderIsInbox(const Akonadi::Collection &collection, bool withoutPo
             if (type.status() == Akonadi::AgentInstance::Broken) {
                 continue;
             }
-            if (type.identifier().contains(POP3_RESOURCE_IDENTIFIER)) {
-                OrgKdeAkonadiPOP3SettingsInterface *iface =
-                    MailCommon::Util::createPop3SettingsInterface(type.identifier());
-
-                if (iface->isValid()) {
-                    if (iface->targetCollection() == collection.id()) {
-                        delete iface;
+            const QString typeIdentifier = type.identifier();
+            if (typeIdentifier.contains(POP3_RESOURCE_IDENTIFIER)) {
+                PimCommon::ResourceReadConfigFile resourceFile(typeIdentifier);
+                const KConfigGroup grp = resourceFile.group(QStringLiteral("General"));
+                if (grp.isValid()) {
+                    const Akonadi::Collection::Id targetCollection = grp.readEntry(QStringLiteral("targetCollection"), -1);
+                    if (targetCollection == collection.id()) {
                         return true;
                     }
                 }
-                delete iface;
             }
         }
     }
