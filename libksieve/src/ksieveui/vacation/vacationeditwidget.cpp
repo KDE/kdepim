@@ -159,7 +159,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     glay->addWidget(tmpLabel, row, 0);
     glay->addWidget(mMailAliasesEdit, row, 1);
 
-    // Action for incomming mails
+    // Action for incoming mails
     mMailAction = new QComboBox(this);
     for (int i = 0; i < 4; ++i) {
         mMailAction->addItem(VacationUtils::mailAction((VacationUtils::MailAction) i));
@@ -178,7 +178,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     hLayout->addWidget(mMailActionRecipient);
 
     ++row;
-    tmpLabel = new QLabel(i18n("&Action for incomming mails:"), this);
+    tmpLabel = new QLabel(i18n("&Action for incoming mails:"), this);
     tmpLabel->setBuddy(mMailAction);
     glay->addWidget(tmpLabel, row, 0);
     glay->addLayout(hLayout, row, 1);
