@@ -77,6 +77,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     tmpLabel->setBuddy(mSubject);
     glay->addWidget(tmpLabel, row, 0);
     glay->addWidget(mSubject, row, 1);
+    ++row;
 
     QHBoxLayout *timeLayout = new QHBoxLayout(this);
     // Start date
@@ -96,13 +97,13 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     timeLayout->addWidget(mStartTimeActive);
     timeLayout->addWidget(mStartTime);
 
-    ++row;
     mStartDateLabel = new QLabel(i18n("&Start date:"), this);
     mStartDateLabel->setObjectName(QStringLiteral("mStartDateLabel"));
     mStartDateLabel->setBuddy(mStartDate);
     glay->addWidget(mStartDateLabel, row, 0);
     glay->addLayout(timeLayout, row, 1);
 
+    ++row;
     // End date
     timeLayout = new QHBoxLayout(this);
 
@@ -121,13 +122,12 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     timeLayout->addWidget(mEndDate);
     timeLayout->addWidget(mEndTimeActive);
     timeLayout->addWidget(mEndTime);
+    glay->addLayout(timeLayout, row, 1);
 
-    ++row;
     mEndDateLabel = new QLabel(i18n("&End date:"), this);
-    mEndDateLabel->setObjectName(QStringLiteral("mStartDateLabel"));
+    mEndDateLabel->setObjectName(QStringLiteral("mEndDateLabel"));
     mEndDateLabel->setBuddy(mEndDate);
     glay->addWidget(mEndDateLabel, row, 0);
-    glay->addWidget(mEndDate, row, 1);
 
     // Hide the date edits by default - they must be enabled by caller when the
     // server supports this feature
