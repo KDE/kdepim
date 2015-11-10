@@ -37,6 +37,7 @@ private Q_SLOTS:
     void slotWriteNextArchiveResource();
     void slotAddressbookJobTerminated();
 private:
+    void storeDirectory(const QString &subDirectory);
     void backupConfig();
     int mIndexIdentifier;
 };

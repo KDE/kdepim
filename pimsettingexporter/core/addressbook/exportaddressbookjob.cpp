@@ -162,28 +162,22 @@ void ExportAddressbookJob::backupConfig()
     }
     backupUiRcFile(QStringLiteral("kaddressbookui.rc"), QStringLiteral("kaddressbook"));
 
-    QString subDirectory = QStringLiteral("/kaddressbook/csv-templates/");
-    const QDir templateDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + subDirectory);
-    if (templateDirectory.exists()) {
-        const bool templateDirAdded = archive()->addLocalDirectory(templateDirectory.path(), Utils::dataPath() + subDirectory);
-        if (templateDirAdded) {
-            Q_EMIT info(i18n("Template directory \"%1\" added to backup file.", templateDirectory.path()));
-        } else {
-            Q_EMIT error(i18n("Template directory \"%1\" cannot be added to backup file.", templateDirectory.path()));
-        }
-    }
-    subDirectory = QStringLiteral("/kaddressbook/viewertemplates/");
-    const QDir viewertemplateDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + subDirectory);
-    if (viewertemplateDirectory.exists()) {
-        const bool templateDirAdded = archive()->addLocalDirectory(templateDirectory.path(), Utils::dataPath() + subDirectory);
-        if (templateDirAdded) {
-            Q_EMIT info(i18n("Template directory \"%1\" added to backup file.", templateDirectory.path()));
-        } else {
-            Q_EMIT error(i18n("Template directory \"%1\" cannot be added to backup file.", templateDirectory.path()));
-        }
-    }
-
+    storeDirectory(QStringLiteral("/kaddressbook/csv-templates/"));
+    storeDirectory(QStringLiteral("/kaddressbook/viewertemplates/"));
+    storeDirectory(QStringLiteral("/kaddressbook/printing/"));
 
     Q_EMIT info(i18n("Config backup done."));
 }
 
+void ExportAddressbookJob::storeDirectory(const QString &subDirectory)
+{
+    const QDir templateDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + subDirectory);
+    if (templateDirectory.exists()) {
+        const bool templateDirAdded = archive()->addLocalDirectory(templateDirectory.path(), Utils::dataPath() + subDirectory);
+        if (templateDirAdded) {
+            Q_EMIT info(i18n("Directory \"%1\" added to backup file.", templateDirectory.path()));
+        } else {
+            Q_EMIT error(i18n("Directory \"%1\" cannot be added to backup file.", templateDirectory.path()));
+        }
+    }
+}
