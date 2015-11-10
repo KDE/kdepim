@@ -18,12 +18,12 @@
 
 #include "mailkernel.h"
 #include "util/mailutil.h"
-#include "imapresourcesettings.h"
 #include "mailcommon_debug.h"
 #include "PimCommon/PimUtil"
 #include "PimCommon/ImapResourceCapabilitiesManager"
 
 #include <AgentInstance>
+#include <QApplication>
 #include <AgentManager>
 #include <entitymimetypefiltermodel.h>
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>

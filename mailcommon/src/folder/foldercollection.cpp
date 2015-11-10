@@ -19,7 +19,6 @@
 #include "foldercollection.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
-#include "imapresourcesettings.h"
 #include "util/resourcereadconfigfile.h"
 #include "PimCommon/PimUtil"
 #include <AkonadiCore/NewMailNotifierAttribute>
