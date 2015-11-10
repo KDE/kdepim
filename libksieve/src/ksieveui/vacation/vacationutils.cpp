@@ -62,7 +62,7 @@ QString KSieveUi::VacationUtils::mailAction(KSieveUi::VacationUtils::MailAction 
         return i18n("Copy to");
     default:
         qCWarning(LIBKSIEVE_LOG) << "Unknown mail action" << action;
-        return i18n("Unkown action");
+        return i18n("Unknown action");
     }
 }
 
