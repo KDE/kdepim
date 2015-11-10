@@ -186,7 +186,7 @@ void ManageSieveWidget::slotCancelFetch()
     QTreeWidgetItem *item = d->mTreeView->currentItem();
     if (item) {
         const QList<KManageSieve::SieveJob *>jobs = mJobs.keys(item);
-        Q_FOREACH(KManageSieve::SieveJob *job, jobs) {
+        Q_FOREACH (KManageSieve::SieveJob *job, jobs) {
             job->kill();
         }
     }
@@ -438,7 +438,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     }
 
     d->mBlockSignal = true; // don't trigger slotItemChanged
-    Q_FOREACH(const QString &script, listScript) {
+    Q_FOREACH (const QString &script, listScript) {
         //Hide protected name.
         if (Util::isKep14ProtectedName(script)) {
             continue;
@@ -503,7 +503,7 @@ void ManageSieveWidget::setActiveScripts(ParseUserScriptJob *job)
         }
     }
 
-    foreach(const QString &scriptName, scriptOrder) {
+    foreach (const QString &scriptName, scriptOrder) {
         parent->addChild(scriptMap[scriptName]);
     }
 

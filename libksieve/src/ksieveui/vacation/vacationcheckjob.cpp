@@ -32,11 +32,11 @@ VacationCheckJob::VacationCheckJob(const QUrl &url, const QString &serverName, Q
     : QObject(parent),
       mServerName(serverName),
       mUrl(url)
-      , mSieveJob(Q_NULLPTR)
-      , mParseJob(Q_NULLPTR)
-      , mScriptPos(-1)
-      , mKep14Support(false)
-      , mNoScriptFound(false)
+    , mSieveJob(Q_NULLPTR)
+    , mParseJob(Q_NULLPTR)
+    , mScriptPos(-1)
+    , mKep14Support(false)
+    , mNoScriptFound(false)
 {
 }
 
@@ -160,7 +160,7 @@ void VacationCheckJob::searchVacationScript()
     QStringList scriptList = mActiveScripts;
 
     // Reorder script list
-    foreach(const QString &script, mAvailableScripts) {
+    foreach (const QString &script, mAvailableScripts) {
         if (!scriptList.contains(script)) {
             scriptList.append(script);
         }

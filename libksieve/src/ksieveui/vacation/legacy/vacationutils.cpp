@@ -50,7 +50,6 @@ static inline QString stringReplace(QString s)
     return s.replace(QLatin1Char('\"'), QStringLiteral("\\\""));
 }
 
-
 /*
 
 This file only contains legacy code, that can be removed if the lagacy code is not needed anymore.
@@ -58,10 +57,10 @@ See README for further information.
 
 */
 bool Legacy::VacationUtils::parseScript(const QString &script, QString &messageText,
-                                QString &subject,
-                                int &notificationInterval, AddrSpecList &aliases,
-                                bool &sendForSpam, QString &domainName,
-                                QDate &startDate, QDate &endDate)
+                                        QString &subject,
+                                        int &notificationInterval, AddrSpecList &aliases,
+                                        bool &sendForSpam, QString &domainName,
+                                        QDate &startDate, QDate &endDate)
 {
     if (script.trimmed().isEmpty()) {
         return false;
@@ -89,7 +88,7 @@ bool Legacy::VacationUtils::parseScript(const QString &script, QString &messageT
     }
     notificationInterval = vdx.notificationInterval();
     aliases.clear();
-    foreach(const QString &alias, vdx.aliases()) {
+    foreach (const QString &alias, vdx.aliases()) {
         KMime::Types::Mailbox a;
         a.fromUnicodeString(alias);
         aliases.append(a.addrSpec());
@@ -103,7 +102,6 @@ bool Legacy::VacationUtils::parseScript(const QString &script, QString &messageT
     return true;
 }
 
-
 /*
 
 This file only contains legacy code, that can be removed if the lagacy code is not needed anymore.
@@ -111,11 +109,11 @@ See README for further information.
 
 */
 QString Legacy::VacationUtils::composeScript(const QString &messageText,
-                                     const QString &subject,
-                                     int notificationInterval,
-                                     const AddrSpecList &addrSpecs,
-                                     bool sendForSpam, const QString &domain,
-                                     const QDate &startDate, const QDate &endDate)
+        const QString &subject,
+        int notificationInterval,
+        const AddrSpecList &addrSpecs,
+        bool sendForSpam, const QString &domain,
+        const QDate &startDate, const QDate &endDate)
 {
     QString addressesArgument;
     QStringList aliases;

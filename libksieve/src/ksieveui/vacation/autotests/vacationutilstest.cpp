@@ -221,7 +221,7 @@ void VacationUtilsTest::testWriteScript()
     vacation.endDate = QDate(2015, 03, 04);
     vacation.active = true;
 
-    foreach(const QString &alias, aliases) {
+    foreach (const QString &alias, aliases) {
         KMime::Types::Mailbox a;
         a.fromUnicodeString(alias);
         vacation.aliases.append(a.addrSpec());

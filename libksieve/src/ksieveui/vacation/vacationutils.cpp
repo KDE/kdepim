@@ -102,7 +102,7 @@ KMime::Types::AddrSpecList VacationUtils::defaultMailAliases()
             a.fromUnicodeString((*it).primaryEmailAddress());
             sl.push_back(a.addrSpec());
         }
-        foreach(const QString &email, (*it).emailAliases()) {
+        foreach (const QString &email, (*it).emailAliases()) {
             KMime::Types::Mailbox a;
             a.fromUnicodeString(email);
             sl.push_back(a.addrSpec());
@@ -138,10 +138,10 @@ VacationUtils::Vacation parseScriptLegacy(const QString &script)
     KSieveUi::VacationUtils::Vacation vacation;
     vacation.active = true;
     vacation.valid =  Legacy::VacationUtils::parseScript(script, vacation.messageText,
-                                vacation.subject,
-                                vacation.notificationInterval, vacation.aliases,
-                                vacation.sendForSpam, vacation.excludeDomain,
-                                vacation.startDate, vacation.endDate);
+                      vacation.subject,
+                      vacation.notificationInterval, vacation.aliases,
+                      vacation.sendForSpam, vacation.excludeDomain,
+                      vacation.startDate, vacation.endDate);
     return vacation;
 }
 
@@ -193,7 +193,7 @@ VacationUtils::Vacation VacationUtils::parseScript(const QString &script)
     }
     vacation.notificationInterval = vdx.notificationInterval();
     vacation.aliases = KMime::Types::AddrSpecList();
-    foreach(const QString &alias, vdx.aliases()) {
+    foreach (const QString &alias, vdx.aliases()) {
         KMime::Types::Mailbox a;
         a.fromUnicodeString(alias);
         vacation.aliases.append(a.addrSpec());

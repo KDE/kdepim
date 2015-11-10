@@ -119,7 +119,7 @@ void MultiImapVacationDialog::init()
     QDialogButtonBox *buttonBox = Q_NULLPTR;
 
     const QMap <QString, QUrl> list = d->mVacationManager->serverList();
-    foreach(const QString &serverName, list.keys()) {
+    foreach (const QString &serverName, list.keys()) {
         const QUrl url = list.value(serverName);
         createPage(serverName, url);
         foundOneImap = true;

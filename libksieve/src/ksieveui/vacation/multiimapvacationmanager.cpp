@@ -43,7 +43,7 @@ QMap <QString, QUrl> MultiImapVacationManager::serverList() const
 {
     QMap <QString, QUrl> list;
     const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
-    foreach(const Akonadi::AgentInstance &instance, instances) {
+    foreach (const Akonadi::AgentInstance &instance, instances) {
         if (instance.status() == Akonadi::AgentInstance::Broken) {
             continue;
         }
@@ -83,7 +83,7 @@ void MultiImapVacationManager::checkVacation()
     mCheckInProgress = true;
 
     QMap <QString, QUrl> list = serverList();
-    foreach(const QString &serverName, list.keys()) {
+    foreach (const QString &serverName, list.keys()) {
         const QUrl url = list.value(serverName);
         checkVacation(serverName, url);
     }

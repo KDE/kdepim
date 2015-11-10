@@ -222,7 +222,7 @@ bool Util::hasKep14Support(const QStringList &sieveCapabilities, const QStringLi
     }
 
     bool hasUserScript = false;
-    foreach(const QString &script, availableScripts) {
+    foreach (const QString &script, availableScripts) {
         if (script.isEmpty()) {
             continue;
         }
@@ -246,3 +246,4 @@ bool Util::isKep14ProtectedName(const QString &name)
     }
     return false;
 }
+

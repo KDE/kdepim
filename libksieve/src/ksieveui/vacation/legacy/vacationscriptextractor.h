@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef LEGACY_VACATIONSCRIPTEXTRACTOR_H
 #define LEGACY_VACATIONSCRIPTEXTRACTOR_H
 
@@ -85,7 +84,7 @@ This file only contains legacy code, that can be removed if the lagacy code is n
 See README for further information.
 
 */
-class __attribute__ ((__deprecated__)) SpamDataExtractor : public GenericInformationExtractor
+class __attribute__((__deprecated__)) SpamDataExtractor : public GenericInformationExtractor
 {
 public:
     SpamDataExtractor()
@@ -149,7 +148,7 @@ This file only contains legacy code, that can be removed if the lagacy code is n
 See README for further information.
 
 */
-class __attribute__ ((__deprecated__)) DomainRestrictionDataExtractor : public GenericInformationExtractor
+class __attribute__((__deprecated__)) DomainRestrictionDataExtractor : public GenericInformationExtractor
 {
 public:
     DomainRestrictionDataExtractor()
@@ -215,7 +214,7 @@ This file only contains legacy code, that can be removed if the lagacy code is n
 See README for further information.
 
 */
-class __attribute__ ((__deprecated__)) DateExtractor : public GenericInformationExtractor
+class __attribute__((__deprecated__)) DateExtractor : public GenericInformationExtractor
 {
 public:
     DateExtractor()
@@ -250,7 +249,7 @@ This file only contains legacy code, that can be removed if the lagacy code is n
 See README for further information.
 
 */
-class __attribute__ ((__deprecated__)) VacationDataExtractor : public KSieve::ScriptBuilder
+class __attribute__((__deprecated__)) VacationDataExtractor : public KSieve::ScriptBuilder
 {
     enum Context {
         None = 0,
@@ -294,13 +293,11 @@ private:
     void testEnd() Q_DECL_OVERRIDE {}
     void testListStart() Q_DECL_OVERRIDE {}
     void testListEnd() Q_DECL_OVERRIDE {}
-    void blockStart(int lineNumber) Q_DECL_OVERRIDE
-    {
+    void blockStart(int lineNumber) Q_DECL_OVERRIDE {
         Q_UNUSED(lineNumber)
 
     }
-    void blockEnd(int lineNumber) Q_DECL_OVERRIDE
-    {
+    void blockEnd(int lineNumber) Q_DECL_OVERRIDE {
         Q_UNUSED(lineNumber)
     }
     void hashComment(const QString &) Q_DECL_OVERRIDE {}
