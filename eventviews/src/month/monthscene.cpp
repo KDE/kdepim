@@ -200,7 +200,7 @@ void MonthGraphicsView::drawBackground(QPainter *p, const QRectF &rect)
                       static_cast<int>(mScene->headerHeight() - dayLabelsHeight)),
                 Qt::AlignCenter,
                 i18nc("monthname year", "%1 %2",
-                      QLocale::system().monthName(mMonthView->averageDate().month()),
+                      QLocale::system().standaloneMonthName(mMonthView->averageDate().month()),
                       mMonthView->averageDate().year()));
 
     font.setPointSize(dayLabelsHeight - 10);
