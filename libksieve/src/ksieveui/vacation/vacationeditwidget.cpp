@@ -97,7 +97,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     timeLayout->addWidget(mStartTimeActive);
     timeLayout->addWidget(mStartTime);
 
-    mStartDateLabel = new QLabel(i18n("&Start date:"), this);
+    mStartDateLabel = new QLabel(i18n("Start date:"), this);
     mStartDateLabel->setObjectName(QStringLiteral("mStartDateLabel"));
     mStartDateLabel->setBuddy(mStartDate);
     glay->addWidget(mStartDateLabel, row, 0);
@@ -124,7 +124,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     timeLayout->addWidget(mEndTime);
     glay->addLayout(timeLayout, row, 1);
 
-    mEndDateLabel = new QLabel(i18n("&End date:"), this);
+    mEndDateLabel = new QLabel(i18n("End date:"), this);
     mEndDateLabel->setObjectName(QStringLiteral("mEndDateLabel"));
     mEndDateLabel->setBuddy(mEndDate);
     glay->addWidget(mEndDateLabel, row, 0);
