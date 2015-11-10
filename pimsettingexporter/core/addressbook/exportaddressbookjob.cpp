@@ -169,15 +169,4 @@ void ExportAddressbookJob::backupConfig()
     Q_EMIT info(i18n("Config backup done."));
 }
 
-void ExportAddressbookJob::storeDirectory(const QString &subDirectory)
-{
-    const QDir templateDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + subDirectory);
-    if (templateDirectory.exists()) {
-        const bool templateDirAdded = archive()->addLocalDirectory(templateDirectory.path(), Utils::dataPath() + subDirectory);
-        if (templateDirAdded) {
-            Q_EMIT info(i18n("Directory \"%1\" added to backup file.", templateDirectory.path()));
-        } else {
-            Q_EMIT error(i18n("Directory \"%1\" cannot be added to backup file.", templateDirectory.path()));
-        }
-    }
-}
+

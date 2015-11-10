@@ -530,3 +530,16 @@ void AbstractImportExportJob::initializeListStep()
         mListStep << Utils::Data;
     }
 }
+
+void AbstractImportExportJob::storeDirectory(const QString &subDirectory)
+{
+    const QDir directoryToStore(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + subDirectory);
+    if (directoryToStore.exists()) {
+        const bool templateDirAdded = archive()->addLocalDirectory(directoryToStore.path(), Utils::dataPath() + subDirectory);
+        if (templateDirAdded) {
+            Q_EMIT info(i18n("Directory \"%1\" added to backup file.", directoryToStore.path()));
+        } else {
+            Q_EMIT error(i18n("Directory \"%1\" cannot be added to backup file.", directoryToStore.path()));
+        }
+    }
+}

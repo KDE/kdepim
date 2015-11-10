@@ -110,6 +110,7 @@ protected:
     void createProgressDialog(const QString &title = QString());
 
     void setProgressDialogLabel(const QString &text);
+    void storeDirectory(const QString &subDirectory);
 
     QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
     QVector<resourceFiles> mListResourceFile;

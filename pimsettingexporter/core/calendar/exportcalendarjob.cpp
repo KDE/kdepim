@@ -161,25 +161,9 @@ void ExportCalendarJob::backupConfig()
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
 
-    const QString templateDirName = QStringLiteral("/korganizer/templates/");
-    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + templateDirName;
-    QDir templateDirectory(templateDir);
-    if (templateDirectory.exists()) {
-        const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  templateDirName);
-        if (!templateDirAdded) {
-            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", templateDir));
-        }
-    }
+    storeDirectory(QStringLiteral("/korganizer/templates/"));
+    storeDirectory(QStringLiteral("/korganizer/designer/"));
 
-    const QString designerDirName = QStringLiteral("/korganizer/designer/");
-    const QString designerDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + designerDirName;
-    QDir designerDirectory(designerDir);
-    if (designerDirectory.exists()) {
-        const bool templateDirAdded = archive()->addLocalDirectory(designerDir, Utils::dataPath() +  designerDirName);
-        if (!templateDirAdded) {
-            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", designerDir));
-        }
-    }
     backupUiRcFile(QStringLiteral("korganizerui.rc"), QStringLiteral("korganizer"));
     backupUiRcFile(QStringLiteral("korganizer_part.rc"), QStringLiteral("korganizer"));
     Q_EMIT info(i18n("Config backup done."));
