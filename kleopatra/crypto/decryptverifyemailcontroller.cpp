@@ -90,6 +90,14 @@ namespace {
             const KConfigGroup config( KGlobal::config(), "DecryptVerifyEMailWizard" );
             const QByteArray geom = config.readEntry( "savedGeometry", QByteArray());
             restoreGeometry( geom );
+            if (wizardStyle() == QWizard::ModernStyle) {
+                /* XXX This hack fixes Bug 355140. Showing the wizard modifies
+                 * its geometry if the style is modern. So we show it first and
+                 * then restore the Geometry again. Works and there is no visible
+                 * flicker. */
+                show();
+                restoreGeometry( geom );
+            }
         }
 
         void addTaskCollection( const shared_ptr<TaskCollection> & coll ) {
