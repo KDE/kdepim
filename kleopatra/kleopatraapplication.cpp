@@ -274,6 +274,35 @@ QString KleopatraApplication::newInstance(const QCommandLineParser &parser,
         protocol = GpgME::CMS;
     }
 
+    // Check for Parent Window id
+    WId parentId = 0;
+    if (parser.isSet(QStringLiteral("parent-windowid"))) {
+#ifdef Q_OS_WIN
+        // WId is not a portable type as it is a pointer type on Windows.
+        // casting it from an integer is ok though as the values are guranteed to
+        // be compatible in the documentation.
+        parentId = reinterpret_cast<WId>(parser.value(QStringLiteral("parent-windowid")).toUInt());
+#else
+        parentId = parser.value(QStringLiteral("parent-windowid")).toUInt();
+#endif
+    }
+
+    // Check for --search command.
+    if (parser.isSet(QStringLiteral("search"))) {
+        // This is an extra command instead of a combination with the
+        // similar query to avoid changing the older query commands behavior
+        // and query's "show details if a certificate exist or search on a
+        // keyserver" logic is hard to explain and use consistently.
+        const QString needle = parser.value(QStringLiteral("search"));
+        if (needle.isEmpty()) {
+            return i18n("No search string specified for --search");
+        }
+        LookupCertificatesCommand *const cmd = new LookupCertificatesCommand(needle, 0);
+        cmd->setParentWId(parentId);
+        cmd->start();
+        return QString();
+    }
+
     // Check for --query command
     if (parser.isSet(QStringLiteral("query"))) {
         const QString fingerPrint = parser.value(QStringLiteral("query"));
@@ -281,34 +310,17 @@ QString KleopatraApplication::newInstance(const QCommandLineParser &parser,
             return i18n("No fingerprint argument specified for --query");
         }
 
-        // Check for Parent Window id
-        WId parentId = 0;
-        if (parser.isSet(QStringLiteral("parent-windowid"))) {
-#ifdef Q_OS_WIN
-            // WId is not a portable type as it is a pointer type on Windows.
-            // casting it from an integer is ok though as the values are guranteed to
-            // be compatible in the documentation.
-            parentId = reinterpret_cast<WId>(parser.value(QStringLiteral("parent-windowid")).toUInt());
-#else
-            parentId = parser.value(QStringLiteral("parent-windowid")).toUInt();
-#endif
-        }
-
         // Search for local keys
         const GpgME::Key &key = Kleo::KeyCache::instance()->findByKeyIDOrFingerprint(fingerPrint.toLocal8Bit().data());
         if (key.isNull()) {
             // Show external search dialog
             LookupCertificatesCommand *const cmd = new LookupCertificatesCommand(fingerPrint, 0);
-            if (parentId != 0) {
-                cmd->setParentWId(parentId);
-            };
+            cmd->setParentWId(parentId);
             cmd->start();
         } else {
             // show local detail
             DetailsCommand *const cmd = new DetailsCommand(key, 0);
-            if (parentId != 0) {
-                cmd->setParentWId(parentId);
-            };
+            cmd->setParentWId(parentId);
             cmd->start();
         }
         return QString();

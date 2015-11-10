@@ -77,9 +77,15 @@ static void kleopatra_options(QCommandLineParser *parser)
             << QCommandLineOption(QStringList() << QStringLiteral("decrypt-verify")
                                   << QStringLiteral("D"),
                                   i18n("Decrypt and/or verify file(s)"))
+            << QCommandLineOption(QStringList() << QStringLiteral("search"),
+                                  i18n("Search for a certificate on a keyserver"),
+                                  QStringLiteral("search string"))
             << QCommandLineOption(QStringList() << QStringLiteral("query")
                                   << QStringLiteral("q"),
-                                  i18n("Search for Certificate by fingerprint"),
+                                  i18nc("If a certificate is already known it shows the certificate details dialog."
+                                        "Otherwise it brings up the certificate search dialog.",
+                                        "Show details of a local certificate or search for it on a keyserver"
+                                        " by fingerprint"),
                                   QStringLiteral("fingerprint"))
             << QCommandLineOption(QStringLiteral("parent-windowid"),
                                   i18n("Parent Window Id for dialogs"),
