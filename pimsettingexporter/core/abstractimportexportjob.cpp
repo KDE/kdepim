@@ -543,3 +543,28 @@ void AbstractImportExportJob::storeDirectory(const QString &subDirectory)
         }
     }
 }
+
+void AbstractImportExportJob::importDataSubdirectory(const QString &subdirectoryRelativePath)
+{
+    const KArchiveEntry *themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + subdirectoryRelativePath);
+    if (themeEntry && themeEntry->isDirectory()) {
+        const KArchiveDirectory *themeDir = static_cast<const KArchiveDirectory *>(themeEntry);
+        Q_FOREACH (const QString &entryName, themeDir->entries()) {
+            const KArchiveEntry *entry = themeDir->entry(entryName);
+            if (entry && entry->isDirectory()) {
+                QString subFolderName = entryName;
+                QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + subdirectoryRelativePath + QStringLiteral("/%1").arg(entryName));
+                int i = 1;
+                while (themeDirectory.exists()) {
+                    subFolderName = entryName + QStringLiteral("_%1").arg(i);
+                    themeDirectory = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + subdirectoryRelativePath + QStringLiteral("/%1").arg(subFolderName));
+                    ++i;
+                }
+                copyToDirectory(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + subdirectoryRelativePath + QStringLiteral("/%1").arg(subFolderName));
+            }
+        }
+    }
+
+}
+
+

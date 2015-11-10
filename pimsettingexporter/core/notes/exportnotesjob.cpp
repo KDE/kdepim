@@ -163,5 +163,6 @@ void ExportNotesJob::backupConfig()
         backupFile(tmp.fileName(), Utils::configsPath(), globalNoteSettingsStr);
         delete knoteConfig;
     }
+    storeDirectory(QStringLiteral("/knotes/print/theme/"));
     Q_EMIT info(i18n("Config backup done."));
 }
