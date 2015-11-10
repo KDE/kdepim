@@ -114,3 +114,4 @@ Root
 |       |---------kaddressbook/printing/
 |       |---------korganizer/designer/
 |       |---------gravatar/*.png
+|       |---------knotes/print/theme/

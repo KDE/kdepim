@@ -124,6 +124,7 @@ void ImportNotesJob::restoreData()
     } else {
         restoreResources();
     }
+    importDataSubdirectory(QStringLiteral("/knotes/print/theme/"));
     Q_EMIT info(i18n("Data restored."));
 }
 
