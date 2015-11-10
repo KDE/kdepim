@@ -278,27 +278,31 @@ void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile *file, co
     }
 
 
+    importSubdirectory(QStringLiteral("/kaddressbook/viewertemplates/"));
+    importSubdirectory(QStringLiteral("/kaddressbook/printing/"));
+    kaddressBookConfig->sync();
+}
 
-    const QString viewerTemplateName = QStringLiteral("/kaddressbook/viewertemplates/");
-    const KArchiveEntry *themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + viewerTemplateName);
+void ImportAddressbookJob::importSubdirectory(const QString &subdirectoryRelativePath)
+{
+    const KArchiveEntry *themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + subdirectoryRelativePath);
     if (themeEntry && themeEntry->isDirectory()) {
         const KArchiveDirectory *themeDir = static_cast<const KArchiveDirectory *>(themeEntry);
         Q_FOREACH (const QString &entryName, themeDir->entries()) {
             const KArchiveEntry *entry = themeDir->entry(entryName);
             if (entry && entry->isDirectory()) {
                 QString subFolderName = entryName;
-                QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + viewerTemplateName + QStringLiteral("/%1").arg(entryName));
+                QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + subdirectoryRelativePath + QStringLiteral("/%1").arg(entryName));
                 int i = 1;
                 while (themeDirectory.exists()) {
                     subFolderName = entryName + QStringLiteral("_%1").arg(i);
-                    themeDirectory = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + viewerTemplateName + QStringLiteral("/%1").arg(subFolderName));
+                    themeDirectory = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + subdirectoryRelativePath + QStringLiteral("/%1").arg(subFolderName));
                     ++i;
                 }
-                copyToDirectory(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + viewerTemplateName + QStringLiteral("/%1").arg(subFolderName));
+                copyToDirectory(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + subdirectoryRelativePath + QStringLiteral("/%1").arg(subFolderName));
             }
         }
     }
 
-    kaddressBookConfig->sync();
 }
 

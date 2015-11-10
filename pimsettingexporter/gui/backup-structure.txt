@@ -111,5 +111,6 @@ Root
 |       |---------blogilo/blogilo.db
 |       |---------kaddressbook/viewertemplates/
 |       |---------kaddressbook/csv-templates/
+|       |---------kaddressbook/printing/
 |       |---------korganizer/designer/
 |       |---------gravatar/*.png
