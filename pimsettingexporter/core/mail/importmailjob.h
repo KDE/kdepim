@@ -59,7 +59,7 @@ private:
     void mergeArchiveMailAgentConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveConfigOrigin, KSharedConfig::Ptr archiveConfigDestination);
     void mergeSieveTemplate(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
-    void importDirectory(const QString &relativePath);
+    void importSimpleFilesInDirectory(const QString &relativePath);
     QString uniqueIdentityName(const QString &name);
 
     QHash<uint, uint> mHashIdentity;

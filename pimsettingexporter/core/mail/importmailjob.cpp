@@ -816,8 +816,8 @@ void ImportMailJob::restoreConfig()
         restoreConfigFile(filename);
     }
 
-    importDirectory(QStringLiteral("/autocorrect/"));
-    importDirectory(QStringLiteral("/gravatar/"));
+    importSimpleFilesInDirectory(QStringLiteral("/autocorrect/"));
+    importSimpleFilesInDirectory(QStringLiteral("/gravatar/"));
     const KArchiveEntry *kmail2Entry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("kmail2/adblockrules_local"));
     if (kmail2Entry && kmail2Entry->isFile()) {
         const KArchiveFile *entry = static_cast<const KArchiveFile *>(kmail2Entry);
@@ -854,7 +854,7 @@ void ImportMailJob::restoreConfig()
     QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
 }
 
-void ImportMailJob::importDirectory(const QString &relativePath)
+void ImportMailJob::importSimpleFilesInDirectory(const QString &relativePath)
 {
     const KArchiveEntry *autocorrectionEntry  = mArchiveDirectory->entry(Utils::dataPath() + relativePath);
     if (autocorrectionEntry && autocorrectionEntry->isDirectory()) {
