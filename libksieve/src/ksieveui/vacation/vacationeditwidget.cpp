@@ -434,5 +434,7 @@ void VacationEditWidget::setDefault()
     setSendForSpam(VacationUtils::defaultSendForSpam());
     setDomainName(VacationUtils::defaultDomainName());
     setMailAction(VacationUtils::defaultMailAction(), QString());
+    mStartTimeActive->setChecked(false);
+    mEndTimeActive->setChecked(false);
     setDomainCheck(false);
 }
