@@ -26,10 +26,13 @@ target_link_libraries(akonadi_notes_agent
   KF5::AkonadiAgentBase
   KF5::NotifyConfig
   KF5::DBusAddons
-  KF5::KDELibs4Support
   KF5::NoteShared
   KF5::PimCommon
   KF5::PimTextEdit
+  KF5::XmlGui
+  KF5::WindowSystem
+  KF5::Notifications
+  KF5::IconThemes
 )
 
 if( APPLE )
