@@ -43,8 +43,7 @@ int main(int argc, char *argv[])
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("blogilo")));
     KLocalizedString::setApplicationDomain("blogilo");
     KAboutData about(QStringLiteral("blogilo"), i18n("Blogilo"), VERSION, i18n("A KDE Blogging Client"),
-                     KAboutLicense::GPL_V2, i18n("Copyright © 2008–2014 Blogilo authors"), QString(),
-                     QStringLiteral("http://blogilo.gnufolks.org"));
+                     KAboutLicense::GPL_V2, i18n("Copyright © 2008–2015 Blogilo authors"));
     about.addAuthor(i18n("Mehrdad Momeny"), i18n("Core Developer"), QStringLiteral("mehrdad.momeny@gmail.com"));
     about.addAuthor(i18n("Golnaz Nilieh"), i18n("Core Developer"), QStringLiteral("g382nilieh@gmail.com"));
     about.addAuthor(i18n("Laurent Montel"), i18n("Core Developer"), QStringLiteral("montel@kde.org"));
