@@ -165,54 +165,10 @@ void ImportCalendarJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceC
     }
 }
 
-void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix, const QString &searchEntryName)
-{
-    Q_FOREACH (const QString &entryName, dir->entries()) {
-        const KArchiveEntry *entry = dir->entry(entryName);
-        if (entry && entry->isDirectory()) {
-            const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
-            if (entryName == searchEntryName) {
-                storeArchiveInfoResources(static_cast<const KArchiveDirectory *>(entry), entryName);
-            } else {
-                searchAllFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix, searchEntryName);
-            }
-        }
-    }
-}
-
 bool ImportCalendarJob::isAConfigFile(const QString &name) const
 {
     return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_ical_resource_"))
                                                   || name.contains(QStringLiteral("akonadi_icaldir_resource_")));
-}
-
-void ImportCalendarJob::storeArchiveInfoResources(const KArchiveDirectory *dir, const QString &prefix)
-{
-    Q_FOREACH (const QString &entryName, dir->entries()) {
-        const KArchiveEntry *entry = dir->entry(entryName);
-        if (entry && entry->isDirectory()) {
-            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory *>(entry);
-            const QStringList lst = resourceDir->entries();
-
-            if (lst.count() >= 2) {
-                const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                resourceFiles files;
-                Q_FOREACH (const QString &name, lst) {
-                    if (isAConfigFile(name)) {
-                        files.akonadiConfigFile = archPath + name;
-                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
-                        files.akonadiAgentConfigFile = archPath + name;
-                    } else {
-                        files.akonadiResources = archPath + name;
-                    }
-                }
-                files.debug();
-                mListResourceFile.append(files);
-            } else {
-                qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Problem in archive. number of file " << lst.count();
-            }
-        }
-    }
 }
 
 void ImportCalendarJob::restoreConfig()

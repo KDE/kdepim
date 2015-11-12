@@ -55,7 +55,7 @@ void ImportAlarmJob::start()
     Q_EMIT title(i18n("Start import KAlarm settings..."));
     createProgressDialog(i18n("Import KAlarm settings"));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory, QString());
+    searchAllFiles(mArchiveDirectory, QString(), QStringLiteral("alarm"));
     initializeListStep();
     QTimer::singleShot(0, this, &ImportAlarmJob::slotNextStep);
 }
@@ -143,53 +143,10 @@ void ImportAlarmJob::restoreResources()
     startSynchronizeResources(listResource);
 }
 
-void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
-{
-    Q_FOREACH (const QString &entryName, dir->entries()) {
-        const KArchiveEntry *entry = dir->entry(entryName);
-        if (entry && entry->isDirectory()) {
-            const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
-            if (entryName == QLatin1String("alarm")) {
-                storeAlarmArchiveResource(static_cast<const KArchiveDirectory *>(entry), entryName);
-            } else {
-                searchAllFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix);
-            }
-        }
-    }
-}
 bool ImportAlarmJob::isAConfigFile(const QString &name) const
 {
     return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_kalarm_resource_"))
                                                   || name.contains(QStringLiteral("akonadi_kalarm_dir_resource_")));
-}
-
-void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
-{
-    Q_FOREACH (const QString &entryName, dir->entries()) {
-        const KArchiveEntry *entry = dir->entry(entryName);
-        if (entry && entry->isDirectory()) {
-            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory *>(entry);
-            const QStringList lst = resourceDir->entries();
-
-            if (lst.count() >= 2) {
-                const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                resourceFiles files;
-                Q_FOREACH (const QString &name, lst) {
-                    if (isAConfigFile(name)) {
-                        files.akonadiConfigFile = archPath + name;
-                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
-                        files.akonadiAgentConfigFile = archPath + name;
-                    } else {
-                        files.akonadiResources = archPath + name;
-                    }
-                }
-                files.debug();
-                mListResourceFile.append(files);
-            } else {
-                qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Problem in archive. number of file " << lst.count();
-            }
-        }
-    }
 }
 
 void ImportAlarmJob::restoreConfig()
