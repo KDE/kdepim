@@ -36,7 +36,7 @@ protected Q_SLOTS:
     void slotNextStep() Q_DECL_OVERRIDE;
 
 private:
-    bool isAConfigFile(const QString &name) const;
+    bool isAConfigFile(const QString &name) const Q_DECL_OVERRIDE;
     void searchAllFiles(const KArchiveDirectory *dir, const QString &prefix, const QString &searchEntryName);
     void storeArchiveInfoResources(const KArchiveDirectory *dir, const QString &prefix);
     void importkorganizerConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix);

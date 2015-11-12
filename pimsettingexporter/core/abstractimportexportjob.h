@@ -103,6 +103,7 @@ protected:
     void restoreConfigFile(const QString &configNameStr);
     bool overwriteDirectoryMessageBox(const QString &directory) const;
     void overwriteDirectory(const QString &path, const KArchiveEntry *entry);
+    virtual bool isAConfigFile(const QString &name) const;
 
     KZip *archive() const;
 

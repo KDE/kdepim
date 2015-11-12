@@ -166,6 +166,12 @@ void AbstractImportExportJob::overwriteDirectory(const QString &path, const KArc
     }
 }
 
+bool AbstractImportExportJob::isAConfigFile(const QString &name) const
+{
+    //Redefine in subclass
+    return true;
+}
+
 bool AbstractImportExportJob::overwriteDirectoryMessageBox(const QString &directory) const
 {
     return mImportExportProgressIndicator->overwriteDirectoryMessageBox(directory);
