@@ -35,6 +35,7 @@
 #include "importcertificatescommand.h"
 #include "importcertificatescommand_p.h"
 
+#include <models/keycache.h>
 #include <models/keylistsortfilterproxymodel.h>
 #include <models/predicates.h>
 
@@ -362,6 +363,9 @@ void ImportCertificatesCommand::Private::tryToFinish() {
     if ( waitForMoreJobs || !jobs.empty() )
         return;
 
+    /* Activate the Keycache again and trigger a reload to get our imported keys. */
+    KeyCache::mutableInstance()->enableFileSystemWatcher(true);
+    KeyCache::mutableInstance()->reload();
     if ( kdtools::any( results, boost::bind( &Error::code, boost::bind( &ImportResult::error, _1 ) ) ) ) {
         setImportResultProxyModel( results, ids );
         if ( kdtools::all( results, boost::bind( &Error::isCanceled, boost::bind( &ImportResult::error, _1 ) ) ) )
@@ -386,6 +390,9 @@ static std::auto_ptr<ImportJob> get_import_job( GpgME::Protocol protocol ) {
 
 void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, const QByteArray & data, const QString & id ) {
     assert( protocol != UnknownProtocol );
+
+    /* Disable the Keycache filesystemwatcher to disable races during the import. */
+    KeyCache::mutableInstance()->enableFileSystemWatcher(false);
 
     if ( kdtools::contains( nonWorkingProtocols, protocol ) )
         return;
@@ -423,6 +430,9 @@ static std::auto_ptr<ImportFromKeyserverJob> get_import_from_keyserver_job( GpgM
 
 void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, const std::vector<Key> & keys, const QString & id ) {
     assert( protocol != UnknownProtocol );
+
+    /* Disable the key cache filesystemwatcher to disable races during the import. */
+    KeyCache::mutableInstance()->enableFileSystemWatcher(false);
 
     if ( kdtools::contains( nonWorkingProtocols, protocol ) )
         return;
