@@ -48,7 +48,6 @@ public:
     SieveTextEditPrivate()
         : m_sieveLineNumberArea(Q_NULLPTR),
           mTextEditorCompleter(Q_NULLPTR),
-          mInitialFontSize(0),
           mShowHelpMenu(true)
     {
 
@@ -56,7 +55,6 @@ public:
     PimCommon::SieveSyntaxHighlighterRules mSieveHighliterRules;
     SieveLineNumberArea *m_sieveLineNumberArea;
     KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
-    int mInitialFontSize;
     bool mShowHelpMenu;
 };
 
@@ -68,7 +66,6 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
     setWordWrapMode(QTextOption::NoWrap);
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     d->m_sieveLineNumberArea = new SieveLineNumberArea(this);
-    d->mInitialFontSize = font().pointSize();
 
     connect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
     connect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);
@@ -432,11 +429,3 @@ void SieveTextEdit::wordWrap(bool state)
     setWordWrapMode(state ? QTextOption::WordWrap : QTextOption::NoWrap);
 }
 
-void SieveTextEdit::zoomReset()
-{
-    if (d->mInitialFontSize > 0) {
-        QFont f = font();
-        f.setPointSize(d->mInitialFontSize);
-        setFont(f);
-    }
-}

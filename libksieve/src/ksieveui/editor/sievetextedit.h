@@ -56,7 +56,6 @@ public:
     void lowerCase();
     void sentenceCase();
     void reverseCase();
-    void zoomReset();
     void wordWrap(bool state);
     bool isWordWrap() const;
 private Q_SLOTS:

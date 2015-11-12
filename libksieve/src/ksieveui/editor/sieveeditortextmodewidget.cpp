@@ -309,7 +309,7 @@ void SieveEditorTextModeWidget::wordWrap(bool state)
 
 void SieveEditorTextModeWidget::zoomReset()
 {
-    mTextEdit->zoomReset();
+    mTextEdit->slotZoomReset();
 }
 
 void SieveEditorTextModeWidget::slotFind()
