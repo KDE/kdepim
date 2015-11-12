@@ -73,7 +73,7 @@ void ImportMailJob::start()
     Q_EMIT title(i18n("Start import KMail settings..."));
     createProgressDialog(i18n("Import KMail settings"));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory, QString());
+    searchAllMailsFiles(mArchiveDirectory, QString());
     if (!mFileList.isEmpty() || !mListResourceFile.isEmpty()) {
         initializeListStep();
         QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
@@ -108,7 +108,7 @@ void ImportMailJob::slotNextStep()
     }
 }
 
-void ImportMailJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
+void ImportMailJob::searchAllMailsFiles(const KArchiveDirectory *dir, const QString &prefix)
 {
     Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
@@ -117,7 +117,7 @@ void ImportMailJob::searchAllFiles(const KArchiveDirectory *dir, const QString &
             if (entryName == QLatin1String("mails")) {
                 storeMailArchiveResource(static_cast<const KArchiveDirectory *>(entry), entryName);
             } else {
-                searchAllFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix);
+                searchAllMailsFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix);
             }
         } else if (entry) {
             const QString fileName = prefix.isEmpty() ? entry->name() : prefix + QLatin1Char('/') + entry->name();

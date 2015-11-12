@@ -57,7 +57,7 @@ void ImportCalendarJob::start()
     Q_EMIT title(i18n("Start import KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
     createProgressDialog(i18n("Import KOrganizer settings"));
-    searchAllFiles(mArchiveDirectory, QString());
+    searchAllFiles(mArchiveDirectory, QString(), QStringLiteral("calendar"));
     initializeListStep();
     QTimer::singleShot(0, this, &ImportCalendarJob::slotNextStep);
 }
@@ -165,22 +165,28 @@ void ImportCalendarJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceC
     }
 }
 
-void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
+void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix, const QString &searchEntryName)
 {
     Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
             const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
-            if (entryName == QLatin1String("calendar")) {
-                storeCalendarArchiveResource(static_cast<const KArchiveDirectory *>(entry), entryName);
+            if (entryName == searchEntryName) {
+                storeArchiveInfoResources(static_cast<const KArchiveDirectory *>(entry), entryName);
             } else {
-                searchAllFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix);
+                searchAllFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix, searchEntryName);
             }
         }
     }
 }
 
-void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
+bool ImportCalendarJob::isAConfigFile(const QString &name) const
+{
+    return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_ical_resource_"))
+                                                  || name.contains(QStringLiteral("akonadi_icaldir_resource_")));
+}
+
+void ImportCalendarJob::storeArchiveInfoResources(const KArchiveDirectory *dir, const QString &prefix)
 {
     Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
@@ -192,8 +198,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
                 Q_FOREACH (const QString &name, lst) {
-                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_ical_resource_"))
-                            || name.contains(QStringLiteral("akonadi_icaldir_resource_")))) {
+                    if (isAConfigFile(name)) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;

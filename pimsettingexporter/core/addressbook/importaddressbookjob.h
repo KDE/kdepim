@@ -36,6 +36,7 @@ protected Q_SLOTS:
     void slotNextStep() Q_DECL_OVERRIDE;
 
 private:
+    bool isAConfigFile(const QString &name) const;
     void searchAllFiles(const KArchiveDirectory *dir, const QString &prefix);
     void storeAddressBookArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
     void importkaddressBookConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix);

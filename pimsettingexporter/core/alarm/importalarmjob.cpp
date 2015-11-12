@@ -157,6 +157,11 @@ void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir, const QString 
         }
     }
 }
+bool ImportAlarmJob::isAConfigFile(const QString &name) const
+{
+    return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_kalarm_resource_"))
+                                                  || name.contains(QStringLiteral("akonadi_kalarm_dir_resource_")));
+}
 
 void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
 {
@@ -170,8 +175,7 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
                 Q_FOREACH (const QString &name, lst) {
-                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_kalarm_resource_"))
-                            || name.contains(QStringLiteral("akonadi_kalarm_dir_resource_")))) {
+                    if (isAConfigFile(name)) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;

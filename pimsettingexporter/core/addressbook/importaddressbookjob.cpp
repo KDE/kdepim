@@ -178,6 +178,13 @@ void ImportAddressbookJob::searchAllFiles(const KArchiveDirectory *dir, const QS
     }
 }
 
+bool ImportAddressbookJob::isAConfigFile(const QString &name) const
+{
+    return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_vcarddir_resource_")) ||
+                                                  name.contains(QStringLiteral("akonadi_vcard_resource_")) ||
+                                                  name.contains(QStringLiteral("akonadi_contacts_resource_")));
+}
+
 void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
 {
     Q_FOREACH (const QString &entryName, dir->entries()) {
@@ -190,9 +197,7 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
                 Q_FOREACH (const QString &name, lst) {
-                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_vcarddir_resource_")) ||
-                            name.contains(QStringLiteral("akonadi_vcard_resource_")) ||
-                            name.contains(QStringLiteral("akonadi_contacts_resource_")))) {
+                    if (isAConfigFile(name)) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;

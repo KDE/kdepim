@@ -35,6 +35,7 @@ protected Q_SLOTS:
     void slotNextStep() Q_DECL_OVERRIDE;
 
 private:
+    bool isAConfigFile(const QString &name) const;
     void storeAlarmArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
     void searchAllFiles(const KArchiveDirectory *dir, const QString &prefix);
     void importkalarmConfig(const KArchiveFile *kalarmFile, const QString &kalarmrc, const QString &filename, const QString &prefix);

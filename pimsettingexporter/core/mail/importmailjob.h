@@ -51,7 +51,7 @@ private:
     void importKmailConfig(const KArchiveFile *kmailsnippet, const QString &kmail2rc, const QString &filename, const QString &prefix);
     void importArchiveConfig(const KArchiveFile *archiveconfiguration, const QString &archiveconfigurationrc, const QString &filename, const QString &prefix);
     void importFolderArchiveConfig(const KArchiveFile *archiveconfiguration, const QString &archiveconfigurationrc, const QString &filename, const QString &prefix);
-    void searchAllFiles(const KArchiveDirectory *dir, const QString &prefix);
+    void searchAllMailsFiles(const KArchiveDirectory *dir, const QString &prefix);
     void storeMailArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
 
     void mergeLdapConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
