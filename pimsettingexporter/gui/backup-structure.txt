@@ -84,8 +84,8 @@ Root
 |       |---------blogiloui.rc
 |       |---------pageviewer.rc
 |       |---------akregator_part.rc
-|       |---------articleviewe.rc
-|       |---------articleviewe.rc
+|       |---------articleviewer.rc
+|       |---------akregator_shell.rc
 |       |---------kalarmui.rc
 |       |---------korganizerui.rc
 |       |---------korganizer_part.rc

@@ -72,8 +72,9 @@ void ImportAkregatorJob::restoreConfig()
     restoreConfigFile(akregatorStr);
     restoreUiRcFile(QStringLiteral("pageviewer.rc"), QStringLiteral("akregator"));
     restoreUiRcFile(QStringLiteral("akregator_part.rc"), QStringLiteral("akregator"));
-    restoreUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
-    restoreUiRcFile(QStringLiteral("articleviewe.rc"), QStringLiteral("akregator"));
+    restoreUiRcFile(QStringLiteral("articleviewer.rc"), QStringLiteral("akregator"));
+    restoreUiRcFile(QStringLiteral("akregator_shell.rc"), QStringLiteral("akregator"));
+
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
 }
