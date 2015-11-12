@@ -831,24 +831,7 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-    const KArchiveEntry *themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("messageviewer/themes/"));
-    if (themeEntry && themeEntry->isDirectory()) {
-        const KArchiveDirectory *themeDir = static_cast<const KArchiveDirectory *>(themeEntry);
-        Q_FOREACH (const QString &entryName, themeDir->entries()) {
-            const KArchiveEntry *entry = themeDir->entry(entryName);
-            if (entry && entry->isDirectory()) {
-                QString subFolderName = entryName;
-                QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("messageviewer/themes/%1").arg(entryName));
-                int i = 1;
-                while (themeDirectory.exists()) {
-                    subFolderName = entryName + QStringLiteral("_%1").arg(i);
-                    themeDirectory = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("messageviewer/themes/%1").arg(subFolderName));
-                    ++i;
-                }
-                copyToDirectory(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("messageviewer/themes/%1").arg(subFolderName));
-            }
-        }
-    }
+    importDataSubdirectory(QStringLiteral("/messageviewer/themes/"));
 
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);

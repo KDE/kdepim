@@ -386,13 +386,7 @@ void ExportMailJob::backupConfig()
         delete templateConfig;
     }
 
-    const QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/"));
-    if (themeDirectory.exists()) {
-        const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String("messageviewer/themes/"));
-        if (!themeDirAdded) {
-            Q_EMIT error(i18n("Theme directory \"%1\" cannot be added to backup file.", themeDirectory.path()));
-        }
-    }
+    storeDirectory(QStringLiteral("/messageviewer/themes/"));
 
     const QDir gravatarDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/"));
     if (gravatarDirectory.exists()) {
