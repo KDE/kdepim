@@ -163,6 +163,10 @@ void ExportNotesJob::backupConfig()
         backupFile(tmp.fileName(), Utils::configsPath(), globalNoteSettingsStr);
         delete knoteConfig;
     }
+    backupUiRcFile(QStringLiteral("knotesappui.rc"), QStringLiteral("knotes"));
+    backupUiRcFile(QStringLiteral("knotesui.rc"), QStringLiteral("knotes"));
+    backupUiRcFile(QStringLiteral("knotes_part.rc"), QStringLiteral("knotes"));
+
     storeDirectory(QStringLiteral("/knotes/print/theme/"));
     Q_EMIT info(i18n("Config backup done."));
 }

@@ -105,6 +105,10 @@ void ImportNotesJob::restoreConfig()
 
     }
 
+    restoreUiRcFile(QStringLiteral("knotesappui.rc"), QStringLiteral("knotes"));
+    restoreUiRcFile(QStringLiteral("knotesui.rc"), QStringLiteral("knotes"));
+    restoreUiRcFile(QStringLiteral("knotes_part.rc"), QStringLiteral("knotes"));
+
     Q_EMIT info(i18n("Config restored."));
     QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
 }

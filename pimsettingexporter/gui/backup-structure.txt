@@ -96,6 +96,9 @@ Root
 |       |---------kmmainwin.rc
 |       |---------kmail_part.rc
 |       |---------kontactui.rc
+|       |---------knotesappui.rc
+|       |---------knotesui.rc
+|       |---------knotes_part.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>
