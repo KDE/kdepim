@@ -146,7 +146,7 @@ void ImportAlarmJob::restoreResources()
 bool ImportAlarmJob::isAConfigFile(const QString &name) const
 {
     return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_kalarm_resource_"))
-                                                  || name.contains(QStringLiteral("akonadi_kalarm_dir_resource_")));
+            || name.contains(QStringLiteral("akonadi_kalarm_dir_resource_")));
 }
 
 void ImportAlarmJob::restoreConfig()

@@ -166,8 +166,8 @@ void ImportAddressbookJob::addSpecificResourceSettings(KSharedConfig::Ptr resour
 bool ImportAddressbookJob::isAConfigFile(const QString &name) const
 {
     return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_vcarddir_resource_")) ||
-                                                  name.contains(QStringLiteral("akonadi_vcard_resource_")) ||
-                                                  name.contains(QStringLiteral("akonadi_contacts_resource_")));
+            name.contains(QStringLiteral("akonadi_vcard_resource_")) ||
+            name.contains(QStringLiteral("akonadi_contacts_resource_")));
 }
 
 void ImportAddressbookJob::restoreConfig()
@@ -237,7 +237,6 @@ void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile *file, co
             }
         }
     }
-
 
     importDataSubdirectory(QStringLiteral("/kaddressbook/viewertemplates/"));
     importDataSubdirectory(QStringLiteral("/kaddressbook/printing/"));

@@ -168,7 +168,7 @@ void ImportCalendarJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceC
 bool ImportCalendarJob::isAConfigFile(const QString &name) const
 {
     return name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_ical_resource_"))
-                                                  || name.contains(QStringLiteral("akonadi_icaldir_resource_")));
+            || name.contains(QStringLiteral("akonadi_icaldir_resource_")));
 }
 
 void ImportCalendarJob::restoreConfig()
@@ -265,8 +265,6 @@ void ImportCalendarJob::restoreConfig()
             qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "template cannot copy to " << templatePath;
         }
     }
-
-
 
     restoreUiRcFile(QStringLiteral("korganizerui.rc"), QStringLiteral("korganizer"));
     restoreUiRcFile(QStringLiteral("korganizer_part.rc"), QStringLiteral("korganizer"));
