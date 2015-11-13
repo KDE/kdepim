@@ -131,7 +131,7 @@ void ImportAlarmJob::restoreResources()
                         }
                     }
                     const QString archiveNameType = isDirResource ? QStringLiteral("akonadi_kalarm_dir_resource") : QStringLiteral("akonadi_kalarm_resource");
-                    const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_kalarm_dir_resource"), filename, settings, true);
+                    const QString newResource = mCreateResource->createResource(archiveNameType, filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
                     qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " newResource" << newResource;
