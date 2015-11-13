@@ -847,10 +847,10 @@ void ImportMailJob::importSimpleFilesInDirectory(const QString &relativePath)
             if (entry && entry->isFile()) {
                 const KArchiveFile *autocorrectionFile = static_cast<const KArchiveFile *>(entry);
                 const QString name = autocorrectionFile->name();
-                QString autocorrectionPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath;
+                QString autocorrectionPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath + QLatin1Char('/') + name;
                 if (QFile(autocorrectionPath).exists()) {
                     if (overwriteConfigMessageBox(name)) {
-                        copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + relativePath);
+                        copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + relativePath);
                     }
                 } else {
                     autocorrectionPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath;
