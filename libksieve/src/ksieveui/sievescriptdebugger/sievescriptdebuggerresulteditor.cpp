@@ -35,7 +35,7 @@ SieveScriptDebuggerResultEditor::~SieveScriptDebuggerResultEditor()
 
 }
 
-void SieveScriptDebuggerResultEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
+void SieveScriptDebuggerResultEditor::addExtraMenuEntry(QMenu *menu, QPoint pos)
 {
     KPIMTextEdit::PlainTextEditor::addExtraMenuEntry(menu, pos);
     if (isReadOnly() && !document()->isEmpty()) {

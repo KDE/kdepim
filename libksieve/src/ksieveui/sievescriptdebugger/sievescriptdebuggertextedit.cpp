@@ -34,7 +34,7 @@ SieveScriptDebuggerTextEdit::~SieveScriptDebuggerTextEdit()
 
 }
 
-void SieveScriptDebuggerTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
+void SieveScriptDebuggerTextEdit::addExtraMenuEntry(QMenu *menu, QPoint pos)
 {
     QAction *separator = new QAction(menu);
     separator->setSeparator(true);

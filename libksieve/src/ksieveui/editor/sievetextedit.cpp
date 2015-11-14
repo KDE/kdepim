@@ -289,7 +289,7 @@ void SieveTextEdit::setShowHelpMenu(bool b)
     d->mShowHelpMenu = b;
 }
 
-void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
+void SieveTextEdit::addExtraMenuEntry(QMenu* menu, QPoint pos)
 {
     if (!d->mShowHelpMenu) {
         return;
