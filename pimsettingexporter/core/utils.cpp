@@ -251,11 +251,22 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     }
     //Customize resource if necessary here.
     config->sync();
-    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), path + agentFileName);
+    bool fileAdded  = archive->addLocalFile(tmp.fileName(), path + agentFileName);
     delete config;
     if (!fileAdded) {
         return i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName);
     }
+
+    const QString agentConfigFileName = QLatin1String("agent_config_") + identifier;
+    const QString agentConfigFileNamePath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/akonadi/") + agentConfigFileName;
+    QFile agentConfigFileNameFile(agentConfigFileNamePath);
+    if (agentConfigFileNameFile.exists()) {
+        fileAdded  = archive->addLocalFile(agentConfigFileNamePath, path + agentConfigFileName);
+        if (!fileAdded) {
+            return i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName);
+        }
+    }
+
     return QString();
 }
 
