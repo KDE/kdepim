@@ -174,6 +174,7 @@ void Ldap::destroy()
                 selHosts.append(server);
             }
         }
+        hosts.reserve(cHosts);
         for (int i = 0; i < cHosts; ++i) {
             KLDAP::LdapServer server;
             m_clientSearchConfig->readConfig(server, group, i, false);

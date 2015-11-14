@@ -120,6 +120,7 @@ public:
         QListWidgetItem *item = q->currentItem();
         if (item) {
             QStringList name;
+            name.reserve(q->count());
             for (int i = 0; i < q->count(); ++i) {
                 name.append(q->item(i)->text());
             }

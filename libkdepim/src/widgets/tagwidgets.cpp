@@ -148,7 +148,9 @@ void TagSelectionDialog::onTagCreated(KJob *job)
 QStringList TagSelectionDialog::selection() const
 {
     QStringList list;
-    Q_FOREACH (const Akonadi::Tag &tag, Akonadi::TagSelectionDialog::selection()) {
+    const Akonadi::Tag::List lst = Akonadi::TagSelectionDialog::selection();
+    list.reserve(lst.count());
+    Q_FOREACH (const Akonadi::Tag &tag, lst) {
         list << tag.name();
     }
     return list;

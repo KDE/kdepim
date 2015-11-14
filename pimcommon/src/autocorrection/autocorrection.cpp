@@ -59,6 +59,7 @@ AutoCorrection::AutoCorrection()
     readConfig();
 
     auto locale = QLocale::system();
+    mCacheNameOfDays.reserve(7);
     for (int i = 1; i <= 7; ++i) {
         mCacheNameOfDays.append(locale.dayName(i).toLower());
     }
