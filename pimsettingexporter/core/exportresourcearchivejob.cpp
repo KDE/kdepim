@@ -88,7 +88,7 @@ void ExportResourceArchiveJob::slotTerminated(bool success)
         if (!url.isEmpty()) {
             const QFileInfo fi(url);
             const QString filename = fi.fileName();
-            const bool fileAdded  = mZip->addLocalFile(mUrl, mArchivePath + filename);
+            const bool fileAdded  = mZip->addLocalFile(url, mArchivePath + filename);
             if (fileAdded) {
                 Q_EMIT info(i18n("\"%1\" was backed up.", filename));
             } else {
