@@ -27,7 +27,6 @@
 #include <QWebFrame>
 
 using namespace MessageViewer;
-static QString IPv4_PATTERN = QStringLiteral("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
 static QString addWarningColor(const QString &url)
 {
     const QString error = QStringLiteral("<font color=#FF0000>%1</font>").arg(url);
@@ -88,7 +87,7 @@ void ScamDetection::scanPage(QWebFrame *frame)
 bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 {
     bool foundScam = false;
-    QRegularExpression ip4regExp(IPv4_PATTERN);
+    QRegularExpression ip4regExp(QStringLiteral("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?"));
     const QWebElementCollection allAnchor = rootElement.findAll(QStringLiteral("a"));
     Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
         //1) detect if title has a url and title != href

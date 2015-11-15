@@ -173,7 +173,7 @@ bool FollowUpReminderInfoWidget::save()
     for (; i < numberOfItem; ++i) {
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(mTreeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(i));
+            KConfigGroup group = config->group(FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern().arg(i));
             mailItem->info()->writeConfig(group, i);
         }
     }
