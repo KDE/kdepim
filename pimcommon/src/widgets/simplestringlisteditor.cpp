@@ -177,6 +177,7 @@ QStringList SimpleStringListEditor::stringList() const
 {
     QStringList result;
     const int numberOfItem(mListBox->count());
+    result.reserve(numberOfItem);
     for (int i = 0; i < numberOfItem; ++i) {
         result << (mListBox->item(i)->text());
     }

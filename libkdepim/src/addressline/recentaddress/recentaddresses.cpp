@@ -168,6 +168,7 @@ void RecentAddresses::clear()
 QStringList RecentAddresses::addresses() const
 {
     QStringList addresses;
+    addresses.reserve(m_addresseeList.count());
     KContacts::Addressee::List::ConstIterator end = m_addresseeList.constEnd();
     for (KContacts::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
             it != end; ++it) {

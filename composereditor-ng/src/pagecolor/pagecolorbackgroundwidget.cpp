@@ -33,6 +33,7 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui->setupUi(this);
     QList<QByteArray> lstImages = QImageReader::supportedImageFormats();
     QStringList mimetypes;
+    mimetypes.reserve(lstImages.count());
     Q_FOREACH (const QByteArray &format, lstImages) {
         mimetypes.append(QString::fromLatin1(format));
     }

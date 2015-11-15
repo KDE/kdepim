@@ -374,6 +374,7 @@ const QStringList KPIM::AddresseeLineEditPrivate::adjustedCompletionItems(bool f
         // Sort the sections
         QList<SourceWithWeight> sourcesAndWeights;
         const int numberOfCompletionSources(s_static->completionSources.size());
+        sourcesAndWeights.reserve(numberOfCompletionSources);
         for (int i = 0; i < numberOfCompletionSources; ++i) {
             SourceWithWeight sww;
             sww.sourceName = s_static->completionSources.at(i);

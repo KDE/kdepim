@@ -142,6 +142,7 @@ void BilboPost::setCategoryList(const QVector<Category> &list)
     d_ptr->mCategoryList = list;
     QStringList cats;
     const int count = list.count();
+    cats.reserve(count);
     for (int i = 0; i < count; ++i) {
         cats.append(list.at(i).name);
     }
