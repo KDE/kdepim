@@ -99,7 +99,11 @@ void SieveJob::Private::run(Session *session)
 
 bool SieveJob::Private::handleResponse(const Response &response, const QByteArray &data)
 {
+    if (mCommands.isEmpty()) {
+        return false;
+    }
     const Command lastCmd = mCommands.top();
+
     Session *session = sessionForUrl(mUrl);
 
     QString errMsg;
