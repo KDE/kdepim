@@ -75,8 +75,7 @@
 #include <QSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <krichtextwidget.h>
-
+#include <QTextBlock>
 #include "messagecomposer_debug.h"
 
 #include <QDir>
