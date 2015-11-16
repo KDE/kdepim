@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>661</width>
-    <height>551</height>
+    <height>571</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="mainVerticalLayout">
@@ -516,7 +516,7 @@
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="text">
-        <string comment="@label end date/time for an event or to-do">&amp;End:</string>
+        <string comment="@label end date/time for an event or to-do">E&amp;nd:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -673,19 +673,6 @@
            </item>
           </layout>
          </item>
-         <item row="1" column="0" colspan="4">
-          <widget class="KRichTextWidget" name="mDescriptionEdit">
-           <property name="toolTip">
-            <string comment="@info:tooltip">Set the description in plain text or rich text.</string>
-           </property>
-           <property name="whatsThis">
-            <string comment="@info:whatsthis">Sets the description for this event, to-do or journal. This will be displayed in a reminder if one is set, as well as in a tooltip when you hover over the event.</string>
-           </property>
-           <property name="tabChangesFocus">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="0">
           <widget class="QLabel" name="mCategoryLabel">
            <property name="sizePolicy">
@@ -708,6 +695,9 @@
             <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
            </property>
           </widget>
+         </item>
+         <item row="1" column="0" colspan="4">
+          <widget class="KPIMTextEdit::RichTextComposer" name="mDescriptionEdit"/>
          </item>
         </layout>
        </widget>
@@ -1688,9 +1678,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
+   <class>KPIM::KCheckComboBox</class>
+   <extends>KComboBox</extends>
+   <header>Libkdepim/KCheckComboBox</header>
   </customwidget>
   <customwidget>
    <class>KSeparator</class>
@@ -1699,19 +1689,29 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header>ktextedit.h</header>
+   <class>KDateComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kdatecombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KRichTextWidget</class>
-   <extends>KRichTextEdit</extends>
-   <header>krichtextwidget.h</header>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::KCheckComboBox</class>
-   <extends>KComboBox</extends>
-   <header>Libkdepim/KCheckComboBox</header>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTimeComboBox</class>
+   <extends>QComboBox</extends>
+   <header>ktimecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIMTextEdit::RichTextComposer</class>
+   <extends>QWidget</extends>
+   <header>kpimtextedit/richtextcomposer.h</header>
   </customwidget>
   <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>
@@ -1734,36 +1734,6 @@
    <header location="global">AkonadiWidgets/TagWidget</header>
    <container>1</container>
   </customwidget>
-  <customwidget>
-   <class>KPIM::KCheckComboBox</class>
-   <extends>KComboBox</extends>
-   <header>Libkdepim/KCheckComboBox</header>
-  </customwidget>
-  <customwidget>
-   <class>KRichTextEdit</class>
-   <extends>KTextEdit</extends>
-   <header>krichtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTimeComboBox</class>
-   <extends>KComboBox</extends>
-   <header>ktimecombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KDateComboBox</class>
-   <extends>KComboBox</extends>
-   <header>kdatecombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KRichTextWidget</class>
-   <extends>KRichTextEdit</extends>
-   <header>krichtextwidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPIM::KWeekdayCheckCombo</class>
-   <extends>KPIM::KCheckComboBox</extends>
-   <header>Libkdepim/KWeekdayCheckCombo</header>
-  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>mCalSelectorPlaceHolder</tabstop>
@@ -1784,7 +1754,6 @@
   <tabstop>mEndTimeEdit</tabstop>
   <tabstop>mTimeZoneComboEnd</tabstop>
   <tabstop>mTabWidget</tabstop>
-  <tabstop>mDescriptionEdit</tabstop>
   <tabstop>mTagWidget</tabstop>
   <tabstop>mSecrecyCombo</tabstop>
   <tabstop>mSolveButton</tabstop>

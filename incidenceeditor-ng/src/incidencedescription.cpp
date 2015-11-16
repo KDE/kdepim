@@ -20,6 +20,7 @@
 
 #include "incidencedescription.h"
 #include "ui_dialogdesktop.h"
+#include <KPIMTextEdit/RichTextComposer>
 
 #include "incidenceeditor_debug.h"
 #include <KActionCollection>
@@ -48,18 +49,10 @@ IncidenceDescription::IncidenceDescription(Ui::EventOrTodoDesktop *ui)
     : IncidenceEditor(0), mUi(ui), d(new IncidenceDescriptionPrivate())
 {
     setObjectName(QStringLiteral("IncidenceDescription"));
-    mUi->mDescriptionEdit->setRichTextSupport(KRichTextWidget::SupportBold |
-            KRichTextWidget::SupportBold |
-            KRichTextWidget::SupportItalic |
-            KRichTextWidget::SupportUnderline |
-            KRichTextWidget::SupportStrikeOut |
-            KRichTextWidget::SupportChangeListStyle |
-            KRichTextWidget::SupportAlignment |
-            KRichTextWidget::SupportFormatPainting);
     mUi->mRichTextLabel->setContextMenuPolicy(Qt::NoContextMenu);
     setupToolBar();
     connect(mUi->mRichTextLabel, &QLabel::linkActivated, this, &IncidenceDescription::toggleRichTextDescription);
-    connect(mUi->mDescriptionEdit, &KRichTextWidget::textChanged, this, &IncidenceDescription::checkDirtyStatus);
+    connect(mUi->mDescriptionEdit, &KPIMTextEdit::RichTextComposer::textChanged, this, &IncidenceDescription::checkDirtyStatus);
 }
 
 IncidenceDescription::~IncidenceDescription()
@@ -80,7 +73,7 @@ void IncidenceDescription::load(const KCalCore::Incidence::Ptr &incidence)
             d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
         } else {
             QString original = incidence->description();
-            mUi->mDescriptionEdit->setText(incidence->description());
+            mUi->mDescriptionEdit->setPlainText(incidence->description());
             d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toPlainText();
         }
     } else {
@@ -131,7 +124,7 @@ void IncidenceDescription::enableRichTextDescription(bool enable)
     if (enable) {
         rt = i18nc("@action Enable or disable rich text editting", "Disable rich text");
         placeholder = QStringLiteral("<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>");
-        mUi->mDescriptionEdit->enableRichTextMode();
+        mUi->mDescriptionEdit->activateRichText();
         d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
     } else {
         mUi->mDescriptionEdit->switchToPlainText();
@@ -141,8 +134,16 @@ void IncidenceDescription::enableRichTextDescription(bool enable)
     placeholder = placeholder.arg(rt);
     mUi->mRichTextLabel->setText(placeholder);
     mUi->mEditToolBarPlaceHolder->setVisible(enable);
-    mUi->mDescriptionEdit->setActionsEnabled(enable);
+    setRichTextComposerEnableAction(enable);
     checkDirtyStatus();
+}
+
+void IncidenceDescription::setRichTextComposerEnableAction(bool state)
+{
+    Q_FOREACH(QAction *act, mUi->mDescriptionEdit->richTextActionList())
+    {
+        act->setEnabled(state);
+    }
 }
 
 void IncidenceDescription::toggleRichTextDescription()
@@ -154,7 +155,7 @@ void IncidenceDescription::setupToolBar()
 {
 #ifndef QT_NO_TOOLBAR
     KActionCollection *collection = new KActionCollection(this);
-    collection->addActions(mUi->mDescriptionEdit->createActions());
+    mUi->mDescriptionEdit->createActions(collection);
 
     KToolBar *mEditToolBar = new KToolBar(mUi->mEditToolBarPlaceHolder);
     mEditToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -174,7 +175,7 @@ void IncidenceDescription::setupToolBar()
     mEditToolBar->addSeparator();
 
     mEditToolBar->addAction(collection->action(QStringLiteral("format_painter")));
-    mUi->mDescriptionEdit->setActionsEnabled(false);
+    setRichTextComposerEnableAction(false);
 
     QGridLayout *layout = new QGridLayout(mUi->mEditToolBarPlaceHolder);
     layout->addWidget(mEditToolBar);
