@@ -65,7 +65,6 @@ private:
     void setupToolBar();
 
 private:
-    void setRichTextComposerEnableAction(bool state);
     Ui::EventOrTodoDesktop *mUi;
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(IncidenceDescription)

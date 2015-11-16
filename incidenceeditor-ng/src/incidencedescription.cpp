@@ -133,17 +133,9 @@ void IncidenceDescription::enableRichTextDescription(bool enable)
 
     placeholder = placeholder.arg(rt);
     mUi->mRichTextLabel->setText(placeholder);
+    mUi->mDescriptionEdit->setEnableActions(enable);
     mUi->mEditToolBarPlaceHolder->setVisible(enable);
-    setRichTextComposerEnableAction(enable);
     checkDirtyStatus();
-}
-
-void IncidenceDescription::setRichTextComposerEnableAction(bool state)
-{
-    Q_FOREACH(QAction *act, mUi->mDescriptionEdit->richTextActionList())
-    {
-        act->setEnabled(state);
-    }
 }
 
 void IncidenceDescription::toggleRichTextDescription()
@@ -175,7 +167,7 @@ void IncidenceDescription::setupToolBar()
     mEditToolBar->addSeparator();
 
     mEditToolBar->addAction(collection->action(QStringLiteral("format_painter")));
-    setRichTextComposerEnableAction(false);
+    mUi->mDescriptionEdit->setEnableActions(false);
 
     QGridLayout *layout = new QGridLayout(mUi->mEditToolBarPlaceHolder);
     layout->addWidget(mEditToolBar);
