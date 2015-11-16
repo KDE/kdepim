@@ -166,7 +166,7 @@ void ExportNotesJob::backupConfig()
     backupUiRcFile(QStringLiteral("knotesappui.rc"), QStringLiteral("knotes"));
     backupUiRcFile(QStringLiteral("knotesui.rc"), QStringLiteral("knotes"));
     backupUiRcFile(QStringLiteral("knotes_part.rc"), QStringLiteral("knotes"));
-
+    backupConfigFile(QStringLiteral("akonadi_notes_agent.notifyrc"));
     storeDirectory(QStringLiteral("/knotes/print/theme/"));
     Q_EMIT info(i18n("Config backup done."));
 }

@@ -58,6 +58,7 @@ void ExportAkregatorJob::slotCheckBackupConfig()
     backupUiRcFile(QStringLiteral("akregator_part.rc"), QStringLiteral("akregator"));
     backupUiRcFile(QStringLiteral("articleviewer.rc"), QStringLiteral("akregator"));
     backupUiRcFile(QStringLiteral("akregator_shell.rc"), QStringLiteral("akregator"));
+    backupConfigFile(QStringLiteral("akregator.notifyrc"));
 
     Q_EMIT info(i18n("Config backup done."));
     QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
