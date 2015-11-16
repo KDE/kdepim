@@ -142,15 +142,15 @@ static QString makeFilter(const QString &query, LdapSearchDialog::FilterType att
 
     if (attr == LdapSearchDialog::Name) {
         result += startsWith ? QStringLiteral("|(cn=%1*)(sn=%2*)") : QStringLiteral("|(cn=*%1*)(sn=*%2*)");
-        result = result.arg(query).arg(query);
+        result = result.arg(query, query);
     } else {
         result += startsWith ? QStringLiteral("%1=%2*") : QStringLiteral("%1=*%2*");
         if (attr == LdapSearchDialog::Email) {
-            result = result.arg(QStringLiteral("mail")).arg(query);
+            result = result.arg(QStringLiteral("mail"), query);
         } else if (attr == LdapSearchDialog::HomeNumber) {
-            result = result.arg(QStringLiteral("homePhone")).arg(query);
+            result = result.arg(QStringLiteral("homePhone"), query);
         } else if (attr == LdapSearchDialog::WorkNumber) {
-            result = result.arg(QStringLiteral("telephoneNumber")).arg(query);
+            result = result.arg(QStringLiteral("telephoneNumber"), query);
         } else {
             // Error?
             result.clear();

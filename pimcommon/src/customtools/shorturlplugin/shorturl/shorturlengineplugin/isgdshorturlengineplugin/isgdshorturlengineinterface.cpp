@@ -43,7 +43,7 @@ QString IsgdShortUrlEngineInterface::engineName() const
 
 void IsgdShortUrlEngineInterface::generateShortUrl()
 {
-    const QString requestUrl = QStringLiteral("http://is.gd/create.php?%1&url=%2").arg(QStringLiteral("format=json")).arg(mOriginalUrl);
+    const QString requestUrl = QStringLiteral("http://is.gd/create.php?%1&url=%2").arg(QStringLiteral("format=json"), mOriginalUrl);
     QNetworkRequest request = QNetworkRequest(QUrl(requestUrl));
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));

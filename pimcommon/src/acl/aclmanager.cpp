@@ -65,8 +65,7 @@ public:
         switch (role) {
         case Qt::DisplayRole:
             return QStringLiteral("%1: %2").
-                   arg(QString::fromLatin1(right.first)).
-                   arg(AclUtils::permissionsToUserString(right.second));
+                   arg(QString::fromLatin1(right.first), AclUtils::permissionsToUserString(right.second));
         case UserIdRole:
             return QString::fromLatin1(right.first);
         case PermissionsRole:
@@ -306,14 +305,14 @@ public:
         } else {
             int pos = serverName.lastIndexOf(QLatin1Char('.'));
             if (pos == -1) {   // no qualified domain name, only hostname
-                return QStringLiteral("%1@%2").arg(loginName).arg(serverName);
+                return QStringLiteral("%1@%2").arg(loginName, serverName);
             }
 
             pos = serverName.lastIndexOf(QLatin1Char('.'), pos - 1);
             if (pos == -1) {   // a simple domain name e.g. mydomain.org
-                return QStringLiteral("%1@%2").arg(loginName).arg(serverName);
+                return QStringLiteral("%1@%2").arg(loginName, serverName);
             } else {
-                return QStringLiteral("%1@%2").arg(loginName).arg(serverName.mid(pos + 1));
+                return QStringLiteral("%1@%2").arg(loginName, serverName.mid(pos + 1));
             }
         }
     }
@@ -474,7 +473,7 @@ void AclManager::save()
 
         if (!searchJob->contactGroups().isEmpty()) {   // it has been a distribution list
             Akonadi::ContactGroupExpandJob *expandJob =
-                new Akonadi::ContactGroupExpandJob(searchJob->contactGroups().first(), this);
+                new Akonadi::ContactGroupExpandJob(searchJob->contactGroups().at(0), this);
             if (expandJob->exec()) {
                 foreach (const KContacts::Addressee &contact, expandJob->contacts()) {
                     const QByteArray rawEmail =

@@ -512,7 +512,7 @@ void MonthScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QPointF pos = mouseEvent->scenePos();
 
-    MonthGraphicsView *view = static_cast<MonthGraphicsView *>(views().first());
+    MonthGraphicsView *view = static_cast<MonthGraphicsView *>(views().at(0));
 
     // Change cursor depending on the part of the item it hovers to inform
     // the user that he can resize the item.
@@ -666,7 +666,7 @@ void MonthScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QPointF pos = mouseEvent->scenePos();
 
-    static_cast<MonthGraphicsView *>(views().first())->setActionCursor(None);
+    static_cast<MonthGraphicsView *>(views().at(0))->setActionCursor(None);
 
     repeatTimer.stop();
     mCurrentIndicator = Q_NULLPTR;
@@ -739,7 +739,7 @@ void MonthScene::selectItem(MonthItem *item)
     if (mMonthView->selectedIncidenceDates().isEmpty()) {
         Q_EMIT incidenceSelected(tmp->akonadiItem(), QDate());
     } else {
-        Q_EMIT incidenceSelected(tmp->akonadiItem(), mMonthView->selectedIncidenceDates().first());
+        Q_EMIT incidenceSelected(tmp->akonadiItem(), mMonthView->selectedIncidenceDates().at(0));
     }
     update();
 }

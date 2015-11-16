@@ -48,7 +48,7 @@ QTextDocument *LogItemDelegate::document(const QStyleOptionViewItem &option, con
 
     const QString content = QStringLiteral(
                                 "<html style=\"color:%1\">"
-                                "<body> %2").arg(textColor.name().toUpper()).arg(text)
+                                "<body> %2").arg(textColor.name().toUpper(), text)
                             + QLatin1String("</table></body></html>");
 
     document->setHtml(content);
@@ -166,13 +166,13 @@ QString CustomLogWidget::toHtml() const
         LogType type = static_cast<LogType>(itemWidget->data(CustomLogWidget::ItemLogType).toInt());
         switch (type) {
         case Title:
-            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::black).name()).arg(itemText);
+            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::black).name(), itemText);
             break;
         case Error:
-            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::red).name()).arg(itemText);
+            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::red).name(), itemText);
             break;
         case Info:
-            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::green).name()).arg(itemText);
+            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::green).name(), itemText);
             break;
         case EndLine:
             logText = QStringLiteral("<br/>");

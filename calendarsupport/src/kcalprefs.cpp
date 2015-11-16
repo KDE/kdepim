@@ -248,7 +248,7 @@ QStringList KCalPrefs::fullEmails()
 
     fullEmails.reserve(1 + mAdditionalMails.count() + lst.count());
     // The user name and email from the config dialog:
-    fullEmails << QStringLiteral("%1 <%2>").arg(fullName()).arg(email());
+    fullEmails << QStringLiteral("%1 <%2>").arg(fullName(), email());
 
     QStringList::Iterator it;
     KIdentityManagement::IdentityManager::ConstIterator it1;
@@ -258,7 +258,7 @@ QStringList KCalPrefs::fullEmails()
     // Add emails configured in korganizer
     lst = mAdditionalMails;
     for (it = lst.begin(); it != lst.end(); ++it) {
-        fullEmails << QStringLiteral("%1 <%2>").arg(fullName()).arg(*it);
+        fullEmails << QStringLiteral("%1 <%2>").arg(fullName(), *it);
     }
 
     // Warning, this list could contain duplicates.

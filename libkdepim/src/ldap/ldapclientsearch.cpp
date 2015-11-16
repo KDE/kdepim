@@ -403,7 +403,7 @@ void LdapClientSearch::Private::makeSearchData(QStringList &ret, LdapResult::Lis
         } else if (name.isEmpty()) {
             ret.append(mail);
         } else {
-            ret.append(QStringLiteral("%1 <%2>").arg(name).arg(mail));
+            ret.append(QStringLiteral("%1 <%2>").arg(name, mail));
         }
 
         LdapResult sr;
