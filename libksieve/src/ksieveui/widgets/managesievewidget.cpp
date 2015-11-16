@@ -163,7 +163,7 @@ void ManageSieveWidget::slotContextMenuRequested(const QPoint &p)
     if (isFileNameItem(item)) {
         // script items:
         menu.addAction(i18n("Edit Script..."), this, SLOT(slotEditScript()));
-        menu.addAction(i18n("Delete Script"), this, SLOT(slotDeleteScript()));
+        menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete Script"), this, SLOT(slotDeleteScript()));
         if (itemIsActived(item)) {
             menu.addSeparator();
             menu.addAction(i18n("Deactivate Script"), this, SLOT(slotDeactivateScript()));
@@ -171,9 +171,9 @@ void ManageSieveWidget::slotContextMenuRequested(const QPoint &p)
     } else if (!item->parent()) {
         // top-levels:
         if (!serverHasError(item) && mJobs.keys(item).isEmpty()) {
-            menu.addAction(i18n("New Script..."), this, SLOT(slotNewScript()));
+            menu.addAction(QIcon::fromTheme(QStringLiteral("document-new")), i18n("New Script..."), this, SLOT(slotNewScript()));
         } else if (!mJobs.keys(item).isEmpty()) { //In Progress
-            menu.addAction(KStandardGuiItem::cancel().text(), this, SLOT(slotCancelFetch()));
+            menu.addAction(KStandardGuiItem::cancel().icon(), KStandardGuiItem::cancel().text(), this, SLOT(slotCancelFetch()));
         }
     }
     if (!menu.actions().isEmpty()) {

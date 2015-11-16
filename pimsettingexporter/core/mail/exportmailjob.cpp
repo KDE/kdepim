@@ -322,6 +322,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("akonadi_followupreminder_agent.notifyrc"));
     backupConfigFile(QStringLiteral("messagevieweradblockrc"));
     backupConfigFile(QStringLiteral("messageviewer.notifyrc"));
+    backupConfigFile(QStringLiteral("storageservicemanager.notifyrc"));
 
     const QString archiveMailAgentConfigurationStr(QStringLiteral("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr;

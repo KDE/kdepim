@@ -809,7 +809,8 @@ void ImportMailJob::restoreConfig()
               << QStringLiteral("akonadi_newmailnotifier_agent.notifyrc")
               << QStringLiteral("akonadi_maildispatcher_agent.notifyrc")
               << QStringLiteral("akonadi_followupreminder_agent.notifyrc")
-              << QStringLiteral("messageviewer.notifyrc");
+              << QStringLiteral("messageviewer.notifyrc")
+              << QStringLiteral("storageservicemanager.notifyrc");
 
     //We can't merge it.
     Q_FOREACH (const QString &filename, lstNotify) {

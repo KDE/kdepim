@@ -3,7 +3,7 @@ Migrate configrc done:
 - storageservicemanager (storageservicemanagerrc, storageservicemanager.notifyrc)
 - headerthemeeditor (headerthemeeditorrc)
 - contactthemeeditor (contactthemeeditorrc) 
-- ktnef ( ktnefui.rc , ktnefrc )
+- ktnef ( ktnefui.rc, ktnefrc )
 - kmailcvt (kmailcvtrc)
 - importwizard (importwizardrc)
 - agent/noteagents (akonadi_notes_agentrc, akonadi_notes_agent.notifyrc)
@@ -16,11 +16,11 @@ Migrate configrc done:
 - kwatchgnupg (kwatchgnupgrc, kwatchgnupgui.rc)
 - kleopatra (kleopatrarc, kleopatra.rc)
 - knotes (knotesrc) #TODO need to migrate it in plugins too
-- blogilo (blogiloui.rc, blogilorc) #TODO need to migrate database
+- blogilo (blogiloui.rc, blogilorc, Database)
 - pimsettingexporter (pimsettingexporterrc, pimsettingexporter.rc)
 - akonadiconsole ( akonadiconsolerc, akonadiconsoleui.rc )
 - korganizer (korganizer_htmlexportrc, korganizerrc, korganizer_part.rc, korganizerui.rc, freebusyurls)
-- akregator (akregatorrc, akregator.notifyrc, akregator_shell.rc, akregator_part.rc, pageviewer.rc, articleviewer.rc, akregator_sharemicroblog_plugin.rc, akregator_onlinesync_plugin.rc
+- akregator (akregatorrc, akregator.notifyrc, akregator_shell.rc, akregator_part.rc, pageviewer.rc, articleviewer.rc, akregator_sharemicroblog_plugin.rc, akregator_onlinesync_plugin.rc)
 - korgac (korgacrc)
 - libkdepim (kpimbalooblacklist, kpimcompletionorder)
 - kontact (kontactrc, kontactui.rc)
