@@ -67,6 +67,7 @@ Root
 |       |---------akonadi_maildispatcher_agent.notifyrc
 |       |---------akonadi_newmailnotifier_agent.notifyrc
 |       |---------akonadi_followupreminder_agent.notifyrc
+|       |---------storageservicemanager.notifyrc
 |       |---------messagevieweradblockrc
 |       |---------knotesrc
 |       |---------akregatorrc
