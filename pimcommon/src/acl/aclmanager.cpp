@@ -450,7 +450,7 @@ void AclManager::save()
         return;
     }
 
-    d->mCollection = job->collections().first();
+    d->mCollection = job->collections().at(0);
 
     d->mChanged = false;
 

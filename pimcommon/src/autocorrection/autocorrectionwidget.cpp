@@ -437,7 +437,7 @@ void AutoCorrectionWidget::enableAddRemoveButton()
 
     QTreeWidgetItem *item = Q_NULLPTR;
     if (d->m_autocorrectEntries.contains(find)) {
-        item = d->ui->treeWidget->findItems(find, Qt::MatchCaseSensitive).first();
+        item = d->ui->treeWidget->findItems(find, Qt::MatchCaseSensitive).at(0);
     }
 
     bool enable = false;

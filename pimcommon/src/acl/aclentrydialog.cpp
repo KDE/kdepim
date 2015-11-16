@@ -75,7 +75,7 @@ void AclEntryDialog::Private::slotSelectAddresses()
     }
 
     const QString text = !dlg.selectedAddresses().isEmpty() ?
-                         dlg.selectedAddresses().first().quotedEmail() :
+                         dlg.selectedAddresses().at(0).quotedEmail() :
                          QString();
 
     mUserIdLineEdit->setText(text);
