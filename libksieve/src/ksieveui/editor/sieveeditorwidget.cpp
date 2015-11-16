@@ -77,7 +77,7 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
     toolbar->addAction(mSwitchMode);
     connect(mSwitchMode, &QAction::triggered, this, &SieveEditorWidget::slotSwitchMode);
 #if !defined(NDEBUG)
-    if (!qgetenv("KDEPIM_SIEVEEDITOR_DEBUG").isEmpty()) {
+    if (!qEnvironmentVariableIsEmpty("KDEPIM_SIEVEEDITOR_DEBUG")) {
         //Not necessary to translate it.
         mGenerateXml = new QAction(QStringLiteral("Generate xml"), this);
         connect(mGenerateXml, &QAction::triggered, this, &SieveEditorWidget::slotGenerateXml);
