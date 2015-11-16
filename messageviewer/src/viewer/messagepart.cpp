@@ -255,9 +255,7 @@ TextMessagePart::TextMessagePart(ObjectTreeParser* otp, KMime::Content* node, bo
         return;
     }
 
-    KMMsgSignatureState inlineSignatureState;
-    KMMsgEncryptionState inlineEncryptionState;
-    mBlocks = mOtp->writeBodyStr2(mNode->decodedContent(), mOtp->codecFor(mNode), NodeHelper::fromAsString(mNode), inlineSignatureState, inlineEncryptionState);
+    mBlocks = mOtp->writeBodyStr2(mNode->decodedContent(), mOtp->codecFor(mNode), NodeHelper::fromAsString(mNode), mSignatureState, mEncryptionState);
 }
 
 TextMessagePart::~TextMessagePart()
@@ -286,6 +284,17 @@ QString TextMessagePart::text() const
     }
     return text;
 }
+
+KMMsgEncryptionState TextMessagePart::encryptionState() const
+{
+    return mEncryptionState;
+}
+
+KMMsgSignatureState TextMessagePart::signatureState() const
+{
+    return mSignatureState;
+}
+
 
 //-----MimeMessageBlock----------------------
 
