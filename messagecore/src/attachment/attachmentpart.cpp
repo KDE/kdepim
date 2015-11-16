@@ -135,7 +135,7 @@ void AttachmentPart::setAutoEncoding(bool enabled)
     d->mAutoEncoding = enabled;
 
     if (enabled) {
-        d->mEncoding = KMime::encodingsForData(d->mData).first();
+        d->mEncoding = KMime::encodingsForData(d->mData).at(0);
     }
 
     d->mSize = sizeWithEncoding(d->mData, d->mEncoding);

@@ -489,7 +489,9 @@ public:
         QList< QPair<KLDAP::LdapAttrMap, QString> > contacts;
 
         const QModelIndexList selected = mResultView->selectionModel()->selectedRows();
-        for (int i = 0; i < selected.count(); ++i) {
+        const int numberOfSelectedElement(selected.count());
+        contacts.reserve(numberOfSelectedElement);
+        for (int i = 0; i < numberOfSelectedElement; ++i) {
             contacts.append(mModel->contact(sortproxy->mapToSource(selected.at(i))));
         }
 

@@ -553,7 +553,7 @@ QIcon DropBoxStorageService::icon() const
 
 QString DropBoxStorageService::disallowedSymbols() const
 {
-    return QLatin1String("[/:?*<>\"|]");
+    return QStringLiteral("[/:?*<>\"|]");
 }
 
 QString DropBoxStorageService::disallowedSymbolsStr() const

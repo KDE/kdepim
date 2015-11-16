@@ -796,7 +796,7 @@ void TodoView::selectionChanged(const QItemSelection &selected,
     if (selectedIncidenceDates().isEmpty()) {
         Q_EMIT incidenceSelected(todoItem, QDate());
     } else {
-        Q_EMIT incidenceSelected(todoItem, selectedIncidenceDates().first());
+        Q_EMIT incidenceSelected(todoItem, selectedIncidenceDates().at(0));
     }
 }
 
