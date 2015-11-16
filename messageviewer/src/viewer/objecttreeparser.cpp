@@ -1027,6 +1027,9 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
         TextMessagePart mp(this, curNode, bDrawFrame, !fileName.isEmpty());
         mp.html(!bDrawFrame);
 
+        result.setInlineSignatureState(mp.signatureState());
+        result.setInlineEncryptionState(mp.encryptionState());
+
         if (isFirstTextPart) {
             mPlainTextContent = mp.text();
         }

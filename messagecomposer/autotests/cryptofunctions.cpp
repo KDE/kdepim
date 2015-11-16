@@ -54,7 +54,6 @@ void ComposerTestUtil::verify(bool sign, bool encrypt, KMime::Content *content, 
 
 void ComposerTestUtil::verifySignature(KMime::Content *content, QByteArray signedContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding)
 {
-    qDebug() << "verifySignature";
     // store it in a KMime::Message, that's what OTP needs
     KMime::Message *resultMessage =  new KMime::Message;
     resultMessage->setContent(content->encodedContent());
@@ -122,7 +121,7 @@ void ComposerTestUtil::verifySignature(KMime::Content *content, QByteArray signe
     }
 
     // make sure the good sig is of what we think it is
-    QCOMPARE(otp.plainTextContent(), QString::fromUtf8(signedContent));
+    QCOMPARE(otp.plainTextContent().trimmed(), QString::fromUtf8(signedContent).trimmed());
     Q_UNUSED(signedContent);
 
 }
@@ -181,7 +180,7 @@ void ComposerTestUtil::verifyEncryption(KMime::Content *content, QByteArray encr
         QCOMPARE(nh->encryptionState(resultMessage.data()), MessageViewer::KMMsgFullyEncrypted);
 
     }
-    QCOMPARE(otp.plainTextContent(), QString::fromUtf8(encrContent));
+    QCOMPARE(otp.plainTextContent().trimmed(), QString::fromUtf8(encrContent).trimmed());
     Q_UNUSED(encrContent);
 }
 
@@ -237,7 +236,7 @@ void ComposerTestUtil::verifySignatureAndEncryption(KMime::Content *content, QBy
         QCOMPARE(extra.size(), 1);
         QCOMPARE(nh->signatureState(extra[ 0 ]), MessageViewer::KMMsgFullySigned);
     }
-    QCOMPARE(otp.plainTextContent(), QString::fromUtf8(origContent));
+    QCOMPARE(otp.plainTextContent().trimmed(), QString::fromUtf8(origContent).trimmed());
     Q_UNUSED(origContent);
 }
 

@@ -21,6 +21,7 @@
 #define _MESSAGEVIEWER_MESSAGEPART_H_
 
 #include "partmetadata.h"
+#include "nodehelper.h"
 #include <KMime/Message>
 
 #include <Libkleo/CryptoBackend>
@@ -148,11 +149,16 @@ public:
     QString text() const Q_DECL_OVERRIDE;
     void html(bool decorate) Q_DECL_OVERRIDE;
 
+    KMMsgSignatureState signatureState() const;
+    KMMsgEncryptionState encryptionState() const;
+
 private:
     KMime::Content* mNode;
+    KMMsgSignatureState mSignatureState;
+    KMMsgEncryptionState mEncryptionState;
+    QVector<MessagePart::Ptr> mBlocks;
     bool mDrawFrame;
     bool mShowLink;
-    QVector<MessagePart::Ptr> mBlocks;
 };
 
 class MimeMessagePart : public MessagePart
