@@ -333,7 +333,7 @@ void KTNEFMain::extractAllFiles()
 
 void KTNEFMain::propertiesFile()
 {
-    KTNEFAttach *attach = mView->getSelection().first();
+    KTNEFAttach *attach = mView->getSelection().at(0);
     AttachPropertyDialog dlg(this);
     dlg.setAttachment(attach);
     dlg.exec();

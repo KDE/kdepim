@@ -761,7 +761,7 @@ void IncidenceRecurrence::selectMonthlyItem(KCalCore::Recurrence *recurrence,
         // check if we have any setting for which day (vcs import is broken and
         // does not set any day, thus we need to check)
         const int day = recurrence->monthDays().isEmpty() ? currentDate().day() :
-                        recurrence->monthDays().first();
+                        recurrence->monthDays().at(0);
 
         // Days from the end are after the ones from the begin, so correct for the
         // negative sign and add 30 (index starting at 0)

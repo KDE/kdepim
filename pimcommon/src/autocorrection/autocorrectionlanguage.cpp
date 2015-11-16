@@ -29,7 +29,7 @@ AutoCorrectionLanguage::AutoCorrectionLanguage(QWidget *parent)
             addItem(locale->languageCodeToName(lang), lang);
         }
     }
-    const QString defaultLang = locale->languageList().first();
+    const QString defaultLang = locale->languageList().at(0);
     const int index = findData(defaultLang);
     setCurrentIndex(index);
     model()->sort(0);
