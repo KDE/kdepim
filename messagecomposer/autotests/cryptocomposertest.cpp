@@ -442,7 +442,7 @@ void CryptoComposerTest::testOpenPGPInline()
     if (sign && !encrypt) {
         data += QString::fromLatin1("\n");
     }
-    qDebug() << "message:" << message->encodedContent();
+    //qDebug() << "message:" << message->encodedContent();
     ComposerTestUtil::verify(sign, encrypt, message.data(), data.toUtf8(),
                              Kleo::InlineOpenPGPFormat, cte);
 
@@ -603,7 +603,7 @@ void CryptoComposerTest::runSMIMETest(bool sign, bool enc, bool opaque)
         delete composer;
         composer = Q_NULLPTR;
 
-        qDebug() << "message:" << message->encodedContent();
+        //qDebug() << "message:" << message->encodedContent();
 
         ComposerTestUtil::verify(sign, enc, message.data(), data.toUtf8(),  f, cte);
 
