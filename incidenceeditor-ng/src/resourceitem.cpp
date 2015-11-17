@@ -42,6 +42,7 @@ ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, const QStringList &attrs, co
         mAttrs << QStringLiteral("uniqueMember");
         mLdapClient.setAttributes(attrs);
     } else {
+        itemData.reserve(mAttrs.count());
         foreach (const QString &header, mAttrs) {
             itemData << header;
         }

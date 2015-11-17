@@ -56,7 +56,7 @@ void CreateTodoJob::slotFetchDone(KJob *job)
 {
     Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
     if (fetchJob->items().count() == 1) {
-        mItem = fetchJob->items().first();
+        mItem = fetchJob->items().at(0);
     } else {
         qCDebug(MESSAGEVIEWER_LOG) << " createTodo Error during fetch: " << job->errorString();
         Q_EMIT emitResult();
