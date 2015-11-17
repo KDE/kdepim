@@ -112,6 +112,7 @@ QString NewThemeDialog::directory() const
 
 void NewThemeDialog::slotUpdateOkButton()
 {
-    d->mOkButton->setEnabled(!d->mUrlRequester->lineEdit()->text().isEmpty() && !d->mThemeName->text().isEmpty());
+    d->mOkButton->setEnabled(!d->mUrlRequester->lineEdit()->text().trimmed().isEmpty()
+                             && !d->mThemeName->text().trimmed().isEmpty());
 }
 
