@@ -96,7 +96,7 @@ void Viewer::changeEvent(QEvent *event)
     QWidget::changeEvent(event);
 }
 
-void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode)
+void Viewer::setMessage(const KMime::Message::Ptr &message, UpdateMode updateMode)
 {
     Q_D(Viewer);
     if (message == d->message()) {

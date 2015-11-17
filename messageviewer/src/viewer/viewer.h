@@ -144,7 +144,7 @@ public:
     * @param msg - the message to be shown. If 0, an empty page is displayed.
     * @param updateMode - update the display immediately or not. See UpdateMode.
     */
-    void setMessage(KMime::Message::Ptr message, UpdateMode updateMode = Delayed);
+    void setMessage(const KMime::Message::Ptr &message, UpdateMode updateMode = Delayed);
 
     /**
     * Set the Akonadi item that will be displayed.

@@ -37,7 +37,7 @@ public:
     void importMails(const QString &maildir);
 
     static QString defaultSettingsPath();
-    static QString defaultProfile(const QString defaultSettingPath, QWidget *parent = Q_NULLPTR);
+    static QString defaultProfile(const QString &defaultSettingPath, QWidget *parent = Q_NULLPTR);
     static QMap<QString, QString> listProfile(QString &currentProfile, const QString &defaultSettingPath);
 
 protected:

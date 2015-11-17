@@ -108,7 +108,7 @@ class KConfigBasedRecipientPreferences::Private
     friend class ::Kleo::Crypto::KConfigBasedRecipientPreferences;
     KConfigBasedRecipientPreferences *const q;
 public:
-    explicit Private(KSharedConfigPtr config, KConfigBasedRecipientPreferences *qq);
+    explicit Private(const KSharedConfigPtr &config, KConfigBasedRecipientPreferences *qq);
     ~Private();
 
 private:
@@ -124,7 +124,7 @@ private:
     mutable bool m_dirty;
 };
 
-KConfigBasedRecipientPreferences::Private::Private(KSharedConfigPtr config, KConfigBasedRecipientPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
+KConfigBasedRecipientPreferences::Private::Private(const KSharedConfigPtr &config, KConfigBasedRecipientPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
 {
     assert(m_config);
 }
@@ -176,7 +176,7 @@ void KConfigBasedRecipientPreferences::Private::ensurePrefsParsed() const
     m_parsed = true;
 }
 
-KConfigBasedRecipientPreferences::KConfigBasedRecipientPreferences(KSharedConfigPtr config) : d(new Private(config, this))
+KConfigBasedRecipientPreferences::KConfigBasedRecipientPreferences(const KSharedConfigPtr &config) : d(new Private(config, this))
 {
 }
 
@@ -208,7 +208,7 @@ class KConfigBasedSigningPreferences::Private
     friend class ::Kleo::Crypto::KConfigBasedSigningPreferences;
     KConfigBasedSigningPreferences *const q;
 public:
-    explicit Private(KSharedConfigPtr config, KConfigBasedSigningPreferences *qq);
+    explicit Private(const KSharedConfigPtr &config, KConfigBasedSigningPreferences *qq);
     ~Private();
 
 private:
@@ -224,7 +224,7 @@ private:
     mutable bool m_dirty;
 };
 
-KConfigBasedSigningPreferences::Private::Private(KSharedConfigPtr config, KConfigBasedSigningPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
+KConfigBasedSigningPreferences::Private::Private(const KSharedConfigPtr &config, KConfigBasedSigningPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
 {
     assert(m_config);
 }
@@ -257,7 +257,7 @@ KConfigBasedSigningPreferences::Private::~Private()
     writePrefs();
 }
 
-KConfigBasedSigningPreferences::KConfigBasedSigningPreferences(KSharedConfigPtr config) : d(new Private(config, this))
+KConfigBasedSigningPreferences::KConfigBasedSigningPreferences(const KSharedConfigPtr &config) : d(new Private(config, this))
 {
 }
 

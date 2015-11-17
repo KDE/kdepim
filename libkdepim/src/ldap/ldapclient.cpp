@@ -115,7 +115,7 @@ QStringList LdapClient::attributes() const
     return d->mAttrs;
 }
 
-void LdapClient::setScope(const QString scope)
+void LdapClient::setScope(const QString &scope)
 {
     d->mScope = scope;
 }

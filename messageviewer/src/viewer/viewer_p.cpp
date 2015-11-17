@@ -1274,7 +1274,7 @@ void ViewerPrivate::resetStateForNewMessage()
     }
 }
 
-void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
+void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr &message,
                                        Viewer::UpdateMode updateMode)
 {
     mViewerPluginToolManager->updateActions(mMessageItem);
@@ -1380,7 +1380,7 @@ void ViewerPrivate::showHideMimeTree()
 #endif
 }
 
-void ViewerPrivate::atmViewMsg(KMime::Message::Ptr message)
+void ViewerPrivate::atmViewMsg(const KMime::Message::Ptr &message)
 {
     Q_ASSERT(message);
     Q_EMIT showMessage(message, overrideEncoding());

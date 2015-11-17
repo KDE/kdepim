@@ -312,7 +312,7 @@ public:
 
     void resetStateForNewMessage();
 
-    void setMessageInternal(const KMime::Message::Ptr message, Viewer::UpdateMode updateMode);
+    void setMessageInternal(const KMime::Message::Ptr &message, Viewer::UpdateMode updateMode);
 
     /** Set the Akonadi item that will be displayed.
     *  @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
@@ -336,7 +336,7 @@ public:
     void showHideMimeTree();
 
     /** View message part of type message/RFC822 in extra viewer window. */
-    void atmViewMsg(KMime::Message::Ptr message);
+    void atmViewMsg(const KMime::Message::Ptr &message);
 
     void setExternalWindow(bool b);
 

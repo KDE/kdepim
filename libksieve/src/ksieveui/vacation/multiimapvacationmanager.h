@@ -47,7 +47,7 @@ Q_SIGNALS:
     void scriptAvailable(const QString &serverName, const QStringList &sieveCapabilities, const QString &scriptName, const QString &script, bool active);
 
 private Q_SLOTS:
-    void slotScriptActive(VacationCheckJob *job, QString scriptName, bool active);
+    void slotScriptActive(VacationCheckJob *job, const QString &scriptName, bool active);
     void slotCheckKep14Ended(KSieveUi::CheckKolabKep14SupportJob *job, bool success);
 
 private:

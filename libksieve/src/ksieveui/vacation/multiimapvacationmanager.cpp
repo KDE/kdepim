@@ -89,7 +89,7 @@ void MultiImapVacationManager::checkVacation()
     }
 }
 
-void MultiImapVacationManager::slotScriptActive(VacationCheckJob *job, QString scriptName, bool active)
+void MultiImapVacationManager::slotScriptActive(VacationCheckJob *job, const QString &scriptName, bool active)
 {
     --mNumberOfJobs;
     if (mNumberOfJobs == 0) {
