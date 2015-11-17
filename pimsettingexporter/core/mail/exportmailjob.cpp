@@ -298,8 +298,13 @@ void ExportMailJob::backupConfig()
     backupUiRcFile(QStringLiteral("kmcomposerui.rc"), QStringLiteral("kmail2"));
     backupUiRcFile(QStringLiteral("kmmainwin.rc"), QStringLiteral("kmail2"));
     backupUiRcFile(QStringLiteral("kmail_part.rc"), QStringLiteral("kmail2"));
+    backupUiRcFile(QStringLiteral("kontactsummary_part.rc"), QStringLiteral("kontactsummary"));
     backupUiRcFile(QStringLiteral("kontactui.rc"), QStringLiteral("kontact"));
     backupUiRcFile(QStringLiteral("kleopatra.rc"), QStringLiteral("kleopatra"));
+    backupUiRcFile(QStringLiteral("headerthemeeditorui.rc"), QStringLiteral("headerthemeeditor"));
+    backupUiRcFile(QStringLiteral("contactthemeeditorui.rc"), QStringLiteral("contactthemeeditor"));
+    backupUiRcFile(QStringLiteral("contactprintthemeeditorui.rc"), QStringLiteral("contactprintthemeeditor"));
+
 
     backupConfigFile(QStringLiteral("kabldaprc"));
     backupConfigFile(QStringLiteral("kmailsnippetrc"));
