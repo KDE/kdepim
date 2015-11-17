@@ -213,15 +213,15 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoToTopWhenClickOnBack()
     buttons.addNewUrl(urlValid);
 
     buttons.goBack()->trigger();
-    InformationUrl forwardUrl = buttons.forwardUrls().first();
+    InformationUrl forwardUrl = buttons.forwardUrls().at(0);
     QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo3"));
 
     buttons.goBack()->trigger();
-    forwardUrl = buttons.forwardUrls().first();
+    forwardUrl = buttons.forwardUrls().at(0);
     QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo2"));
 
     buttons.goBack()->trigger();
-    forwardUrl = buttons.forwardUrls().first();
+    forwardUrl = buttons.forwardUrls().at(0);
     QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo1"));
 
 }
@@ -244,11 +244,11 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoToTopWhenClickOnBackAndAf
     buttons.addNewUrl(urlValid);
 
     buttons.goBack()->trigger();
-    InformationUrl forwardUrl = buttons.forwardUrls().first();
+    InformationUrl forwardUrl = buttons.forwardUrls().at(0);
     QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo3"));
 
     buttons.goForward()->trigger();
-    forwardUrl = buttons.backUrls().first();
+    forwardUrl = buttons.backUrls().at(0);
     QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo3"));
 }
 

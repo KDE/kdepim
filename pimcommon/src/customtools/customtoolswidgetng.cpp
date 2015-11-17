@@ -95,6 +95,7 @@ void CustomToolsWidgetNg::slotActivateView(QWidget *w)
 QList<KToggleAction *> CustomToolsWidgetNg::actionList() const
 {
     QList<KToggleAction *> lstActions;
+    lstActions.reserve(d->mListInterfaceView.count());
     Q_FOREACH (PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
         lstActions << interface->action();
     }
