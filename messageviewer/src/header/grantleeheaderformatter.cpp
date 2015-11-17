@@ -91,7 +91,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool 
     return format(theme.absolutePath(), headerTemplate, theme.displayExtraVariables(), isPrinting, style, message);
 }
 
-QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::format(const QString &absolutePath, const Grantlee::Template &headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QVariantHash headerObject;
 

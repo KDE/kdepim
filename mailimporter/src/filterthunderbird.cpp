@@ -52,7 +52,7 @@ QString FilterThunderbird::defaultSettingsPath()
     return QDir::homePath() + QLatin1String("/.thunderbird/");
 }
 
-QString FilterThunderbird::defaultProfile(const QString defaultSettingPath, QWidget *parent)
+QString FilterThunderbird::defaultProfile(const QString &defaultSettingPath, QWidget *parent)
 {
     QString currentProfile;
     QMap<QString, QString> listProfile = FilterThunderbird::listProfile(currentProfile, defaultSettingPath);

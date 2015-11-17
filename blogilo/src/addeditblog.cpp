@@ -605,7 +605,7 @@ void AddEditBlog::slotAccepted()
     accept();
 }
 
-void AddEditBlog::showWaitWidget(QString text)
+void AddEditBlog::showWaitWidget(const QString &text)
 {
     d->ui.btnAutoConf->setEnabled(false);
     d->ui.btnFetch->setEnabled(false);

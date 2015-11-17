@@ -117,7 +117,7 @@ public:
      *
      * Valid values are 'one' or 'sub'.
      */
-    void setScope(const QString scope);
+    void setScope(const QString &scope);
 
     /**
      * Starts the query with the given @p filter.

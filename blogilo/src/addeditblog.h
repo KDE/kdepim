@@ -78,7 +78,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotAccepted();
 private:
-    void showWaitWidget(QString text);
+    void showWaitWidget(const QString &text);
     void hideWaitWidget();
 
     class Private;

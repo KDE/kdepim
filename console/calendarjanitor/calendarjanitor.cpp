@@ -646,7 +646,7 @@ void CalendarJanitor::beginTest(const QString &message)
     print(message.leftJustified(TEXT_WIDTH), false);
 }
 
-void CalendarJanitor::endTest(bool printEnabled, const QString fixExplanation, const QString &fixExplanation2)
+void CalendarJanitor::endTest(bool printEnabled, const QString &fixExplanation, const QString &fixExplanation2)
 {
     if (m_numDamaged == 0 && printEnabled) {
         print(QStringLiteral(" [OK]"));
