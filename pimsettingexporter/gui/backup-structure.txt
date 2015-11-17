@@ -102,6 +102,10 @@ Root
 |       |---------knotes_part.rc
 |       |---------akonadi_notes_agent.notifyrc
 |       |---------akregator.notifyrc
+|       |---------kontactsummary_part.rc
+|       |---------headerthemeeditorui.rc
+|       |---------contactprintthemeeditorui.rc    
+|       |---------contactthemeeditorui.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>
