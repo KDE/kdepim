@@ -697,7 +697,7 @@
           </widget>
          </item>
          <item row="1" column="0" colspan="4">
-          <widget class="KPIMTextEdit::RichTextComposer" name="mDescriptionEdit"/>
+          <widget class="KPIMTextEdit::RichTextComposerWidget" name="mDescriptionEdit"/>
          </item>
         </layout>
        </widget>
@@ -1709,9 +1709,9 @@
    <header>ktimecombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIMTextEdit::RichTextComposer</class>
+   <class>KPIMTextEdit::RichTextComposerWidget</class>
    <extends>QWidget</extends>
-   <header>kpimtextedit/richtextcomposer.h</header>
+   <header>kpimtextedit/richtextcomposerwidget.h</header>
   </customwidget>
   <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>
