@@ -31,6 +31,7 @@
 #include <QFile>
 #include <KLocalizedString>
 #include <QDesktopServices>
+#include <KToolInvocation>
 
 using namespace KABSendVCards;
 
@@ -104,7 +105,7 @@ void SendVcardsJob::jobFinished()
 {
     const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
     if (!lstAttachment.isEmpty()) {
-        QDesktopServices::openUrl(QStringLiteral("mailto:"));
+        KToolInvocation::invokeMailer(QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment);
     } else {
         sendVCardsError(i18n("No vCard created."));
     }
