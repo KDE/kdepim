@@ -166,8 +166,8 @@ int main(int argc, char **argv)
     w->resize(800, 600);
 
     w->show();
-    app.exec();
+    const int ret = app.exec();
     delete w;
-    return 0;
+    return ret;
 }
 

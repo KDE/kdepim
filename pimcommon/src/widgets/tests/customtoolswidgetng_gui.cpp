@@ -73,8 +73,8 @@ int main(int argc, char **argv)
     CustomToolWidgetNgTest *w = new CustomToolWidgetNgTest();
     w->resize(800, 200);
     w->show();
-    app.exec();
+    const int ret = app.exec();
     delete w;
-    return 0;
+    return ret;
 }
 

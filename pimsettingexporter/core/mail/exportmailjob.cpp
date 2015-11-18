@@ -304,7 +304,7 @@ void ExportMailJob::backupConfig()
     backupUiRcFile(QStringLiteral("headerthemeeditorui.rc"), QStringLiteral("headerthemeeditor"));
     backupUiRcFile(QStringLiteral("contactthemeeditorui.rc"), QStringLiteral("contactthemeeditor"));
     backupUiRcFile(QStringLiteral("contactprintthemeeditorui.rc"), QStringLiteral("contactprintthemeeditor"));
-
+    backupUiRcFile(QStringLiteral("kwatchgnupgui.rc"), QStringLiteral("kwatchgnupg"));
 
     backupConfigFile(QStringLiteral("kabldaprc"));
     backupConfigFile(QStringLiteral("kmailsnippetrc"));
@@ -316,6 +316,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("kpimbalooblacklist"));
     backupConfigFile(QStringLiteral("kleopatrarc"));
     backupConfigFile(QStringLiteral("sieveeditorrc"));
+    backupConfigFile(QStringLiteral("kwatchgnupgrc"));
 
     //Notify file config
     backupConfigFile(QStringLiteral("akonadi_mailfilter_agent.notifyrc"));
