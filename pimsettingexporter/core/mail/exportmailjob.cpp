@@ -478,7 +478,7 @@ void ExportMailJob::backupConfig()
                 if (found) {
                     const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
                     if (!realPath.isEmpty()) {
-                        storageGroup.writeEntry(QStringLiteral("%1%2").arg(storageModelSelectedPattern).arg(realPath), oldValue);
+                        storageGroup.writeEntry(QStringLiteral("%1%2").arg(storageModelSelectedPattern, realPath), oldValue);
                         storageGroup.deleteEntry(str);
                     }
                 }

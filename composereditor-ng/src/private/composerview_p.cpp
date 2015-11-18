@@ -890,7 +890,7 @@ void ComposerViewPrivate::execCommand(const QString &cmd)
 void ComposerViewPrivate::execCommand(const QString &cmd, const QString &arg)
 {
     QWebFrame *frame = q->page()->mainFrame();
-    const QString js = QStringLiteral("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
+    const QString js = QStringLiteral("document.execCommand(\"%1\", false, \"%2\")").arg(cmd, arg);
     frame->evaluateJavaScript(js);
 }
 
