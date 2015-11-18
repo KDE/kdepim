@@ -46,8 +46,10 @@ int main(int argc, char **argv)
 
     KSieveUi::MultiImapVacationManager manager;
     KSieveUi::MultiImapVacationDialog dlg(&manager);
+    QObject::connect(&dlg, &KSieveUi::MultiImapVacationDialog::okClicked, &app, &QApplication::quit);
+    QObject::connect(&dlg, &KSieveUi::MultiImapVacationDialog::cancelClicked, &app, &QApplication::quit);
 
     dlg.show();
-    app.exec();
-    return 0;
+
+    return app.exec();
 }
