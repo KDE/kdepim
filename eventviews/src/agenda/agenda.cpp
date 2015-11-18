@@ -1859,7 +1859,7 @@ void Agenda::insertMultiItem(const KCalCore::Incidence::Ptr &event, const KDateT
             } else {
                 cellYBottom = rows() - 1;
             }
-            newtext = QStringLiteral("(%1/%2): ").arg(count).arg(width);
+            newtext = QStringLiteral("(%1/%2): ").arg(count, width);
             newtext.append(ev->summary());
 
             current = insertItem(event, recurrenceId, cellX, cellYTop, cellYBottom, count, width, isSelected);

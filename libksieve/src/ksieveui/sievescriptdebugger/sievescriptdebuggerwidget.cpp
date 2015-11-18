@@ -41,6 +41,10 @@ SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
     mStackedWidget->addWidget(mSieveScriptFrontEnd);
 
     mSieveNoExistingFrontEnd = new QLabel(i18n("\"sieve-test\" was not found on system. Please install it."));
+    mSieveNoExistingFrontEnd->setAlignment(Qt::AlignHCenter);
+    QFont f = mSieveNoExistingFrontEnd->font();
+    f.setBold(true);
+    mSieveNoExistingFrontEnd->setFont(f);
     mSieveNoExistingFrontEnd->setObjectName(QStringLiteral("sievenoexistingfrontend"));
     mStackedWidget->addWidget(mSieveNoExistingFrontEnd);
 
