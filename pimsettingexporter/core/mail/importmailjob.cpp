@@ -796,6 +796,7 @@ void ImportMailJob::restoreConfig()
     restoreUiRcFile(QStringLiteral("kontactui.rc"), QStringLiteral("kontact"));
     restoreUiRcFile(QStringLiteral("kleopatra.rc"), QStringLiteral("kleopatra"));
     restoreUiRcFile(QStringLiteral("kontactsummary_part.rc"), QStringLiteral("kontactsummary"));
+    restoreUiRcFile(QStringLiteral("kwatchgnupgui.rc"), QStringLiteral("kwatchgnupg"));
 
     restoreConfigFile(QStringLiteral("kontactrc"));
 
@@ -804,6 +805,7 @@ void ImportMailJob::restoreConfig()
     restoreConfigFile(QStringLiteral("kpimbalooblacklist"));
     restoreConfigFile(QStringLiteral("kleopatrarc"));
     restoreConfigFile(QStringLiteral("sieveeditorrc"));
+    restoreConfigFile(QStringLiteral("kwatchgnupgrc"));
     //Restore notify file
     QStringList lstNotify;
     lstNotify << QStringLiteral("akonadi_mailfilter_agent.notifyrc")

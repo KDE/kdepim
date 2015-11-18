@@ -1,4 +1,4 @@
-2015-11-09:
+2015-11-18:
 -----------
 
 2015-1-29: New VERSION for archive => VERSION_2 => knote-akonadi
@@ -106,6 +106,8 @@ Root
 |       |---------headerthemeeditorui.rc
 |       |---------contactprintthemeeditorui.rc    
 |       |---------contactthemeeditorui.rc
+|       |---------kwatchgnupgrc
+|       |---------kwatchgnupgui.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>
