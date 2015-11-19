@@ -25,12 +25,10 @@
 #include <AkonadiCore/TagCreateJob>
 #include <KConfigGroup>
 
-class QPushButton;
 class KActionCollection;
 
 namespace MailCommon
 {
-class TagWidget;
 class AddTagDialogPrivate;
 class MAILCOMMON_EXPORT AddTagDialog : public QDialog
 {
