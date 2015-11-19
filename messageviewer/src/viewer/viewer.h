@@ -370,7 +370,7 @@ Q_SIGNALS:
     void showReader(KMime::Content *aMsgPart, bool aHTML, const QString &encoding);
 
     /// Emitted when the message should be shown in a separate window
-    void showMessage(KMime::Message::Ptr message, const QString &encoding);
+    void showMessage(const KMime::Message::Ptr &message, const QString &encoding);
 
     void deleteMessage(const Akonadi::Item &);
 

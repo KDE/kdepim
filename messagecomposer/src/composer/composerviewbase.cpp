@@ -905,7 +905,7 @@ void MessageComposer::ComposerViewBase::slotSendComposeResult(KJob *job)
     m_composers.removeAll(composer);
 }
 
-void MessageComposer::ComposerViewBase::saveRecentAddresses(KMime::Message::Ptr msg)
+void MessageComposer::ComposerViewBase::saveRecentAddresses(const KMime::Message::Ptr &msg)
 {
     foreach (const QByteArray &address, msg->to()->addresses()) {
         KPIM::RecentAddresses::self(MessageComposer::MessageComposerSettings::self()->config())->add(QLatin1String(address));
@@ -918,7 +918,7 @@ void MessageComposer::ComposerViewBase::saveRecentAddresses(KMime::Message::Ptr 
     }
 }
 
-void MessageComposer::ComposerViewBase::queueMessage(KMime::Message::Ptr message, MessageComposer::Composer *composer)
+void MessageComposer::ComposerViewBase::queueMessage(const KMime::Message::Ptr &message, MessageComposer::Composer *composer)
 {
     const MessageComposer::InfoPart *infoPart = composer->infoPart();
     MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob(this);
@@ -1212,7 +1212,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk(const KMime::Message
     file.commit();
 }
 
-void MessageComposer::ComposerViewBase::saveMessage(KMime::Message::Ptr message, MessageComposer::MessageSender::SaveIn saveIn)
+void MessageComposer::ComposerViewBase::saveMessage(const KMime::Message::Ptr &message, MessageComposer::MessageSender::SaveIn saveIn)
 {
     Akonadi::Collection target;
     const KIdentityManagement::Identity identity = identityManager()->identityForUoid(m_identityCombo->currentIdentity());
