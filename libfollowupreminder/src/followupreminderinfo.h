@@ -60,7 +60,7 @@ public:
     void setAnswerWasReceived(bool answerWasReceived);
 
     Akonadi::Item::Id answerMessageItemId() const;
-    void setAnswerMessageItemId(const Akonadi::Item::Id &answerMessageItemId);
+    void setAnswerMessageItemId(Akonadi::Item::Id answerMessageItemId);
 
     qint32 uniqueIdentifier() const;
     void setUniqueIdentifier(const qint32 &uniqueIdentifier);

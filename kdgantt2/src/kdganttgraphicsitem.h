@@ -126,7 +126,6 @@ private:
     QPointF m_presspos;
     QPointF m_pressscenepos;
     QGraphicsLineItem *m_dragline;
-    GraphicsItem *m_dragtarget;
     QList<ConstraintGraphicsItem *> m_startConstraints;
     QList<ConstraintGraphicsItem *> m_endConstraints;
 };

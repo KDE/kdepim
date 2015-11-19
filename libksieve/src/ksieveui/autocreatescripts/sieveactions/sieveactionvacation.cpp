@@ -168,7 +168,7 @@ QString SieveActionVacation::code(QWidget *w) const
     const QString addressesStr = addresses->text();
     QString result = QStringLiteral("vacation");
     if (!dayStr.isEmpty()) {
-        result += QStringLiteral(" %1 %2").arg(vacationTypeStr).arg(dayStr);
+        result += QStringLiteral(" %1 %2").arg(vacationTypeStr, dayStr);
     }
     if (!subjectStr.isEmpty()) {
         result += QStringLiteral(" :subject \"%1\"").arg(subjectStr);

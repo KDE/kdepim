@@ -286,7 +286,7 @@ void MultiAgendaView::recreateViews()
     QTimer::singleShot(0, this, &MultiAgendaView::slotResizeScrollView);
     d->mTimeLabelsZone->updateAll();
 
-    QScrollArea *timeLabel = d->mTimeLabelsZone->timeLabels().first();
+    QScrollArea *timeLabel = d->mTimeLabelsZone->timeLabels().at(0);
     connect(timeLabel->verticalScrollBar(), &QAbstractSlider::valueChanged,
             d->mScrollBar, &QAbstractSlider::setValue);
     connect(d->mScrollBar, &QAbstractSlider::valueChanged,

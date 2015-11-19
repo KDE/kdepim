@@ -82,7 +82,7 @@ Akonadi::Item::Id FollowUpReminderInfo::answerMessageItemId() const
     return mAnswerMessageItemId;
 }
 
-void FollowUpReminderInfo::setAnswerMessageItemId(const Akonadi::Item::Id &answerMessageId)
+void FollowUpReminderInfo::setAnswerMessageItemId(Akonadi::Item::Id answerMessageId)
 {
     mAnswerMessageItemId = answerMessageId;
 }
