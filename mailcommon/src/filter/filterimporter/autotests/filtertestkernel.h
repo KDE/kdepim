@@ -49,7 +49,7 @@ public:
     bool excludeImportantMailFromExpiry() Q_DECL_OVERRIDE;
     QStringList customTemplates() Q_DECL_OVERRIDE;
     Akonadi::Collection::Id lastSelectedFolder() Q_DECL_OVERRIDE;
-    void setLastSelectedFolder(const Akonadi::Collection::Id &col) Q_DECL_OVERRIDE;
+    void setLastSelectedFolder(Akonadi::Collection::Id col) Q_DECL_OVERRIDE;
     bool showPopupAfterDnD() Q_DECL_OVERRIDE;
 
 private:

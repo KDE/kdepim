@@ -47,7 +47,7 @@ public:
     Akonadi::Collection::List selectedCollections() const;
     QList<Akonadi::Collection::Id> selectedCollectionIds() const;
     bool contains(const Akonadi::Collection &c) const;
-    bool contains(const Akonadi::Collection::Id &id) const;
+    bool contains(Akonadi::Collection::Id id) const;
 
     bool hasSelection() const;
 

@@ -99,7 +99,7 @@ Akonadi::Collection::Id DummyKernel::lastSelectedFolder()
     return Akonadi::Collection::Id();
 }
 
-void DummyKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
+void DummyKernel::setLastSelectedFolder(Akonadi::Collection::Id col)
 {
     Q_UNUSED(col);
 }

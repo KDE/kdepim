@@ -120,7 +120,7 @@ Akonadi::Collection::Id KCalPrefs::defaultCalendarId() const
     return d->mDefaultCalendarId;
 }
 
-void KCalPrefs::setDefaultCalendarId(const Akonadi::Collection::Id id)
+void KCalPrefs::setDefaultCalendarId(Akonadi::Collection::Id id)
 {
     d->mDefaultCalendarId = id;
 }

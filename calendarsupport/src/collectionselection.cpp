@@ -64,7 +64,7 @@ bool CollectionSelection::contains(const Akonadi::Collection &c) const
     return selectedCollectionIds().contains(c.id());
 }
 
-bool CollectionSelection::contains(const Akonadi::Collection::Id &id) const
+bool CollectionSelection::contains(Akonadi::Collection::Id id) const
 {
     return selectedCollectionIds().contains(id);
 }

@@ -87,7 +87,7 @@ public:
      * the collection. Since the ETM is loaded async, this method will not find
      * the collection right after startup, when the ETM is not yet fully loaded.
      */
-    Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
+    Akonadi::Collection collectionFromId(Akonadi::Collection::Id id) const;
 
     Akonadi::Collection inboxCollectionFolder();
     Akonadi::Collection outboxCollectionFolder();
