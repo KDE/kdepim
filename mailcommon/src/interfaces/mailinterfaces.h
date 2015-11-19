@@ -95,7 +95,7 @@ public:
     virtual qreal closeToQuotaThreshold() = 0;
 
     virtual Akonadi::Collection::Id lastSelectedFolder() = 0;
-    virtual void setLastSelectedFolder(const Akonadi::Collection::Id &col) = 0;
+    virtual void setLastSelectedFolder(Akonadi::Collection::Id col) = 0;
 
     virtual QStringList customTemplates() = 0;
 

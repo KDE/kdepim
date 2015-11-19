@@ -113,7 +113,7 @@ Akonadi::Collection::Id MBoxImporterKernel::lastSelectedFolder()
     return Akonadi::Collection::Id();
 }
 
-void MBoxImporterKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
+void MBoxImporterKernel::setLastSelectedFolder(Akonadi::Collection::Id col)
 {
     Q_UNUSED(col);
 }

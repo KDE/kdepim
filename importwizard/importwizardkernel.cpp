@@ -115,7 +115,7 @@ Akonadi::Collection::Id ImportWizardKernel::lastSelectedFolder()
     return Akonadi::Collection::Id();
 }
 
-void ImportWizardKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
+void ImportWizardKernel::setLastSelectedFolder(Akonadi::Collection::Id col)
 {
     Q_UNUSED(col);
 }

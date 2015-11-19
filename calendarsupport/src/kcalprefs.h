@@ -78,7 +78,7 @@ public:
     QString mailTransport() const;
 
     Akonadi::Collection::Id defaultCalendarId() const;
-    void setDefaultCalendarId(const Akonadi::Collection::Id);
+    void setDefaultCalendarId(Akonadi::Collection::Id);
 
     void setCategoryColor(const QString &cat, const QColor &color);
     QColor categoryColor(const QString &cat) const;

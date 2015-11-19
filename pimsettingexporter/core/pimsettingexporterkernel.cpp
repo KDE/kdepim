@@ -125,7 +125,7 @@ Akonadi::Collection::Id PimSettingExporterKernel::lastSelectedFolder()
     return Akonadi::Collection::Id();
 }
 
-void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
+void PimSettingExporterKernel::setLastSelectedFolder(Akonadi::Collection::Id col)
 {
     Q_UNUSED(col);
 }

@@ -117,7 +117,7 @@ PimCommon::ImapResourceCapabilitiesManager *Kernel::imapResourceManager() const
     return mImapResourceManager;
 }
 
-Akonadi::Collection Kernel::collectionFromId(const Akonadi::Collection::Id &id) const
+Akonadi::Collection Kernel::collectionFromId(Akonadi::Collection::Id id) const
 {
     const QModelIndex idx =
         Akonadi::EntityTreeModel::modelIndexForCollection(

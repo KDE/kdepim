@@ -115,7 +115,7 @@ Akonadi::Collection::Id FilterTestKernel::lastSelectedFolder()
     return Akonadi::Collection::Id();
 }
 
-void FilterTestKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
+void FilterTestKernel::setLastSelectedFolder(Akonadi::Collection::Id col)
 {
     Q_UNUSED(col);
 }
