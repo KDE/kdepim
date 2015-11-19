@@ -291,11 +291,11 @@ private:
     QList< MessageComposer::Composer * > generateCryptoMessages(bool &wasCanceled);
     void fillGlobalPart(MessageComposer::GlobalPart *globalPart);
     void fillInfoPart(MessageComposer::InfoPart *part, RecipientExpansion expansion);
-    void queueMessage(KMime::Message::Ptr message, MessageComposer::Composer *composer);
-    void saveMessage(KMime::Message::Ptr message, MessageComposer::MessageSender::SaveIn saveIn);
+    void queueMessage(const KMime::Message::Ptr &message, MessageComposer::Composer *composer);
+    void saveMessage(const KMime::Message::Ptr &message, MessageComposer::MessageSender::SaveIn saveIn);
     void fillQueueJobHeaders(MailTransport::MessageQueueJob *qjob, KMime::Message::Ptr message, const MessageComposer::InfoPart *infoPart);
     QStringList cleanEmailList(const QStringList &emails);
-    void saveRecentAddresses(KMime::Message::Ptr ptr);
+    void saveRecentAddresses(const KMime::Message::Ptr& ptr);
     void updateRecipients(const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, MessageComposer::Recipient::Type type);
 
     void markAllAttachmentsForSigning(bool sign);

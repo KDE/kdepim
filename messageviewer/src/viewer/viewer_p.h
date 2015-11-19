@@ -570,7 +570,7 @@ Q_SIGNALS:
     void urlClicked(const Akonadi::Item &msg, const QUrl &url);
     void requestConfigSync();
     void showReader(KMime::Content *aMsgPart, bool aHTML, const QString &encoding);
-    void showMessage(KMime::Message::Ptr message, const QString &encoding);
+    void showMessage(const KMime::Message::Ptr &message, const QString &encoding);
     void itemRemoved();
     void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
