@@ -26,7 +26,6 @@
 
 class KLineEdit;
 class KColorCombo;
-class KFontRequester;
 class KIconButton;
 class KKeySequenceWidget;
 class QCheckBox;
