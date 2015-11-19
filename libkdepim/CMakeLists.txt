@@ -70,6 +70,15 @@ install(FILES
   COMPONENT Devel
 )
 
+ecm_configure_package_config_file(MailTransportDBusServiceConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/MailTransportDBusServiceConfig.cmake
+  PATH_VARS KDE_INSTALL_DBUSINTERFACEDIR
+  INSTALL_DESTINATION "${CMAKECONFIG_INSTALL_PREFIX}/MailTransportDBusService")
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/MailTransportDBusServiceConfig.cmake
+  DESTINATION "${CMAKECONFIG_INSTALL_PREFIX}/MailTransportDBusService")
+
 install(EXPORT KF5LibkdepimTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5LibkdepimTargets.cmake NAMESPACE KF5::)
 
 install(FILES

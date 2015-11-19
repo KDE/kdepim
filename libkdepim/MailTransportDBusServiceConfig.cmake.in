@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+set(MAILTRANSPORT_DBUS_SERVICE "@PACKAGE_KDE_INSTALL_DBUSINTERFACEDIR@/org.kde.mailtransport.service.xml")
+

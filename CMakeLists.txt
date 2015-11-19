@@ -213,6 +213,7 @@ find_package(KF5ComposerEditorNG ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED
 find_package(KF5KdepimDBusInterfaces ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5LibKSieve ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5Gravatar ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
+find_package(MailTransportDBusService CONFIG REQUIRED)
 endif()
 
 if (NOT APPLE)
@@ -293,8 +294,9 @@ add_subdirectory(mailimporter)
 add_subdirectory(messageviewer)
 add_subdirectory(messagecomposer)
 add_subdirectory(pimcommon)
-add_subdirectory(mailcommon) 
+add_subdirectory(mailcommon)
 
+set(MAILTRANSPORT_DBUS_SERVICE ${CMAKE_SOURCE_DIR}/libkdepim/src/interfaces/org.kde.mailtransport.service.xml)
 endif()
 add_subdirectory(icons)
 
