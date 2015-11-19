@@ -56,6 +56,7 @@ void FollowupReminderInfoDialogTest::shouldAddItemInTreeList()
     FollowUpReminderInfoWidget *infowidget = dlg.findChild<FollowUpReminderInfoWidget *>(QStringLiteral("FollowUpReminderInfoWidget"));
     QTreeWidget *treeWidget = infowidget->findChild<QTreeWidget *>(QStringLiteral("treewidget"));
     QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
+    lstInfo.reserve(10);
     for (int i = 0; i < 10; ++i) {
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
         lstInfo.append(info);

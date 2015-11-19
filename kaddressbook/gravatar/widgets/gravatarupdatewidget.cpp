@@ -65,6 +65,10 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     connect(mSearchGravatar, &QAbstractButton::clicked, this, &GravatarUpdateWidget::slotSearchGravatar);
     connect(mUseLibravatar, &QCheckBox::toggled, mFallbackGravatar, &QCheckBox::setEnabled);
     mResultGravatar = new QLabel;
+    QFont font = mResultGravatar->font();
+    font.setBold(true);
+    mResultGravatar->setFont(font);
+
     mResultGravatar->setObjectName(QStringLiteral("result"));
     mainLayout->addWidget(mResultGravatar, 0, 2, 4, 1, Qt::AlignCenter);
 }
@@ -77,7 +81,7 @@ void GravatarUpdateWidget::setEmail(const QString &email)
 {
     mEmail = email;
     mEmailLab->setText(mEmail);
-    mResultGravatar->clear();
+    mResultGravatar->setText(QString());
     mSearchGravatar->setEnabled(!mEmail.trimmed().isEmpty());
 }
 

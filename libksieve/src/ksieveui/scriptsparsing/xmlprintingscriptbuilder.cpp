@@ -177,7 +177,7 @@ void XMLPrintingScriptBuilder::write(const QString &key, const QString &attribut
     if (attribute.isEmpty()) {
         write(QStringLiteral("<%1>").arg(key));
     } else {
-        write(QStringLiteral("<%1 %2>").arg(key).arg(attribute));
+        write(QStringLiteral("<%1 %2>").arg(key, attribute));
     }
     write(value);
     write(QStringLiteral("</%1>").arg(key));

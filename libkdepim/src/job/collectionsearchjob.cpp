@@ -141,6 +141,7 @@ void CollectionSearchJob::onAncestorsFetched(KJob *job)
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
     Akonadi::Collection::List matchingCollections;
+    matchingCollections.reserve(d->mMatchingCollections.count());
     Q_FOREACH (const Akonadi::Collection &c, d->mMatchingCollections) {
         //We need to replace the parents with the version that contains the name, so we can display it accordingly
         matchingCollections << replaceParent(c, fetchJob->collections());

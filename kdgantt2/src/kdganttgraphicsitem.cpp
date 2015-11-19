@@ -231,9 +231,7 @@ QString GraphicsItem::ganttToolTip() const
     if (!tip.isNull()) {
         return tip;
     } else return GraphicsScene::tr("%1 -> %2: %3")
-                      .arg(model->data(index(), StartTimeRole).toString())
-                      .arg(model->data(index(), EndTimeRole).toString())
-                      .arg(model->data(index(), Qt::DisplayRole).toString());
+                      .arg(model->data(index(), StartTimeRole).toString(), model->data(index(), EndTimeRole).toString(), model->data(index(), Qt::DisplayRole).toString());
 }
 
 QRectF GraphicsItem::boundingRect() const

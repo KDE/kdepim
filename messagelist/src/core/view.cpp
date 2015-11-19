@@ -2408,7 +2408,7 @@ bool View::event(QEvent *e)
         } else {
             tip += htmlCodeForStandardRow.arg(MessageCore::StringUtil::stripEmailAddr(mi->sender())).arg(i18n("From"));
             tip += htmlCodeForStandardRow.arg(MessageCore::StringUtil::stripEmailAddr(mi->receiver())).arg(i18nc("Receiver of the email", "To"));
-            tip += htmlCodeForStandardRow.arg(mi->formattedDate()).arg(i18n("Date"));
+            tip += htmlCodeForStandardRow.arg(mi->formattedDate(), i18n("Date"));
         }
 
         QString status = mi->statusDescription();
@@ -2430,7 +2430,7 @@ bool View::event(QEvent *e)
 
         if (mi->hasAnnotation()) {
             if (textIsLeftToRight) {
-                tip += htmlCodeForStandardRow.arg(i18n("Note")).arg(mi->annotation().replace(QLatin1Char('\n'), QStringLiteral("<br>")));
+                tip += htmlCodeForStandardRow.arg(i18n("Note"), mi->annotation().replace(QLatin1Char('\n'), QStringLiteral("<br>")));
             } else {
                 tip += htmlCodeForStandardRow.arg(mi->annotation().replace(QLatin1Char('\n'), QStringLiteral("<br>"))).arg(i18n("Note"));
             }
@@ -2439,7 +2439,7 @@ bool View::event(QEvent *e)
         QString content = MessageList::Util::contentSummary(mi->akonadiItem());
         if (!content.trimmed().isEmpty()) {
             if (textIsLeftToRight) {
-                tip += htmlCodeForStandardRow.arg(i18n("Preview")).arg(content.replace(QLatin1Char('\n'), QStringLiteral("<br>")));
+                tip += htmlCodeForStandardRow.arg(i18n("Preview"), content.replace(QLatin1Char('\n'), QStringLiteral("<br>")));
             } else {
                 tip += htmlCodeForStandardRow.arg(content.replace(QLatin1Char('\n'), QStringLiteral("<br>"))).arg(i18n("Preview"));
             }
