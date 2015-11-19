@@ -60,6 +60,9 @@ GravatarDownloadPixmapWidget::GravatarDownloadPixmapWidget(QWidget *parent)
     mGetPixmapButton->setEnabled(false);
 
     mResultLabel = new QLabel;
+    QFont font = mResultLabel->font();
+    font.setBold(true);
+    mResultLabel->setFont(font);
     mResultLabel->setObjectName(QStringLiteral("resultlabel"));
     mainLayout->addWidget(mResultLabel);
 }
@@ -90,7 +93,7 @@ void GravatarDownloadPixmapWidget::slotResolvUrlFinish(Gravatar::GravatarResolvU
 
 void GravatarDownloadPixmapWidget::slotSearchButton()
 {
-    mResultLabel->clear();
+    mResultLabel->setText(QString());
     Gravatar::GravatarResolvUrlJob *job = new Gravatar::GravatarResolvUrlJob(this);
     job->setEmail(mLineEdit->text());
     //For testing
