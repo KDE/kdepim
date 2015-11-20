@@ -1,4 +1,4 @@
-2015-11-18:
+2015-11-20:
 -----------
 
 2015-1-29: New VERSION for archive => VERSION_2 => knote-akonadi
@@ -109,6 +109,7 @@ Root
 |       |---------kwatchgnupgrc
 |       |---------kwatchgnupgui.rc
 |       |---------akonadiconsoleui.rc
+|       |---------foldermailarchiverc
 |
 |-----akonadi
 |       |---------<archive akonadi>

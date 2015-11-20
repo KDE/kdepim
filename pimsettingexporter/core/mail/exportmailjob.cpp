@@ -332,7 +332,33 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("storageservicemanager.notifyrc"));
 
 
-    //TODO export foldermailarchiverc
+    const QString folderMailArchiveStr(QStringLiteral("foldermailarchiverc"));
+    const QString folderMailArchiverc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + folderMailArchiveStr;
+    if (QFile(folderMailArchiverc).exists()) {
+        KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(folderMailArchiveStr);
+
+        QTemporaryFile tmp;
+        tmp.open();
+
+        KConfig *archiveConfig = archivemailrc->copyTo(tmp.fileName());
+        const QStringList archiveList = archiveConfig->groupList().filter(QRegularExpression(QStringLiteral("FolderArchiveAccount")));
+
+        Q_FOREACH (const QString &str, archiveList) {
+            KConfigGroup oldGroup = archiveConfig->group(str);
+            qint64 id = oldGroup.readEntry("topLevelCollectionId", -1);
+            if (id != -1)  {
+                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(id));
+                if (!realPath.isEmpty()) {
+                    oldGroup.writeEntry(QStringLiteral("topLevelCollectionId"), realPath);
+                }
+            }
+        }
+        archiveConfig->sync();
+
+        backupFile(tmp.fileName(), Utils::configsPath(), folderMailArchiveStr);
+        delete archiveConfig;
+    }
+
 
     const QString archiveMailAgentConfigurationStr(QStringLiteral("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr;
