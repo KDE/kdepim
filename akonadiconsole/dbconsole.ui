@@ -25,7 +25,16 @@
       </property>
       <widget class="QWidget" name="resultViewPage">
        <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -39,7 +48,16 @@
       </widget>
       <widget class="QWidget" name="errorViewPage">
        <layout class="QVBoxLayout" name="verticalLayout_3">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -55,20 +73,7 @@
      <widget class="QWidget" name="layoutWidget">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="KTextEdit" name="queryEdit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="tabChangesFocus">
-          <bool>true</bool>
-         </property>
-         <property name="acceptRichText">
-          <bool>false</bool>
-         </property>
-        </widget>
+        <widget class="KPIMTextEdit::PlainTextEditorWidget" name="queryEdit"/>
        </item>
        <item>
         <widget class="QPushButton" name="execButton">
@@ -91,9 +96,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header>ktextedit.h</header>
+   <class>KPIMTextEdit::PlainTextEditorWidget</class>
+   <extends>QWidget</extends>
+   <header>kpimtextedit/plaintexteditorwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
