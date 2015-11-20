@@ -38,6 +38,9 @@
 #include "accountwizard_debug.h"
 #include <kmessagebox.h>
 #include <qplatformdefs.h>
+#include <KAboutData>
+
+#include <KHelpMenu>
 
 Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
     KAssistantDialog(parent, flags)
@@ -92,6 +95,12 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
     page->enterPageNext();
     Q_EMIT page->pageEnteredNext();
     connect(button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &Dialog::accept);
+    KHelpMenu *helpMenu = new KHelpMenu(this, KAboutData::applicationData(), true);
+    //Initialize menu
+    QMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
+    button(QDialogButtonBox::Help)->setMenu(menu);
+
 }
 
 KPageWidgetItem *Dialog::addPage(Page *page, const QString &title)
