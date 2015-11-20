@@ -797,6 +797,7 @@ void ImportMailJob::restoreConfig()
     restoreUiRcFile(QStringLiteral("kleopatra.rc"), QStringLiteral("kleopatra"));
     restoreUiRcFile(QStringLiteral("kontactsummary_part.rc"), QStringLiteral("kontactsummary"));
     restoreUiRcFile(QStringLiteral("kwatchgnupgui.rc"), QStringLiteral("kwatchgnupg"));
+    restoreUiRcFile(QStringLiteral("akonadiconsoleui.rc"), QStringLiteral("akonadiconsole"));
 
     restoreConfigFile(QStringLiteral("kontactrc"));
 

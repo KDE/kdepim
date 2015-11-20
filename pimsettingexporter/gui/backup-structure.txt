@@ -108,6 +108,7 @@ Root
 |       |---------contactthemeeditorui.rc
 |       |---------kwatchgnupgrc
 |       |---------kwatchgnupgui.rc
+|       |---------akonadiconsoleui.rc
 |
 |-----akonadi
 |       |---------<archive akonadi>
