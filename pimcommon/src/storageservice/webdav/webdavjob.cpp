@@ -74,7 +74,7 @@ void WebDavJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth
             Q_EMIT authorizationDone(mPublicLocation, mServiceLocation, mUserName, mPassword);
             mNbAuthCheck = -1;
         } else {
-            Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
+            Q_EMIT authorizationFailed(i18n("Authentication Cancelled."));
             deleteLater();
         }
         delete dlg;
@@ -94,7 +94,7 @@ void WebDavJob::requestTokenAccess()
         mServiceLocation = dlg->serviceLocation();
         mPublicLocation = dlg->publicLocation();
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
+        Q_EMIT authorizationFailed(i18n("Authentication Cancelled."));
         delete dlg;
         deleteLater();
         return;
