@@ -28,6 +28,7 @@ class QPushButton;
 class QLabel;
 class QTextBrowser;
 class QStackedWidget;
+class QListWidgetItem;
 namespace PimCommon
 {
 class StorageListWidgetItem;
@@ -58,11 +59,13 @@ private Q_SLOTS:
     void slotUpdateAccountInfoFailed(const QString &serviceName, const QString &error);
     void slotAuthenticate();
     void slotAuthenticationCancelled(const QString &serviceName);
+    void slotServiceDoubleClicked(QListWidgetItem *item);
 private:
     void updateButtons();
     void setDefaultLabel();
     PimCommon::StorageListWidgetItem *createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const QIcon &icon);
     void defaultConnection(StorageServiceAbstract *storage);
+    void modifyItem(QListWidgetItem *item);
     enum ServiceData {
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2

@@ -114,12 +114,18 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mainLayout->addLayout(vbox);
     setLayout(mainLayout);
     connect(mListService, &QListWidget::itemSelectionChanged, this, &StorageServiceSettingsWidget::slotServiceSelected);
+    connect(mListService, &QListWidget::itemDoubleClicked, this, &StorageServiceSettingsWidget::slotServiceDoubleClicked);
     updateButtons();
 }
 
 StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 {
 
+}
+
+void StorageServiceSettingsWidget::slotServiceDoubleClicked(QListWidgetItem *item)
+{
+    modifyItem(item);
 }
 
 void StorageServiceSettingsWidget::slotAuthenticate()
@@ -401,6 +407,11 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
 void StorageServiceSettingsWidget::slotModifyService()
 {
     QListWidgetItem *item = mListService->currentItem();
+    modifyItem(item);
+}
+
+void StorageServiceSettingsWidget::modifyItem(QListWidgetItem *item)
+{
     if (item) {
         const QString serviceName = item->data(Name).toString();
         auto storage = mListStorageService.value(serviceName);
