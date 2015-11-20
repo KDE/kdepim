@@ -162,7 +162,7 @@ void AttachmentEditDialog::slotApply()
 
 void AttachmentEditDialog::inlineChanged(int state)
 {
-    mOkButton->setEnabled(!mUi->mURLRequester->url().isEmpty() ||
+    mOkButton->setEnabled(!mUi->mURLRequester->url().toDisplayString().trimmed().isEmpty() ||
                           mUi->mStackedWidget->currentIndex() == 1);
     if (state == Qt::Unchecked && mUi->mStackedWidget->currentIndex() == 1) {
         mUi->mStackedWidget->setCurrentIndex(0);
@@ -176,8 +176,9 @@ void AttachmentEditDialog::inlineChanged(int state)
 
 void AttachmentEditDialog::urlChanged(const QString &url)
 {
-    mOkButton->setEnabled(!url.isEmpty());
-    mUi->mInlineCheck->setEnabled(!url.isEmpty() ||
+    const bool urlIsNotEmpty = !url.trimmed().isEmpty();
+    mOkButton->setEnabled(urlIsNotEmpty);
+    mUi->mInlineCheck->setEnabled(urlIsNotEmpty ||
                                   mUi->mStackedWidget->currentIndex() == 1);
 }
 
