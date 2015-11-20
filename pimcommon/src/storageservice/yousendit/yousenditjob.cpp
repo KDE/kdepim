@@ -179,7 +179,7 @@ void YouSendItJob::requestTokenAccess()
         mPassword = dlg->password();
         mUsername = dlg->username();
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentication Cancelled."));
+        Q_EMIT authorizationCancelled();
         deleteLater();
         delete dlg;
         return;
