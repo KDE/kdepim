@@ -181,6 +181,7 @@ QStringList ResolveRecipientsPage::ListWidget::selectedEntries() const
 {
     QStringList entries;
     const QList<QListWidgetItem *> items = m_listWidget->selectedItems();
+    entries.reserve(items.count());
     Q_FOREACH (const QListWidgetItem *i, items) {
         entries.append(i->data(IdRole).toString());
     }

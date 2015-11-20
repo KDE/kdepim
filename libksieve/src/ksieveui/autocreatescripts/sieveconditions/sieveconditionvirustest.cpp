@@ -77,7 +77,7 @@ QString SieveConditionVirusTest::code(QWidget *w) const
     const QSpinBox *spinbox = w->findChild<QSpinBox *>(QStringLiteral("value"));
     const QString value = QString::number(spinbox->value());
 
-    return QStringLiteral("virustest %1 %2 \"%3\"").arg(relationStr).arg(comparatorStr).arg(value);
+    return QStringLiteral("virustest %1 %2 \"%3\"").arg(relationStr, comparatorStr, value);
 }
 
 bool SieveConditionVirusTest::needCheckIfServerHasCapability() const

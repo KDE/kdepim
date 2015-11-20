@@ -286,7 +286,7 @@ QString SelectDateWidget::dateType(SelectDateWidget::DateType type) const
 QString SelectDateWidget::code() const
 {
     const DateType type = mDateType->itemData(mDateType->currentIndex()).value<KSieveUi::SelectDateWidget::DateType>();
-    return QStringLiteral("\"%1\" \"%2\"").arg(dateType(type)).arg(dateValue(type));
+    return QStringLiteral("\"%1\" \"%2\"").arg(dateType(type), dateValue(type));
 }
 
 void SelectDateWidget::setCode(const QString &type, const QString &value)

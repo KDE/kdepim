@@ -57,7 +57,7 @@ void SelectRelationalMatchType::setCode(const QString &type, const QString &comp
 
 QString SelectRelationalMatchType::code() const
 {
-    return QStringLiteral("%1 \"%2\"").arg(mType->itemData(mType->currentIndex()).toString()).arg(mMatch->itemData(mMatch->currentIndex()).toString());
+    return QStringLiteral("%1 \"%2\"").arg(mType->itemData(mType->currentIndex()).toString(), mMatch->itemData(mMatch->currentIndex()).toString());
 }
 
 void SelectRelationalMatchType::initialize()
