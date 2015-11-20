@@ -305,6 +305,7 @@ void ExportMailJob::backupConfig()
     backupUiRcFile(QStringLiteral("contactthemeeditorui.rc"), QStringLiteral("contactthemeeditor"));
     backupUiRcFile(QStringLiteral("contactprintthemeeditorui.rc"), QStringLiteral("contactprintthemeeditor"));
     backupUiRcFile(QStringLiteral("kwatchgnupgui.rc"), QStringLiteral("kwatchgnupg"));
+    backupUiRcFile(QStringLiteral("akonadiconsoleui.rc"), QStringLiteral("akonadiconsole"));
 
     backupConfigFile(QStringLiteral("kabldaprc"));
     backupConfigFile(QStringLiteral("kmailsnippetrc"));
@@ -329,6 +330,9 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("messagevieweradblockrc"));
     backupConfigFile(QStringLiteral("messageviewer.notifyrc"));
     backupConfigFile(QStringLiteral("storageservicemanager.notifyrc"));
+
+
+    //TODO export foldermailarchiverc
 
     const QString archiveMailAgentConfigurationStr(QStringLiteral("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr;
