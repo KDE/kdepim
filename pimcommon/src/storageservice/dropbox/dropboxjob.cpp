@@ -364,7 +364,7 @@ void DropBoxJob::doAuthentication()
         getTokenAccess();
         delete dlg;
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
+        Q_EMIT authorizationFailed(i18n("Authentication Cancelled."));
         delete dlg;
         deleteLater();
     }
