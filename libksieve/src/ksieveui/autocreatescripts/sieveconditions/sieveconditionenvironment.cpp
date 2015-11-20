@@ -86,7 +86,7 @@ QString SieveConditionEnvironment::code(QWidget *w) const
     const QLineEdit *value =  w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
 
-    return QStringLiteral("environment \"%1\" \"%2\"").arg(itemStr).arg(valueStr);
+    return QStringLiteral("environment \"%1\" \"%2\"").arg(itemStr, valueStr);
 }
 
 QStringList SieveConditionEnvironment::needRequires(QWidget *) const
