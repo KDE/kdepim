@@ -154,6 +154,7 @@ Q_SIGNALS:
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void uploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
+    void authenticationCancelled(const QString &serviceName);
     void authenticationDone(const QString &serviceName);
     void authenticationFailed(const QString &serviceName, const QString &error = QString());
     void createFolderDone(const QString &serviceName, const QString &folderName);
@@ -211,6 +212,7 @@ protected:
     virtual void storageServiceCopyFolder(const QString &source, const QString &destination) = 0;
     void emitAuthentificationDone();
     void emitAuthentificationFailed(const QString &errorMessage);
+    void emitAuthentificationCancelled();
     NextAction *mNextAction;
     QPointer<QNetworkReply> mUploadReply;
     QPointer<QNetworkReply> mDownloadReply;

@@ -62,6 +62,7 @@ Q_SIGNALS:
     void uploadFileFailed(const QString &fileName);
     void listFolderDone(const QVariant &listFolder);
     void authorizationFailed(const QString &error);
+    void authorizationCancelled();
     void downLoadFileDone(const QString &filename);
     void downLoadFileFailed(const QString &filename);
     void deleteFileDone(const QString &filename);

@@ -70,6 +70,7 @@ public:
 private Q_SLOTS:
     void slotAuthorizationFailed(const QString &errorMessage);
     void slotAuthorizationDone(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
+    void slotAuthorizationCancelled();
 
 private:
     void connectDefaultSlot(WebDavJob *job);

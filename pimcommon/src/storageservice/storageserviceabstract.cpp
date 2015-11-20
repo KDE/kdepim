@@ -385,6 +385,12 @@ void StorageServiceAbstract::slotDownLoadFileDone(const QString &fileName)
     changeProgressState(false);
 }
 
+void StorageServiceAbstract::emitAuthentificationCancelled()
+{
+    Q_EMIT authenticationCancelled(storageServiceName());
+    changeProgressState(false);
+}
+
 void StorageServiceAbstract::emitAuthentificationFailed(const QString &errorMessage)
 {
     Q_EMIT authenticationFailed(storageServiceName(), errorMessage);

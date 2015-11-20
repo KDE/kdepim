@@ -291,10 +291,23 @@ void StorageServiceSettingsWidget::slotAddService()
 
 void StorageServiceSettingsWidget::defaultConnection(StorageServiceAbstract *storage)
 {
-    connect(storage, &PimCommon::DropBoxStorageService::authenticationFailed, this, &StorageServiceSettingsWidget::slotAuthenticationFailed);
-    connect(storage, &PimCommon::DropBoxStorageService::authenticationDone, this, &StorageServiceSettingsWidget::slotAuthenticationDone);
-    connect(storage, &PimCommon::DropBoxStorageService::accountInfoDone, this, &StorageServiceSettingsWidget::slotUpdateAccountInfo);
-    connect(storage, &PimCommon::DropBoxStorageService::actionFailed, this, &StorageServiceSettingsWidget::slotUpdateAccountInfoFailed);
+    connect(storage, &PimCommon::StorageServiceAbstract::authenticationCancelled, this, &StorageServiceSettingsWidget::slotAuthenticationCancelled);
+    connect(storage, &PimCommon::StorageServiceAbstract::authenticationFailed, this, &StorageServiceSettingsWidget::slotAuthenticationFailed);
+    connect(storage, &PimCommon::StorageServiceAbstract::authenticationDone, this, &StorageServiceSettingsWidget::slotAuthenticationDone);
+    connect(storage, &PimCommon::StorageServiceAbstract::accountInfoDone, this, &StorageServiceSettingsWidget::slotUpdateAccountInfo);
+    connect(storage, &PimCommon::StorageServiceAbstract::actionFailed, this, &StorageServiceSettingsWidget::slotUpdateAccountInfoFailed);
+}
+
+void StorageServiceSettingsWidget::slotAuthenticationCancelled(const QString &serviceName)
+{
+    PimCommon::StorageListWidgetItem *item = Q_NULLPTR;
+    for (int i = 0; i < mListService->count(); ++i) {
+        if (mListService->item(i)->data(Name).toString() == serviceName) {
+            item = static_cast<PimCommon::StorageListWidgetItem *>(mListService->item(i));
+            item->stopAnimation();
+            break;
+        }
+    }
 }
 
 void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)

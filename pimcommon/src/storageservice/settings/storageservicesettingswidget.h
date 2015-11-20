@@ -57,6 +57,7 @@ private Q_SLOTS:
     void slotAuthenticationDone(const QString &serviceName);
     void slotUpdateAccountInfoFailed(const QString &serviceName, const QString &error);
     void slotAuthenticate();
+    void slotAuthenticationCancelled(const QString &serviceName);
 private:
     void updateButtons();
     void setDefaultLabel();

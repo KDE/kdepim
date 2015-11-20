@@ -101,6 +101,7 @@ void WebDavStorageService::storageServiceauthentication()
     connect(job, &WebDavJob::authorizationDone, this, &WebDavStorageService::slotAuthorizationDone);
     connect(job, &WebDavJob::authorizationFailed, this, &WebDavStorageService::slotAuthorizationFailed);
     connect(job, &WebDavJob::actionFailed, this, &WebDavStorageService::slotActionFailed);
+    connect(job, &WebDavJob::authorizationCancelled, this, &WebDavStorageService::slotAuthorizationCancelled);
     job->requestTokenAccess();
 }
 
@@ -124,6 +125,11 @@ void WebDavStorageService::slotAuthorizationDone(const QString &publicLocation, 
         }
     }
     emitAuthentificationDone();
+}
+
+void WebDavStorageService::slotAuthorizationCancelled()
+{
+    emitAuthentificationCancelled();
 }
 
 void WebDavStorageService::slotAuthorizationFailed(const QString &errorMessage)
