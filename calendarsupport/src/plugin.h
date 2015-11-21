@@ -19,6 +19,8 @@
 #ifndef CALENDARSUPPORT_PLUGIN_H
 #define CALENDARSUPPORT_PLUGIN_H
 
+#include "calendarsupport_export.h"
+
 #include <KPluginFactory>
 
 namespace CalendarSupport
@@ -58,8 +60,9 @@ public:
     virtual void configure(QWidget *) {}
 };
 
-class PluginFactory : public KPluginFactory
+class CALENDARSUPPORT_EXPORT PluginFactory : public KPluginFactory
 {
+    Q_OBJECT
 public:
     virtual Plugin *createPluginFactory() = 0;
 

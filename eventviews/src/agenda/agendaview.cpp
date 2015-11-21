@@ -2275,16 +2275,14 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration(cons
         if ((*it)->desktopEntryName() == name) {
             KService::Ptr service = *it;
             KPluginLoader loader(*service);
-            KPluginFactory *factory = loader.factory();
 
+            auto factory = loader.instance();
             if (!factory) {
                 qCDebug(CALENDARVIEW_LOG) << "Factory creation failed";
                 return Q_NULLPTR;
             }
 
-            CalendarDecoration::DecorationFactory *pluginFactory =
-                static_cast<CalendarDecoration::DecorationFactory *>(factory);
-
+            auto pluginFactory = qobject_cast<CalendarDecoration::DecorationFactory*>(factory);
             if (!pluginFactory) {
                 qCDebug(CALENDARVIEW_LOG) << "Cast failed";
                 return Q_NULLPTR;
