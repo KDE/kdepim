@@ -334,8 +334,7 @@ bool Filter::doAddMessage(const QString &folderName,
     QString messageID;
     // Create the mail folder (if not already created).
     Akonadi::Collection mailFolder = parseFolderString(folderName);
-
-    QUrl msgUrl(msgPath);
+    QUrl msgUrl = QUrl::fromLocalFile(msgPath);
     if (!msgUrl.isEmpty() && msgUrl.isLocalFile()) {
 
         QFile f(msgUrl.toLocalFile());
