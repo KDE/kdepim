@@ -1095,7 +1095,7 @@ bool AgendaView::loadDecorations(const QStringList &decorations,
     return decoList.count() > 0;
 }
 
-void AgendaView::placeDecorationsFrame(KHBox *frame, bool decorationsFound, bool isTop)
+void AgendaView::placeDecorationsFrame(QFrame *frame, bool decorationsFound, bool isTop)
 {
     if (decorationsFound) {
 
@@ -1113,20 +1113,24 @@ void AgendaView::placeDecorationsFrame(KHBox *frame, bool decorationsFound, bool
 }
 
 void AgendaView::placeDecorations(DecorationList &decoList, const QDate &date,
-                                  KHBox *labelBox, bool forWeek)
+                                  QWidget *labelBox, bool forWeek)
 {
     foreach (CalendarDecoration::Decoration *deco, decoList) {
         CalendarDecoration::Element::List elements;
         elements = forWeek ? deco->weekElements(date) : deco->dayElements(date);
         if (elements.count() > 0) {
-            KHBox *decoHBox = new KHBox(labelBox);
+            auto decoHBox = new QFrame(labelBox);
+            auto layout = new QHBoxLayout(decoHBox);
+            layout->setSpacing(0);
+            layout->setMargin(0);
             decoHBox->setFrameShape(QFrame::StyledPanel);
             decoHBox->setMinimumWidth(1);
 
             foreach (CalendarDecoration::Element *it, elements) {
-                DecorationLabel *label = new DecorationLabel(it, decoHBox);
+                DecorationLabel *label = new DecorationLabel(it);
                 label->setAlignment(Qt::AlignBottom);
                 label->setMinimumWidth(1);
+                layout->addWidget(label);
             }
         }
     }
