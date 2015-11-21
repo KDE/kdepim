@@ -260,6 +260,7 @@ private:
 
 class EVENTVIEWS_EXPORT DecorationFactory : public CalendarSupport::PluginFactory
 {
+    Q_OBJECT
 public:
     virtual Decoration *createPluginFactory() = 0;
 };

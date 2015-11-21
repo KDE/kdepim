@@ -23,6 +23,7 @@ set(calendarsupport_LIB_SRCS
   messagewidget.cpp
   utils.cpp
   tagcache.cpp
+  plugin.cpp
 
   printing/calprintpluginbase.cpp
   printing/calprintdefaultplugins.cpp
