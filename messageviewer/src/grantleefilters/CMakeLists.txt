@@ -1,7 +1,7 @@
 #project(grantleefilters)
 
 
-add_library(grantlee_messageheaderfilters MODULE messageheadergrantleefilters messageheaderfilter)
+add_library(grantlee_messageheaderfilters MODULE messageheadergrantleefilters.cpp messageheaderfilter.cpp)
 GRANTLEE_ADJUST_PLUGIN_NAME(grantlee_messageheaderfilters)
 
 target_link_libraries(grantlee_messageheaderfilters KF5::MessageCore Grantlee5::TextDocument Grantlee5::Templates)
