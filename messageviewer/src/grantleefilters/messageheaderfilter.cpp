@@ -19,7 +19,7 @@
 #include <kmime/kmime_headers.h>
 #include <MessageCore/StringUtil>
 #include <grantlee/util.h>
-#include <QDebug>
+#include "grantlee_messageheaderfilter_debug.h"
 
 QVariant MessageHeaderEmailShowLink::doFilter(const QVariant &input, const QVariant &argument, bool autoescape) const
 {
@@ -64,7 +64,7 @@ QVariant MessageHeaderEmailExpandable::doFilter(const QVariant &input, const QVa
                              MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList"));
         return val;
     } else {
-        qDebug() << " invalid pointer";
+        qCDebug(GRANTLEEMESSAGEVIEWERFILTER_LOG) << " invalid pointer";
     }
     return QVariant();
 }
