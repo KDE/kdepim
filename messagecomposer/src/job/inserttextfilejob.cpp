@@ -75,6 +75,8 @@ void InsertTextFileJob::slotGetJobFinished(KJob *job)
             } else {
                 d->mEditor->textCursor().insertText(QString::fromLocal8Bit(d->mFileData.data()));
             }
+        } else {
+            d->mEditor->textCursor().insertText(QString::fromLocal8Bit(d->mFileData.data()));
         }
     }
 
