@@ -51,6 +51,7 @@ void FilterImporterThunderbird::readStream(QTextStream &stream)
         qCDebug(MAILCOMMON_LOG) << " line :" << line << " filter " << filter;
         filter = parseLine(stream, line, filter);
     }
+    //TODO show limit of action/condition
     appendFilter(filter);
 }
 

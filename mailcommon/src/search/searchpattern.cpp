@@ -242,6 +242,9 @@ void SearchPattern::writeConfig(KConfigGroup &config) const
     QList<SearchRule::Ptr>::const_iterator it;
     QList<SearchRule::Ptr>::const_iterator endIt(constEnd());
 
+    if (count() >= FILTER_MAX_RULES) {
+        qCDebug(MAILCOMMON_LOG) << "Number of patterns > to filter max rules";
+    }
     for (it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it) {
         // we could do this ourselves, but we want the rules to be extensible,
         // so we give the rule it's number and let it do the rest.

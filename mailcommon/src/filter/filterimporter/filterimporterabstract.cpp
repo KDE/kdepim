@@ -50,6 +50,7 @@ void FilterImporterAbstract::appendFilter(MailCommon::MailFilter *filter)
         return;
     }
 
+    //TODO verify number of condition
     filter->purify();
     if (!filter->isEmpty()) {
         // the filter is valid:
