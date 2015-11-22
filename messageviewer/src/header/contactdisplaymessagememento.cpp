@@ -75,7 +75,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
             if (mPhoto.isIntern()) {
                 Q_EMIT update(Viewer::Delayed);
             } else {
-                QUrl url = QUrl(mPhoto.url());
+                QUrl url = QUrl::fromUserInput(mPhoto.url(), QString(), QUrl::AssumeLocalFile);
                 QImage image;
                 bool ok = false;
 
