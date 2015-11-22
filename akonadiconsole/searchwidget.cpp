@@ -26,6 +26,7 @@
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/itemsearchjob.h>
 #include <AkonadiCore/SearchQuery>
+#include <kpimtextedit/plaintexteditorwidget.h>
 
 #include <KComboBox>
 #include <KMessageBox>
@@ -45,7 +46,7 @@ SearchWidget::SearchWidget(QWidget *parent)
     QGridLayout *layout = new QGridLayout(this);
 
     mQueryCombo = new KComboBox;
-    mQueryWidget = new KTextEdit;
+    mQueryWidget = new KPIMTextEdit::PlainTextEditorWidget;
     mResultView = new QListView;
     mItemView = new QTextBrowser;
     QPushButton *button = new QPushButton(QStringLiteral("Search"));
