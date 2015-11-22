@@ -79,7 +79,6 @@ bool PimSettingsBackupRestore::openArchive(const QString &filename, bool readWri
 
 bool PimSettingsBackupRestore::backupStart(const QString &filename)
 {
-    qDebug() << " bool PimSettingsBackupRestore::backupStart(const QString &filename)" << mStored.isEmpty();
     if (mStored.isEmpty()) {
         addDate();
         Q_EMIT addInfo(i18n("No data selected."));
