@@ -72,7 +72,6 @@ SieveEditorMainWindow::SieveEditorMainWindow()
 SieveEditorMainWindow::~SieveEditorMainWindow()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-
     KConfigGroup group = config->group(QStringLiteral("SieveEditorMainWindow"));
     group.writeEntry("Size", size());
     if (SieveEditorGlobalConfig::self()->closeWallet()) {

@@ -60,6 +60,6 @@ int main(int argc, char **argv)
 
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
     mw->show();
-    int val = app.exec();
+    const int val = app.exec();
     return val;
 }
