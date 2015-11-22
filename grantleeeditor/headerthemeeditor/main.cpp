@@ -64,5 +64,7 @@ int main(int argc, char **argv)
 
     ThemeEditorMainWindow *mw = new ThemeEditorMainWindow();
     mw->show();
-    return app.exec();
+    const int ret = app.exec();
+    delete mw;
+    return ret;
 }

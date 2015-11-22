@@ -195,7 +195,7 @@ void ContactEditorMainWindow::slotOpenTheme()
     }
     closeThemeEditor();
     if (loadTheme(directory)) {
-        mRecentFileAction->addUrl(QUrl(directory));
+        mRecentFileAction->addUrl(QUrl::fromLocalFile(directory));
     }
     mSaveAction->setEnabled(false);
 }
@@ -260,7 +260,7 @@ bool ContactEditorMainWindow::saveCurrentProject(ActionSaveTheme act)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
-            mRecentFileAction->addUrl(QUrl(projectDirectory));
+            mRecentFileAction->addUrl(QUrl::fromLocalFile(projectDirectory));
             mContactEditor = new ContactEditorPage(projectDirectory, newTheme);
             connect(mContactEditor, &ContactEditorPage::changed, mSaveAction, &QAction::setEnabled);
             connect(mContactEditor, &ContactEditorPage::canInsertFile, this, &ContactEditorMainWindow::slotCanInsertFile);
