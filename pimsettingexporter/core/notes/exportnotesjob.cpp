@@ -122,6 +122,7 @@ void ExportNotesJob::slotWriteNextArchiveResource()
                     connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportNotesJob::slotNoteJobTerminated);
                     resourceJob->start();
                 } else {
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "Url is empty for " << identifier;
                     QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
                 }
             } else {
