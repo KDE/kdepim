@@ -378,6 +378,8 @@ bool Filter::doAddMessage(const QString &folderName,
             d->filterInfo->alert(i18n("<b>Warning:</b> Got a bad message folder, adding to root folder."));
             addAkonadiMessage(d->filterInfo->rootCollection(), newMessage, status);
         }
+    } else {
+        qCWarning(MAILIMPORTER_LOG) << "Url is not temporary file: " << msgUrl;
     }
     return true;
 }
