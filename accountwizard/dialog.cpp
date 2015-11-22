@@ -42,8 +42,8 @@
 
 #include <KHelpMenu>
 
-Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
-    KAssistantDialog(parent, flags)
+Dialog::Dialog(QWidget *parent)
+    : KAssistantDialog(parent)
 {
     mSetupManager = new SetupManager(this);
     const bool showPersonalDataPage = Global::typeFilter().size() == 1 && Global::typeFilter().at(0) == KMime::Message::mimeType();

@@ -77,7 +77,7 @@ int main(int argc, char **argv)
         Global::setTypeFilter(typeValue.split(QLatin1Char(',')));
     }
 
-    Dialog dlg(0/*, Qt::WindowStaysOnTopHint*/);
+    Dialog dlg(0);
     dlg.show();
 
     return app.exec();
