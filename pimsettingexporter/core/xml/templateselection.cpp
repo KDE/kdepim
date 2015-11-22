@@ -69,6 +69,9 @@ Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element
             } else if (tagName == QLatin1String("config")) {
                 types |= Utils::Config;
                 numberOfStep++;
+            } else if (tagName == QLatin1String("data")) {
+                types |= Utils::Data;
+                numberOfStep++;
             } else if (tagName == QLatin1String("akonadidb")) {
                 types |= Utils::AkonadiDb;
                 numberOfStep++;
@@ -144,6 +147,10 @@ void TemplateSelection::saveParameters(Utils::StoredTypes type, QDomElement &ele
     }
     if (type & Utils::Config) {
         QDomElement tag = mDocument.createElement(QStringLiteral("config"));
+        elem.appendChild(tag);
+    }
+    if (type & Utils::Data) {
+        QDomElement tag = mDocument.createElement(QStringLiteral("data"));
         elem.appendChild(tag);
     }
     if (type & Utils::AkonadiDb) {
