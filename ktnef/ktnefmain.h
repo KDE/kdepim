@@ -46,7 +46,6 @@ public:
     void loadFile(const QString &filename);
 
 protected:
-    /** @reimp */
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
@@ -69,9 +68,6 @@ protected Q_SLOTS:
     void viewDragRequested(const QList<KTNEFAttach *> &list);
     void slotConfigureKeys();
     void openRecentFile(const QUrl &);
-
-//  protected:
-//    void closeEvent( QCloseEvent *e );
 
 private Q_SLOTS:
     void slotOpenWithAction(QAction *act);
