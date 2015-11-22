@@ -783,11 +783,11 @@ void ViewerPrivate::displaySplashPage(const QString &templateName, const QVarian
                                         Q_NULLPTR,
                                         QStringLiteral("messageviewer/about/"));
     GrantleeTheme::Theme theme = manager.theme(QStringLiteral("default"));
-    if (!theme.isValid()) {
-        qCDebug(MESSAGEVIEWER_LOG) << "Theme error: failed to find splash theme";
-    } else {
+    if (theme.isValid()) {
         mViewer->setHtml(theme.render(templateName, data),
                          QUrl::fromLocalFile(theme.absolutePath() + QLatin1Char('/')));
+    } else {
+        qCDebug(MESSAGEVIEWER_LOG) << "Theme error: failed to find splash theme";
     }
     mViewer->show();
 }
