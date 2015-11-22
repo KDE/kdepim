@@ -107,6 +107,8 @@ void ExportAddressbookJob::slotWriteNextArchiveResource()
                     connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportAddressbookJob::info);
                     connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportAddressbookJob::slotAddressbookJobTerminated);
                     resourceJob->start();
+                } else {
+                    QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
                 }
             } else {
                 QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));

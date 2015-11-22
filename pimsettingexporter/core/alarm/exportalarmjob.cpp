@@ -109,6 +109,8 @@ void ExportAlarmJob::slotWriteNextArchiveResource()
                     connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportAlarmJob::info);
                     connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportAlarmJob::slotAlarmJobTerminated);
                     resourceJob->start();
+                } else {
+                    QTimer::singleShot(0, this, SLOT(slotAlarmJobTerminated()));
                 }
             } else {
                 QTimer::singleShot(0, this, SLOT(slotAlarmJobTerminated()));

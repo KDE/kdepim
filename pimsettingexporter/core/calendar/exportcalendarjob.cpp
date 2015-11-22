@@ -110,6 +110,8 @@ void ExportCalendarJob::slotWriteNextArchiveResource()
                     connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportCalendarJob::info);
                     connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportCalendarJob::slotCalendarJobTerminated);
                     resourceJob->start();
+                } else {
+                    QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
                 }
             } else {
                 QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));

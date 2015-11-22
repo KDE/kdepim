@@ -121,6 +121,8 @@ void ExportNotesJob::slotWriteNextArchiveResource()
                     connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportNotesJob::info);
                     connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportNotesJob::slotNoteJobTerminated);
                     resourceJob->start();
+                } else {
+                    QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
                 }
             } else {
                 QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
