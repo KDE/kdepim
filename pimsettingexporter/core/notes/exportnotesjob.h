@@ -33,7 +33,7 @@ public:
 private Q_SLOTS:
     void slotCheckBackupResource();
     void slotCheckBackupConfig();
-    void slotAddressbookJobTerminated();
+    void slotNoteJobTerminated();
     void slotWriteNextArchiveResource();
 private:
     void backupConfig();

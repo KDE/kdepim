@@ -87,7 +87,7 @@ void ExportNotesJob::slotCheckBackupConfig()
     Q_EMIT jobFinished();
 }
 
-void ExportNotesJob::slotAddressbookJobTerminated()
+void ExportNotesJob::slotNoteJobTerminated()
 {
     if (wasCanceled()) {
         Q_EMIT jobFinished();
@@ -119,14 +119,17 @@ void ExportNotesJob::slotWriteNextArchiveResource()
                     resourceJob->setArchiveName(QStringLiteral("notes.zip"));
                     connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportNotesJob::error);
                     connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportNotesJob::info);
-                    connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportNotesJob::slotAddressbookJobTerminated);
+                    connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportNotesJob::slotNoteJobTerminated);
                     resourceJob->start();
+                } else {
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "Url is empty for " << identifier;
+                    QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
                 }
             } else {
-                QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
+                QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
             }
         } else {
-            QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
+            QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
         }
     } else {
         Q_EMIT info(i18n("Resources backup done."));

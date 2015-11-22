@@ -182,6 +182,9 @@ void ExportMailJob::slotWriteNextArchiveResource()
                             connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportMailJob::slotMailsJobTerminated);
                             connect(this, &ExportMailJob::taskCanceled, resourceJob, &ExportResourceArchiveJob::slotTaskCanceled);
                             resourceJob->start();
+                        } else {
+                            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "Url is empty for " << identifier;
+                            QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
                         }
                     } else {
                         QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
