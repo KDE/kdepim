@@ -31,6 +31,7 @@ namespace CalendarSupport
 
 class CALENDARSUPPORT_EXPORT IdentityManager : public KIdentityManagement::IdentityManager
 {
+    Q_OBJECT
 public:
     explicit IdentityManager(QObject *parent = Q_NULLPTR, const char *name = Q_NULLPTR)
         : KIdentityManagement::IdentityManager(true/*readonly*/, parent, name) {}

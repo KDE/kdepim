@@ -26,6 +26,7 @@ struct ldapServer;
 
 class AutoconfigKolabLdap : public AutoconfigKolabMail
 {
+    Q_OBJECT
 public:
     /** Constructor */
     explicit AutoconfigKolabLdap(QObject *parent = Q_NULLPTR);

@@ -30,6 +30,7 @@ class Plugin;
 
 class KAddressBookUniqueAppHandler : public KontactInterface::UniqueAppHandler
 {
+    Q_OBJECT
 public:
     explicit KAddressBookUniqueAppHandler(KontactInterface::Plugin *plugin)
         : KontactInterface::UniqueAppHandler(plugin) {}

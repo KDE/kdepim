@@ -93,6 +93,7 @@ Q_SIGNALS:
 */
 class KDEPIM_EXPORT KPrefsWidBool : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a bool value control element consisting of a QCheckbox.
@@ -127,6 +128,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidInt : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a integer value control element consisting of a label and a
@@ -168,6 +170,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidTime : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a time value control element consisting of a label and a spinbox.
@@ -206,6 +209,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidDuration : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a duration value control element consisting of a label and a
@@ -245,6 +249,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidDate : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a time value control element consisting of a label and a date box.
@@ -385,6 +390,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidRadios : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a control element for selection of an option. It consists of a box
@@ -438,6 +444,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidCombo : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a control element for selection of an option. It consists of a
@@ -475,6 +482,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidString : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a string value control element consisting of a test label and a
@@ -522,6 +530,7 @@ private:
 */
 class KDEPIM_EXPORT KPrefsWidPath : public KPrefsWid
 {
+    Q_OBJECT
 public:
     /**
       Create a string value control element consisting of a test label and a

@@ -34,6 +34,7 @@ namespace CalendarSupport
 
 class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
 {
+    Q_OBJECT
 public:
     /** Constructor disabled for public. Use instance() to create a KCalPrefs
     object. */
