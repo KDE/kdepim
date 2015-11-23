@@ -34,8 +34,6 @@ public:
 
 private:
     void createInformationWidget(const QMap<QString, QString> &information);
-    void readConfig();
-    void writeConfig();
 };
 }
 
