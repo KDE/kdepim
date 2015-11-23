@@ -285,7 +285,7 @@ bool StorageServiceTreeWidget::checkName(const QString &name)
 void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = QInputDialog::getText(this, i18nc("@title:window", "Create Folder"), i18n("Folder:"));
-    if (!folder.isEmpty()) {
+    if (!folder.trimmed().isEmpty()) {
         if (!checkName(folder)) {
             return;
         }
