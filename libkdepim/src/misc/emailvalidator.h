@@ -34,6 +34,7 @@ namespace KPIM
 */
 class KDEPIM_EXPORT EmailValidator : public QValidator //krazy:exclude=dpointer
 {
+    Q_OBJECT
 public:
     explicit EmailValidator(QObject *parent);
 

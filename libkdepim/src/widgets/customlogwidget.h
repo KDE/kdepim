@@ -28,6 +28,7 @@ namespace KPIM
 {
 class LogItemDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
 public:
     explicit LogItemDelegate(QObject *parent);
     ~LogItemDelegate();

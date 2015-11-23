@@ -25,6 +25,7 @@ struct freebusy;
 
 class AutoconfigKolabFreebusy : public AutoconfigKolabMail
 {
+    Q_OBJECT
 public:
     /** Constructor */
     explicit AutoconfigKolabFreebusy(QObject *parent = Q_NULLPTR);
