@@ -47,5 +47,8 @@ QString GrantleeContactViewer::kaddressBookAbsoluteThemePath()
 
 void GrantleeContactViewer::setForceDisableQRCode(bool b)
 {
-    mFormatter->setForceDisableQRCode(b);
+    if (b != mFormatter->forceDisableQRCode()) {
+        mFormatter->setForceDisableQRCode(b);
+        updateView();
+    }
 }
