@@ -28,6 +28,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QFormLayout>
 
 using namespace PimCommon;
 
@@ -53,11 +54,10 @@ void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString,
     connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServicePropertiesDialog::reject);
 
     QWidget *parent = new QWidget;
-    QGridLayout *grid = new QGridLayout;
-    parent->setLayout(grid);
+    QFormLayout *layout = new QFormLayout;
+    parent->setLayout(layout);
 
     QMapIterator<QString, QString> i(information);
-    int row = 0;
     while (i.hasNext()) {
         i.next();
         QLabel *type = new QLabel;
@@ -66,15 +66,12 @@ void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString,
         type->setFont(font);
         type->setAlignment(Qt::AlignRight);
         type->setText(i.key());
-        grid->addWidget(type, row, 0);
 
         QLabel *info = new QLabel;
         info->setTextInteractionFlags(Qt::TextBrowserInteraction);
         info->setAlignment(Qt::AlignLeft);
         info->setText(i.value());
-        grid->addWidget(info, row, 1);
-
-        ++row;
+        layout->addRow(type, info);
     }
     mainLayout->addWidget(parent);
     mainLayout->addWidget(buttonBox);
