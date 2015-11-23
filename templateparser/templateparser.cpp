@@ -1234,10 +1234,6 @@ QString TemplateParser::getHtmlSignature() const
 void TemplateParser::addProcessedBodyToMessage( const QString &plainBody,
                                                 const QString &htmlBody ) const
 {
-    // Get the attachments of the original mail
-    MessageCore::AttachmentCollector ac;
-    ac.collectAttachmentsFrom( mOrigMsg.get() );
-
     MessageCore::ImageCollector ic;
     ic.collectImagesFrom( mOrigMsg.get() );
 
@@ -1275,11 +1271,20 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody,
     // If we have some attachments, create a multipart/mixed mail and
     // add the normal body as well as the attachments
     KMime::Content *mainPart = textPart;
-    if ( !ac.attachments().empty() && mMode == Forward ) {
-        mainPart = createMultipartMixed( ac, textPart );
-        mainPart->assemble();
-    }
+    if ( mMode == Forward ) {
+        // Get the attachments of the original mail
+        MessageCore::AttachmentCollector ac;
 
+        if (mOtp->nodeHelper()->partMetaData( mOrigMsg.get() ).isEncrypted) {
+            ac.collectAttachmentsFrom( mOtp->nodeHelper()->decryptedNodeForContent( mOrigMsg.get() ) );
+        } else {
+            ac.collectAttachmentsFrom( mOrigMsg.get() );
+        }
+        if (!ac.attachments().empty()) {
+            mainPart = createMultipartMixed( ac, textPart );
+            mainPart->assemble();
+        }
+    }
     mMsg->setBody( mainPart->encodedBody() );
     mMsg->setHeader( mainPart->contentType() );
     mMsg->setHeader( mainPart->contentTransferEncoding() );
