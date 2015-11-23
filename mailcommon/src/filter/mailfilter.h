@@ -37,9 +37,6 @@ class KConfigGroup;
 namespace MailCommon
 {
 
-// maximum number of filter actions per filter
-const int FILTER_MAX_ACTIONS = 8;
-
 class MAILCOMMON_EXPORT MailFilter
 {
     friend MAILCOMMON_EXPORT QDataStream &operator<<(QDataStream &stream, const MailFilter &filter);
@@ -84,6 +81,8 @@ public:
     /** Cleanup. */
     ~MailFilter();
 
+
+    static int filterActionsMaximumSize();
     void generateRandomIdentifier();
 
     /**

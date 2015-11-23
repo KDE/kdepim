@@ -242,10 +242,10 @@ void SearchPattern::writeConfig(KConfigGroup &config) const
     QList<SearchRule::Ptr>::const_iterator it;
     QList<SearchRule::Ptr>::const_iterator endIt(constEnd());
 
-    if (count() >= FILTER_MAX_RULES) {
+    if (count() >= filterRulesMaximumSize()) {
         qCDebug(MAILCOMMON_LOG) << "Number of patterns > to filter max rules";
     }
-    for (it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it) {
+    for (it = constBegin(); it != endIt && i < filterRulesMaximumSize(); ++i, ++it) {
         // we could do this ourselves, but we want the rules to be extensible,
         // so we give the rule it's number and let it do the rest.
         (*it)->writeConfig(config, i);
@@ -253,6 +253,11 @@ void SearchPattern::writeConfig(KConfigGroup &config) const
 
     // save the total number of rules.
     config.writeEntry("rules", i);
+}
+
+int SearchPattern::filterRulesMaximumSize()
+{
+    return 8;
 }
 
 void SearchPattern::init()
@@ -406,7 +411,7 @@ void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
     QList<SearchRule::Ptr>::const_iterator it;
     QList<SearchRule::Ptr>::const_iterator endIt(constEnd());
     int i = 0;
-    for (it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it) {
+    for (it = constBegin(); it != endIt && i < filterRulesMaximumSize(); ++i, ++it) {
         if (i != 0) {
             code += QLatin1String("\n, ");
         }

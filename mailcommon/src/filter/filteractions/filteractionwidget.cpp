@@ -283,7 +283,7 @@ void FilterActionWidgetLister::Private::regenerateActionListFromWidgets()
 }
 
 FilterActionWidgetLister:: FilterActionWidgetLister(QWidget *parent)
-    : KWidgetLister(false, 1, FILTER_MAX_ACTIONS, parent), d(new Private(this))
+    : KWidgetLister(false, 1, MailFilter::filterActionsMaximumSize(), parent), d(new Private(this))
 {
 }
 

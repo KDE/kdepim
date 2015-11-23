@@ -44,9 +44,6 @@ class KConfigGroup;
 namespace MailCommon
 {
 
-// maximum number of filter rules per filter
-const int FILTER_MAX_RULES = 8;
-
 // Needed for MSVC 2010, as it seems to not implicit cast for a pointer anymore
 #ifdef _MSC_VER
 uint qHash(SearchRule::Ptr sr);
@@ -194,6 +191,7 @@ public:
         mOperator = aOp;
     }
 
+    static int filterRulesMaximumSize();
     /**
      * Returns the pattern as string. For debugging.
      */

@@ -112,6 +112,11 @@ MailFilter::~MailFilter()
     qDeleteAll(mActions);
 }
 
+int MailFilter::filterActionsMaximumSize()
+{
+    return 8;
+}
+
 void MailFilter::generateRandomIdentifier()
 {
     mIdentifier = KRandom::randomString(16);
@@ -421,8 +426,8 @@ bool MailFilter::readConfig(const KConfigGroup &config, bool interactive)
     mActions.clear();
 
     int numActions = config.readEntry("actions", 0);
-    if (numActions > FILTER_MAX_ACTIONS) {
-        numActions = FILTER_MAX_ACTIONS;
+    if (numActions > filterActionsMaximumSize()) {
+        numActions = filterActionsMaximumSize();
         KMessageBox::information(0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name()));
     }
 
