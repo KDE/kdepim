@@ -256,7 +256,7 @@ void StorageServiceTreeWidget::slotRenameFile()
     const QString oldFileName = itemIdentifierSelected();
     const QString name = currentItem()->text(0);
     const QString filename = QInputDialog::getText(this, i18n("Rename Filename"), i18n("Filename:"), QLineEdit::Normal, name);
-    if (!filename.isEmpty()) {
+    if (!filename.trimmed().isEmpty()) {
         if (name != filename) {
             if (!checkName(filename)) {
                 return;
@@ -285,7 +285,7 @@ bool StorageServiceTreeWidget::checkName(const QString &name)
 void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = QInputDialog::getText(this, i18nc("@title:window", "Create Folder"), i18n("Folder:"));
-    if (!folder.isEmpty()) {
+    if (!folder.trimmed().isEmpty()) {
         if (!checkName(folder)) {
             return;
         }
