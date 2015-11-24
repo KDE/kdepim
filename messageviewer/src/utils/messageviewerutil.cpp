@@ -452,6 +452,7 @@ bool Util::saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *
 
     if (msgBase.hasPayload<KMime::Message::Ptr>()) {
         fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject(msgBase.payload<KMime::Message::Ptr>().data()).trimmed());
+        fileName.remove(QLatin1Char('\"'));
     } else {
         fileName = i18n("message");
     }
