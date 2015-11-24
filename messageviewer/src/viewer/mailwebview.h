@@ -118,7 +118,7 @@ private Q_SLOTS:
 private:
     bool checkForAccessKey(QKeyEvent *event);
     void showAccessKeys();
-    void makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element);
+    void makeAccessKeyLabel(QChar accessKey, const QWebElement &element);
     enum AccessKeyState {
         NotActivated,
         PreActivated,

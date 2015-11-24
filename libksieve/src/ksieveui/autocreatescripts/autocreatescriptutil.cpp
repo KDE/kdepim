@@ -31,7 +31,7 @@ QString AutoCreateScriptUtil::createMultiLine(const QString &str)
     return result;
 }
 
-QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator, bool addEndSemiColon)
+QString AutoCreateScriptUtil::createList(const QString &str, QChar separator, bool addEndSemiColon)
 {
     const QStringList list = str.trimmed().split(separator);
     const int count = list.count();
