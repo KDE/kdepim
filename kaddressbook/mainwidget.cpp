@@ -857,8 +857,9 @@ void MainWidget::setQRCodeShow(bool on)
     KConfig config(QStringLiteral("akonadi_contactrc"));
     KConfigGroup group(&config, QStringLiteral("View"));
     group.writeEntry("QRCodes", on);
-    if (mItemView->model()) {
-        mItemView->setCurrentIndex(mItemView->model()->index(0, 0));
+    group.sync();
+    if (mDetailsViewStack->currentWidget() == mContactDetails) {
+        mContactDetails->updateView();
     }
 #else
     Q_UNUSED(on);
