@@ -122,8 +122,3 @@ void GravatarUpdateDialog::writeConfig()
     grp.writeEntry("Size", size());
     grp.sync();
 }
-
-void GravatarUpdateDialog::slotAccepted()
-{
-    accept();
-}
