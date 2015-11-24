@@ -143,7 +143,7 @@ QObject *HeaderStyle::sourceObject() const
     return mSourceObject;
 }
 
-void HeaderStyle::setMessageStatus(const Akonadi::MessageStatus &status)
+void HeaderStyle::setMessageStatus(Akonadi::MessageStatus status)
 {
     mMessageStatus = status;
 }

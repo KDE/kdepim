@@ -82,7 +82,7 @@ public:
     void setLastModified(const QDateTime &lastModified);
 
     qlonglong size() const;
-    void setSize(const qlonglong &size);
+    void setSize(qlonglong size);
 
     bool isFile() const;
     void setIsFile(bool isFile);

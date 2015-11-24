@@ -72,7 +72,7 @@ qint32 FollowUpReminderInfo::uniqueIdentifier() const
     return mUniqueIdentifier;
 }
 
-void FollowUpReminderInfo::setUniqueIdentifier(const qint32 &uniqueIdentifier)
+void FollowUpReminderInfo::setUniqueIdentifier(qint32 uniqueIdentifier)
 {
     mUniqueIdentifier = uniqueIdentifier;
 }

@@ -348,7 +348,7 @@ void StorageModel::updateMessageItemData(MessageList::Core::MessageItem *mi,
 }
 
 void StorageModel::setMessageItemStatus(MessageList::Core::MessageItem *mi,
-                                        int row, const Akonadi::MessageStatus &status)
+                                        int row, Akonadi::MessageStatus status)
 {
     Q_UNUSED(mi);
     Item item = itemForRow(row);

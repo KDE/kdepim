@@ -63,7 +63,7 @@ public:
     void setAnswerMessageItemId(Akonadi::Item::Id answerMessageItemId);
 
     qint32 uniqueIdentifier() const;
-    void setUniqueIdentifier(const qint32 &uniqueIdentifier);
+    void setUniqueIdentifier(qint32 uniqueIdentifier);
 
 private:
     void readConfig(const KConfigGroup &config);

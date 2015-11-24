@@ -516,7 +516,7 @@ void MailWebView::showAccessKeys()
             if (a) {
                 const QKeySequence shortCut = a->shortcut();
                 if (!shortCut.isEmpty()) {
-                    Q_FOREACH (const QChar &c, unusedKeys) {
+                    Q_FOREACH (QChar c, unusedKeys) {
                         if (shortCut.matches(QKeySequence(c)) != QKeySequence::NoMatch) {
                             unusedKeys.removeOne(c);
                         }
@@ -603,7 +603,7 @@ void MailWebView::showAccessKeys()
     mAccessKeyActivated = (mAccessKeyLabels.isEmpty() ? Activated : NotActivated);
 }
 
-void MailWebView::makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element)
+void MailWebView::makeAccessKeyLabel(QChar accessKey, const QWebElement &element)
 {
     QLabel *label = new QLabel(this);
     QFont font(label->font());

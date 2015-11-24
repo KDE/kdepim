@@ -583,7 +583,7 @@ protected:
     * It first applies the change to the cached state in MessageItem and
     * then requests our parent widget to act on the storage.
     */
-    void changeMessageStatus(MessageItem *it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset);
+    void changeMessageStatus(MessageItem *it, Akonadi::MessageStatus set, Akonadi::MessageStatus unset);
     void changeMessageStatusRead(MessageItem *it, bool read);
 
     /**

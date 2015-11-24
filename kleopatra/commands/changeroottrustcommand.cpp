@@ -238,7 +238,7 @@ static QString add_colons(const QString &fpr)
     QString result;
     result.reserve(fpr.size() / 2 * 3 + 1);
     bool needColon = false;
-    Q_FOREACH (const QChar &ch, fpr) {
+    Q_FOREACH (QChar ch, fpr) {
         result += ch;
         if (needColon) {
             result += QLatin1Char(':');

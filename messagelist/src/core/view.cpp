@@ -2065,7 +2065,7 @@ void View::changeMessageStatusRead(MessageItem *it, bool read)
     d->mWidget->viewMessageStatusChangeRequest(it, set, unset);
 }
 
-void View::changeMessageStatus(MessageItem *it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset)
+void View::changeMessageStatus(MessageItem *it, Akonadi::MessageStatus set, Akonadi::MessageStatus unset)
 {
     // We first change the status of MessageItem itself. This will make the change
     // visible to the user even if the Model is actually in the middle of a long job (maybe it's loading)

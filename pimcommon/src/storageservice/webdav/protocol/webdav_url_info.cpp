@@ -233,7 +233,7 @@ qlonglong QWebdavUrlInfo::size() const
     return mSize;
 }
 
-void QWebdavUrlInfo::setSize(const qlonglong &size)
+void QWebdavUrlInfo::setSize(qlonglong size)
 {
     mSize = size;
 }

@@ -430,7 +430,7 @@ const Akonadi::MessageStatus &Item::status() const
     return d_ptr->mStatus;
 }
 
-void Item::setStatus(const Akonadi::MessageStatus &status)
+void Item::setStatus(Akonadi::MessageStatus status)
 {
     d_ptr->mStatus = status;
 }
@@ -539,7 +539,7 @@ qint64 Item::parentCollectionId() const
 }
 
 void MessageList::Core::Item::setSubjectAndStatus(const QString &subject,
-        const Akonadi::MessageStatus &status)
+        Akonadi::MessageStatus status)
 {
     d_ptr->mSubject = subject;
     d_ptr->mStatus = status;

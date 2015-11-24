@@ -1085,7 +1085,7 @@ void Widget::viewJobBatchTerminated()
 {
 }
 
-void Widget::viewMessageStatusChangeRequest(MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear)
+void Widget::viewMessageStatusChangeRequest(MessageItem *msg, Akonadi::MessageStatus set, Akonadi::MessageStatus clear)
 {
     Q_UNUSED(msg);
     Q_UNUSED(set);
