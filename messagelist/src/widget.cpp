@@ -325,7 +325,7 @@ void Widget::viewMessageListContextPopupRequest(const QList< MessageList::Core::
     }
 }
 
-void Widget::viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear)
+void Widget::viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg, Akonadi::MessageStatus set, Akonadi::MessageStatus clear)
 {
     Q_ASSERT(msg);   // must not be null
     Q_ASSERT(storageModel());

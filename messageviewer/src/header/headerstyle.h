@@ -102,7 +102,7 @@ public:
     void setSourceObject(QObject *sourceObject);
     QObject *sourceObject() const;
 
-    void setMessageStatus(const Akonadi::MessageStatus &status);
+    void setMessageStatus(Akonadi::MessageStatus status);
     Akonadi::MessageStatus messageStatus() const;
 
     void setTheme(const GrantleeTheme::Theme &theme);

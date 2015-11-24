@@ -115,7 +115,7 @@ public:
     * to the specified message item. The new status should be stored (but doesn't need
     * to be set as mi->status() itself as the caller is responsable for this).
     */
-    virtual void setMessageItemStatus(MessageItem *mi, int row, const Akonadi::MessageStatus &status) = 0;
+    virtual void setMessageItemStatus(MessageItem *mi, int row, Akonadi::MessageStatus status) = 0;
 
     /**
     * Called by Model just before this StorageModel is attacched to it.

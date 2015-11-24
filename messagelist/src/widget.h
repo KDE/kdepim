@@ -380,7 +380,7 @@ protected:
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    void viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear) Q_DECL_OVERRIDE;
+    void viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg, Akonadi::MessageStatus set, Akonadi::MessageStatus clear) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotCollapseItem();

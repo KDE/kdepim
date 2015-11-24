@@ -219,7 +219,7 @@ protected:
     * This is called by View when a message item is manipulated by the user
     * in a way that it's status should change. (e.g, by clicking on a status icon, for example).
     */
-    virtual void viewMessageStatusChangeRequest(MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear);
+    virtual void viewMessageStatusChangeRequest(MessageItem *msg, Akonadi::MessageStatus set, Akonadi::MessageStatus clear);
 
     /**
     * This is called by View to signal a start of a (possibly lengthy) job batch.

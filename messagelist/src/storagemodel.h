@@ -68,7 +68,7 @@ public:
     bool initializeMessageItem(MessageList::Core::MessageItem *mi, int row, bool bUseReceiver) const Q_DECL_OVERRIDE;
     void fillMessageItemThreadingData(MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset) const Q_DECL_OVERRIDE;
     void updateMessageItemData(MessageList::Core::MessageItem *mi, int row) const Q_DECL_OVERRIDE;
-    void setMessageItemStatus(MessageList::Core::MessageItem *mi, int row, const Akonadi::MessageStatus &status) Q_DECL_OVERRIDE;
+    void setMessageItemStatus(MessageList::Core::MessageItem *mi, int row, Akonadi::MessageStatus status) Q_DECL_OVERRIDE;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

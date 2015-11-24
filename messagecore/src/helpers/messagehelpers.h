@@ -54,7 +54,7 @@ MESSAGECORE_EXPORT bool isStandaloneMessage(const Akonadi::Item &item);
    * @param id The item id of the original message.
    * @param status The status (replied or forwarded) that links the message to the original message.
    */
-MESSAGECORE_EXPORT void addLinkInformation(const KMime::Message::Ptr &message, Akonadi::Item::Id item, const Akonadi::MessageStatus &status);
+MESSAGECORE_EXPORT void addLinkInformation(const KMime::Message::Ptr &message, Akonadi::Item::Id item, Akonadi::MessageStatus status);
 
 /**
    * Reads the private headers of the given @p message to extract link information to its original message.

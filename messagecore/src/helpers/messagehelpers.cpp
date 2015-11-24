@@ -38,7 +38,7 @@ bool MessageCore::Util::isStandaloneMessage(const Akonadi::Item &item)
     return item.hasPayload<KMime::Message::Ptr>() && !item.isValid();
 }
 
-void MessageCore::Util::addLinkInformation(const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus &status)
+void MessageCore::Util::addLinkInformation(const KMime::Message::Ptr &msg, Akonadi::Item::Id id, Akonadi::MessageStatus status)
 {
     Q_ASSERT(status.isReplied() || status.isForwarded() || status.isDeleted());
 
