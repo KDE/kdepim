@@ -21,7 +21,7 @@ include(ECMQtDeclareLoggingCategory)
 include(ECMAddTests)
 
 set(KF5_VERSION "5.16.0")
-set(KDEPIMLIBS_LIB_VERSION "5.1.41")
+set(KDEPIMLIBS_LIB_VERSION "5.1.42")
 set(KDEPIM_LIB_VERSION "5.1.40")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")

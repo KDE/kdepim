@@ -859,7 +859,8 @@ void MainWidget::setQRCodeShow(bool on)
     group.writeEntry("QRCodes", on);
     group.sync();
     if (mDetailsViewStack->currentWidget() == mContactDetails) {
-        mContactDetails->updateView();
+        mFormatter->setShowQRCode(on);
+        mContactDetails->setShowQRCode(on);
     }
 #else
     Q_UNUSED(on);

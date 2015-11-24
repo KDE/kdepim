@@ -51,8 +51,13 @@ class Q_DECL_HIDDEN GrantleeContactFormatter::Private
 {
 public:
     Private()
-        : forceDisableQRCode(false)
+        : forceDisableQRCode(false),
+          showQRCode(true)
     {
+        KConfig config(QStringLiteral("akonadi_contactrc"));
+        KConfigGroup group(&config, QStringLiteral("View"));
+        showQRCode = group.readEntry("QRCodes", true);
+
         mEngine = new Grantlee::Engine;
 
         mTemplateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>(new Grantlee::FileSystemTemplateLoader());
@@ -86,6 +91,7 @@ public:
     Grantlee::Template mEmbeddableTemplate;
     QString mErrorMessage;
     bool forceDisableQRCode;
+    bool showQRCode;
 };
 
 GrantleeContactFormatter::GrantleeContactFormatter()
@@ -118,6 +124,11 @@ void GrantleeContactFormatter::setForceDisableQRCode(bool b)
 bool GrantleeContactFormatter::forceDisableQRCode() const
 {
     return d->forceDisableQRCode;
+}
+
+void GrantleeContactFormatter::setShowQRCode(bool b)
+{
+    d->showQRCode = b;
 }
 
 inline static void setHashField(QVariantHash &hash, const QString &name, const QString &value)
@@ -503,9 +514,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
 
 #if defined(HAVE_PRISON)
     if (!d->forceDisableQRCode) {
-        KConfig config(QStringLiteral("akonadi_contactrc"));
-        KConfigGroup group(&config, QStringLiteral("View"));
-        if (group.readEntry("QRCodes", true)) {
+        if (d->showQRCode) {
             contactObject.insert(QStringLiteral("hasqrcode"), QStringLiteral("true"));
         }
     }

@@ -63,6 +63,7 @@ public:
      */
     QString toHtml(HtmlForm form = SelfcontainedForm) const Q_DECL_OVERRIDE;
 
+    void setShowQRCode(bool b);
 private:
     //@cond PRIVATE
     class Private;
