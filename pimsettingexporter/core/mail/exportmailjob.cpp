@@ -334,7 +334,6 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("messageviewer.notifyrc"));
     backupConfigFile(QStringLiteral("storageservicemanager.notifyrc"));
 
-
     const QString folderMailArchiveStr(QStringLiteral("foldermailarchiverc"));
     const QString folderMailArchiverc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + folderMailArchiveStr;
     if (QFile(folderMailArchiverc).exists()) {
@@ -361,7 +360,6 @@ void ExportMailJob::backupConfig()
         backupFile(tmp.fileName(), Utils::configsPath(), folderMailArchiveStr);
         delete archiveConfig;
     }
-
 
     const QString archiveMailAgentConfigurationStr(QStringLiteral("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr;

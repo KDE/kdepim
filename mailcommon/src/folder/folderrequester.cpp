@@ -32,8 +32,6 @@
 #include "util/mailutil.h"
 #include "kernel/mailkernel.h"
 
-
-
 #include <CollectionFetchJob>
 
 #include <QDialog>

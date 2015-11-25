@@ -172,7 +172,7 @@ VacationUtils::Vacation VacationUtils::parseScript(const QString &script)
     SpamDataExtractor sdx;
     DomainRestrictionDataExtractor drdx;
     DateExtractor dx;
-    KSieveExt::MultiScriptBuilder tsb(&vdx , &sdx, &drdx, &dx);
+    KSieveExt::MultiScriptBuilder tsb(&vdx, &sdx, &drdx, &dx);
     parser.setScriptBuilder(&tsb);
     if (!parser.parse() || !vdx.commandFound()) {
         const auto vac = parseScriptLegacy(script);
@@ -409,7 +409,7 @@ QString KSieveUi::VacationUtils::updateVacationBlock(const QString &oldScript, c
                              newScriptUTF8.begin() + newScriptUTF8.length());
     VacationDataExtractor vdxOld, vdxNew;
     RequireExtractor rx;
-    KSieveExt::MultiScriptBuilder tsb(&vdxOld , &rx);
+    KSieveExt::MultiScriptBuilder tsb(&vdxOld, &rx);
     parserOld.setScriptBuilder(&tsb);
     parserNew.setScriptBuilder(&vdxNew);
 

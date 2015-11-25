@@ -25,8 +25,6 @@
 #include <KIconLoader>
 #include <MessageComposer/ComposerLineEdit>
 
-
-
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <QIcon>

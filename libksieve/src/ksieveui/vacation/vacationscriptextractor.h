@@ -366,7 +366,7 @@ public:
     {
         return mResults.count(QStringLiteral("x-spam-flag")) &&
                mResults.count(QStringLiteral("spam-flag-yes")) &&
-               mResults.count(QStringLiteral("vacation")) ;
+               mResults.count(QStringLiteral("vacation"));
     }
 };
 

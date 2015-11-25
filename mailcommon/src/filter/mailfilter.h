@@ -81,7 +81,6 @@ public:
     /** Cleanup. */
     ~MailFilter();
 
-
     static int filterActionsMaximumSize();
     void generateRandomIdentifier();
 
