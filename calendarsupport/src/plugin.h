@@ -36,7 +36,6 @@ namespace CalendarSupport
 */
 class Plugin
 {
-
     enum {
         INTERFACE_VERSION = 2
     };

@@ -320,6 +320,7 @@ protected:
 
 class CalPrintIncidenceConfig : public QWidget, public Ui::CalPrintIncidenceConfig_Base
 {
+    Q_OBJECT
 public:
     explicit CalPrintIncidenceConfig(QWidget *parent) : QWidget(parent)
     {
@@ -329,6 +330,7 @@ public:
 
 class CalPrintDayConfig : public QWidget, public Ui::CalPrintDayConfig_Base
 {
+    Q_OBJECT
 public:
     explicit CalPrintDayConfig(QWidget *parent) : QWidget(parent)
     {
@@ -338,6 +340,7 @@ public:
 
 class CalPrintWeekConfig : public QWidget, public Ui::CalPrintWeekConfig_Base
 {
+    Q_OBJECT
 public:
     explicit CalPrintWeekConfig(QWidget *parent) : QWidget(parent)
     {
@@ -347,6 +350,7 @@ public:
 
 class CalPrintMonthConfig : public QWidget, public Ui::CalPrintMonthConfig_Base
 {
+    Q_OBJECT
 public:
     explicit CalPrintMonthConfig(QWidget *parent) : QWidget(parent)
     {
@@ -356,6 +360,7 @@ public:
 
 class CalPrintTodoConfig : public QWidget, public Ui::CalPrintTodoConfig_Base
 {
+    Q_OBJECT
 public:
     explicit CalPrintTodoConfig(QWidget *parent) : QWidget(parent)
     {
