@@ -196,6 +196,7 @@ protected:
 
 class PrintPluginFactory : public PluginFactory
 {
+    Q_OBJECT
 public:
     virtual PrintPlugin *createPluginFactory() = 0;
 };
