@@ -71,7 +71,10 @@ void SkeletonMessageJobPrivate::doStart()
     {
         KMime::Headers::From *from = new KMime::Headers::From( message );
         KMime::Types::Mailbox address;
-        address.fromUnicodeString( KPIMUtils::normalizeAddressesAndEncodeIdn( infoPart->from() ) );
+        // From is expected to be a single e-mail address and a list of comma seperated
+        // addresses. So we quote the comma here.
+        address.fromUnicodeString( KPIMUtils::normalizeAddressesAndEncodeIdn( infoPart->from().replace( QLatin1String( "," ),
+                                                                                                        QLatin1String( "\\," ) ) ) );
         from->addAddress( address );
         message->setHeader( from );
     }
