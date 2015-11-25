@@ -14,6 +14,7 @@ set(pimsettingexporter_dialog_SRCS
   dialog/backupfilestructureinfodialog.cpp
   dialog/showarchivestructuredialog.cpp
   dialog/synchronizeresourcedialog.cpp
+  dialog/pimsettingexporterconfiguredialog.cpp
 )
 
 

@@ -3,3 +3,7 @@ add_test(synchronizeresourcedialogtest synchronizeresourcedialogtest)
 ecm_mark_as_test(synchronizeresourcedialogtest)
 target_link_libraries(synchronizeresourcedialogtest Qt5::Test Qt5::Widgets KF5::I18n KF5::ItemViews KF5::ConfigCore)
 
+add_executable( pimsettingexporterconfiguredialogtest pimsettingexporterconfiguredialogtest.cpp)
+add_test(pimsettingexporterconfiguredialogtest pimsettingexporterconfiguredialogtest)
+ecm_mark_as_test(pimsettingexporterconfiguredialogtest)
+target_link_libraries(pimsettingexporterconfiguredialogtest Qt5::Test Qt5::Widgets KF5::I18n KF5::ItemViews KF5::ConfigCore)
