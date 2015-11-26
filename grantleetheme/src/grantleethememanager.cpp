@@ -371,8 +371,8 @@ QString ThemeManager::pathFromThemes(const QString &themesRelativePath,
 }
 
 GrantleeTheme::Theme ThemeManager::loadTheme(const QString &themePath,
-                                             const QString &dirName,
-                                             const QString &defaultDesktopFileName)
+        const QString &dirName,
+        const QString &defaultDesktopFileName)
 {
     const GrantleeTheme::Theme theme(themePath, dirName, defaultDesktopFileName);
     return theme;
@@ -389,6 +389,5 @@ QString ThemeManager::configuredThemeName(const QString &themeType)
     const KConfigGroup grp = config->group(themeType);
     return grp.readEntry(QStringLiteral("themeName"));
 }
-
 
 #include "moc_grantleethememanager.cpp"

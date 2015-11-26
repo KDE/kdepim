@@ -80,7 +80,7 @@ void ThemePrivate::setupLoader()
     sEngine->addTemplateLoader(loader);
 }
 
-Grantlee::Context ThemePrivate::createContext(const QVariantHash& data)
+Grantlee::Context ThemePrivate::createContext(const QVariantHash &data)
 {
     if (!sLocalizer) {
         sLocalizer.reset(new GrantleeKi18nLocalizer());
@@ -96,11 +96,11 @@ QString ThemePrivate::errorTemplate(const QString &reason,
                                     const Grantlee::Template &failedTemplate)
 {
     Grantlee::Template tpl = sEngine->newTemplate(
-        QStringLiteral("<h1>{{ error }}</h1>\n"
-                       "<b>%1:</b> {{ templateName }}<br>\n"
-                       "<b>%2:</b> {{ errorMessage }}")
-            .arg(i18n("Template"), i18n("Error message")),
-        QStringLiteral("TemplateError"));
+                                 QStringLiteral("<h1>{{ error }}</h1>\n"
+                                         "<b>%1:</b> {{ templateName }}<br>\n"
+                                         "<b>%2:</b> {{ errorMessage }}")
+                                 .arg(i18n("Template"), i18n("Error message")),
+                                 QStringLiteral("TemplateError"));
 
     Grantlee::Context ctx = createContext();
     ctx.insert(QStringLiteral("error"), reason);
@@ -108,8 +108,6 @@ QString ThemePrivate::errorTemplate(const QString &reason,
     ctx.insert(QStringLiteral("errorMessage"), failedTemplate->errorString());
     return tpl->render(&ctx);
 }
-
-
 
 Theme::Theme()
     : d(new ThemePrivate)
@@ -154,7 +152,6 @@ Theme &Theme::operator=(const Theme &other)
 
     return *this;
 }
-
 
 bool Theme::isValid() const
 {

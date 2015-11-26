@@ -49,7 +49,6 @@
  * tags, but makes it easier to use {% icon %} in sub-templates.
  */
 
-
 class IconTag : public Grantlee::AbstractNodeFactory
 {
 public:
@@ -74,6 +73,5 @@ private:
     QString mAltText;
     int mSizeOrGroup;
 };
-
 
 #endif // ICON_H

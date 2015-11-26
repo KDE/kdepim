@@ -23,7 +23,7 @@
 #include <grantlee/taglibraryinterface.h>
 
 class KDEGrantleePlugin : public QObject
-                              , public Grantlee::TagLibraryInterface
+    , public Grantlee::TagLibraryInterface
 {
     Q_OBJECT
     Q_INTERFACES(Grantlee::TagLibraryInterface)

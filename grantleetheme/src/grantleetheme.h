@@ -53,7 +53,6 @@ public:
     QString author() const;
     QString authorEmail() const;
 
-
     QString render(const QString &templateName, const QVariantHash &data);
 
     static void addPluginPath(const QString &path);

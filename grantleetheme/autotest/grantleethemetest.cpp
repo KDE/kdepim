@@ -92,8 +92,6 @@ void GrantleeThemeTest::shouldLoadTheme()
     QCOMPARE(theme.dirName(), dirname);
 }
 
-
-
 bool GrantleeThemeTest::validateHtml(const QString &themePath, const QString &name, const QString &html)
 {
     const QString outFileName = themePath + QStringLiteral("/%1.out").arg(name);
@@ -158,7 +156,6 @@ bool GrantleeThemeTest::compareHtml(const QString &themePath, const QString &nam
     return proc.exitCode() == 0;
 }
 
-
 void GrantleeThemeTest::testRenderTemplate_data()
 {
     QTest::addColumn<QString>("dirname");
@@ -199,6 +196,5 @@ void GrantleeThemeTest::testRenderTemplate()
         QFile::remove(themePath + QDir::separator() + templateBasename + QStringLiteral(".out.html"));
     }
 }
-
 
 QTEST_MAIN(GrantleeThemeTest)

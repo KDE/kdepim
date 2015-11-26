@@ -40,7 +40,7 @@ QHash<QString, Grantlee::AbstractNodeFactory *> KDEGrantleePlugin::nodeFactories
     return nodeFactories;
 }
 
-QHash<QString, Grantlee::Filter *> KDEGrantleePlugin::filters(const QString& name)
+QHash<QString, Grantlee::Filter *> KDEGrantleePlugin::filters(const QString &name)
 {
     return Grantlee::TagLibraryInterface::filters(name);
 }
