@@ -27,3 +27,8 @@ PimSettingExporterConfigureWidget::~PimSettingExporterConfigureWidget()
 {
 
 }
+
+void PimSettingExporterConfigureWidget::save()
+{
+    //TODO
+}

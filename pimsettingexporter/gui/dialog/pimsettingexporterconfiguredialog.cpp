@@ -16,14 +16,34 @@
 */
 
 #include "pimsettingexporterconfiguredialog.h"
+#include <QVBoxLayout>
+#include <KLocalizedString>
+#include <QDialogButtonBox>
+#include "../widgets/pimsettingexporterconfigurewidget.h"
 
 PimSettingExporterConfigureDialog::PimSettingExporterConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
+    QVBoxLayout *layout = new QVBoxLayout;
+    setLayout(layout);
+    mConfigureWidget = new PimSettingExporterConfigureWidget(this);
+    mConfigureWidget->setObjectName(QStringLiteral("configurewidget"));
+    layout->addWidget(mConfigureWidget);
 
+    QDialogButtonBox *button = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    button->setObjectName(QStringLiteral("buttonbox"));
+    connect(button, &QDialogButtonBox::accepted, this, &PimSettingExporterConfigureDialog::slotAccepted);
+    connect(button, &QDialogButtonBox::rejected, this, &PimSettingExporterConfigureDialog::reject);
+    layout->addWidget(button);
 }
 
 PimSettingExporterConfigureDialog::~PimSettingExporterConfigureDialog()
 {
 
+}
+
+void PimSettingExporterConfigureDialog::slotAccepted()
+{
+    mConfigureWidget->save();
+    accept();
 }

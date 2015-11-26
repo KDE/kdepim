@@ -26,6 +26,8 @@ class PimSettingExporterConfigureWidget : public QWidget
 public:
     explicit PimSettingExporterConfigureWidget(QWidget *parent = Q_NULLPTR);
     ~PimSettingExporterConfigureWidget();
+
+    void save();
 };
 
 #endif // PIMSETTINGEXPORTERCONFIGUREWIDGET_H

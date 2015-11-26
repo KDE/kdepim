@@ -16,7 +16,11 @@
 */
 
 #include "pimsettingexporterconfiguredialogtest.h"
+#include "../dialog/pimsettingexporterconfiguredialog.h"
+#include <QDialogButtonBox>
 #include <QTest>
+#include "../widgets/pimsettingexporterconfigurewidget.h"
+
 PimSettingExporterConfigureDialogTest::PimSettingExporterConfigureDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -26,6 +30,16 @@ PimSettingExporterConfigureDialogTest::PimSettingExporterConfigureDialogTest(QOb
 PimSettingExporterConfigureDialogTest::~PimSettingExporterConfigureDialogTest()
 {
 
+}
+
+void PimSettingExporterConfigureDialogTest::shouldHaveDefaultValue()
+{
+    PimSettingExporterConfigureDialog dlg;
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
+    QVERIFY(buttonBox);
+
+    PimSettingExporterConfigureWidget *configureWidget = dlg.findChild<PimSettingExporterConfigureWidget *>(QStringLiteral("configurewidget"));
+    QVERIFY(configureWidget);
 }
 
 QTEST_MAIN(PimSettingExporterConfigureDialogTest)

@@ -19,13 +19,19 @@
 #define PIMSETTINGEXPORTERCONFIGUREDIALOG_H
 
 #include <QDialog>
-
+class PimSettingExporterConfigureWidget;
 class PimSettingExporterConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit PimSettingExporterConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~PimSettingExporterConfigureDialog();
+
+private Q_SLOTS:
+    void slotAccepted();
+
+private:
+    PimSettingExporterConfigureWidget *mConfigureWidget;
 };
 
 #endif // PIMSETTINGEXPORTERCONFIGUREDIALOG_H
