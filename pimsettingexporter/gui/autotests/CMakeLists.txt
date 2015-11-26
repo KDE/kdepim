@@ -7,3 +7,9 @@ add_executable( pimsettingexporterconfiguredialogtest pimsettingexporterconfigur
 add_test(pimsettingexporterconfiguredialogtest pimsettingexporterconfiguredialogtest)
 ecm_mark_as_test(pimsettingexporterconfiguredialogtest)
 target_link_libraries(pimsettingexporterconfiguredialogtest Qt5::Test Qt5::Widgets KF5::I18n KF5::ItemViews KF5::ConfigCore)
+
+
+add_executable( pimsettingexporterconfigurewidgettest pimsettingexporterconfigurewidgettest.cpp)
+add_test(pimsettingexporterconfigurewidgettest pimsettingexporterconfigurewidgettest)
+ecm_mark_as_test(pimsettingexporterconfigurewidgettest)
+target_link_libraries(pimsettingexporterconfigurewidgettest Qt5::Test Qt5::Widgets KF5::I18n KF5::ItemViews KF5::ConfigCore)

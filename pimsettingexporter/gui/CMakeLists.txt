@@ -7,6 +7,7 @@ include_directories(
 set(pimsettingexporter_widget_SRCS
   widgets/selectiontypetreewidget.cpp
   widgets/logwidget.cpp
+  widgets/pimsettingexporterconfigurewidget.cpp
 )
 
 set(pimsettingexporter_dialog_SRCS
