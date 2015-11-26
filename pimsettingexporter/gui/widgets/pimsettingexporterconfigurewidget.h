@@ -19,7 +19,7 @@
 #define PIMSETTINGEXPORTERCONFIGUREWIDGET_H
 
 #include <QWidget>
-
+class QCheckBox;
 class PimSettingExporterConfigureWidget : public QWidget
 {
     Q_OBJECT
@@ -28,6 +28,13 @@ public:
     ~PimSettingExporterConfigureWidget();
 
     void save();
+
+public Q_SLOTS:
+    void resetToDefault();
+
+private:
+    void initialize();
+    QCheckBox *mAlwaysOverrideFile;
 };
 
 #endif // PIMSETTINGEXPORTERCONFIGUREWIDGET_H

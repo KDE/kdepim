@@ -18,6 +18,7 @@
 #include "pimsettingexporterconfiguredialog.h"
 #include <QVBoxLayout>
 #include <KLocalizedString>
+#include <QPushButton>
 #include <QDialogButtonBox>
 #include "../widgets/pimsettingexporterconfigurewidget.h"
 
@@ -30,10 +31,11 @@ PimSettingExporterConfigureDialog::PimSettingExporterConfigureDialog(QWidget *pa
     mConfigureWidget->setObjectName(QStringLiteral("configurewidget"));
     layout->addWidget(mConfigureWidget);
 
-    QDialogButtonBox *button = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QDialogButtonBox *button = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     button->setObjectName(QStringLiteral("buttonbox"));
     connect(button, &QDialogButtonBox::accepted, this, &PimSettingExporterConfigureDialog::slotAccepted);
     connect(button, &QDialogButtonBox::rejected, this, &PimSettingExporterConfigureDialog::reject);
+    connect(button->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, mConfigureWidget, &PimSettingExporterConfigureWidget::resetToDefault);
     layout->addWidget(button);
 }
 

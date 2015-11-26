@@ -51,6 +51,8 @@
 #include <QFileDialog>
 #include <QCommandLineParser>
 
+#include <dialog/pimsettingexporterconfiguredialog.h>
+
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
       mBackupAction(Q_NULLPTR),
@@ -212,6 +214,14 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group(QStringLiteral("Recent File"));
     mRecentFilesAction->loadEntries(groupConfig);
+
+    KStandardAction::preferences(this, SLOT(slotConfigure()), ac);
+}
+
+void PimSettingExporterWindow::slotConfigure()
+{
+    PimSettingExporterConfigureDialog dlg(this);
+    dlg.exec();
 }
 
 void PimSettingExporterWindow::slotUpdateActions(bool inAction)
