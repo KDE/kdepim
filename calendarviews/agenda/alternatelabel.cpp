@@ -85,10 +85,15 @@ void AlternateLabel::squeezeTextToLabel()
   if ( longTextWidth <= labelWidth ) {
     QLabel::setText( mExtensiveText );
     this->setToolTip( QString() );
+    setVisible(true);
   } else if ( textWidth <= labelWidth ) {
     QLabel::setText( mLongText );
     this->setToolTip( mExtensiveText );
+    setVisible(true);
   } else {
+    if (mShortText.isEmpty()) {
+        setVisible(false);
+    }
     QLabel::setText( mShortText );
     this->setToolTip( mExtensiveText );
   }

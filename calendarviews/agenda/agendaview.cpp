@@ -1164,7 +1164,7 @@ void AgendaView::createDayLabels( bool force )
       // Compute a small version of the holiday string for AlternateLabel
       const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
       AlternateLabel *label =
-        new AlternateLabel( ww->truncatedString(), text, text, topDayLabelBox );
+        new AlternateLabel( QString(), text, text, topDayLabelBox );
       label->setAlignment( Qt::AlignCenter );
       delete ww;
     }
