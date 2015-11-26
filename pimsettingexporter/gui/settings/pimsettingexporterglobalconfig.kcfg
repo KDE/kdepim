@@ -8,5 +8,11 @@
     <entry name="AlwaysOverrideFile" type="bool">
       <default>false</default>
     </entry>
+    <entry name="AlwaysMergeConfigFile" type="bool">
+      <default>false</default>
+    </entry>   
+    <entry name="AlwaysOverrideDirectory" type="bool">
+      <default>false</default>
+    </entry>
   </group>
 </kcfg>

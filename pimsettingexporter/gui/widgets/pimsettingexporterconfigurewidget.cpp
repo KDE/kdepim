@@ -31,6 +31,14 @@ PimSettingExporterConfigureWidget::PimSettingExporterConfigureWidget(QWidget *pa
     mAlwaysOverrideFile->setObjectName(QStringLiteral("alwaysoverridefile"));
     layout->addWidget(mAlwaysOverrideFile);
 
+    mAlwaysOverrideDirectory = new QCheckBox(i18n("Always Override File"));
+    mAlwaysOverrideDirectory->setObjectName(QStringLiteral("alwaysoverridedirectory"));
+    layout->addWidget(mAlwaysOverrideDirectory);
+
+    mAlwaysMergeConfigFile = new QCheckBox(i18n("Always Merge Config File"));
+    mAlwaysMergeConfigFile->setObjectName(QStringLiteral("alwaysmergeconfigfile"));
+    layout->addWidget(mAlwaysMergeConfigFile);
+
     initialize();
 }
 
@@ -42,11 +50,15 @@ PimSettingExporterConfigureWidget::~PimSettingExporterConfigureWidget()
 void PimSettingExporterConfigureWidget::initialize()
 {
     mAlwaysOverrideFile->setChecked(PimSettingExportGlobalConfig::self()->alwaysOverrideFile());
+    mAlwaysMergeConfigFile->setChecked(PimSettingExportGlobalConfig::self()->alwaysMergeConfigFile());
+    mAlwaysOverrideDirectory->setChecked(PimSettingExportGlobalConfig::self()->alwaysOverrideDirectory());
 }
 
 void PimSettingExporterConfigureWidget::save()
 {
     PimSettingExportGlobalConfig::self()->setAlwaysOverrideFile(mAlwaysOverrideFile->isChecked());
+    PimSettingExportGlobalConfig::self()->setAlwaysMergeConfigFile(mAlwaysMergeConfigFile->isChecked());
+    PimSettingExportGlobalConfig::self()->setAlwaysOverrideDirectory(mAlwaysOverrideDirectory->isChecked());
 }
 
 void PimSettingExporterConfigureWidget::resetToDefault()

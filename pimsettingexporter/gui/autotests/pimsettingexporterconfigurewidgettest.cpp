@@ -36,6 +36,12 @@ void PimSettingExporterConfigureWidgetTest::shouldHaveDefaultValue()
     PimSettingExporterConfigureWidget w;
     QCheckBox *alwaysOverrideFile = w.findChild<QCheckBox *>(QStringLiteral("alwaysoverridefile"));
     QVERIFY(alwaysOverrideFile);
+
+    QCheckBox *alwaysOverrideDirectory = w.findChild<QCheckBox *>(QStringLiteral("alwaysoverridedirectory"));
+    QVERIFY(alwaysOverrideDirectory);
+
+    QCheckBox *alwaysMergeConfigFile = w.findChild<QCheckBox *>(QStringLiteral("alwaysmergeconfigfile"));
+    QVERIFY(alwaysMergeConfigFile);
 }
 
 QTEST_MAIN(PimSettingExporterConfigureWidgetTest)
