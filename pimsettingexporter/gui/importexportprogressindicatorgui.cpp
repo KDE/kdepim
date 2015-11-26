@@ -16,7 +16,7 @@
 */
 
 #include "importexportprogressindicatorgui.h"
-
+#include "pimsettingexporterglobalconfig.h"
 #include <qprogressdialog.h>
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -76,6 +76,8 @@ int ImportExportProgressIndicatorGui::mergeConfigMessageBox(const QString &confi
 
 bool ImportExportProgressIndicatorGui::overwriteConfigMessageBox(const QString &configName) const
 {
+    if (PimSettingExportGlobalConfig::self()->alwaysOverrideFile())
+        return true;
     return (KMessageBox::warningYesNo(mParentWidget, i18n("\"%1\" already exists. Do you want to overwrite it?", configName), i18n("Restore")) == KMessageBox::Yes);
 }
 

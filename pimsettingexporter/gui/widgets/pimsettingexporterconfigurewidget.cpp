@@ -16,6 +16,7 @@
 */
 
 #include "pimsettingexporterconfigurewidget.h"
+#include "pimsettingexporterglobalconfig.h"
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <KLocalizedString>
@@ -29,6 +30,8 @@ PimSettingExporterConfigureWidget::PimSettingExporterConfigureWidget(QWidget *pa
     mAlwaysOverrideFile = new QCheckBox(i18n("Always Override File"));
     mAlwaysOverrideFile->setObjectName(QStringLiteral("alwaysoverridefile"));
     layout->addWidget(mAlwaysOverrideFile);
+
+    initialize();
 }
 
 PimSettingExporterConfigureWidget::~PimSettingExporterConfigureWidget()
@@ -38,15 +41,18 @@ PimSettingExporterConfigureWidget::~PimSettingExporterConfigureWidget()
 
 void PimSettingExporterConfigureWidget::initialize()
 {
-
+    mAlwaysOverrideFile->setChecked(PimSettingExportGlobalConfig::self()->alwaysOverrideFile());
 }
 
 void PimSettingExporterConfigureWidget::save()
 {
-    //TODO
+    PimSettingExportGlobalConfig::self()->setAlwaysOverrideFile(mAlwaysOverrideFile->isChecked());
 }
 
 void PimSettingExporterConfigureWidget::resetToDefault()
 {
-    //TODO
+    const bool bUseDefaults = PimSettingExportGlobalConfig::self()->useDefaults(true);
+    initialize();
+
+    PimSettingExportGlobalConfig::self()->useDefaults(bUseDefaults);
 }

@@ -16,7 +16,8 @@
 */
 
 #include "pimsettingexporterconfigurewidgettest.h"
-
+#include "../widgets/pimsettingexporterconfigurewidget.h"
+#include <QCheckBox>
 #include <QTest>
 
 PimSettingExporterConfigureWidgetTest::PimSettingExporterConfigureWidgetTest(QObject *parent)
@@ -28,6 +29,13 @@ PimSettingExporterConfigureWidgetTest::PimSettingExporterConfigureWidgetTest(QOb
 PimSettingExporterConfigureWidgetTest::~PimSettingExporterConfigureWidgetTest()
 {
 
+}
+
+void PimSettingExporterConfigureWidgetTest::shouldHaveDefaultValue()
+{
+    PimSettingExporterConfigureWidget w;
+    QCheckBox *alwaysOverrideFile = w.findChild<QCheckBox *>(QStringLiteral("alwaysoverridefile"));
+    QVERIFY(alwaysOverrideFile);
 }
 
 QTEST_MAIN(PimSettingExporterConfigureWidgetTest)
