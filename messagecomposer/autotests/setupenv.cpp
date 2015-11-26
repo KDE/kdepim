@@ -31,7 +31,7 @@
 void MessageComposer::Test::setupEnv()
 {
     setenv("LC_ALL", "C", 1);
-    setenv("KDEHOME", QFile::encodeName(QDir::homePath() + QString::fromLatin1("/.kde-unit-test")), 1);
+    setenv("KDEHOME", QFile::encodeName(QDir::homePath() + QString::fromLatin1("/.qttest")), 1);
 
     QStringList reasons;
     Kleo::CryptoBackendFactory::instance()->scanForBackends(&reasons);

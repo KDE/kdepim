@@ -28,7 +28,7 @@
 void MessageViewer::Test::setupEnv()
 {
     setenv("LC_ALL", "C", 1);
-    setenv("KDEHOME", QFile::encodeName(QDir::homePath() + QString::fromLatin1("/.kde-unit-test")), 1);
+    setenv("KDEHOME", QFile::encodeName(QDir::homePath() + QString::fromLatin1("/.qttest")), 1);
     QStandardPaths::setTestModeEnabled(true);
 }
 
