@@ -24,6 +24,7 @@
 #include "agenda/agenda.h"
 #include "agenda/agendaview.h"
 #include "agenda/timelabelszone.h"
+#include "agenda/timelabels.h"
 
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Calendar/ETMCalendar>
@@ -56,6 +57,13 @@ using namespace Future;
 
 using namespace Akonadi;
 using namespace EventViews;
+
+enum {
+  SPACING = 2
+};
+enum {
+  SHRINKDOWN = 2  // points less for the timezone font
+};
 
 /**
    Function for debugging purposes:
@@ -152,9 +160,10 @@ class MultiAgendaView::Private
     QVector<KCheckableProxyModel*> mCollectionSelectionModels;
     QVector<QString> mCustomColumnTitles;
     int mCustomNumberOfColumns;
-    QLabel *mLabel;
+    QWidget *mTimeBarHeaderFrame;
     QWidget *mRightDummyWidget;
     QHash<QString, KViewStateMaintainer<ETMViewStateSaver>* > mSelectionSavers;
+    QList<QLabel *> mTimeBarHeaders;
 };
 
 MultiAgendaView::MultiAgendaView( QWidget *parent )
@@ -165,8 +174,10 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   topLevelLayout->setSpacing( 0 );
   topLevelLayout->setMargin( 0 );
 
+  d->mScrollArea = new QScrollArea( this );
+
   QFontMetrics fm( font() );
-  int topLabelHeight = 2 * fm.height() + fm.lineSpacing();
+  int topLabelHeight = 2 * fm.height() + fm.lineSpacing() - d->mScrollArea->frameWidth();
 
   KVBox *topSideBox = new KVBox( this );
 
@@ -176,33 +187,24 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mLeftSplitter = new QSplitter( Qt::Vertical, topSideBox );
   d->mLeftSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
-  d->mLabel = new QLabel( i18n( "All Day" ), d->mLeftSplitter );
-  d->mLabel->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
-  d->mLabel->setWordWrap( true );
+  d->mTimeBarHeaderFrame = new KHBox( d->mLeftSplitter );
 
   KVBox *sideBox = new KVBox( d->mLeftSplitter );
+  sideBox->setSpacing( SPACING );
+  sideBox->setMargin( 0);
 
   // compensate for the frame the agenda views but not the timelabels have
-  QWidget *timeLabelTopAlignmentSpacer = new QWidget( sideBox );
+ // QWidget *timeLabelTopAlignmentSpacer = new QWidget( sideBox );
 
-  d->mTimeLabelsZone = new TimeLabelsZone( sideBox, PrefsPtr( new Prefs() ) );
-
-  QWidget *timeLabelBotAlignmentSpacer = new QWidget( sideBox );
+  d->mTimeLabelsZone = new TimeLabelsZone( sideBox, PrefsPtr( new Prefs() ), NULL, this );
 
   d->mLeftBottomSpacer = new QWidget( topSideBox );
 
   topLevelLayout->addWidget( topSideBox );
 
-  d->mScrollArea = new QScrollArea( this );
   d->mScrollArea->setWidgetResizable( true );
 
   d->mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
-  // BUG: timelabels aren't aligned with the agenda's grid, 2 or 3 pixels of offset.
-  // asymetric since the timelabels
-  timeLabelTopAlignmentSpacer->setFixedHeight( d->mScrollArea->frameWidth() - 1 );
-  // have 25 horizontal lines
-  timeLabelBotAlignmentSpacer->setFixedHeight( d->mScrollArea->frameWidth() - 2 );
 
   d->mScrollArea->setFrameShape( QFrame::NoFrame );
   topLevelLayout->addWidget( d->mScrollArea, 100 );
@@ -503,7 +505,7 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
   const QSize minHint = av->allDayAgenda()->scrollArea()->minimumSizeHint();
 
   if ( minHint.isValid() ) {
-    mLabel->setMinimumHeight( minHint.height() );
+    mTimeBarHeaderFrame->setMinimumHeight( minHint.height() );
     mRightDummyWidget->setMinimumHeight( minHint.height() );
   }
 
@@ -567,6 +569,7 @@ void MultiAgendaView::updateConfig()
 {
   EventView::updateConfig();
   d->mTimeLabelsZone->setPreferences( preferences() );
+  updateTimeBarWidth();
   d->mTimeLabelsZone->updateAll();
   foreach ( AgendaView *agenda, d->mAgendaViews ) {
     agenda->updateConfig();
@@ -808,4 +811,52 @@ QSize MultiAgendaView::Private::ElidedLabel::minimumSizeHint() const
 {
     const QFontMetrics& fm = fontMetrics();
     return QSize(fm.width(QLatin1String("...")), fm.height());
+}
+
+void MultiAgendaView::createTimeBarHeaders()
+{
+  qDeleteAll( d->mTimeBarHeaders );
+  d->mTimeBarHeaders.clear();
+
+  const QFont oldFont( font() );
+  QFont labelFont = d->mTimeLabelsZone->preferences()->agendaTimeLabelsFont();
+  labelFont.setPointSize( labelFont.pointSize() - SHRINKDOWN );
+
+  foreach ( QScrollArea *area, d->mTimeLabelsZone->timeLabels() ) {
+    TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
+    QLabel *label = new QLabel( timeLabel->header().replace( QLatin1Char('/'), QLatin1String("/ ") ),
+                                d->mTimeBarHeaderFrame );
+    label->setFont( labelFont );
+    label->setAlignment( Qt::AlignBottom | Qt::AlignRight );
+    label->setMargin( 0 );
+    label->setWordWrap( true );
+    label->setToolTip( timeLabel->headerToolTip() );
+    d->mTimeBarHeaders.append( label );
+  }
+  setFont( oldFont );
+}
+
+void MultiAgendaView::updateTimeBarWidth()
+{
+  createTimeBarHeaders();
+
+  const QFont oldFont( font() );
+  QFont labelFont = d->mTimeLabelsZone->preferences()->agendaTimeLabelsFont();
+  labelFont.setPointSize( labelFont.pointSize() - SHRINKDOWN );
+  QFontMetrics fm( labelFont );
+
+  int width = d->mTimeLabelsZone->preferedTimeLabelsWidth();
+  foreach ( QLabel *l, d->mTimeBarHeaders ) {
+    foreach ( const QString &word, l->text().split( QLatin1Char(' ') ) ) {
+      width = qMax( width, fm.width( word ) );
+    }
+  }
+  setFont( oldFont );
+
+  width = width + fm.width( QLatin1Char( '/' ) );
+
+  const int timeBarWidth = width * d->mTimeBarHeaders.count();
+
+  d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth - SPACING );
+  d->mTimeLabelsZone->setFixedWidth( timeBarWidth );
 }

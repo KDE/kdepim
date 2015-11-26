@@ -39,6 +39,7 @@ namespace EventViews {
 
 class Agenda;
 class AgendaView;
+class MultiAgendaView;
 
 class Prefs;
 typedef boost::shared_ptr<Prefs> PrefsPtr;
@@ -47,7 +48,8 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {
   Q_OBJECT
   public:
-    explicit TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda = 0 );
+    explicit TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda = 0,
+                             MultiAgendaView *multiagenda = 0);
 
     /** Add a new time label with the given spec.
         If spec is not valid, use the display timespec.
@@ -79,6 +81,7 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
     Agenda *mAgenda;
     PrefsPtr mPrefs;
     AgendaView *mParent;
+    MultiAgendaView *mMultiAgendaParent;
 
     QHBoxLayout *mTimeLabelsLayout;
     QList<QScrollArea*> mTimeLabelsList;

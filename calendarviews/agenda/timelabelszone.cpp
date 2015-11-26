@@ -22,6 +22,7 @@
 #include "timelabelszone.h"
 #include "agenda.h"
 #include "agendaview.h"
+#include "../multiagenda/multiagendaview.h"
 #include "prefs.h"
 #include "timelabels.h"
 
@@ -33,9 +34,11 @@
 
 using namespace EventViews;
 
-TimeLabelsZone::TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda )
+TimeLabelsZone::TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda,
+        MultiAgendaView *multiAgenda)
   : QWidget( parent ), mAgenda( agenda ), mPrefs( preferences ),
-    mParent( qobject_cast<AgendaView*>( parent ) )
+    mParent( qobject_cast<AgendaView*>( parent ) ),
+    mMultiAgendaParent( multiAgenda )
 {
   mTimeLabelsLayout = new QHBoxLayout( this );
   mTimeLabelsLayout->setMargin( 0 );
@@ -59,6 +62,9 @@ void TimeLabelsZone::reset()
   if ( mParent ) {
     mParent->updateTimeBarWidth();
     mParent->createDayLabels( true );
+  }
+  if (mMultiAgendaParent) {
+    mMultiAgendaParent->updateTimeBarWidth();
   }
 }
 

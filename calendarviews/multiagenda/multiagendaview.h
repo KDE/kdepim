@@ -76,6 +76,10 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
 
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
+    // Used by the timelabelszone
+    void updateTimeBarWidth();
+    void createTimeBarHeaders();
+
   protected:
     void resizeEvent( QResizeEvent *event );
     void showEvent( QShowEvent *event );
