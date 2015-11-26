@@ -191,11 +191,11 @@ void SieveEditorMainWindow::setupActions()
     mAutoGenerateScriptAction->setEnabled(false);
 
     mCommentAction = ac->addAction(QStringLiteral("comment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotComment()));
-    ac->setDefaultShortcut(mCommentAction, Qt::CTRL+ Qt::Key_D);
+    ac->setDefaultShortcut(mCommentAction, Qt::CTRL + Qt::Key_D);
     mCommentAction->setText(i18n("Comment"));
 
     mUncommentAction = ac->addAction(QStringLiteral("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
-    ac->setDefaultShortcut(mUncommentAction, Qt::CTRL + Qt::SHIFT + Qt::Key_D );
+    ac->setDefaultShortcut(mUncommentAction, Qt::CTRL + Qt::SHIFT + Qt::Key_D);
     mUncommentAction->setText(i18n("Uncomment"));
 
     mZoomInAction = new QAction(QIcon::fromTheme(QStringLiteral("zoom-in")), i18n("&Zoom In"), this);

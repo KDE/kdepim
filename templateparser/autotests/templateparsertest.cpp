@@ -84,9 +84,9 @@ void TemplateParserTester::test_convertedHtml()
 void TemplateParserTester::test_bodyFromHtml()
 {
     const QString content(QStringLiteral("<html><head><title>Plain mail with signature</title></head>"
-                                        "<body>This is the message text from Sudhendu Kumar&lt;"
-                                        "dontspamme@yoohoo.com&gt;.<br /><br />-- <br />Thanks &amp; "
-                                        "Regards<br />Sudhendu Kumar</body></html>"));
+                                         "<body>This is the message text from Sudhendu Kumar&lt;"
+                                         "dontspamme@yoohoo.com&gt;.<br /><br />-- <br />Thanks &amp; "
+                                         "Regards<br />Sudhendu Kumar</body></html>"));
     QWebPage page;
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
     page.settings()->setAttribute(QWebSettings::JavaEnabled, false);
