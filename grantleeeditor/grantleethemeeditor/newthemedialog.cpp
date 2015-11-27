@@ -56,6 +56,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     lay->addWidget(lab);
 
     d->mThemeName = new KLineEdit;
+    d->mThemeName->setClearButtonEnabled(true);
     d->mThemeName->setTrapReturnKey(true);
     connect(d->mThemeName, &KLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
     lay->addWidget(d->mThemeName);
