@@ -34,6 +34,5 @@ int main(int argc, char **argv)
     dlg->resize(800, 600);
     dlg->show();
     const int ret = app.exec();
-    delete dlg;
     return ret;
 }
