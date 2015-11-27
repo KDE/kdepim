@@ -125,7 +125,7 @@ void AttachmentFromFolderJob::Private::addEntity(const QFileInfoList &f, const Q
                 q->emitResult();
             }
             if (!mZip->writeFile(path + info.fileName(), file.readAll(), archivePerms,
-                                 QString(), QString(),mArchiveTime, mArchiveTime, mArchiveTime)) {
+                                 QString(), QString(), mArchiveTime, mArchiveTime, mArchiveTime)) {
                 q->setError(KJob::UserDefinedError);
                 q->setErrorText(i18n("Could not add %1 to the archive", file.fileName()));
                 q->emitResult();

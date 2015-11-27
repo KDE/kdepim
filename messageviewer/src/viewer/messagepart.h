@@ -100,15 +100,15 @@ private:
 class TextBlock : public HTMLBlock
 {
 public:
-    TextBlock(MessageViewer::HtmlWriter* writer, MessageViewer::NodeHelper* nodeHelper, KMime::Content* node, bool link);
+    TextBlock(MessageViewer::HtmlWriter *writer, MessageViewer::NodeHelper *nodeHelper, KMime::Content *node, bool link);
     virtual ~TextBlock();
 private:
     void internalEnter();
     void internalExit();
 private:
-    HtmlWriter* mWriter;
+    HtmlWriter *mWriter;
     NodeHelper *mNodeHelper;
-    KMime::Content* mNode;
+    KMime::Content *mNode;
     QString mFileName;
     bool mLink;
 };
@@ -143,7 +143,7 @@ class TextMessagePart : public MessagePart
 {
 public:
     typedef QSharedPointer<TextMessagePart> Ptr;
-    TextMessagePart(MessageViewer::ObjectTreeParser* otp, KMime::Content* node, bool drawFrame, bool showLink);
+    TextMessagePart(MessageViewer::ObjectTreeParser *otp, KMime::Content *node, bool drawFrame, bool showLink);
     virtual ~TextMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
@@ -153,7 +153,7 @@ public:
     KMMsgEncryptionState encryptionState() const;
 
 private:
-    KMime::Content* mNode;
+    KMime::Content *mNode;
     KMMsgSignatureState mSignatureState;
     KMMsgEncryptionState mEncryptionState;
     QVector<MessagePart::Ptr> mBlocks;

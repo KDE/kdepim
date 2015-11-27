@@ -267,8 +267,8 @@ private:
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
     bool loadDecorations(const QStringList &decorations, DecorationList &decoList);
-    void placeDecorationsFrame(QFrame* frame, bool decorationsFound, bool isTop);
-    void placeDecorations(EventViews::AgendaView::DecorationList& decoList, const QDate& date, QWidget* labelBox, bool forWeek);
+    void placeDecorationsFrame(QFrame *frame, bool decorationsFound, bool isTop);
+    void placeDecorations(EventViews::AgendaView::DecorationList &decoList, const QDate &date, QWidget *labelBox, bool forWeek);
 #endif
 
     friend class TimeLabelsZone;

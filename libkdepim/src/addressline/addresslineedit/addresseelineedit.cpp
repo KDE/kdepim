@@ -70,8 +70,6 @@
 #include <kcontacts/vcarddrag.h>
 #include <addressline/completionconfiguredialog/completionconfiguredialog.h>
 
-
-
 using namespace KPIM;
 
 inline bool itemIsHeader(const QListWidgetItem *item)
@@ -485,8 +483,6 @@ void AddresseeLineEdit::insertEmails(const QStringList &emails)
     }
     setText(contents + KLocalizedString::removeAcceleratorMarker(result->text()));
 }
-
-
 
 void AddresseeLineEdit::cursorAtEnd()
 {

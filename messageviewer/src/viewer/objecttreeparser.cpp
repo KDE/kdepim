@@ -2354,9 +2354,9 @@ void ObjectTreeParser::sigStatusToMetaData(const std::vector <GpgME::Signature> 
 
 //-----------------------------------------------------------------------------
 QVector<MessagePart::Ptr> ObjectTreeParser::writeBodyStr2(const QByteArray &aStr, const QTextCodec *aCodec,
-                                    const QString &fromAddress,
-                                    KMMsgSignatureState  &inlineSignatureState,
-                                    KMMsgEncryptionState &inlineEncryptionState)
+        const QString &fromAddress,
+        KMMsgSignatureState  &inlineSignatureState,
+        KMMsgEncryptionState &inlineEncryptionState)
 {
     inlineSignatureState  = KMMsgNotSigned;
     inlineEncryptionState = KMMsgNotEncrypted;

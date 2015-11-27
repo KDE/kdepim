@@ -67,42 +67,35 @@ public:
         return 2 * mRowHeight + 10;
     }
 
-
     bool isRowVisible(const QModelIndex &) const Q_DECL_OVERRIDE
     {
         return true;
     }
-
 
     bool isRowExpanded(const QModelIndex &) const Q_DECL_OVERRIDE
     {
         return false;
     }
 
-
     KDGantt::Span rowGeometry(const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
         return KDGantt::Span(idx.row() * mRowHeight, mRowHeight);
     }
-
 
     int maximumItemHeight() const Q_DECL_OVERRIDE
     {
         return mRowHeight / 2;
     }
 
-
     int totalHeight() const Q_DECL_OVERRIDE
     {
         return m_model->rowCount() * mRowHeight;
     }
 
-
     QModelIndex indexAt(int height) const Q_DECL_OVERRIDE
     {
         return m_model->index(height / mRowHeight, 0);
     }
-
 
     QModelIndex indexBelow(const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
@@ -111,7 +104,6 @@ public:
         }
         return idx.model()->index(idx.row() + 1, idx.column(), idx.parent());
     }
-
 
     QModelIndex indexAbove(const QModelIndex &idx) const Q_DECL_OVERRIDE
     {

@@ -93,7 +93,6 @@ public:
     void setExpandIntern(bool);
     bool expandIntern() const;
 
-
     bool autoGroupExpand() const;
     void setAutoGroupExpand(bool autoGroupExpand);
 

@@ -127,7 +127,6 @@ void SendLater::SendLaterUtil::reload()
     }
 }
 
-
 QString SendLater::SendLaterUtil::sendLaterPattern()
 {
     return QStringLiteral("SendLaterItem %1");

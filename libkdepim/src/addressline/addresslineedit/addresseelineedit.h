@@ -140,7 +140,6 @@ public:
     KConfig *recentAddressConfig() const;
     void configureCompletion();
 
-
 Q_SIGNALS:
     void textCompleted();
     void addAddress(const QString &address);

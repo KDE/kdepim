@@ -363,7 +363,6 @@ public:
         return m_schemes;
     }
 
-
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
         switch (idx.column()) {
@@ -374,7 +373,6 @@ public:
         }
         return QItemDelegate::createEditor(parent, option, idx);
     }
-
 
     void setEditorData(QWidget *editor, const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
@@ -391,7 +389,6 @@ public:
         }
     }
 
-
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
         switch (idx.column()) {
@@ -406,7 +403,6 @@ public:
             break;
         }
     }
-
 
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
     {

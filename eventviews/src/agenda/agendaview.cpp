@@ -2286,7 +2286,7 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration(cons
                 return Q_NULLPTR;
             }
 
-            auto pluginFactory = qobject_cast<CalendarDecoration::DecorationFactory*>(factory);
+            auto pluginFactory = qobject_cast<CalendarDecoration::DecorationFactory *>(factory);
             if (!pluginFactory) {
                 qCDebug(CALENDARVIEW_LOG) << "Cast failed";
                 return Q_NULLPTR;

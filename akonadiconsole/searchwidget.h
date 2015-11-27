@@ -32,7 +32,8 @@ class KTextEdit;
 class QListView;
 class QModelIndex;
 class QStringListModel;
-namespace KPIMTextEdit {
+namespace KPIMTextEdit
+{
 class PlainTextEditorWidget;
 }
 class SearchWidget : public QWidget

@@ -295,7 +295,7 @@ private:
     void saveMessage(const KMime::Message::Ptr &message, MessageComposer::MessageSender::SaveIn saveIn);
     void fillQueueJobHeaders(MailTransport::MessageQueueJob *qjob, KMime::Message::Ptr message, const MessageComposer::InfoPart *infoPart);
     QStringList cleanEmailList(const QStringList &emails);
-    void saveRecentAddresses(const KMime::Message::Ptr& ptr);
+    void saveRecentAddresses(const KMime::Message::Ptr &ptr);
     void updateRecipients(const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, MessageComposer::Recipient::Type type);
 
     void markAllAttachmentsForSigning(bool sign);

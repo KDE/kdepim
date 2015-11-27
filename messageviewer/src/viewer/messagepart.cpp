@@ -110,7 +110,6 @@ void AttachmentMarkBlock::internalExit()
     entered = false;
 }
 
-
 TextBlock::TextBlock(MessageViewer::HtmlWriter *writer, MessageViewer::NodeHelper *nodeHelper, KMime::Content *node, bool link)
     : mWriter(writer)
     , mNodeHelper(nodeHelper)
@@ -135,17 +134,17 @@ void TextBlock::internalEnter()
     const QString label = MessageCore::StringUtil::quoteHtmlChars(NodeHelper::fileName(mNode), true);
 
     const QString comment =
-    MessageCore::StringUtil::quoteHtmlChars(mNode->contentDescription()->asUnicodeString(), true);
+        MessageCore::StringUtil::quoteHtmlChars(mNode->contentDescription()->asUnicodeString(), true);
 
     const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
 
     mWriter->queue(QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">"
-    "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">"));
+                                 "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">"));
     if (!mLink)
-         mWriter->queue(QLatin1String("<a href=\"") + mNodeHelper->asHREF(mNode, QStringLiteral("body")) + QLatin1String("\">")
-        + label + QLatin1String("</a>"));
+        mWriter->queue(QLatin1String("<a href=\"") + mNodeHelper->asHREF(mNode, QStringLiteral("body")) + QLatin1String("\">")
+                       + label + QLatin1String("</a>"));
     else {
-         mWriter->queue(label);
+        mWriter->queue(label);
     }
     if (!comment.isEmpty()) {
         mWriter->queue(QLatin1String("<br/>") + comment);
@@ -244,7 +243,7 @@ QString MessagePart::renderInternalText() const
 
 //-----TextMessageBlock----------------------
 
-TextMessagePart::TextMessagePart(ObjectTreeParser* otp, KMime::Content* node, bool drawFrame, bool showLink)
+TextMessagePart::TextMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool drawFrame, bool showLink)
     : MessagePart(otp, QString())
     , mNode(node)
     , mDrawFrame(drawFrame)
@@ -294,7 +293,6 @@ KMMsgSignatureState TextMessagePart::signatureState() const
 {
     return mSignatureState;
 }
-
 
 //-----MimeMessageBlock----------------------
 
