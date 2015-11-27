@@ -26,3 +26,12 @@ target_link_libraries(mndadvicedialoggui
   KF5::MailCommon
 )
 
+
+set(kmfilterdialogtestgui_SRCS kmfilterdialogtestgui.cpp)
+add_executable(kmfilterdialogtestgui ${kmfilterdialogtestgui_SRCS})
+ecm_mark_as_test(kmfilterdialogtestgui)
+target_link_libraries(kmfilterdialogtestgui
+  Qt5::Core
+  Qt5::Gui
+  KF5::MailCommon
+)
