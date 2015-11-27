@@ -16,7 +16,8 @@
 */
 
 #include "kmfilterdialogtestgui.h"
-
+#include "dummykernel.h"
+#include "../kernel/mailkernel.h"
 #include "../kmfilterdialog.h"
 
 #include <QApplication>
@@ -24,6 +25,9 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    DummyKernel *kernel = new DummyKernel(0);
+    CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
 
     QList<KActionCollection *> lstAction;
     MailCommon::KMFilterDialog *dlg = new MailCommon::KMFilterDialog(lstAction, Q_NULLPTR, true);

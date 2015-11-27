@@ -27,7 +27,7 @@ target_link_libraries(mndadvicedialoggui
 )
 
 
-set(kmfilterdialogtestgui_SRCS kmfilterdialogtestgui.cpp)
+set(kmfilterdialogtestgui_SRCS kmfilterdialogtestgui.cpp dummykernel.cpp)
 add_executable(kmfilterdialogtestgui ${kmfilterdialogtestgui_SRCS})
 ecm_mark_as_test(kmfilterdialogtestgui)
 target_link_libraries(kmfilterdialogtestgui
