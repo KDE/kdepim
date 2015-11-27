@@ -603,7 +603,9 @@ void KMFilterDialog::slotApplicabilityChanged()
         mAccountList->setEnabled(mApplyOnForChecked->isEnabled() && mApplyOnForChecked->isChecked());
 
         // Advanced tab functionality - Update list of accounts this filter applies to
-        mAccountList->applyOnAccount(mFilter);
+        if (!mApplyOnForAll->isChecked()) {
+            mAccountList->applyOnAccount(mFilter);
+        }
 
         // Enable the apply button
         slotDialogUpdated();
