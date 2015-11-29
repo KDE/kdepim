@@ -42,6 +42,7 @@ public:
     QString boxClientSecret() const;
     QString oauth2RedirectUrl() const;
 
+    void createStorageService() Q_DECL_OVERRIDE;
 };
 }
 #endif // BOXPLUGIN_H

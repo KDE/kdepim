@@ -37,6 +37,7 @@ public:
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
 
     QString youSendItApiKey() const;
+    void createStorageService() Q_DECL_OVERRIDE;
 };
 }
 #endif // YOUSENDITPLUGIN_H

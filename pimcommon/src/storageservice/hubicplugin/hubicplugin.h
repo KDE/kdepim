@@ -38,6 +38,7 @@ public:
     QString hubicClientId() const;
     QString hubicClientSecret() const;
     QString oauth2RedirectUrl() const;
+    void createStorageService() Q_DECL_OVERRIDE;
 
 };
 }

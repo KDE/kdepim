@@ -90,4 +90,9 @@ QUrl HubicPlugin::serviceUrl() const
     return QUrl(QStringLiteral("https://hubic.com"));
 }
 
+void HubicPlugin::createStorageService()
+{
+    //TODO
+}
+
 #include "hubicplugin.moc"

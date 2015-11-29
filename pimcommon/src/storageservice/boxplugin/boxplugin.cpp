@@ -52,6 +52,11 @@ QString BoxPlugin::oauth2RedirectUrl() const
     return QString();
 }
 
+void BoxPlugin::createStorageService()
+{
+    //TODO
+}
+
 QString BoxPlugin::storageServiceName() const
 {
     return QStringLiteral("box");

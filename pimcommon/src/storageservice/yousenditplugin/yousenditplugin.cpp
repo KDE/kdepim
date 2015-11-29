@@ -75,6 +75,11 @@ StorageServicePlugin::Capabilities YouSendItPlugin::capabilities() const
     //cap |= CopyFolderCapability;
 
     return cap;
-
 }
+
+void YouSendItPlugin::createStorageService()
+{
+    //TODO
+}
+
 #include "yousenditplugin.moc"
