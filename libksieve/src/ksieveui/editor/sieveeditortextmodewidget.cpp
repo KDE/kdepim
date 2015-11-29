@@ -34,6 +34,7 @@
 #include "kpimtextedit/texttospeechwidget.h"
 #include "kpimtextedit/textgotolinewidget.h"
 #include "KSplitterCollapserButton"
+#include "sieveeditorhelphtmlwidget.h"
 #include "kpimtextedit/slidecontainer.h"
 
 #include <ksieve/parser.h>
@@ -289,12 +290,22 @@ bool SieveEditorTextModeWidget::hasSelection() const
 
 void SieveEditorTextModeWidget::zoomIn()
 {
-    mTextEdit->zoomIn();
+    QWidget *w = mTabWidget->currentWidget();
+    if (w == mTextEdit) {
+        mTextEdit->zoomIn();
+    } else if (SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(w)) {
+        page->zoomIn();
+    }
 }
 
 void SieveEditorTextModeWidget::zoomOut()
 {
-    mTextEdit->zoomOut();
+    QWidget *w = mTabWidget->currentWidget();
+    if (w == mTextEdit) {
+        mTextEdit->zoomOut();
+    } else if (SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(w)) {
+        page->zoomOut();
+    }
 }
 
 bool SieveEditorTextModeWidget::isWordWrap() const
@@ -309,7 +320,12 @@ void SieveEditorTextModeWidget::wordWrap(bool state)
 
 void SieveEditorTextModeWidget::zoomReset()
 {
-    mTextEdit->slotZoomReset();
+    QWidget *w = mTabWidget->currentWidget();
+    if (w == mTextEdit) {
+        mTextEdit->slotZoomReset();
+    } else if (SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(w)) {
+        page->resetZoom();
+    }
 }
 
 void SieveEditorTextModeWidget::slotFind()

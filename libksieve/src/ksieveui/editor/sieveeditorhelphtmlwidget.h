@@ -37,6 +37,10 @@ public:
 
     QUrl currentUrl() const;
 
+    void resetZoom();
+    void zoomOut();
+    void zoomIn();
+
 Q_SIGNALS:
     void titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
     void progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &);
@@ -52,6 +56,7 @@ private:
     QString mTitle;
     SieveEditorWebView *mWebView;
     SieveEditorLoadProgressIndicator *mProgressIndicator;
+    qreal mZoomFactor;
 };
 }
 

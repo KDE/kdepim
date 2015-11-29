@@ -21,9 +21,15 @@
 #include <QVBoxLayout>
 
 using namespace KSieveUi;
-
+namespace {
+qreal zoomBy()
+{
+    return 20;
+}
+}
 SieveEditorHelpHtmlWidget::SieveEditorHelpHtmlWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mZoomFactor(100)
 {
     mProgressIndicator = new SieveEditorLoadProgressIndicator(this);
     connect(mProgressIndicator, &SieveEditorLoadProgressIndicator::pixmapChanged, this, &SieveEditorHelpHtmlWidget::slotPixmapChanged);
@@ -85,3 +91,32 @@ void SieveEditorHelpHtmlWidget::openUrl(const QUrl &url)
     mWebView->setUrl(url);
 }
 
+void SieveEditorHelpHtmlWidget::zoomIn()
+{
+    if (mZoomFactor >= 300) {
+        return;
+    }
+    mZoomFactor += zoomBy();
+    if (mZoomFactor > 300) {
+        mZoomFactor = 300;
+    }
+    mWebView->setZoomFactor(mZoomFactor / 100.0);
+}
+
+void SieveEditorHelpHtmlWidget::zoomOut()
+{
+    if (mZoomFactor <= 10) {
+        return;
+    }
+    mZoomFactor -= zoomBy();
+    if (mZoomFactor < 10) {
+        mZoomFactor = 10;
+    }
+    mWebView->setZoomFactor(mZoomFactor / 100.0);
+}
+
+void SieveEditorHelpHtmlWidget::resetZoom()
+{
+    mZoomFactor = 100;
+    mWebView->setZoomFactor(1.0);
+}
