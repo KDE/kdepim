@@ -77,7 +77,7 @@ StorageServicePlugin::Capabilities YouSendItPlugin::capabilities() const
     return cap;
 }
 
-void YouSendItPlugin::createStorageService()
+void YouSendItPlugin::createStorageService(const QString &identifier)
 {
     //TODO
 }

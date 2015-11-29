@@ -76,7 +76,7 @@ QIcon WebDavPlugin::icon() const
     return QIcon::fromTheme(QStringLiteral("folder-remote"));
 }
 
-void WebDavPlugin::createStorageService()
+void WebDavPlugin::createStorageService(const QString &identifier)
 {
     //TODO
 }

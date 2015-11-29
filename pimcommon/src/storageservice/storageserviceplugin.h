@@ -64,7 +64,7 @@ public:
     virtual QString disallowedSymbolsStr() const;
     virtual qlonglong maximumUploadFileSize() const;
 
-    virtual void createStorageService() = 0;
+    virtual void createStorageService(const QString &identifier) = 0;
 };
 }
 

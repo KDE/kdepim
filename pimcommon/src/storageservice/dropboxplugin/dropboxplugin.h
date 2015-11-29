@@ -45,7 +45,7 @@ public:
     qlonglong maximumUploadFileSize() const Q_DECL_OVERRIDE;
 
     QIcon icon() const Q_DECL_OVERRIDE;
-    void createStorageService() Q_DECL_OVERRIDE;
+    void createStorageService(const QString &identifier) Q_DECL_OVERRIDE;
 };
 }
 #endif // DROPBOXPLUGIN_H

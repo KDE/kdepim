@@ -52,7 +52,7 @@ QString BoxPlugin::oauth2RedirectUrl() const
     return QString();
 }
 
-void BoxPlugin::createStorageService()
+void BoxPlugin::createStorageService(const QString &identifier)
 {
     //TODO
 }
