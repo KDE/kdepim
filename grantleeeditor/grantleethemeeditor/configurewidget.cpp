@@ -37,9 +37,15 @@ ConfigureWidget::~ConfigureWidget()
 
 void ConfigureWidget::writeConfig()
 {
-    GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthorEmail(ui->authorEmail->text());
-    GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthor(ui->author->text());
-    GrantleeThemeEditor::GrantleeThemeEditorSettings::setPath(ui->defaultPath->url().path());
+    const QString authorEmail = ui->authorEmail->text().trimmed();
+    if (!authorEmail.isEmpty())
+        GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthorEmail(authorEmail);
+    const QString authorName = ui->author->text().trimmed();
+    if (!authorName.isEmpty())
+        GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthor(authorName);
+    QUrl url = ui->defaultPath->url();
+    if (url.isValid())
+        GrantleeThemeEditor::GrantleeThemeEditorSettings::setPath(url.path());
     GrantleeThemeEditor::GrantleeThemeEditorSettings::self()->save();
 }
 
