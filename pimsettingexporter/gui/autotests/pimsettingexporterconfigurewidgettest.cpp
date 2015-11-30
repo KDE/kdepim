@@ -18,6 +18,7 @@
 #include "pimsettingexporterconfigurewidgettest.h"
 #include "../widgets/pimsettingexporterconfigurewidget.h"
 #include <QCheckBox>
+#include <QGroupBox>
 #include <QTest>
 
 PimSettingExporterConfigureWidgetTest::PimSettingExporterConfigureWidgetTest(QObject *parent)
@@ -34,6 +35,11 @@ PimSettingExporterConfigureWidgetTest::~PimSettingExporterConfigureWidgetTest()
 void PimSettingExporterConfigureWidgetTest::shouldHaveDefaultValue()
 {
     PimSettingExporterConfigureWidget w;
+
+    QGroupBox *importGroupBox = w.findChild<QGroupBox *>(QStringLiteral("import_groupbox"));
+    QVERIFY(importGroupBox);
+
+
     QCheckBox *alwaysOverrideFile = w.findChild<QCheckBox *>(QStringLiteral("alwaysoverridefile"));
     QVERIFY(alwaysOverrideFile);
 
