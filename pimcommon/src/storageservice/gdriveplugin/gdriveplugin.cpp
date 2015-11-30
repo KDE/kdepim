@@ -75,9 +75,10 @@ QUrl GDrivePlugin::serviceUrl() const
     return QUrl(QStringLiteral("http://www.google.com/drive"));
 }
 
-void GDrivePlugin::createStorageService(const QString &identifier)
+PimCommon::StorageServiceInterface *GDrivePlugin::createStorageService(const QString &identifier)
 {
     //TODO
+    return Q_NULLPTR;
 }
 
 #include "gdriveplugin.moc"

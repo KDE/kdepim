@@ -76,9 +76,10 @@ QIcon WebDavPlugin::icon() const
     return QIcon::fromTheme(QStringLiteral("folder-remote"));
 }
 
-void WebDavPlugin::createStorageService(const QString &identifier)
+PimCommon::StorageServiceInterface *WebDavPlugin::createStorageService(const QString &identifier)
 {
     //TODO
+    return Q_NULLPTR;
 }
 
 #include "webdavplugin.moc"

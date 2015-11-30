@@ -90,9 +90,10 @@ QUrl HubicPlugin::serviceUrl() const
     return QUrl(QStringLiteral("https://hubic.com"));
 }
 
-void HubicPlugin::createStorageService(const QString &identifier)
+PimCommon::StorageServiceInterface *HubicPlugin::createStorageService(const QString &identifier)
 {
     //TODO
+    return Q_NULLPTR;
 }
 
 #include "hubicplugin.moc"

@@ -109,9 +109,10 @@ QIcon DropBoxPlugin::icon() const
     return QIcon::fromTheme(QStringLiteral("kdepim-dropbox"));
 }
 
-void DropBoxPlugin::createStorageService(const QString &identifier)
+PimCommon::StorageServiceInterface *DropBoxPlugin::createStorageService(const QString &identifier)
 {
     //TODO
+    return Q_NULLPTR;
 }
 
 #include "dropboxplugin.moc"

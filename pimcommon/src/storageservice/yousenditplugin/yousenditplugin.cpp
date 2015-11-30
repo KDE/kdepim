@@ -77,9 +77,10 @@ StorageServicePlugin::Capabilities YouSendItPlugin::capabilities() const
     return cap;
 }
 
-void YouSendItPlugin::createStorageService(const QString &identifier)
-{
+PimCommon::StorageServiceInterface *YouSendItPlugin::createStorageService(const QString &identifier)
+{    
     //TODO
+    return Q_NULLPTR;
 }
 
 #include "yousenditplugin.moc"

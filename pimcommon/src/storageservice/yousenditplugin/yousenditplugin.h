@@ -37,7 +37,7 @@ public:
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
 
     QString youSendItApiKey() const;
-    void createStorageService(const QString &identifier) Q_DECL_OVERRIDE;
+    PimCommon::StorageServiceInterface *createStorageService(const QString &identifier) Q_DECL_OVERRIDE;
 };
 }
 #endif // YOUSENDITPLUGIN_H

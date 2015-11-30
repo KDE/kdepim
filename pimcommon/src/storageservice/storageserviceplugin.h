@@ -22,6 +22,7 @@
 #include "pimcommon_export.h"
 namespace PimCommon
 {
+class StorageServiceInterface;
 class PIMCOMMON_EXPORT StorageServicePlugin : public QObject
 {
     Q_OBJECT
@@ -64,7 +65,7 @@ public:
     virtual QString disallowedSymbolsStr() const;
     virtual qlonglong maximumUploadFileSize() const;
 
-    virtual void createStorageService(const QString &identifier) = 0;
+    virtual PimCommon::StorageServiceInterface *createStorageService(const QString &identifier) = 0;
 };
 }
 

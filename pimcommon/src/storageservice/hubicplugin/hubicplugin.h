@@ -38,7 +38,7 @@ public:
     QString hubicClientId() const;
     QString hubicClientSecret() const;
     QString oauth2RedirectUrl() const;
-    void createStorageService(const QString &identifier) Q_DECL_OVERRIDE;
+    PimCommon::StorageServiceInterface *createStorageService(const QString &identifier) Q_DECL_OVERRIDE;
 
 };
 }
