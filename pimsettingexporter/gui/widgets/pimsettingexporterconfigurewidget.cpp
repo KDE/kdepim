@@ -20,6 +20,7 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <KLocalizedString>
+#include <QGroupBox>
 
 PimSettingExporterConfigureWidget::PimSettingExporterConfigureWidget(QWidget *parent)
     : QWidget(parent)
@@ -27,17 +28,23 @@ PimSettingExporterConfigureWidget::PimSettingExporterConfigureWidget(QWidget *pa
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
 
+    QGroupBox *groupBox = new QGroupBox(i18n("Import"));
+    layout->addWidget(groupBox);
+
+    QVBoxLayout *groupBoxLayout = new QVBoxLayout;
+    groupBox->setLayout(groupBoxLayout);
+
     mAlwaysOverrideFile = new QCheckBox(i18n("Always Override File"));
     mAlwaysOverrideFile->setObjectName(QStringLiteral("alwaysoverridefile"));
-    layout->addWidget(mAlwaysOverrideFile);
+    groupBoxLayout->addWidget(mAlwaysOverrideFile);
 
     mAlwaysOverrideDirectory = new QCheckBox(i18n("Always Override File"));
     mAlwaysOverrideDirectory->setObjectName(QStringLiteral("alwaysoverridedirectory"));
-    layout->addWidget(mAlwaysOverrideDirectory);
+    groupBoxLayout->addWidget(mAlwaysOverrideDirectory);
 
     mAlwaysMergeConfigFile = new QCheckBox(i18n("Always Merge Config File"));
     mAlwaysMergeConfigFile->setObjectName(QStringLiteral("alwaysmergeconfigfile"));
-    layout->addWidget(mAlwaysMergeConfigFile);
+    groupBoxLayout->addWidget(mAlwaysMergeConfigFile);
 
     initialize();
 }
