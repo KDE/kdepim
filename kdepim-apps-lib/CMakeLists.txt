@@ -8,3 +8,5 @@ add_subdirectory(libfollowupreminder)
 add_subdirectory(libkdepimdbusinterfaces)
 add_subdirectory(libsendlater)
 add_subdirectory(kaddressbookgrantlee)
+
+install( FILES kdepim-apps-lib.categories DESTINATION ${KDE_INSTALL_CONFDIR} )

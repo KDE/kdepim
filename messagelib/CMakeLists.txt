@@ -12,3 +12,4 @@ add_subdirectory(messagecomposer)
 add_subdirectory(messagecore)
 add_subdirectory(messagelist)
 
+install( FILES messagelib.categories DESTINATION ${KDE_INSTALL_CONFDIR} )

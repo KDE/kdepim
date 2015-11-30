@@ -1,0 +1,6 @@
+# messagelib
+log_messagecomposer messagelib (messagecomposer)
+log_messagecore messagelib (messagecore)
+log_messagelist messagelib (messagelist)
+log_messageviewer messagelib (messageviewer)
+log_templateparser messagelib (templateparser)
