@@ -281,7 +281,6 @@ add_subdirectory(mailcommon)
 
 set(MAILTRANSPORT_DBUS_SERVICE ${CMAKE_SOURCE_DIR}/libkdepim/src/interfaces/org.kde.mailtransport.service.xml)
 endif()
-add_subdirectory(icons)
 
 include (kleopatra/ConfigureChecks.cmake)
 
