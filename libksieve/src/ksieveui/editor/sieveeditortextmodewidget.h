@@ -67,7 +67,6 @@ public:
     void showParsingEditorWarning();
 
     void setParsingEditorWarningError(const QString &script, const QString &error);
-    void goToLine();
     void replace();
     void find();
     void undo();
@@ -105,12 +104,13 @@ Q_SIGNALS:
     void redoAvailable(bool);
     void copyAvailable(bool);
 
+public Q_SLOTS:
+    void slotShowGoToLine();
 private Q_SLOTS:
     void slotTextChanged();
     void slotFind();
     void slotReplace();
     void slotGoToLine(int line);
-    void slotShowGoToLine();
 private:
     void readConfig();
     void writeConfig();
@@ -129,6 +129,7 @@ private:
     SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
     SieveEditorTabWidget *mTabWidget;
     KPIMTextEdit::TextGoToLineWidget *mGoToLine;
+    KPIMTextEdit::SlideContainer *mGotoLineSliderContainer;
     KPIMTextEdit::SlideContainer *mSliderContainer;
     SieveTemplateWidget *mSieveTemplateWidget;
 };

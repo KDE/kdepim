@@ -200,7 +200,7 @@ void SieveEditorWidget::redo()
 void SieveEditorWidget::goToLine()
 {
     if (mMode == TextMode) {
-        mTextModeWidget->goToLine();
+        mTextModeWidget->slotShowGoToLine();
     }
 }
 

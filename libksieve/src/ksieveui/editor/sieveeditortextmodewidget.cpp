@@ -97,9 +97,13 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect(mTextEdit, &SieveTextEdit::openHelp, mTabWidget, &SieveEditorTabWidget::slotAddHelpPage);
     connect(mTextEdit, &SieveTextEdit::say, mTextToSpeechWidget, &KPIMTextEdit::TextToSpeechWidget::say);
 
+    mGotoLineSliderContainer = new KPIMTextEdit::SlideContainer(this);
     mGoToLine = new KPIMTextEdit::TextGoToLineWidget;
     mGoToLine->hide();
-    textEditLayout->addWidget(mGoToLine);
+    mGotoLineSliderContainer->setContent(mGoToLine);
+    textEditLayout->addWidget(mGotoLineSliderContainer);
+    connect(mGoToLine, &KPIMTextEdit::TextGoToLineWidget::hideGotoLine, mGotoLineSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
+
     connect(mGoToLine, &KPIMTextEdit::TextGoToLineWidget::moveToLine, this, &SieveEditorTextModeWidget::slotGoToLine);
 
     mSliderContainer = new KPIMTextEdit::SlideContainer(this);
@@ -194,7 +198,9 @@ void SieveEditorTextModeWidget::slotGoToLine(int line)
 
 void SieveEditorTextModeWidget::slotShowGoToLine()
 {
-    mGoToLine->show();
+    mGoToLine->setMaximumLineCount(mTextEdit->document()->blockCount());
+    mGotoLineSliderContainer->slideIn();
+    mGoToLine->goToLine();
 }
 
 void SieveEditorTextModeWidget::generateXml()
@@ -408,12 +414,6 @@ void SieveEditorTextModeWidget::showParsingEditorWarning()
 void SieveEditorTextModeWidget::setParsingEditorWarningError(const QString &script, const QString &error)
 {
     mSieveParsingWarning->setErrors(script, error);
-}
-
-void SieveEditorTextModeWidget::goToLine()
-{
-    mGoToLine->setMaximumLineCount(mTextEdit->document()->blockCount());
-    mGoToLine->goToLine();
 }
 
 void SieveEditorTextModeWidget::checkSpelling()
