@@ -58,10 +58,9 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
         const QString &addDialogLabel)
     : QWidget(parent),
       mAddButton(Q_NULLPTR), mRemoveButton(Q_NULLPTR), mModifyButton(Q_NULLPTR),
-      mUpButton(Q_NULLPTR), mDownButton(Q_NULLPTR),
-      mAddDialogLabel(addDialogLabel.isEmpty() ?
-                      i18n("New entry:") : addDialogLabel)
+      mUpButton(Q_NULLPTR), mDownButton(Q_NULLPTR)
 {
+    setAddDialogLabel(addDialogLabel);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     QHBoxLayout *hlay = new QHBoxLayout(this);
     hlay->setMargin(0);
@@ -312,6 +311,11 @@ QList<QListWidgetItem *> SimpleStringListEditor::selectedItems() const
         }
     }
     return listWidgetItem;
+}
+
+void SimpleStringListEditor::setAddDialogLabel(const QString &addDialogLabel)
+{
+    mAddDialogLabel = addDialogLabel.isEmpty() ? i18n("New entry:") : addDialogLabel;
 }
 
 void SimpleStringListEditor::slotUp()

@@ -91,6 +91,8 @@ public:
 
     virtual void addNewEntry();
     virtual QString modifyEntry(const QString &text);
+    void setAddDialogLabel(const QString &addDialogLabel);
+
 Q_SIGNALS:
     /** Connected slots can alter the argument to be added or set the
       argument to QString() to suppress adding.
@@ -122,7 +124,7 @@ private:
     QPushButton   *mUpButton;
     QPushButton   *mDownButton;
     QVBoxLayout   *mButtonLayout;
-    const QString mAddDialogLabel;
+    QString mAddDialogLabel;
 };
 
 }
