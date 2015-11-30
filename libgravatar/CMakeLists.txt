@@ -81,3 +81,4 @@ if (BUILD_TESTING)
    add_subdirectory(tests)
 endif()
 
+install( FILES libgravatar.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
