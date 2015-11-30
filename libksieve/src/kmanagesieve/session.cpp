@@ -38,9 +38,9 @@
 
 using namespace KManageSieve;
 
-Q_DECLARE_METATYPE(KManageSieve::AuthDetails);
-Q_DECLARE_METATYPE(KManageSieve::Response);
-Q_DECLARE_METATYPE(KSslErrorUiData);
+Q_DECLARE_METATYPE(KManageSieve::AuthDetails)
+Q_DECLARE_METATYPE(KManageSieve::Response)
+Q_DECLARE_METATYPE(KSslErrorUiData)
 
 Session::Session(QObject *parent) :
     QObject(parent),
