@@ -515,6 +515,7 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
 
 Kleo::KeySelectionDialog::~KeySelectionDialog()
 {
+    disconnectSignals();
     KConfigGroup dialogConfig(KSharedConfig::openConfig(), "Key Selection Dialog");
     dialogConfig.writeEntry("Dialog size", size());
     dialogConfig.writeEntry("header", mKeyListView->header()->saveState());
