@@ -18,6 +18,7 @@
 #include "backupfilestructureinfodialog.h"
 
 #include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -53,6 +54,7 @@ BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     lay->addWidget(lab);
 
     mEditor = new KPIMTextEdit::PlainTextEditorWidget;
+    mEditor->editor()->setWebShortcutSupport(false);
     mEditor->setReadOnly(true);
     lay->addWidget(mEditor);
     mainLayout->addWidget(w);
