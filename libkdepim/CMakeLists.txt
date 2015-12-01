@@ -101,3 +101,5 @@ if (BUILD_TESTING)
    add_subdirectory(tests)
 endif()
 
+install( FILES libkdepim.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
+

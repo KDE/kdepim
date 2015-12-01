@@ -100,4 +100,4 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MAILCOMMON
 endif()
 
 add_subdirectory(src)
-
+install( FILES mailcommon.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
