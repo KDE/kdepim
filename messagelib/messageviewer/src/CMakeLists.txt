@@ -372,6 +372,17 @@ ecm_generate_headers(MessageViewer_Camelcaseviewerplugin_HEADERS
   RELATIVE viewerplugins 
 )
 
+ecm_generate_headers(MessageViewer_Camelcaseviewerjob_HEADERS
+  HEADER_NAMES
+  CreateTodoJob
+  CreateNoteJob
+  CreateEventJob
+  REQUIRED_HEADERS MessageViewer_viewerjob_HEADERS
+  PREFIX MessageViewer
+  RELATIVE job 
+)
+
+
 ecm_generate_pri_file(BASE_NAME MessageViewer
     LIB_NAME KF5MessageViewer
     DEPS "PimCommon MessageCore AkonadiCore AkonadiMime Contacts Libkleo" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
@@ -389,6 +400,7 @@ install(FILES
     ${MessageViewer_Camelcaseviewer_HEADERS}
     ${MessageViewer_Camelcasewidgets_HEADERS}
     ${MessageViewer_Camelcasemain_HEADERS}
+    ${MessageViewer_Camelcaseviewerjob_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
     COMPONENT Devel
 )
@@ -405,6 +417,7 @@ install(FILES
     ${MessageViewer_viewer_HEADERS}
     ${MessageViewer_main_HEADERS}
     ${MessageViewer_widgets_HEADERS}
+    ${MessageViewer_viewerjob_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_messageviewer.h
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_debug.h
