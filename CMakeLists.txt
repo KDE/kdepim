@@ -114,7 +114,6 @@ set(AKONADINOTES_LIB_VERSION "4.78.0")
 
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KF5_VERSION "5.16.0")
-option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools OpenGL)
@@ -292,9 +291,6 @@ endif()
 add_subdirectory(kmail)
 add_subdirectory(grantleeeditor)
 
-if(KDEPIM_BUILD_EXAMPLES)
-  add_subdirectory(examples)
-endif()
 
 add_subdirectory(korganizer)
 add_subdirectory(korgac)
