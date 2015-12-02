@@ -361,6 +361,17 @@ ecm_generate_headers(PimCommon_Camelcasesettings_HEADERS
   RELATIVE settings
 )
 
+ecm_generate_headers(customtools
+  HEADER_NAMES
+  CustomToolsPlugin
+  CustomToolsViewInterface
+  CustomToolsWidgetNg
+  REQUIRED_HEADERS PimCommon_customtools_HEADERS
+  PREFIX PimCommon
+  RELATIVE customtools
+)
+
+
 ecm_generate_headers(PimCommon_Camelcasestorageservicewidgets_HEADERS
   HEADER_NAMES
   StorageServiceProgressWidget
@@ -529,6 +540,7 @@ ecm_generate_pri_file(BASE_NAME PimCommon
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 install(FILES
+    ${PimCommon_Camelcustomtools_HEADERS}
     ${PimCommon_Camelcasestorageservicesettings_HEADERS}
     ${PimCommon_Camelcasestorageservice_dialog_HEADERS}
     ${PimCommon_CamelCase_HEADERS}
@@ -565,6 +577,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_debug.h
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommonsetting_base.h
     ${CMAKE_CURRENT_BINARY_DIR}/imapresourcesettings.h
+    ${PimCommon_customtools_HEADERS}
     ${PimCommon_storageservicesettings_HEADERS}
     ${PimCommon_storageservice_dialog_HEADERS}
     ${PimCommon_HEADERS}
