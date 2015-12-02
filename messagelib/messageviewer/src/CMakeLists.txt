@@ -337,6 +337,7 @@ ecm_generate_headers(MessageViewer_Camelcaseheader_HEADERS
   HeaderStyle
   KXFace
   HeaderStylePlugin
+  HeaderStyleInterface
   RichHeaderStrategy
   HeaderStylePluginManager
   REQUIRED_HEADERS MessageViewer_header_HEADERS
