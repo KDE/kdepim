@@ -309,6 +309,14 @@ ecm_generate_headers(MessageViewer_Camelcaseutils_HEADERS
   RELATIVE utils
 )
 
+ecm_generate_headers(MessageViewer_Camelcaseantispam_HEADERS
+  HEADER_NAMES
+  SpamHeaderAnalyzer
+  REQUIRED_HEADERS MessageViewer_antispam_HEADERS
+  PREFIX MessageViewer
+  RELATIVE antispam
+)
+
 ecm_generate_headers(MessageViewer_Camelcaseinterfaces_HEADERS
   HEADER_NAMES
   BodyPartFormatter
@@ -336,10 +344,13 @@ ecm_generate_headers(MessageViewer_Camelcaseheader_HEADERS
   GrantleeHeaderTestStyle
   HeaderStyle
   KXFace
+  HeaderStyle_Util
   HeaderStylePlugin
   HeaderStyleInterface
+  PlainHeaderStyle
   RichHeaderStrategy
   HeaderStylePluginManager
+  HeaderStyleMenuManager
   REQUIRED_HEADERS MessageViewer_header_HEADERS
   PREFIX MessageViewer
   RELATIVE header
@@ -402,6 +413,7 @@ install(FILES
     ${MessageViewer_Camelcasewidgets_HEADERS}
     ${MessageViewer_Camelcasemain_HEADERS}
     ${MessageViewer_Camelcaseviewerjob_HEADERS}
+    ${MessageViewer_Camelcaseantispam_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
     COMPONENT Devel
 )
@@ -419,6 +431,7 @@ install(FILES
     ${MessageViewer_main_HEADERS}
     ${MessageViewer_widgets_HEADERS}
     ${MessageViewer_viewerjob_HEADERS}
+    ${MessageViewer_antispam_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_messageviewer.h
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_debug.h

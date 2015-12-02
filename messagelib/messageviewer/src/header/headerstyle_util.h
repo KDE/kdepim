@@ -23,9 +23,9 @@
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
-#include "antispam/spamheaderanalyzer.h"
+#include "messageviewer/spamheaderanalyzer.h"
 
-#include "header/headerstyle.h"
+#include "messageviewer/headerstyle.h"
 #include "messageviewer_export.h"
 namespace MessageViewer
 {

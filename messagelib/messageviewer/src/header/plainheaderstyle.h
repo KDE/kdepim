@@ -18,7 +18,7 @@
 #ifndef PLAINHEADERSTYLE_H
 #define PLAINHEADERSTYLE_H
 
-#include "header/headerstyle.h"
+#include "messageviewer/headerstyle.h"
 #include "messageviewer_export.h"
 namespace MessageViewer
 {

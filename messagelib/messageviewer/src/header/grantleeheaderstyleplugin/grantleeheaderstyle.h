@@ -18,7 +18,7 @@
 #ifndef GRANTLEEHEADERSTYLE_H
 #define GRANTLEEHEADERSTYLE_H
 
-#include "header/headerstyle.h"
+#include "messageviewer/headerstyle.h"
 
 namespace MessageViewer
 {

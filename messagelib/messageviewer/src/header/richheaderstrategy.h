@@ -33,7 +33,7 @@
 
 #ifndef RICHHEADERSTRATEGY_H
 #define RICHHEADERSTRATEGY_H
-#include "header/headerstrategy.h"
+#include "messageviewer/headerstrategy.h"
 #include "messageviewer_export.h"
 #include <QStringList>
 //
