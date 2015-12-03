@@ -15,34 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GENERICPLUGINMANAGER_H
-#define GENERICPLUGINMANAGER_H
+#include "genericpluginmanagertest.h"
+#include "../genericpluginmanager.h"
+#include <QTest>
 
-#include <QObject>
-#include "pimcommon_export.h"
-
-namespace PimCommon {
-class GenericPluginManagerPrivate;
-class PIMCOMMON_EXPORT GenericPluginManager : public QObject
+GenericPluginManagerTest::GenericPluginManagerTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit GenericPluginManager(QObject *parent = Q_NULLPTR);
-    ~GenericPluginManager();
 
-    bool initializePlugins();
-
-    void setServiceTypeName(const QString &serviceName);
-    QString serviceTypeName() const;
-
-    void setPluginName(const QString &pluginName);
-    QString pluginName() const;
-
-    GenericPluginManager *self();
-
-private:
-    GenericPluginManagerPrivate *const d;
-};
 }
 
-#endif // GENERICPLUGINMANAGER_H
+GenericPluginManagerTest::~GenericPluginManagerTest()
+{
+
+}
+
+void GenericPluginManagerTest::shouldHaveDefaultValue()
+{
+    PimCommon::GenericPluginManager pluginManager;
+    QVERIFY(!pluginManager.initializePlugins());
+}
+
+QTEST_MAIN(GenericPluginManagerTest)

@@ -44,14 +44,18 @@ public:
     {
 
     }
-    void initializePlugins();
+    bool initializePlugins();
     QString serviceTypeName;
     QString pluginName;
 };
 
-void GenericPluginManagerPrivate::initializePlugins()
+bool GenericPluginManagerPrivate::initializePlugins()
 {
+    if (serviceTypeName.isEmpty() || pluginName.isEmpty()) {
+        return false;
+    }
     //TODO
+    return true;
 }
 
 
@@ -67,9 +71,9 @@ GenericPluginManager::~GenericPluginManager()
     delete d;
 }
 
-void GenericPluginManager::initializePlugins()
+bool GenericPluginManager::initializePlugins()
 {
-    d->initializePlugins();
+    return d->initializePlugins();
 }
 
 void GenericPluginManager::setServiceTypeName(const QString &serviceName)
