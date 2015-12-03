@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include "pimcommon_export.h"
+class KActionCollection;
 namespace PimCommon
 {
 class GenericPluginInterface;
@@ -30,7 +31,7 @@ public:
     explicit GenericPlugin(QObject *parent = Q_NULLPTR);
     ~GenericPlugin();
 
-    virtual PimCommon::GenericPluginInterface *createInterface(QObject *parent = Q_NULLPTR) = 0;
+    virtual PimCommon::GenericPluginInterface *createInterface(KActionCollection *ac, QObject *parent = Q_NULLPTR) = 0;
 };
 }
 #endif // GENERICPLUGIN_H

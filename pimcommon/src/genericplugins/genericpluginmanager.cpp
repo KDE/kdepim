@@ -18,6 +18,14 @@
 #include "genericplugin.h"
 #include "genericpluginmanager.h"
 
+#include <kpluginmetadata.h>
+#include <KPluginLoader>
+#include <KPluginFactory>
+#include <qfileinfo.h>
+#include <QVariant>
+#include <QSet>
+#include <QVariantList>
+
 using namespace PimCommon;
 
 class GenericPluginManagerInstancePrivate
@@ -38,17 +46,43 @@ public:
 
 Q_GLOBAL_STATIC(GenericPluginManagerInstancePrivate, sInstance)
 
-class PimCommon::GenericPluginManagerPrivate
+class GenericPluginInfo
 {
 public:
-    GenericPluginManagerPrivate()
+    GenericPluginInfo()
+        : plugin(Q_NULLPTR)
     {
 
     }
+    QString saveName() const;
+
+    KPluginMetaData metaData;
+    PimCommon::GenericPlugin *plugin;
+};
+
+
+QString GenericPluginInfo::saveName() const
+{
+    return QFileInfo(metaData.fileName()).baseName();
+}
+
+
+
+class PimCommon::GenericPluginManagerPrivate
+{
+public:
+    GenericPluginManagerPrivate(GenericPluginManager *qq)
+        : q(qq)
+    {
+
+    }
+    void loadPlugin(GenericPluginInfo *item);
     QVector<GenericPlugin *> pluginsList() const;
     bool initializePlugins();
     QString serviceTypeName;
     QString pluginName;
+    QVector<GenericPluginInfo> mPluginList;
+    GenericPluginManager *q;
 };
 
 bool GenericPluginManagerPrivate::initializePlugins()
@@ -56,19 +90,53 @@ bool GenericPluginManagerPrivate::initializePlugins()
     if (serviceTypeName.isEmpty() || pluginName.isEmpty()) {
         return false;
     }
-    //TODO
+    static const QString s_serviceTypeName = serviceTypeName;
+    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(pluginName, [](const KPluginMetaData &md) {
+        return md.serviceTypes().contains(s_serviceTypeName);
+    });
+
+    QVectorIterator<KPluginMetaData> i(plugins);
+    i.toBack();
+    QSet<QString> unique;
+    while (i.hasPrevious()) {
+        GenericPluginInfo info;
+        info.metaData = i.previous();
+
+        // only load plugins once, even if found multiple times!
+        if (unique.contains(info.saveName())) {
+            continue;
+        }
+        info.plugin = Q_NULLPTR;
+        mPluginList.push_back(info);
+        unique.insert(info.saveName());
+    }
+    QVector<GenericPluginInfo>::iterator end(mPluginList.end());
+    for (QVector<GenericPluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
+        loadPlugin(&(*it));
+    }
     return true;
 }
 
 QVector<GenericPlugin *> GenericPluginManagerPrivate::pluginsList() const
 {
-    //TODO
-    return QVector<GenericPlugin *>();
+    QVector<PimCommon::GenericPlugin *> lst;
+    QVector<GenericPluginInfo>::ConstIterator end(mPluginList.constEnd());
+    for (QVector<GenericPluginInfo>::ConstIterator it = mPluginList.constBegin(); it != end; ++it) {
+        if ((*it).plugin) {
+            lst << (*it).plugin;
+        }
+    }
+    return lst;
+}
+
+void GenericPluginManagerPrivate::loadPlugin(GenericPluginInfo *item)
+{
+    item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<PimCommon::GenericPlugin>(q, QVariantList() << item->saveName());
 }
 
 GenericPluginManager::GenericPluginManager(QObject *parent)
     : QObject(parent),
-      d(new GenericPluginManagerPrivate)
+      d(new GenericPluginManagerPrivate(this))
 {
 
 }
