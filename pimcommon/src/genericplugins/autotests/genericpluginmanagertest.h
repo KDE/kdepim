@@ -28,6 +28,7 @@ public:
     ~GenericPluginManagerTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldInitialized();
 };
 
 #endif // GENERICPLUGINMANAGERTEST_H

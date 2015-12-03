@@ -36,4 +36,14 @@ void GenericPluginManagerTest::shouldHaveDefaultValue()
     QVERIFY(!pluginManager.initializePlugins());
 }
 
+void GenericPluginManagerTest::shouldInitialized()
+{
+    PimCommon::GenericPluginManager pluginManager;
+    QVERIFY(!pluginManager.initializePlugins());
+    pluginManager.setServiceTypeName(QStringLiteral("foo"));
+    QVERIFY(!pluginManager.initializePlugins());
+    pluginManager.setPluginName(QStringLiteral("foo"));
+    QVERIFY(pluginManager.initializePlugins());
+}
+
 QTEST_MAIN(GenericPluginManagerTest)
