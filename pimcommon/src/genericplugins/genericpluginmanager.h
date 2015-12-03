@@ -19,10 +19,12 @@
 #define GENERICPLUGINMANAGER_H
 
 #include <QObject>
+#include <QVector>
 #include "pimcommon_export.h"
 
 namespace PimCommon {
 class GenericPluginManagerPrivate;
+class GenericPlugin;
 class PIMCOMMON_EXPORT GenericPluginManager : public QObject
 {
     Q_OBJECT
@@ -40,6 +42,7 @@ public:
 
     GenericPluginManager *self();
 
+    QVector<PimCommon::GenericPlugin *> pluginsList() const;
 private:
     GenericPluginManagerPrivate *const d;
 };

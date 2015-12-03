@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "genericplugin.h"
 #include "genericpluginmanager.h"
 
 using namespace PimCommon;
@@ -44,6 +45,7 @@ public:
     {
 
     }
+    QVector<GenericPlugin *> pluginsList() const;
     bool initializePlugins();
     QString serviceTypeName;
     QString pluginName;
@@ -58,6 +60,11 @@ bool GenericPluginManagerPrivate::initializePlugins()
     return true;
 }
 
+QVector<GenericPlugin *> GenericPluginManagerPrivate::pluginsList() const
+{
+    //TODO
+    return QVector<GenericPlugin *>();
+}
 
 GenericPluginManager::GenericPluginManager(QObject *parent)
     : QObject(parent),
@@ -99,5 +106,10 @@ QString GenericPluginManager::pluginName() const
 GenericPluginManager *GenericPluginManager::self()
 {
     return sInstance->genericPluginManager;
+}
+
+QVector<GenericPlugin *> GenericPluginManager::pluginsList() const
+{
+    return d->pluginsList();
 }
 
