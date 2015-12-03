@@ -178,6 +178,10 @@ set(libpimcommon_shorturl_SRCS
    customtools/shorturlplugin/shorturl/shorturlengineplugin/shorturlengineinterface.cpp
 )
 
+set(libpimcommon_generericplugin_SRCS
+   genericplugins/genericpluginmanager.cpp
+)
+
 set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
   ${libpimcommon_shorturl_SRCS}
@@ -196,6 +200,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_widgets_SRCS}
   ${libpimcommon_temporary_SRCS}
   ${libpimcommon_customtools_SRCS}
+  ${libpimcommon_generericplugin_SRCS}
 )
 
 ecm_qt_declare_logging_category(libpimcommon_SRCS HEADER pimcommon_debug.h IDENTIFIER PIMCOMMON_LOG CATEGORY_NAME log_pimcommon)
@@ -306,6 +311,14 @@ if( LibKGAPI2_FOUND )
   add_subdirectory(storageservice/gdrive/tests/)
   add_subdirectory(storageservice/gdrive/icons/)
 endif()
+
+ecm_generate_headers(PimCommon_CamelCasegenericplugins_HEADERS
+  HEADER_NAMES
+  GenericPluginManager
+  REQUIRED_HEADERS PimCommongenericplugin_HEADERS
+  PREFIX PimCommon
+  RELATIVE genericplugins
+)
 
 
 ecm_generate_headers(PimCommon_CamelCase_HEADERS
@@ -566,6 +579,7 @@ install(FILES
     ${PimCommon_Camelcaseplaintexteditor_HEADERS}
     ${PimCommon_Camelcasetexteditor_commonwidget_HEADERS}
     ${PimCommon_Camelcasewidgets_HEADERS}
+    ${PimCommon_CamelCasegenericplugins_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/PimCommon
     COMPONENT Devel
@@ -603,6 +617,7 @@ install(FILES
     ${PimCommon_plaintexteditor_HEADERS}
     ${PimCommon_texteditor_commonwidget_HEADERS}
     ${PimCommon_widgets_HEADERS}
+    ${PimCommon_genericplugins_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/pimcommon
     COMPONENT Devel
