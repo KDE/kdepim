@@ -22,12 +22,15 @@
 #include "pimcommon_export.h"
 namespace PimCommon
 {
+class GenericPluginInterface;
 class PIMCOMMON_EXPORT GenericPlugin : public QObject
 {
     Q_OBJECT
 public:
     explicit GenericPlugin(QObject *parent = Q_NULLPTR);
     ~GenericPlugin();
+
+    virtual PimCommon::GenericPluginInterface *createInterface(QObject *parent = Q_NULLPTR) = 0;
 };
 }
 #endif // GENERICPLUGIN_H

@@ -27,6 +27,7 @@ class PIMCOMMON_EXPORT GenericPluginInterface : public QObject
 public:
     explicit GenericPluginInterface(QObject *parent = Q_NULLPTR);
     ~GenericPluginInterface();
+    virtual void exec() = 0;
 
 };
 }
