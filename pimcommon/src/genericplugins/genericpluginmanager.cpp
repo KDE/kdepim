@@ -19,6 +19,24 @@
 
 using namespace PimCommon;
 
+class GenericPluginManagerInstancePrivate
+{
+public:
+    GenericPluginManagerInstancePrivate()
+        : genericPluginManager(new GenericPluginManager)
+    {
+    }
+
+    ~GenericPluginManagerInstancePrivate()
+    {
+        delete genericPluginManager;
+    }
+
+    GenericPluginManager *genericPluginManager;
+};
+
+Q_GLOBAL_STATIC(GenericPluginManagerInstancePrivate, sInstance)
+
 class PimCommon::GenericPluginManagerPrivate
 {
 public:
@@ -26,9 +44,16 @@ public:
     {
 
     }
+    void initializePlugins();
     QString serviceTypeName;
     QString pluginName;
 };
+
+void GenericPluginManagerPrivate::initializePlugins()
+{
+    //TODO
+}
+
 
 GenericPluginManager::GenericPluginManager(QObject *parent)
     : QObject(parent),
@@ -44,7 +69,7 @@ GenericPluginManager::~GenericPluginManager()
 
 void GenericPluginManager::initializePlugins()
 {
-    //TODO
+    d->initializePlugins();
 }
 
 void GenericPluginManager::setServiceTypeName(const QString &serviceName)
@@ -66,3 +91,9 @@ QString GenericPluginManager::pluginName() const
 {
     return d->pluginName;
 }
+
+GenericPluginManager *GenericPluginManager::self()
+{
+    return sInstance->genericPluginManager;
+}
+

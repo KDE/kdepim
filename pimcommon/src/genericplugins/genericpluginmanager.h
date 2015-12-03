@@ -38,6 +38,8 @@ public:
     void setPluginName(const QString &pluginName);
     QString pluginName() const;
 
+    GenericPluginManager *self();
+
 private:
     GenericPluginManagerPrivate *const d;
 };
