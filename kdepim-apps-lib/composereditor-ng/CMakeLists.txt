@@ -6,7 +6,6 @@ project(composereditorng)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kdepim-apps-lib_SOURCE_DIR})
 
 
-
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX COMPOSEREDITORNG
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/composereditorng_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5ComposerEditorNGConfigVersion.cmake"
