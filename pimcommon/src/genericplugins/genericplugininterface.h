@@ -47,7 +47,7 @@ public:
     explicit GenericPluginInterface(QObject *parent = Q_NULLPTR);
     ~GenericPluginInterface();
     virtual void exec() = 0;
-    virtual KToggleAction *action() const = 0;
+    virtual ActionType action() const = 0;
 
 };
 }
