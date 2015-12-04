@@ -19,8 +19,27 @@
 #define GENERICPLUGININTERFACE_H
 #include <QObject>
 #include "pimcommon_export.h"
-
+class KToggleAction;
 namespace PimCommon {
+class PIMCOMMON_EXPORT ActionType
+{
+public:
+    enum Type {
+        Tools = 0,
+        Edit = 1
+    };
+
+    ActionType(KToggleAction *action, Type type);
+    KToggleAction *action() const;
+    Type type() const;
+
+private:
+    KToggleAction *mAction;
+    Type mType;
+};
+
+
+
 class PIMCOMMON_EXPORT GenericPluginInterface : public QObject
 {
     Q_OBJECT
@@ -28,6 +47,7 @@ public:
     explicit GenericPluginInterface(QObject *parent = Q_NULLPTR);
     ~GenericPluginInterface();
     virtual void exec() = 0;
+    virtual KToggleAction *action() const = 0;
 
 };
 }

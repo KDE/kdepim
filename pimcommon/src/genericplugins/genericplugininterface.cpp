@@ -29,3 +29,19 @@ GenericPluginInterface::~GenericPluginInterface()
 {
 
 }
+
+ActionType::ActionType(KToggleAction *action, ActionType::Type type)
+    : mAction(action),
+      mType(type)
+{
+}
+
+KToggleAction *ActionType::action() const
+{
+    return mAction;
+}
+
+ActionType::Type ActionType::type() const
+{
+    return mType;
+}
