@@ -60,13 +60,10 @@ public:
     PimCommon::GenericPlugin *plugin;
 };
 
-
 QString GenericPluginInfo::saveName() const
 {
     return QFileInfo(metaData.fileName()).baseName();
 }
-
-
 
 class PimCommon::GenericPluginManagerPrivate
 {
@@ -94,7 +91,7 @@ bool GenericPluginManagerPrivate::initializePlugins()
         return true;
     }
     static const QString s_serviceTypeName = serviceTypeName;
-    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(pluginName, [](const KPluginMetaData &md) {
+    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(pluginName, [](const KPluginMetaData & md) {
         return md.serviceTypes().contains(s_serviceTypeName);
     });
 

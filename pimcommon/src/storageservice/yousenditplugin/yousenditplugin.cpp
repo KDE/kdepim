@@ -78,7 +78,7 @@ StorageServicePlugin::Capabilities YouSendItPlugin::capabilities() const
 }
 
 PimCommon::StorageServiceInterface *YouSendItPlugin::createStorageService(const QString &identifier)
-{    
+{
     //TODO
     return Q_NULLPTR;
 }

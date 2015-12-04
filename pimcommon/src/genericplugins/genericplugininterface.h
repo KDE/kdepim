@@ -20,7 +20,8 @@
 #include <QObject>
 #include "pimcommon_export.h"
 class KToggleAction;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT ActionType
 {
 public:
@@ -37,8 +38,6 @@ private:
     KToggleAction *mAction;
     Type mType;
 };
-
-
 
 class PIMCOMMON_EXPORT GenericPluginInterface : public QObject
 {

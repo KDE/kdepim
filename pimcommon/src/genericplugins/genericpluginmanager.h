@@ -22,7 +22,8 @@
 #include <QVector>
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class GenericPluginManagerPrivate;
 class GenericPlugin;
 class PIMCOMMON_EXPORT GenericPluginManager : public QObject
