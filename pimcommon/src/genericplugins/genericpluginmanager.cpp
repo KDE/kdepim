@@ -90,6 +90,9 @@ bool GenericPluginManagerPrivate::initializePlugins()
     if (serviceTypeName.isEmpty() || pluginName.isEmpty()) {
         return false;
     }
+    if (!mPluginList.isEmpty()) {
+        return true;
+    }
     static const QString s_serviceTypeName = serviceTypeName;
     const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(pluginName, [](const KPluginMetaData &md) {
         return md.serviceTypes().contains(s_serviceTypeName);
