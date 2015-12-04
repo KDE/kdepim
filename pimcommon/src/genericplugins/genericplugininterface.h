@@ -20,6 +20,7 @@
 #include <QObject>
 #include "pimcommon_export.h"
 class KToggleAction;
+class KActionCollection;
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT ActionType
@@ -29,6 +30,12 @@ public:
         Tools = 0,
         Edit = 1
     };
+    ActionType()
+        : mAction(Q_NULLPTR),
+          mType(Tools)
+    {
+
+    }
 
     ActionType(KToggleAction *action, Type type);
     KToggleAction *action() const;
@@ -39,15 +46,26 @@ private:
     Type mType;
 };
 
+class GenericPluginInterfacePrivate;
 class PIMCOMMON_EXPORT GenericPluginInterface : public QObject
 {
     Q_OBJECT
 public:
     explicit GenericPluginInterface(QObject *parent = Q_NULLPTR);
     ~GenericPluginInterface();
-    virtual void exec() = 0;
-    virtual ActionType action() const = 0;
 
+
+    void setParentWidget(QWidget *parent);
+    QWidget *parentWidget() const;
+
+    void setActionType(const ActionType &type);
+    ActionType actionType() const;
+
+    virtual void exec() = 0;
+    virtual void createAction(KActionCollection *ac) = 0;
+
+private:
+    GenericPluginInterfacePrivate *const d;
 };
 }
 Q_DECLARE_TYPEINFO(PimCommon::ActionType, Q_MOVABLE_TYPE);

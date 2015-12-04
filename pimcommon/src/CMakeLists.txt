@@ -320,7 +320,7 @@ ecm_generate_headers(PimCommon_CamelCasegenericplugins_HEADERS
   GenericPluginManager
   GenericPlugin
   GenericPluginInterface
-  REQUIRED_HEADERS PimCommongenericplugin_HEADERS
+  REQUIRED_HEADERS PimCommon_genericplugins_HEADERS
   PREFIX PimCommon
   RELATIVE genericplugins
 )

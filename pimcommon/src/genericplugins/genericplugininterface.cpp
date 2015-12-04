@@ -19,15 +19,48 @@
 
 using namespace PimCommon;
 
+class PimCommon::GenericPluginInterfacePrivate
+{
+public:
+    GenericPluginInterfacePrivate()
+        : parentWidget(Q_NULLPTR)
+    {
+
+    }
+    ActionType actionType;
+    QWidget *parentWidget;
+};
+
 GenericPluginInterface::GenericPluginInterface(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      d(new GenericPluginInterfacePrivate)
 {
 
 }
 
 GenericPluginInterface::~GenericPluginInterface()
 {
+    delete d;
+}
 
+void GenericPluginInterface::setParentWidget(QWidget *parent)
+{
+    d->parentWidget = parent;
+}
+
+QWidget *GenericPluginInterface::parentWidget() const
+{
+    return d->parentWidget;
+}
+
+void GenericPluginInterface::setActionType(const ActionType &type)
+{
+    d->actionType = type;
+}
+
+ActionType GenericPluginInterface::actionType() const
+{
+    return d->actionType;
 }
 
 ActionType::ActionType(KToggleAction *action, ActionType::Type type)
