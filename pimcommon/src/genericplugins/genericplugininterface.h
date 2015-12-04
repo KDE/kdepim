@@ -50,4 +50,5 @@ public:
 
 };
 }
+Q_DECLARE_TYPEINFO(PimCommon::ActionType, Q_MOVABLE_TYPE);
 #endif // GENERICPLUGININTERFACE_H
