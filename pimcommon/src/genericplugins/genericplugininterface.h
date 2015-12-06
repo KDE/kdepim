@@ -19,7 +19,7 @@
 #define GENERICPLUGININTERFACE_H
 #include <QObject>
 #include "pimcommon_export.h"
-class KToggleAction;
+class QAction;
 class KActionCollection;
 namespace PimCommon
 {
@@ -37,12 +37,12 @@ public:
 
     }
 
-    ActionType(KToggleAction *action, Type type);
-    KToggleAction *action() const;
+    ActionType(QAction *action, Type type);
+    QAction *action() const;
     Type type() const;
 
 private:
-    KToggleAction *mAction;
+    QAction *mAction;
     Type mType;
 };
 

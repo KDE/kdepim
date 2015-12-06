@@ -63,13 +63,13 @@ ActionType GenericPluginInterface::actionType() const
     return d->actionType;
 }
 
-ActionType::ActionType(KToggleAction *action, ActionType::Type type)
+ActionType::ActionType(QAction *action, ActionType::Type type)
     : mAction(action),
       mType(type)
 {
 }
 
-KToggleAction *ActionType::action() const
+QAction *ActionType::action() const
 {
     return mAction;
 }
