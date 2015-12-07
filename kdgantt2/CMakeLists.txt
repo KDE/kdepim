@@ -75,3 +75,5 @@ endif()
 # Laurent install it if you want to debug it
 #add_subdirectory(tests)
 add_subdirectory(src)
+
+install( FILES kdgantt2.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
