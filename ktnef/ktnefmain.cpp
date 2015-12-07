@@ -199,12 +199,12 @@ void KTNEFMain::loadFile(const QString &filename)
     mFilename = filename;
     setCaption(mFilename);
     if (!mParser->openFile(filename)) {
+        mView->setAttachments(QList<KTNEFAttach *>());
+        enableExtractAll(false);
         KMessageBox::error(
             this,
             i18nc("@info",
                   "Unable to open file \"%1\".", filename));
-        mView->setAttachments(QList<KTNEFAttach *>());
-        enableExtractAll(false);
     } else {
         addRecentFile(QUrl::fromLocalFile(filename));
         QList<KTNEFAttach *> list = mParser->message()->attachmentList();
