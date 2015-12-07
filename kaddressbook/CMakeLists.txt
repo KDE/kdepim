@@ -99,6 +99,10 @@ set(kaddressbook_gravatar_SRCS
    gravatar/widgets/gravatarupdatewidget.cpp
 )
 
+set(kaddressbook_plugin_SRCS
+   plugininterface/plugininterface.cpp
+)
+
 set(kaddressbook_LIB_SRCS
   contactlist.cpp
   aboutdata.cpp
@@ -119,7 +123,8 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_xxport_SRCS}
   ${kaddressbook_sendmail_SRCS}
   ${kaddressbook_sendvcards_SRCS}
-  ${kaddressbook_gravatar_SRCS}
+  ${kaddressbook_gravatar_SRCS} 
+  ${kaddressbook_plugin_SRCS}
 )
 
 ecm_qt_declare_logging_category(kaddressbook_LIB_SRCS HEADER kaddressbook_debug.h IDENTIFIER KADDRESSBOOK_LOG CATEGORY_NAME log_kaddressbook)
