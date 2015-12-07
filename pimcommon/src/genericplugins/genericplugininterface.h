@@ -60,9 +60,12 @@ public:
 
     void setActionType(const ActionType &type);
     ActionType actionType() const;
+    virtual void createAction(KActionCollection *ac) = 0;
 
     virtual void exec() = 0;
-    virtual void createAction(KActionCollection *ac) = 0;
+
+Q_SIGNALS:
+    void emitPluginActivated(GenericPluginInterface *interface);
 
 private:
     GenericPluginInterfacePrivate *const d;
