@@ -65,7 +65,7 @@ public:
     virtual void exec() = 0;
 
 Q_SIGNALS:
-    void emitPluginActivated(GenericPluginInterface *interface);
+    void emitPluginActivated(PimCommon::GenericPluginInterface *interface);
 
 private:
     GenericPluginInterfacePrivate *const d;
