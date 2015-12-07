@@ -78,6 +78,12 @@ public:
     ViewerPluginManager *q;
 };
 
+namespace {
+QString pluginVersion() {
+    return QString();
+}
+}
+
 void ViewerPluginManagerPrivate::initializePluginList()
 {
     const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("messageviewer"), [](const KPluginMetaData & md) {
@@ -91,13 +97,16 @@ void ViewerPluginManagerPrivate::initializePluginList()
         ViewerPluginInfo info;
         info.metaData = i.previous();
 
-        // only load plugins once, even if found multiple times!
-        if (unique.contains(info.saveName())) {
-            continue;
+        const QString version = info.metaData.version();
+        if ((pluginVersion().isEmpty() && version.isEmpty()) || (!pluginVersion().isEmpty() && (pluginVersion() == version))) {
+            // only load plugins once, even if found multiple times!
+            if (unique.contains(info.saveName())) {
+                continue;
+            }
+            info.plugin = Q_NULLPTR;
+            mPluginList.push_back(info);
+            unique.insert(info.saveName());
         }
-        info.plugin = Q_NULLPTR;
-        mPluginList.push_back(info);
-        unique.insert(info.saveName());
     }
     QVector<ViewerPluginInfo>::iterator end(mPluginList.end());
     for (QVector<ViewerPluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
