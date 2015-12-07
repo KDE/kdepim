@@ -52,9 +52,6 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX CALENDARSUPPORT
                         SOVERSION 5
 )
 
-  #KF5::KdepimDBusInterfaces
-
-
 
 ########### Targets ###########
 
@@ -94,3 +91,4 @@ endif()
 
 add_subdirectory(src)
 
+install( FILES calendarsupport.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
