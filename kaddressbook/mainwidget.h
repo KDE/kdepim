@@ -64,7 +64,7 @@ class XXPortManager;
 class QActionGroup;
 class CategorySelectWidget;
 class CategoryFilterProxyModel;
-
+class PluginInterface;
 class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 {
     Q_OBJECT
@@ -173,6 +173,7 @@ private:
     QAction *mSearchGravatarAction;
     QAction *mSendVcardAction;
     QAction *mSendEmailAction;
+    PluginInterface *mPluginInterface;
 };
 
 #endif

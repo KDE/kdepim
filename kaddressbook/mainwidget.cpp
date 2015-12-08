@@ -99,6 +99,8 @@
 #include <QDesktopServices>
 #include <ItemModifyJob>
 
+#include <plugininterface/plugininterface.h>
+
 namespace
 {
 static bool isStructuralCollection(const Akonadi::Collection &collection)
@@ -151,7 +153,8 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
       mServerSideSubscription(Q_NULLPTR),
       mSearchGravatarAction(Q_NULLPTR),
       mSendVcardAction(Q_NULLPTR),
-      mSendEmailAction(Q_NULLPTR)
+      mSendEmailAction(Q_NULLPTR),
+      mPluginInterface(Q_NULLPTR)
 {
 
     (void) new KaddressbookAdaptor(this);
@@ -160,8 +163,10 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     mXXPortManager = new XXPortManager(this);
     Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
+    mPluginInterface = new PluginInterface(guiClient->actionCollection(), this);
     setupGui();
     setupActions(guiClient->actionCollection());
+
 
     /*
     *  The item models, proxies and views have the following structure:
