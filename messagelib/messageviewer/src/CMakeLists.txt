@@ -35,8 +35,6 @@ if(BUILD_TESTING)
    add_subdirectory(findbar/autotests)
    add_subdirectory(scamdetection/tests)
    add_subdirectory(adblock/tests/)
-   add_subdirectory(header/tests)
-   add_subdirectory(header/autotests)
    add_subdirectory(viewerplugins/tests/)
 endif()
 add_subdirectory(pics)
@@ -455,4 +453,3 @@ install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${KDE_IN
 install(FILES notify/messageviewer.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
 
-add_subdirectory(header)
