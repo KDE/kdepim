@@ -17,7 +17,7 @@
 
 #include "grantleeheaderstyleinterface.h"
 #include "grantleeheaderstyleplugin.h"
-#include "grantleeheaderstyle.h"
+#include "messageviewer/grantleeheaderstyle.h"
 #include "grantleeheaderstrategy.h"
 #include <kpluginfactory.h>
 using namespace MessageViewer;

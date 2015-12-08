@@ -119,7 +119,7 @@ set(libmessageviewer_header_SRCS
   header/headerstrategy.cpp
   header/richheaderstrategy.cpp
   header/headerstyle.cpp
-  header/grantleeheaderstyleplugin/grantleeheaderstyle.cpp
+  header/grantleeheaderstyle.cpp
   header/plainheaderstyle.cpp
   header/enterpriseheaderstyleplugin/enterpriseheaderstyle.cpp
   header/headerstyle_util.cpp
@@ -341,6 +341,7 @@ ecm_generate_headers(MessageViewer_Camelcaseheader_HEADERS
   HEADER_NAMES
   HeaderStrategy
   GrantleeHeaderTestStyle
+  GrantleeHeaderStyle
   HeaderStyle
   KXFace
   HeaderStyle_Util
