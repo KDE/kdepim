@@ -3,4 +3,3 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(messageviewer)
 
-add_subdirectory(kaddressbook)
