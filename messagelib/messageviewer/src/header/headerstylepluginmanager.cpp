@@ -78,6 +78,12 @@ public:
     HeaderStylePluginManager *q;
 };
 
+namespace {
+QString pluginVersion() {
+    return QStringLiteral("1.0");
+}
+}
+
 void HeaderStylePluginManagerPrivate::initializePluginList()
 {
     const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("messageviewer"), [](const KPluginMetaData & md) {
