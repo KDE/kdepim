@@ -38,7 +38,6 @@ if(BUILD_TESTING)
    add_subdirectory(viewerplugins/tests/)
 endif()
 add_subdirectory(pics)
-add_subdirectory(grantleefilters)
 add_subdirectory(kconf_update)
 add_subdirectory(about)
 
