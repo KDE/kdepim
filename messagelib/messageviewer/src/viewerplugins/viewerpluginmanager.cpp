@@ -80,10 +80,9 @@ public:
 
 namespace {
 QString pluginVersion() {
-    return QString();
+    return QStringLiteral("1.0");
 }
 }
-
 void ViewerPluginManagerPrivate::initializePluginList()
 {
     const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("messageviewer"), [](const KPluginMetaData & md) {
@@ -98,7 +97,7 @@ void ViewerPluginManagerPrivate::initializePluginList()
         info.metaData = i.previous();
 
         const QString version = info.metaData.version();
-        if ((pluginVersion().isEmpty() && version.isEmpty()) || (!pluginVersion().isEmpty() && (pluginVersion() == version))) {
+        if (pluginVersion() == version) {
             // only load plugins once, even if found multiple times!
             if (unique.contains(info.saveName())) {
                 continue;
