@@ -23,7 +23,7 @@ include(ECMAddTests)
 
 
 set(KF5_VERSION "5.16.0")
-set(KDEPIM_LIB_VERSION "5.0.90")
+set(KDEPIM_LIB_VERSION "5.1")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
 
