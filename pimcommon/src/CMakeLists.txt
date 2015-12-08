@@ -173,11 +173,6 @@ set(libpimcommon_manageserversidesubscription_SRCS
    manageserversidesubscription/manageserversidesubscriptionjob.cpp
 )
 
-set(libpimcommon_shorturl_SRCS
-   customtools/shorturlplugin/shorturl/shorturlengineplugin/shorturlengineplugin.cpp
-   customtools/shorturlplugin/shorturl/shorturlengineplugin/shorturlengineinterface.cpp
-)
-
 set(libpimcommon_generericplugin_SRCS
    genericplugins/genericpluginmanager.cpp
    genericplugins/genericplugin.cpp
@@ -186,7 +181,6 @@ set(libpimcommon_generericplugin_SRCS
 
 set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
-  ${libpimcommon_shorturl_SRCS}
   ${libpimcommon_manageserversidesubscription_SRCS}
   ${libpimcommon_shareserviceurl_SRCS}
   ${libpimcommon_migrate_SRCS}
@@ -337,16 +331,6 @@ ecm_generate_headers(PimCommon_CamelCase_HEADERS
   PREFIX PimCommon
   RELATIVE util
 )
-
-ecm_generate_headers(PimCommon_Camelcaseshorturl_HEADERS
-  HEADER_NAMES
-  ShortUrlEnginePlugin
-  ShortUrlEngineInterface
-  REQUIRED_HEADERS PimCommon_shorturl_HEADERS
-  PREFIX PimCommon
-  RELATIVE customtools/shorturlplugin/shorturl/shorturlengineplugin/
-)
-
 
 ecm_generate_headers(PimCommon_Camelcasestorageservice_HEADERS
   HEADER_NAMES
@@ -636,5 +620,4 @@ endif()
 
 add_subdirectory(designer)
 
-add_subdirectory(customtools)
 add_subdirectory(storageservice)
