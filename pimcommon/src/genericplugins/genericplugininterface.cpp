@@ -63,6 +63,16 @@ ActionType GenericPluginInterface::actionType() const
     return d->actionType;
 }
 
+void GenericPluginInterface::setItems(const Akonadi::Item::List &items)
+{
+    Q_UNUSED(items);
+}
+
+void GenericPluginInterface::setCurrentCollection(const Akonadi::Collection &col)
+{
+    Q_UNUSED(col);
+}
+
 ActionType::ActionType(QAction *action, ActionType::Type type)
     : mAction(action),
       mType(type)

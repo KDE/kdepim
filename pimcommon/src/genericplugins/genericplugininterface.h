@@ -18,6 +18,7 @@
 #ifndef GENERICPLUGININTERFACE_H
 #define GENERICPLUGININTERFACE_H
 #include <QObject>
+#include <AkonadiCore/Item>
 #include "pimcommon_export.h"
 class QAction;
 class KActionCollection;
@@ -28,7 +29,8 @@ class PIMCOMMON_EXPORT ActionType
 public:
     enum Type {
         Tools = 0,
-        Edit = 1
+        Edit = 1,
+        File = 2
     };
     ActionType()
         : mAction(Q_NULLPTR),
@@ -61,8 +63,9 @@ public:
     void setActionType(const ActionType &type);
     ActionType actionType() const;
     virtual void createAction(KActionCollection *ac) = 0;
-
     virtual void exec() = 0;
+    virtual void setItems(const Akonadi::Item::List &items);
+    virtual void setCurrentCollection(const Akonadi::Collection &col);
 
 Q_SIGNALS:
     void emitPluginActivated(PimCommon::GenericPluginInterface *interface);
