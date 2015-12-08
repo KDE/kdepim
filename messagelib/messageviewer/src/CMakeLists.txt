@@ -121,7 +121,6 @@ set(libmessageviewer_header_SRCS
   header/headerstyle.cpp
   header/grantleeheaderstyle.cpp
   header/plainheaderstyle.cpp
-  header/enterpriseheaderstyleplugin/enterpriseheaderstyle.cpp
   header/headerstyle_util.cpp
   header/grantleeheaderformatter.cpp
   header/grantleeheaderteststyle.cpp
