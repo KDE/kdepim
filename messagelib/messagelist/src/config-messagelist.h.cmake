@@ -1,1 +1,0 @@
-#cmakedefine KDEPIM_FOLDEROPEN_PROFILE 1

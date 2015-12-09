@@ -1,5 +1,0 @@
-@PACKAGE_INIT@
-
-find_dependency(Grantlee5 "5.0")
-
-include("${CMAKE_CURRENT_LIST_DIR}/KF5KaddressbookGrantleeTargets.cmake")

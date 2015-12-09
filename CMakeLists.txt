@@ -2,37 +2,6 @@ project(kdepim)
 
 cmake_minimum_required(VERSION 2.8.12)
 
-option(KDEPIM_SUPERBUILD "Build standalone lib but not application" FALSE)
-option(KDEPIM_BUILD_WITH_INSTALLED_LIB "Build kdepim application against installed lib" FALSE)
-
-if (KDEPIM_SUPERBUILD)
-
-# Remove it when splitted
-# This CMakeLists.txt is a "superbuild" for the frameworks.
-# This means it can be used to build them all standalone one-by-one.
-# This is useful to compile all them with one command.
-# use mkdir build-superbuild && cd build-superbuild && cmake -DKDEPIM_SUPERBUILD=TRUE ../ && make -j8 sb_all
-
-include(SuperBuild.cmake)
-
-set(LIBRARY_NAMELINK)
-sb_add_project(grantleetheme)
-sb_add_project(libkdepim)
-sb_add_project(kdgantt2)
-sb_add_project(pimcommon)
-sb_add_project(libkleo)
-sb_add_project(kdepim-apps-lib)
-sb_add_project(calendarsupport)
-sb_add_project(eventviews)
-sb_add_project(incidenceeditor)
-sb_add_project(libksieve)
-sb_add_project(messagelib)
-sb_add_project(mailcommon)
-
-sb_end()
-
-else()
-
 set(LIBRARY_NAMELINK LIBRARY NAMELINK_SKIP)
 
 # we need some parts of the ECM CMake helpers
@@ -178,35 +147,42 @@ find_package(KF5AkonadiNotes ${AKONADINOTES_LIB_VERSION} CONFIG REQUIRED)
 
 set(LIBGRAVATAR_VERSION_LIB "5.1.41")
 set(LIBMAILIMPORTER_VERSION_LIB "5.1.41")
+set(MAILCOMMON_LIB_VERSION_LIB "5.1.41")
+set(KDEPIM_APPS_LIB_VERSION_LIB "5.1.41")
+set(MESSAGELIB_LIB_VERSION_LIB "5.1.41")
+set(LIBKLEO_LIB_VERSION_LIB "5.1.41")
+set(LIBGRANTLEETHEME_LIB_VERSION_LIB "5.1.41")
+set(PIMCOMMON_LIB_VERSION_LIB "5.1.41")
+set(LIBKDEPIM_LIB_VERSION_LIB "5.1.41")
+set(LIBINCIDENCEEDITOR_LIB_VERSION_LIB "5.1.41")
+set(CALENDARSUPPORT_LIB_VERSION_LIB "5.1.41")
+set(EVENTVIEW_LIB_VERSION_LIB "5.1.41")
+set(KDGANTT2_LIB_VERSION_LIB "5.1.41")
+set(LIBKSIEVE_LIB_VERSION_LIB "5.1.41")
 find_package(KF5Gravatar ${LIBGRAVATAR_VERSION_LIB} CONFIG REQUIRED)
 find_package(KF5MailImporter ${LIBMAILIMPORTER_VERSION_LIB} CONFIG REQUIRED)
-
-if (KDEPIM_BUILD_WITH_INSTALLED_LIB)
-set(KDEPIM_LIB_INSTALLED_VERSION "5.1.41")
-
-find_package(KF5MailCommon ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5KaddressbookGrantlee ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5MessageViewer ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5Libkleo ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5GrantleeTheme ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5PimCommon ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5Libkdepim ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5IncidenceEditorsng ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5MessageCore ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
+find_package(KF5MailCommon ${MAILCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5KaddressbookGrantlee ${KDEPIM_APPS_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5MessageViewer ${MESSAGELIB_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5Libkleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5GrantleeTheme ${LIBGRANTLEETHEME_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5PimCommon ${PIMCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5IncidenceEditorsng ${LIBINCIDENCEEDITOR_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5MessageCore ${MESSAGELIB_LIB_VERSION_LIB} CONFIG REQUIRED)
 find_package(KF5MessageComposer ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageList ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5TemplateParser ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5CalendarSupport ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5EventViews ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5KDGantt2 ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5FollowupReminder ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5EventViews ${EVENTVIEW_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5KDGantt2 ${KDGANTT2_LIB_VERSION_LIB} CONFIG REQUIRED)
+find_package(KF5FollowupReminder ${KDEPIM_APPS_LIB_VERSION_LIB} CONFIG REQUIRED)
 find_package(KF5SendLater ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5KDGantt2 ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5ComposerEditorNG ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5KdepimDBusInterfaces ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-find_package(KF5LibKSieve ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
+find_package(KF5LibKSieve ${LIBKSIEVE_LIB_VERSION_LIB} CONFIG REQUIRED)
 find_package(MailTransportDBusService CONFIG REQUIRED)
-endif()
+
 
 if (NOT APPLE)
     find_package(X11)
@@ -263,22 +239,6 @@ endif()
 
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
-if (NOT KDEPIM_BUILD_WITH_INSTALLED_LIB)
-add_subdirectory(kdepim-apps-lib)
-add_subdirectory(libkdepim)
-add_subdirectory(calendarsupport)
-add_subdirectory(eventviews)
-add_subdirectory(incidenceeditor)
-add_subdirectory(libkleo)
-add_subdirectory(libksieve)
-add_subdirectory(kdgantt2)
-add_subdirectory(grantleetheme)
-add_subdirectory(messagelib)
-add_subdirectory(pimcommon)
-add_subdirectory(mailcommon)
-
-set(MAILTRANSPORT_DBUS_SERVICE ${CMAKE_SOURCE_DIR}/libkdepim/src/interfaces/org.kde.mailtransport.service.xml)
-endif()
 
 include (kleopatra/ConfigureChecks.cmake)
 
@@ -326,4 +286,3 @@ feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
                 FATAL_ON_MISSING_REQUIRED_PACKAGES
 )
-endif()

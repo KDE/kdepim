@@ -1,1 +1,0 @@
-ecm_install_icons( ICONS 16-apps-KF5::Libkdepim-googledrive.png  22-apps-KF5::Libkdepim-googledrive.png  32-apps-KF5::Libkdepim-googledrive.png  48-apps-KF5::Libkdepim-googledrive.png DESTINATION ${KDE_INSTALL_ICONDIR} THEME hicolor )

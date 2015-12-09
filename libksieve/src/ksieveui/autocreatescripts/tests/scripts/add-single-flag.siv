@@ -1,9 +1,0 @@
-require "ihave";
-require "imapflags";
- 
-#Script name: add-single-flag
-
-if ihave "reject"
-{
-    addflag [ "\\Seen" ];
-}
