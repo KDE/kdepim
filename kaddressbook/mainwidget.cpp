@@ -575,8 +575,21 @@ void MainWidget::setupGui()
     mContactGroupDetails->setContactGroupFormatter(mGroupFormatter);
 }
 
+void MainWidget::initializePluginToolsActions()
+{
+    const QHash<PimCommon::ActionType::Type, QList<QAction *> > localActionsType = mPluginInterface->actionsType();
+    QList<QAction *> lstTools = localActionsType.value(PimCommon::ActionType::Tools);
+    if (!lstTools.isEmpty() && mXmlGuiClient->factory()) {
+        mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_tools"));
+        mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_tools"), lstTools);
+    }
+}
+
+
 void MainWidget::setupActions(KActionCollection *collection)
 {
+    mPluginInterface->setParentWidget(this);
+    mPluginInterface->createPluginInterface();
     mGrantleeThemeManager = new GrantleeTheme::ThemeManager(QStringLiteral("addressbook"),
             QStringLiteral("theme.desktop"),
             collection,

@@ -118,6 +118,7 @@ private Q_SLOTS:
     void slotModifyContactFinished(KJob *job);
     void slotSelectionChanged();
 private:
+    void initializePluginToolsActions();
     const Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
     void initGrantleeThemeName();
     void setupGui();
