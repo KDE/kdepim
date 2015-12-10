@@ -589,6 +589,7 @@ void MainWidget::initializePluginActions()
 void MainWidget::setupActions(KActionCollection *collection)
 {
     mPluginInterface->setParentWidget(this);
+    mPluginInterface->setMainWidget(this);
     mPluginInterface->createPluginInterface();
     mGrantleeThemeManager = new GrantleeTheme::ThemeManager(QStringLiteral("addressbook"),
             QStringLiteral("theme.desktop"),

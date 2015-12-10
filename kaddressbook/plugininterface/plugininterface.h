@@ -24,6 +24,7 @@
 #include <pimcommon/genericplugininterface.h>
 class KActionCollection;
 class QAction;
+class MainWidget;
 class PluginInterface : public QObject
 {
     Q_OBJECT
@@ -35,6 +36,8 @@ public:
     QHash<PimCommon::ActionType::Type, QList<QAction *> > actionsType() const;
     void createPluginInterface();
 
+    void setMainWidget(MainWidget *mainWidget);
+
 private Q_SLOTS:
     void slotPluginActivated(PimCommon::GenericPluginInterface *interface);
 
@@ -42,6 +45,7 @@ private:
     QWidget *mParentWidget;
     KActionCollection *mActionCollection;
     QVector<PimCommon::GenericPluginInterface *> mListGenericInterface;
+    MainWidget *mMainWidget;
 };
 
 #endif // PLUGININTERFACE_H

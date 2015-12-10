@@ -26,7 +26,8 @@
 PluginInterface::PluginInterface(KActionCollection *ac, QObject *parent)
     : QObject(parent),
       mParentWidget(Q_NULLPTR),
-      mActionCollection(ac)
+      mActionCollection(ac),
+      mMainWidget(Q_NULLPTR)
 {
     PimCommon::GenericPluginManager::self()->setPluginName(QStringLiteral("kaddressbook"));
     PimCommon::GenericPluginManager::self()->setServiceTypeName(QStringLiteral("KAddressBook/MainViewPlugin"));
@@ -54,6 +55,11 @@ void PluginInterface::slotPluginActivated(PimCommon::GenericPluginInterface *int
     if (interface) {
         interface->exec();
     }
+}
+
+void PluginInterface::setMainWidget(MainWidget *mainWidget)
+{
+    mMainWidget = mainWidget;
 }
 
 void PluginInterface::setParentWidget(QWidget *widget)
