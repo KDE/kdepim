@@ -575,7 +575,7 @@ void MainWidget::setupGui()
     mContactGroupDetails->setContactGroupFormatter(mGroupFormatter);
 }
 
-void MainWidget::initializePluginToolsActions()
+void MainWidget::initializePluginActions()
 {
     const QHash<PimCommon::ActionType::Type, QList<QAction *> > localActionsType = mPluginInterface->actionsType();
     QList<QAction *> lstTools = localActionsType.value(PimCommon::ActionType::Tools);
