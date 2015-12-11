@@ -18,6 +18,7 @@
 #include "plugininterface.h"
 #include "pimcommon/genericpluginmanager.h"
 #include "kaddressbook_debug.h"
+#include "mainwidget.h"
 
 #include <KActionCollection>
 
@@ -52,6 +53,20 @@ void PluginInterface::createPluginInterface()
 
 void PluginInterface::slotPluginActivated(PimCommon::GenericPluginInterface *interface)
 {
+    PimCommon::GenericPluginInterface::RequireTypes requires = interface->requires();
+    if (requires & PimCommon::GenericPluginInterface::CurrentItems) {
+        interface->setCurrentItems(mMainWidget->collectSelectedContactsItem());
+    }
+    if (requires & PimCommon::GenericPluginInterface::Items) {
+        //TODO
+    }
+    if (requires & PimCommon::GenericPluginInterface::CurrentCollection) {
+        //TODO
+    }
+    if (requires & PimCommon::GenericPluginInterface::Collections) {
+        //TODO
+    }
+
     if (interface) {
         interface->exec();
     }

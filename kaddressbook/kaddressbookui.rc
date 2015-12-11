@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="31" translationDomain="kaddressbook">
+<kpartgui name="kaddressbook" version="33" translationDomain="kaddressbook">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -32,8 +32,7 @@
       <Action name="file_print"/>
       <Action name="file_print_preview"/>
       <Separator/>
-      <Action name="merge_contacts"/>
-      <Action name="search_duplicate_contacts"/>
+      <ActionList name="kaddressbook_plugins_tools"/>
       <Separator/>
       <Action name="file_quit"/>
     </Menu>

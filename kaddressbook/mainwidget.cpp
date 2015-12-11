@@ -23,8 +23,6 @@
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
-#include "merge/manualmerge/mergecontactsdialog.h"
-#include "merge/searchduplicate/searchandmergecontactduplicatecontactdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxport/xxportmanager.h"
@@ -393,9 +391,7 @@ void MainWidget::delayedInit()
     KPIM::UiStateSaver::restoreState(mItemView, group);
 
 #if defined(HAVE_PRISON)
-    mXmlGuiClient->
-    actionCollection()->
-    action(QStringLiteral("options_show_qrcodes"))->setChecked(showQRCodes());
+    mXmlGuiClient->actionCollection()->action(QStringLiteral("options_show_qrcodes"))->setChecked(showQRCodes());
 #endif
 
     connect(GlobalContactModel::instance()->model(), &QAbstractItemModel::modelAboutToBeReset,
@@ -406,6 +402,7 @@ void MainWidget::delayedInit()
 
     restoreState();
     updateQuickSearchText();
+    initializePluginActions();
 }
 
 MainWidget::~MainWidget()
@@ -725,14 +722,6 @@ void MainWidget::setupActions(KActionCollection *collection)
         actTheme->setChecked(true);
     }
 
-    action = collection->addAction(QStringLiteral("merge_contacts"));
-    action->setText(i18n("Merge Contacts..."));
-    connect(action, &QAction::triggered, this, &MainWidget::mergeContacts);
-
-    action = collection->addAction(QStringLiteral("search_duplicate_contacts"));
-    action->setText(i18n("Search Duplicate Contacts..."));
-    connect(action, &QAction::triggered, this, &MainWidget::slotSearchDuplicateContacts);
-
     mQuickSearchAction = new QAction(i18n("Set Focus to Quick Search"), this);
     //If change shortcut change in quicksearchwidget->lineedit->setPlaceholderText
     collection->addAction(QStringLiteral("focus_to_quickseach"), mQuickSearchAction);
@@ -1013,22 +1002,9 @@ void MainWidget::slotGrantleeThemesUpdated()
     }
 }
 
-void MainWidget::mergeContacts()
+Akonadi::Item::List MainWidget::collectSelectedContactsItem() const
 {
-    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
-    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(this);
-    dlg->setContacts(lst);
-    dlg->exec();
-    delete dlg;
-}
-
-void MainWidget::slotSearchDuplicateContacts()
-{
-    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
-    QPointer<KABMergeContacts::SearchAndMergeContactDuplicateContactDialog> dlg = new KABMergeContacts::SearchAndMergeContactDuplicateContactDialog(this);
-    dlg->searchPotentialDuplicateContacts(lst);
-    dlg->exec();
-    delete dlg;
+    return Utils::collectSelectedContactsItem(mItemView->selectionModel());
 }
 
 Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const
