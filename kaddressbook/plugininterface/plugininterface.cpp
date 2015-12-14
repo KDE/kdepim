@@ -44,6 +44,7 @@ void PluginInterface::initializeInterfaceRequires(PimCommon::GenericPluginInterf
     if (requires & PimCommon::GenericPluginInterface::CurrentItems) {
         interface->setCurrentItems(mMainWidget->collectSelectedContactsItem());
     }
+#if 0
     if (requires & PimCommon::GenericPluginInterface::Items) {
         //TODO
     }
@@ -53,6 +54,7 @@ void PluginInterface::initializeInterfaceRequires(PimCommon::GenericPluginInterf
     if (requires & PimCommon::GenericPluginInterface::Collections) {
         //TODO
     }
+#endif
 }
 
 void PluginInterface::setMainWidget(MainWidget *mainWidget)
