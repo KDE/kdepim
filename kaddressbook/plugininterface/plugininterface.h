@@ -15,37 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef PLUGININTERFACE_H
-#define PLUGININTERFACE_H
+#ifndef KADDRESSBOOKPLUGININTERFACE_H
+#define KADDRESSBOOKPLUGININTERFACE_H
 
 #include <QObject>
 #include <QVector>
 
 #include <pimcommon/genericplugininterface.h>
+#include <pimcommon/plugininterface.h>
 class KActionCollection;
 class QAction;
 class MainWidget;
-class PluginInterface : public QObject
+class PluginInterface : public PimCommon::PluginInterface
 {
     Q_OBJECT
 public:
     explicit PluginInterface(KActionCollection *ac, QObject *parent = Q_NULLPTR);
     ~PluginInterface();
 
-    void setParentWidget(QWidget *widget);
-    QHash<PimCommon::ActionType::Type, QList<QAction *> > actionsType() const;
-    void createPluginInterface();
-
     void setMainWidget(MainWidget *mainWidget);
 
-private Q_SLOTS:
-    void slotPluginActivated(PimCommon::GenericPluginInterface *interface);
-
+    void initializeInterfaceRequires(PimCommon::GenericPluginInterface *interface) Q_DECL_OVERRIDE;
 private:
-    QWidget *mParentWidget;
-    KActionCollection *mActionCollection;
-    QVector<PimCommon::GenericPluginInterface *> mListGenericInterface;
     MainWidget *mMainWidget;
 };
 
-#endif // PLUGININTERFACE_H
+#endif // KADDRESSBOOKPLUGININTERFACE_H
