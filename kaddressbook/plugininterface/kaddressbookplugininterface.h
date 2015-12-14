@@ -26,12 +26,12 @@
 class KActionCollection;
 class QAction;
 class MainWidget;
-class PluginInterface : public PimCommon::PluginInterface
+class KAddressBookPluginInterface : public PimCommon::PluginInterface
 {
     Q_OBJECT
 public:
-    explicit PluginInterface(KActionCollection *ac, QObject *parent = Q_NULLPTR);
-    ~PluginInterface();
+    explicit KAddressBookPluginInterface(KActionCollection *ac, QObject *parent = Q_NULLPTR);
+    ~KAddressBookPluginInterface();
 
     void setMainWidget(MainWidget *mainWidget);
 

@@ -97,7 +97,7 @@
 #include <QDesktopServices>
 #include <ItemModifyJob>
 
-#include <plugininterface/plugininterface.h>
+#include "plugininterface/kaddressbookplugininterface.h"
 
 namespace
 {
@@ -161,7 +161,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     mXXPortManager = new XXPortManager(this);
     Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
-    mPluginInterface = new PluginInterface(guiClient->actionCollection(), this);
+    mPluginInterface = new KAddressBookPluginInterface(guiClient->actionCollection(), this);
     setupGui();
     setupActions(guiClient->actionCollection());
 

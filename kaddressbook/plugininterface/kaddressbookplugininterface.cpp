@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "plugininterface.h"
+#include "kaddressbookplugininterface.h"
 #include "pimcommon/genericpluginmanager.h"
 #include "kaddressbook_debug.h"
 #include "mainwidget.h"
@@ -24,7 +24,7 @@
 
 #include <pimcommon/genericplugin.h>
 
-PluginInterface::PluginInterface(KActionCollection *ac, QObject *parent)
+KAddressBookPluginInterface::KAddressBookPluginInterface(KActionCollection *ac, QObject *parent)
     : PimCommon::PluginInterface(ac, parent),
       mMainWidget(Q_NULLPTR)
 {
@@ -33,12 +33,12 @@ PluginInterface::PluginInterface(KActionCollection *ac, QObject *parent)
     initializePlugins();
 }
 
-PluginInterface::~PluginInterface()
+KAddressBookPluginInterface::~KAddressBookPluginInterface()
 {
 
 }
 
-void PluginInterface::initializeInterfaceRequires(PimCommon::GenericPluginInterface *interface)
+void KAddressBookPluginInterface::initializeInterfaceRequires(PimCommon::GenericPluginInterface *interface)
 {
     PimCommon::GenericPluginInterface::RequireTypes requires = interface->requires();
     if (requires & PimCommon::GenericPluginInterface::CurrentItems) {
@@ -57,7 +57,7 @@ void PluginInterface::initializeInterfaceRequires(PimCommon::GenericPluginInterf
 #endif
 }
 
-void PluginInterface::setMainWidget(MainWidget *mainWidget)
+void KAddressBookPluginInterface::setMainWidget(MainWidget *mainWidget)
 {
     mMainWidget = mainWidget;
 }

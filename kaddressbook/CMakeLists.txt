@@ -77,7 +77,7 @@ set(kaddressbook_gravatar_SRCS
 )
 
 set(kaddressbook_plugin_SRCS
-   plugininterface/plugininterface.cpp
+   plugininterface/kaddressbookplugininterface.cpp
 )
 
 set(kaddressbook_LIB_SRCS
