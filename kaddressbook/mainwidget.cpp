@@ -32,7 +32,6 @@
 #include "categoryfilterproxymodel.h"
 #include "kaddressbook_options.h"
 
-#include "sendmail/mailsenderjob.h"
 #include "gravatar/widgets/gravatarupdatedialog.h"
 
 #include "KaddressbookGrantlee/GrantleeContactFormatter"
@@ -149,7 +148,6 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
       mQuickSearchAction(Q_NULLPTR),
       mServerSideSubscription(Q_NULLPTR),
       mSearchGravatarAction(Q_NULLPTR),
-      mSendEmailAction(Q_NULLPTR),
       mPluginInterface(Q_NULLPTR)
 {
 
@@ -733,11 +731,6 @@ void MainWidget::setupActions(KActionCollection *collection)
     connect(mQuickSearchAction, &QAction::triggered, mQuickSearchWidget, &QuickSearchWidget::slotFocusQuickSearch);
     collection->setDefaultShortcut(mQuickSearchAction, QKeySequence(Qt::ALT + Qt::Key_Q));
 
-    mSendEmailAction = collection->addAction(QStringLiteral("send_mail"));
-    mSendEmailAction->setText(i18n("Send an email..."));
-    mSendEmailAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
-    connect(mSendEmailAction, &QAction::triggered, this, &MainWidget::slotSendMail);
-
     if (!qEnvironmentVariableIsEmpty("KDEPIM_BALOO_DEBUG")) {
         action = collection->addAction(QStringLiteral("debug_baloo"));
         //Don't translate it. It's just for debug
@@ -1039,34 +1032,6 @@ void MainWidget::slotCheckNewCalendar(const QModelIndex &parent, int begin, int 
     }
 }
 
-void MainWidget::slotSendMail()
-{
-    const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
-    if (!lst.isEmpty()) {
-        KABMailSender::MailSenderJob *mailSender = new KABMailSender::MailSenderJob(lst, this);
-        connect(mailSender, &KABMailSender::MailSenderJob::sendMails, this, &MainWidget::slotSendMails);
-        connect(mailSender, &KABMailSender::MailSenderJob::sendMailsError, this, &MainWidget::slotSendMailsError);
-        mailSender->start();
-    } else {
-        KMessageBox::sorry(this, i18n("You have not selected any contacts."));
-    }
-}
-
-void MainWidget::slotSendMailsError(const QString &error)
-{
-    KMessageBox::error(this, error);
-}
-
-void MainWidget::slotSendMails(const QStringList &emails)
-{
-    if (!emails.isEmpty()) {
-        QUrl url;
-        url.setScheme(QStringLiteral("mailto"));
-        url.setPath(emails.join(QStringLiteral(";")));
-        QDesktopServices::openUrl(url);
-    }
-}
-
 const Akonadi::Item::List MainWidget::collectSelectedAllContactsItem()
 {
     return collectSelectedAllContactsItem(mItemView->selectionModel());
@@ -1192,7 +1157,6 @@ void MainWidget::slotSelectionChanged()
         hasUniqSelection = (mItemView->selectionModel()->selection().at(0).height() == 1);
         hasSelection = true;
     }
-    mSendEmailAction->setEnabled(hasSelection);
     mSearchGravatarAction->setEnabled(hasUniqSelection);
 }
 

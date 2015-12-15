@@ -25,10 +25,6 @@ if(KF5Gpgmepp_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif()
 
-set(kaddressbook_sendmail_SRCS
-  sendmail/mailsenderjob.cpp
-)
-
 
 set(kaddressbook_printing_SRCS
   printing/detailled/detailledstyle.cpp
@@ -94,7 +90,6 @@ set(kaddressbook_LIB_SRCS
   kaddressbookmigrateapplication.cpp
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
-  ${kaddressbook_sendmail_SRCS}
   ${kaddressbook_gravatar_SRCS} 
   ${kaddressbook_plugin_SRCS}
 )
@@ -130,7 +125,6 @@ else()
    target_link_libraries(kaddressbookprivate PRIVATE KF5::Gpgmepp-pthread)
 endif()
 if (BUILD_TESTING)
-   add_subdirectory(sendmail/autotests)
    add_subdirectory(gravatar/autotests)
    add_subdirectory(gravatar/tests)
    add_subdirectory(autotests)

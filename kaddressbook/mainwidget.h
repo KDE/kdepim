@@ -105,11 +105,6 @@ private Q_SLOTS:
     void slotGrantleeThemesUpdated();
     void slotCheckNewCalendar(const QModelIndex &parent, int begin, int end);
 
-    void slotSendMail();
-    void slotSendMailsError(const QString &error);
-
-    void slotSendMails(const QStringList &emails);
-
     void slotDebugBaloo();
     void slotServerSideSubscription();
     void slotCurrentCollectionChanged(const Akonadi::Collection &col);
@@ -171,7 +166,6 @@ private:
     QAction *mQuickSearchAction;
     QAction *mServerSideSubscription;
     QAction *mSearchGravatarAction;
-    QAction *mSendEmailAction;
     KAddressBookPluginInterface *mPluginInterface;
 };
 
