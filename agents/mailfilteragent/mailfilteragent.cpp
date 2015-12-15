@@ -130,6 +130,11 @@ MailFilterAgent::~MailFilterAgent()
     delete m_filterLogDialog;
 }
 
+void MailFilterAgent::configure(WId windowId)
+{
+    Q_UNUSED(windowId);
+}
+
 void MailFilterAgent::initializeCollections()
 {
     m_filterManager->readConfig();

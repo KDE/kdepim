@@ -64,6 +64,9 @@ private Q_SLOTS:
     void itemsReceiviedForFiltering(const Akonadi::Item::List &items);
     void clearMessage();
 
+public Q_SLOTS:
+    void configure(WId windowId) Q_DECL_OVERRIDE;
+
 private:
     FilterManager *m_filterManager;
 
