@@ -76,6 +76,8 @@ public:
     XXPortManager *importManager() const;
     void updateQuickSearchText();
     Akonadi::Item::List collectSelectedContactsItem() const;
+    const Akonadi::Item::List collectSelectedAllContactsItem();
+
 
 public Q_SLOTS:
     void newContact();
@@ -109,8 +111,6 @@ private Q_SLOTS:
     void slotSendMails(const QStringList &emails);
 
     void slotDebugBaloo();
-    void slotSendVcards();
-    void slotSendVcardsError(const QString &error);
     void slotServerSideSubscription();
     void slotCurrentCollectionChanged(const Akonadi::Collection &col);
     void slotCheckGravatar();
@@ -171,7 +171,6 @@ private:
     QAction *mQuickSearchAction;
     QAction *mServerSideSubscription;
     QAction *mSearchGravatarAction;
-    QAction *mSendVcardAction;
     QAction *mSendEmailAction;
     KAddressBookPluginInterface *mPluginInterface;
 };

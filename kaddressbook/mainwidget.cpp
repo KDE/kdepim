@@ -33,7 +33,6 @@
 #include "kaddressbook_options.h"
 
 #include "sendmail/mailsenderjob.h"
-#include "sendvcards/sendvcardsjob.h"
 #include "gravatar/widgets/gravatarupdatedialog.h"
 
 #include "KaddressbookGrantlee/GrantleeContactFormatter"
@@ -150,7 +149,6 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
       mQuickSearchAction(Q_NULLPTR),
       mServerSideSubscription(Q_NULLPTR),
       mSearchGravatarAction(Q_NULLPTR),
-      mSendVcardAction(Q_NULLPTR),
       mSendEmailAction(Q_NULLPTR),
       mPluginInterface(Q_NULLPTR)
 {
@@ -574,11 +572,18 @@ void MainWidget::setupGui()
 
 void MainWidget::initializePluginActions()
 {
-    const QHash<PimCommon::ActionType::Type, QList<QAction *> > localActionsType = mPluginInterface->actionsType();
-    QList<QAction *> lstTools = localActionsType.value(PimCommon::ActionType::Tools);
-    if (!lstTools.isEmpty() && mXmlGuiClient->factory()) {
-        mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_tools"));
-        mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_tools"), lstTools);
+    if (mXmlGuiClient->factory()) {
+        const QHash<PimCommon::ActionType::Type, QList<QAction *> > localActionsType = mPluginInterface->actionsType();
+        QList<QAction *> lstTools = localActionsType.value(PimCommon::ActionType::Tools);
+        if (!lstTools.isEmpty()) {
+            mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_tools"));
+            mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_tools"), lstTools);
+        }
+        QList<QAction *> lstActions = localActionsType.value(PimCommon::ActionType::Action);
+        if (!lstActions.isEmpty()) {
+            mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_actions"));
+            mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_actions"), lstActions);
+        }
     }
 }
 
@@ -732,11 +737,6 @@ void MainWidget::setupActions(KActionCollection *collection)
     mSendEmailAction->setText(i18n("Send an email..."));
     mSendEmailAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
     connect(mSendEmailAction, &QAction::triggered, this, &MainWidget::slotSendMail);
-
-    mSendVcardAction = collection->addAction(QStringLiteral("send_vcards"));
-    mSendVcardAction->setText(i18n("Send vCards..."));
-    mSendVcardAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
-    connect(mSendVcardAction, &QAction::triggered, this, &MainWidget::slotSendVcards);
 
     if (!qEnvironmentVariableIsEmpty("KDEPIM_BALOO_DEBUG")) {
         action = collection->addAction(QStringLiteral("debug_baloo"));
@@ -1039,21 +1039,6 @@ void MainWidget::slotCheckNewCalendar(const QModelIndex &parent, int begin, int 
     }
 }
 
-void MainWidget::slotSendVcards()
-{
-    const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
-    if (!lst.isEmpty()) {
-        KABSendVCards::SendVcardsJob *sendVcards = new KABSendVCards::SendVcardsJob(lst, this);
-        connect(sendVcards, &KABSendVCards::SendVcardsJob::sendVCardsError, this, &MainWidget::slotSendVcardsError);
-        sendVcards->start();
-    }
-}
-
-void MainWidget::slotSendVcardsError(const QString &error)
-{
-    KMessageBox::error(this, error);
-}
-
 void MainWidget::slotSendMail()
 {
     const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
@@ -1080,6 +1065,11 @@ void MainWidget::slotSendMails(const QStringList &emails)
         url.setPath(emails.join(QStringLiteral(";")));
         QDesktopServices::openUrl(url);
     }
+}
+
+const Akonadi::Item::List MainWidget::collectSelectedAllContactsItem()
+{
+    return collectSelectedAllContactsItem(mItemView->selectionModel());
 }
 
 void MainWidget::slotDebugBaloo()
@@ -1202,7 +1192,6 @@ void MainWidget::slotSelectionChanged()
         hasUniqSelection = (mItemView->selectionModel()->selection().at(0).height() == 1);
         hasSelection = true;
     }
-    mSendVcardAction->setEnabled(hasSelection);
     mSendEmailAction->setEnabled(hasSelection);
     mSearchGravatarAction->setEnabled(hasUniqSelection);
 }

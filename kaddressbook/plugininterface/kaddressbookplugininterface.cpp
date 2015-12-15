@@ -42,7 +42,7 @@ void KAddressBookPluginInterface::initializeInterfaceRequires(PimCommon::Generic
 {
     PimCommon::GenericPluginInterface::RequireTypes requires = interface->requires();
     if (requires & PimCommon::GenericPluginInterface::CurrentItems) {
-        interface->setCurrentItems(mMainWidget->collectSelectedContactsItem());
+        interface->setCurrentItems(mMainWidget->collectSelectedAllContactsItem());
     }
 #if 0
     if (requires & PimCommon::GenericPluginInterface::Items) {

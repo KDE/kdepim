@@ -29,9 +29,6 @@ set(kaddressbook_sendmail_SRCS
   sendmail/mailsenderjob.cpp
 )
 
-set(kaddressbook_sendvcards_SRCS
-  sendvcards/sendvcardsjob.cpp
-)
 
 set(kaddressbook_printing_SRCS
   printing/detailled/detailledstyle.cpp
@@ -98,7 +95,6 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
   ${kaddressbook_sendmail_SRCS}
-  ${kaddressbook_sendvcards_SRCS}
   ${kaddressbook_gravatar_SRCS} 
   ${kaddressbook_plugin_SRCS}
 )
@@ -135,7 +131,6 @@ else()
 endif()
 if (BUILD_TESTING)
    add_subdirectory(sendmail/autotests)
-   add_subdirectory(sendvcards/autotests)
    add_subdirectory(gravatar/autotests)
    add_subdirectory(gravatar/tests)
    add_subdirectory(autotests)

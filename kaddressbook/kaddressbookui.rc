@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="34" translationDomain="kaddressbook">
+<kpartgui name="kaddressbook" version="35" translationDomain="kaddressbook">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -54,7 +54,7 @@
     </Menu>
 
     <Menu name="action" noMerge="1"><text>&amp;Action</text>
-      <Action name="send_mail"/>
+      <ActionList name="kaddressbook_plugins_actions"/>
     </Menu>
 
     <Menu name="view" noMerge="1"><text>&amp;View</text>
