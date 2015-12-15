@@ -18,7 +18,6 @@
 */
 
 #include "contactselectionwidget.h"
-#include "utils.h"
 
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>

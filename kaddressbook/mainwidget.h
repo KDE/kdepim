@@ -75,7 +75,6 @@ public:
 
     XXPortManager *importManager() const;
     void updateQuickSearchText();
-    Akonadi::Item::List collectSelectedContactsItem() const;
     const Akonadi::Item::List collectSelectedAllContactsItem();
 
 

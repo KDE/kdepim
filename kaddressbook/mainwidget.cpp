@@ -26,7 +26,6 @@
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxport/xxportmanager.h"
-#include "utils.h"
 #include "kaddressbookadaptor.h"
 #include "categoryselectwidget.h"
 #include "categoryfilterproxymodel.h"
@@ -995,11 +994,6 @@ void MainWidget::slotGrantleeThemesUpdated()
     }
 }
 
-Akonadi::Item::List MainWidget::collectSelectedContactsItem() const
-{
-    return Utils::collectSelectedContactsItem(mItemView->selectionModel());
-}
-
 Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const
 {
     QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(mCollectionView->model());
@@ -1152,10 +1146,8 @@ void MainWidget::slotModifyContactFinished(KJob *job)
 void MainWidget::slotSelectionChanged()
 {
     bool hasUniqSelection = false;
-    bool hasSelection = false;
     if (mItemView->selectionModel()->selection().count() == 1) {
         hasUniqSelection = (mItemView->selectionModel()->selection().at(0).height() == 1);
-        hasSelection = true;
     }
     mSearchGravatarAction->setEnabled(hasUniqSelection);
 }
