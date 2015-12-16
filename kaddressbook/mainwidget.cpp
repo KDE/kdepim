@@ -579,6 +579,12 @@ void MainWidget::initializePluginActions()
             mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_actions"));
             mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_actions"), lstActions);
         }
+        QList<QAction *> lstPopupMenuActions = localActionsType.value(PimCommon::ActionType::PopupMenu);
+        if (!lstPopupMenuActions.isEmpty()) {
+            mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_popupmenu_actions"));
+            mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_popupmenu_actions"), lstPopupMenuActions);
+        }
+
     }
 }
 
