@@ -35,7 +35,6 @@
 #include <messageviewer/webkitparthtmlwriter.h>
 
 #include <kstringhandler.h>
-#include <kiconloader.h>
 #include <qdebug.h>
 #include <kmessagebox.h>
 

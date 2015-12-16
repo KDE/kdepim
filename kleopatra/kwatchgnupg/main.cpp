@@ -39,7 +39,6 @@
 
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <kiconloader.h>
 #include "kwatchgnupg_debug.h"
 #include <QCommandLineParser>
 #include <QApplication>

@@ -26,7 +26,6 @@
 #include <kmanagesieve/sievejob.h>
 
 #include <KLocalizedString>
-#include <KIconLoader>
 
 using namespace KSieveUi;
 

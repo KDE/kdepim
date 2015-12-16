@@ -80,7 +80,6 @@
 #include <KCMultiDialog>
 #include <KPrintPreview>
 #include <KXMLGUIClient>
-#include <KIconLoader>
 #include <KMessageBox>
 
 #include <QActionGroup>
