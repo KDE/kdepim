@@ -159,7 +159,6 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     setupGui();
     setupActions(guiClient->actionCollection());
 
-
     /*
     *  The item models, proxies and views have the following structure:
     *
@@ -582,7 +581,6 @@ void MainWidget::initializePluginActions()
         }
     }
 }
-
 
 void MainWidget::setupActions(KActionCollection *collection)
 {

@@ -77,7 +77,6 @@ public:
     void updateQuickSearchText();
     const Akonadi::Item::List collectSelectedAllContactsItem();
 
-
 public Q_SLOTS:
     void newContact();
     void newGroup();
