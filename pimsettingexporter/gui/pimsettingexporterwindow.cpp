@@ -46,6 +46,8 @@
 #include <KRecentFilesAction>
 #include <QPointer>
 #include <KSharedConfig>
+#include <KFileWidget>
+#include <KRecentDirs>
 #include <QStandardPaths>
 #include <QLocale>
 #include <QFileDialog>
@@ -270,9 +272,15 @@ void PimSettingExporterWindow::slotBackupData()
         return;
     }
 
-    const QString filename = QFileDialog::getSaveFileName(this, i18n("Create backup"), QString(), i18n("Zip file (*.zip)"));
+    QString recentDirClass;
+    const QString filename = QFileDialog::getSaveFileName(this, i18n("Create backup"),
+                                                          KFileWidget::getStartUrl(QUrl(QStringLiteral("kfiledialog:///pimsettingexporter")), recentDirClass).toLocalFile(),
+                                                          i18n("Zip file (*.zip)"));
     if (filename.isEmpty()) {
         return;
+    }
+    if (!recentDirClass.isEmpty()) {
+        KRecentDirs::add(recentDirClass, filename);
     }
     mRecentFilesAction->addUrl(QUrl::fromLocalFile(filename));
     backupData(filename);
@@ -322,10 +330,17 @@ void PimSettingExporterWindow::slotAddEndLine()
 
 void PimSettingExporterWindow::slotRestoreData()
 {
-    const QString filename = QFileDialog::getOpenFileName(this, i18n("Restore backup"), QString(), i18n("Zip File (*.zip)"));
+    QString recentDirClass;
+    const QString filename = QFileDialog::getOpenFileName(this, i18n("Restore backup"),
+                                                          KFileWidget::getStartUrl(QUrl(QStringLiteral("kfiledialog:///pimsettingexporter")), recentDirClass).toLocalFile(),
+                                                          i18n("Zip File (*.zip)"));
     if (filename.isEmpty()) {
         return;
     }
+    if (!recentDirClass.isEmpty()) {
+        KRecentDirs::add(recentDirClass, filename);
+    }
+
     loadData(filename);
 }
 
