@@ -26,6 +26,10 @@ class ConfigureDialog : public QDialog
 public:
     explicit ConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~ConfigureDialog();
+
+private:
+    void readConfig();
+    void writeConfig();
 };
 
 #endif // CONFIGUREDIALOG_H

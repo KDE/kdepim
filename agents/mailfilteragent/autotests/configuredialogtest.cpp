@@ -22,12 +22,10 @@
 ConfigureDialogTest::ConfigureDialogTest(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 ConfigureDialogTest::~ConfigureDialogTest()
 {
-
 }
 
 QTEST_MAIN(ConfigureDialogTest)

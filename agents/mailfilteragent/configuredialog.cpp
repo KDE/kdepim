@@ -16,14 +16,28 @@
 */
 
 #include "configuredialog.h"
+#include <KLocalizedString>
+#include <QDialogButtonBox>
 
 ConfigureDialog::ConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
-
+    readConfig();
 }
 
 ConfigureDialog::~ConfigureDialog()
 {
+    writeConfig();
+}
+
+
+void ConfigureDialog::readConfig()
+{
 
 }
+
+void ConfigureDialog::writeConfig()
+{
+
+}
+
