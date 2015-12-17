@@ -26,6 +26,9 @@ class ConfigureDialogTest : public QObject
 public:
     explicit ConfigureDialogTest(QObject *parent = Q_NULLPTR);
     ~ConfigureDialogTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // CONFIGUREDIALOGTEST_H

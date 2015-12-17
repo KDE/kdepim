@@ -18,10 +18,26 @@
 #include "configuredialog.h"
 #include <KLocalizedString>
 #include <QDialogButtonBox>
+#include <QVBoxLayout>
+#include <kconfiggroup.h>
+#include <KSharedConfig>
+#include <QPushButton>
 
 ConfigureDialog::ConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    buttonBox->setObjectName(QStringLiteral("buttonbox"));
+    mainLayout->addWidget(buttonBox);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ConfigureDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ConfigureDialog::reject);
+
     readConfig();
 }
 
@@ -33,11 +49,17 @@ ConfigureDialog::~ConfigureDialog()
 
 void ConfigureDialog::readConfig()
 {
-
+    KConfigGroup group(KSharedConfig::openConfig(), "ConfigureDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
+    }
 }
 
 void ConfigureDialog::writeConfig()
 {
-
+    KConfigGroup myGroup(KSharedConfig::openConfig(), "Geometry");
+    myGroup.writeEntry("ConfigureDialog", size());
+    myGroup.sync();
 }
 

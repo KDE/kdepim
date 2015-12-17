@@ -15,27 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "configuredialogtest.h"
-#include "../configuredialog.h"
-#include <QTest>
-#include <QStandardPaths>
-#include <QDialogButtonBox>
+#include "configurewidget.h"
 
-ConfigureDialogTest::ConfigureDialogTest(QObject *parent)
-    : QObject(parent)
+ConfigureWidget::ConfigureWidget(QWidget *parent)
+    : QWidget(parent)
 {
-    QStandardPaths::setTestModeEnabled(true);
+
 }
 
-ConfigureDialogTest::~ConfigureDialogTest()
+ConfigureWidget::~ConfigureWidget()
 {
-}
 
-void ConfigureDialogTest::shouldHaveDefaultValue()
-{
-    ConfigureDialog dlg;
-    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
-    QVERIFY(buttonBox);
 }
-
-QTEST_MAIN(ConfigureDialogTest)
