@@ -60,7 +60,7 @@ set(kaddressbook_xxport_SRCS
   xxport/xxportmanager.cpp
   xxport/vcard/vcardviewerdialog.cpp
   xxport/vcard/vcardexportselectionwidget.cpp
-  xxport/contactselectiondialog.cpp
+  xxport/contactxxexportselectiondialog.cpp
 )
 
 set(kaddressbook_gravatar_SRCS
@@ -87,6 +87,7 @@ set(kaddressbook_LIB_SRCS
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
   kaddressbookmigrateapplication.cpp
+  contactselectiondialog.cpp
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
   ${kaddressbook_gravatar_SRCS} 

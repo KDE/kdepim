@@ -17,8 +17,8 @@
   02110-1301, USA.
 */
 
-#ifndef CONTACTSELECTIONDIALOG_H
-#define CONTACTSELECTIONDIALOG_H
+#ifndef CONTACTXxExportSELECTIONDIALOG_H
+#define CONTACTXxExportSELECTIONDIALOG_H
 
 #include <KContacts/Addressee>
 #include <QDialog>
@@ -37,7 +37,7 @@ class Collection;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class ContactSelectionDialog : public QDialog
+class ContactXxExportSelectionDialog : public QDialog
 {
     Q_OBJECT
 
@@ -48,7 +48,7 @@ public:
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    explicit ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport, QWidget *parent = Q_NULLPTR);
+    explicit ContactXxExportSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport, QWidget *parent = Q_NULLPTR);
 
     /**
      * Sets the @p message text.

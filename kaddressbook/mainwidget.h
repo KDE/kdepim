@@ -77,6 +77,13 @@ public:
     void updateQuickSearchText();
     const Akonadi::Item::List collectSelectedAllContactsItem();
 
+    /**
+     * Returns the address book collection that is currently
+     * selected by the user or an invalid collection if no
+     * address book is selected.
+     */
+    Akonadi::Collection currentAddressBook() const;
+
 public Q_SLOTS:
     void newContact();
     void newGroup();
@@ -122,12 +129,6 @@ private:
 
     QAbstractItemModel *allContactsModel();
 
-    /**
-     * Returns the address book collection that is currently
-     * selected by the user or an invalid collection if no
-     * address book is selected.
-     */
-    Akonadi::Collection currentAddressBook() const;
 
     Akonadi::EntityMimeTypeFilterModel *mCollectionTree;
     Akonadi::EntityMimeTypeFilterModel *mItemTree;

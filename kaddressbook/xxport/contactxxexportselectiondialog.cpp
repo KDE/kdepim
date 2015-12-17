@@ -17,7 +17,7 @@
   02110-1301, USA.
 */
 
-#include "contactselectiondialog.h"
+#include "contactxxexportselectiondialog.h"
 #include "contactselectionwidget.h"
 
 #include <QVBoxLayout>
@@ -25,7 +25,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport,
+ContactXxExportSelectionDialog::ContactXxExportSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport,
         QWidget *parent)
     : QDialog(parent),
       mVCardExport(Q_NULLPTR)
@@ -40,8 +40,8 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactSelectionDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactSelectionDialog::reject);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactXxExportSelectionDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactXxExportSelectionDialog::reject);
 
     QVBoxLayout *layout = new QVBoxLayout;
     mainWidget->setLayout(layout);
@@ -59,22 +59,22 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
     resize(QSize(450, 220));
 }
 
-void ContactSelectionDialog::setMessageText(const QString &message)
+void ContactXxExportSelectionDialog::setMessageText(const QString &message)
 {
     mSelectionWidget->setMessageText(message);
 }
 
-void ContactSelectionDialog::setDefaultAddressBook(const Akonadi::Collection &addressBook)
+void ContactXxExportSelectionDialog::setDefaultAddressBook(const Akonadi::Collection &addressBook)
 {
     mSelectionWidget->setDefaultAddressBook(addressBook);
 }
 
-ContactList ContactSelectionDialog::selectedContacts() const
+ContactList ContactXxExportSelectionDialog::selectedContacts() const
 {
     return mSelectionWidget->selectedContacts();
 }
 
-VCardExportSelectionWidget::ExportFields ContactSelectionDialog::exportType() const
+VCardExportSelectionWidget::ExportFields ContactXxExportSelectionDialog::exportType() const
 {
     if (mVCardExport) {
         return mVCardExport->exportType();
@@ -83,7 +83,7 @@ VCardExportSelectionWidget::ExportFields ContactSelectionDialog::exportType() co
     }
 }
 
-void ContactSelectionDialog::setAddGroupContact(bool addGroupContact)
+void ContactXxExportSelectionDialog::setAddGroupContact(bool addGroupContact)
 {
     mSelectionWidget->setAddGroupContact(addGroupContact);
 }
