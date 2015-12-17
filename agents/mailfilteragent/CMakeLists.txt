@@ -9,6 +9,7 @@ set(akonadi_mailfilter_agent_SRCS
   filterlogdialog.cpp
   filtermanager.cpp
   mailfilteragent.cpp
+  configuredialog.cpp
 )
 
 qt5_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)
@@ -43,3 +44,8 @@ target_link_libraries(akonadi_mailfilter_agent
 install(TARGETS akonadi_mailfilter_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES mailfilteragent.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents")
 install(FILES akonadi_mailfilter_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
+
+if(BUILD_TESTING)
+    add_subdirectory(autotests)
+endif()
+
