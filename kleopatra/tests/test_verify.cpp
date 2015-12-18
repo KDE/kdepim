@@ -35,10 +35,12 @@
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/VerifyDetachedJob>
 #include <Libkleo/KeyListJob>
+#include <Libkleo/DecryptVerifyJob>
 #include <KAboutData>
 
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>
+#include <gpgme++/decryptionresult.h>
 #include <gpgme++/key.h>
 #include <QTimer>
 #include <QObject>
@@ -170,6 +172,30 @@ private Q_SLOTS:
         QCOMPARE(sig.summary() & GpgME::Signature::KeyMissing, 0);
         QCOMPARE((quint64) sig.creationTime(), Q_UINT64_C(1189650248));
         QCOMPARE(sig.validity(), GpgME::Signature::Full);
+    }
+
+    /* Test that the decrypt verify job also works with signed only, not
+     * encrypted PGP messages */
+    void testDecryptVerifyOpaqueSigned()
+    {
+        const QString sigFileName = QLatin1String(KLEO_TEST_DATADIR) +
+                                    QLatin1String("/test.data.signed-opaque.asc");
+        std::pair<GpgME::DecryptionResult, GpgME::VerificationResult> result;
+        QByteArray plaintext;
+        QFile sigFile(sigFileName);
+        QVERIFY(sigFile.open(QFile::ReadOnly));
+        const QByteArray ciphertext = sigFile.readAll();
+
+        Kleo::DecryptVerifyJob * job = mBackend->decryptVerifyJob();
+        result = job->exec (ciphertext, plaintext);
+        QVERIFY(result.first.error().code());
+
+        QVERIFY(result.second.numSignatures());
+        GpgME::Signature sig = result.second.signature(0);
+        QVERIFY(sig.validity() == GpgME::Signature::Validity::Full);
+        QVERIFY(!sig.status().code());
+        QVERIFY(QString::fromUtf8(plaintext).startsWith(
+                    QLatin1String("/* -*- mode: c++; c-basic-offset:4 -*-")));
     }
 
 #ifndef GPGME_MULTITHREADED_KEYLIST_BROKEN
