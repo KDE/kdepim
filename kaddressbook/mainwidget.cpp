@@ -32,8 +32,6 @@
 #include "kaddressbook_options.h"
 #include "contactselectiondialog.h"
 
-#include "gravatar/widgets/gravatarupdatedialog.h"
-
 #include "KaddressbookGrantlee/GrantleeContactFormatter"
 #include "KaddressbookGrantlee/GrantleeContactGroupFormatter"
 #include "grantleetheme/grantleethememanager.h"
@@ -146,7 +144,6 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
       mGrantleeThemeManager(Q_NULLPTR),
       mQuickSearchAction(Q_NULLPTR),
       mServerSideSubscription(Q_NULLPTR),
-      mSearchGravatarAction(Q_NULLPTR),
       mPluginInterface(Q_NULLPTR)
 {
 
@@ -744,10 +741,6 @@ void MainWidget::setupActions(KActionCollection *collection)
     mServerSideSubscription = new QAction(QIcon::fromTheme(QStringLiteral("folder-bookmarks")), i18n("Serverside Subscription..."), this);
     collection->addAction(QStringLiteral("serverside_subscription"), mServerSideSubscription);
     connect(mServerSideSubscription, &QAction::triggered, this, &MainWidget::slotServerSideSubscription);
-
-    mSearchGravatarAction = collection->addAction(QStringLiteral("search_gravatar"));
-    mSearchGravatarAction->setText(i18n("Check Gravatar..."));
-    connect(mSearchGravatarAction, &QAction::triggered, this, &MainWidget::slotCheckGravatar);
 }
 
 void MainWidget::printPreview()
@@ -1104,72 +1097,13 @@ void MainWidget::slotCurrentCollectionChanged(const Akonadi::Collection &col)
     mServerSideSubscription->setEnabled(PimCommon::Util::isImapFolder(col, isOnline));
 }
 
-void MainWidget::slotCheckGravatar()
-{
-    const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
-    if (lst.count() == 1) {
-        Akonadi::Item item = lst.first();
-        if (item.hasPayload<KContacts::Addressee>()) {
-            KContacts::Addressee address = item.payload<KContacts::Addressee>();
-            const QString email = address.preferredEmail();
-            if (email.isEmpty()) {
-                KMessageBox::error(this, i18n("No email found for this contact."));
-                return;
-            }
-            QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
-            dlg->setEmail(email);
-            if (!address.photo().isEmpty()) {
-                if (address.photo().isIntern()) {
-                    const QPixmap pix = QPixmap::fromImage(address.photo().data());
-                    dlg->setOriginalPixmap(pix);
-                } else {
-                    dlg->setOriginalUrl(address.photo().url());
-                }
-            }
-            if (dlg->exec()) {
-                KContacts::Picture picture = address.photo();
-                bool needToSave = false;
-                if (dlg->saveUrl()) {
-                    const QUrl url = dlg->resolvedUrl();
-                    if (!url.isEmpty()) {
-                        picture.setUrl(url.toString());
-                        needToSave = true;
-                    }
-                } else {
-                    const QPixmap pix = dlg->pixmap();
-                    if (!pix.isNull()) {
-                        picture.setData(pix.toImage());
-                        needToSave = true;
-                    }
-                }
-                if (needToSave) {
-                    address.setPhoto(picture);
-                    item.setPayload<KContacts::Addressee>(address);
-
-                    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item, this);
-                    connect(modifyJob, &Akonadi::ItemModifyJob::result, this, &MainWidget::slotModifyContactFinished);
-                }
-            }
-            delete dlg;
-        } else {
-            KMessageBox::information(this, i18n("A contact group was selected."));
-        }
-    }
-}
-
-void MainWidget::slotModifyContactFinished(KJob *job)
-{
-    if (job->error()) {
-        qCDebug(KADDRESSBOOK_LOG) << "Error while modifying items. " << job->error() << job->errorString();
-    }
-}
-
 void MainWidget::slotSelectionChanged()
 {
+#if 0
     bool hasUniqSelection = false;
     if (mItemView->selectionModel()->selection().count() == 1) {
         hasUniqSelection = (mItemView->selectionModel()->selection().at(0).height() == 1);
     }
-    mSearchGravatarAction->setEnabled(hasUniqSelection);
+#endif
 }
 

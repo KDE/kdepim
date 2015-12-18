@@ -62,12 +62,6 @@ set(kaddressbook_xxport_SRCS
   xxport/vcard/vcardexportselectionwidget.cpp
 )
 
-set(kaddressbook_gravatar_SRCS
-   gravatar/job/gravatarupdatejob.cpp
-   gravatar/widgets/gravatarupdatedialog.cpp
-   gravatar/widgets/gravatarupdatewidget.cpp
-)
-
 set(kaddressbook_plugin_SRCS
    plugininterface/kaddressbookplugininterface.cpp
 )
@@ -89,7 +83,6 @@ set(kaddressbook_LIB_SRCS
   contactselectiondialog.cpp
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
-  ${kaddressbook_gravatar_SRCS} 
   ${kaddressbook_plugin_SRCS}
 )
 
@@ -115,7 +108,6 @@ PRIVATE
   KF5::KDELibs4Support
   KF5::IconThemes
   Qt5::PrintSupport
-  KF5::Gravatar
   KF5::AkonadiSearchDebug
 )
 if (WIN32)
@@ -124,8 +116,6 @@ else()
    target_link_libraries(kaddressbookprivate PRIVATE KF5::Gpgmepp-pthread)
 endif()
 if (BUILD_TESTING)
-   add_subdirectory(gravatar/autotests)
-   add_subdirectory(gravatar/tests)
    add_subdirectory(autotests)
 endif()
 

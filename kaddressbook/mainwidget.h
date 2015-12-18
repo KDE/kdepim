@@ -114,8 +114,6 @@ private Q_SLOTS:
     void slotDebugBaloo();
     void slotServerSideSubscription();
     void slotCurrentCollectionChanged(const Akonadi::Collection &col);
-    void slotCheckGravatar();
-    void slotModifyContactFinished(KJob *job);
     void slotSelectionChanged();
 private:
     void initializePluginActions();
@@ -165,7 +163,6 @@ private:
     Akonadi::EntityTreeModel *entityTreeModel() const;
     QAction *mQuickSearchAction;
     QAction *mServerSideSubscription;
-    QAction *mSearchGravatarAction;
     KAddressBookPluginInterface *mPluginInterface;
 };
 
