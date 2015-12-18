@@ -60,7 +60,6 @@ set(kaddressbook_xxport_SRCS
   xxport/xxportmanager.cpp
   xxport/vcard/vcardviewerdialog.cpp
   xxport/vcard/vcardexportselectionwidget.cpp
-  xxport/contactxxexportselectiondialog.cpp
 )
 
 set(kaddressbook_gravatar_SRCS

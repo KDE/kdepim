@@ -19,7 +19,7 @@
 */
 
 #include "xxportmanager.h"
-#include "contactxxexportselectiondialog.h"
+#include "contactselectiondialog.h"
 
 #include <AkonadiCore/Collection>
 #include <AkonadiWidgets/CollectionDialog>
@@ -187,8 +187,8 @@ void XXPortManager::slotExport(const QString &identifier)
     }
 
     const bool selectExportType = (identifier == QLatin1String("vcard21") || identifier == QLatin1String("vcard30") || identifier == QLatin1String("vcard40"));
-    QPointer<ContactXxExportSelectionDialog> dlg =
-        new ContactXxExportSelectionDialog(mSelectionModel, selectExportType, mParentWidget);
+    QPointer<ContactSelectionDialog> dlg =
+        new ContactSelectionDialog(mSelectionModel, selectExportType, mParentWidget);
     dlg->setMessageText(i18n("Which contact do you want to export?"));
     dlg->setDefaultAddressBook(mDefaultAddressBook);
     if (!dlg->exec() || !dlg) {
