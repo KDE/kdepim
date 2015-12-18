@@ -50,8 +50,6 @@ private:
     void backupResources();
     void backupConfig();
     void backupIdentity();
-    //void backupAkonadiDb();
-    //bool checkProgram();
     QDateTime mArchiveTime;
     int mIndexIdentifier;
 };

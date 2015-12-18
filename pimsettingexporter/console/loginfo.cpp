@@ -68,5 +68,4 @@ void LogInfo::addLogLine(const QString &message, LogType type)
     }
     //Laurent: Don't use qCDebug here.
     qDebug() << newMessage;
-    //TODO cout << ... ?
 }

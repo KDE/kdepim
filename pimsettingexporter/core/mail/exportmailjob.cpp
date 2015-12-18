@@ -55,17 +55,6 @@ ExportMailJob::~ExportMailJob()
 {
 }
 
-#if 0
-bool ExportMailJob::checkProgram()
-{
-    if (QStandardPaths::findExecutable(QStringLiteral("mysqldump")).isEmpty()) {
-        Q_EMIT error(i18n("mysqldump not found. Export data aborted"));
-        return false;
-    }
-    return true;
-}
-#endif
-
 bool ExportMailJob::checkBackupType(Utils::StoredType type) const
 {
     return (mTypeSelected & type);
@@ -602,57 +591,3 @@ void ExportMailJob::backupIdentity()
     }
 }
 
-#if 0
-void ExportMailJob::backupAkonadiDb()
-{
-    setProgressDialogLabel(i18n("Backing up Akonadi Database..."));
-
-    AkonadiDataBase akonadiDataBase;
-    const QString dbDriver(akonadiDataBase.driver());
-
-    QTemporaryFile tmp;
-    tmp.open();
-
-    QStringList params;
-    QString dbDumpAppName;
-    if (dbDriver == QLatin1String("QMYSQL")) {
-        dbDumpAppName = QStringLiteral("mysqldump");
-
-        params << QStringLiteral("--single-transaction")
-               << QStringLiteral("--flush-logs")
-               << QStringLiteral("--triggers")
-               << QStringLiteral("--result-file=") + tmp.fileName()
-               << akonadiDataBase.options()
-               << akonadiDataBase.name();
-    } else if (dbDriver == QLatin1String("QPSQL")) {
-        dbDumpAppName = QStringLiteral("pg_dump");
-        params << QStringLiteral("--format=custom")
-               << QStringLiteral("--blobs")
-               << QStringLiteral("--file=") + tmp.fileName()
-               << akonadiDataBase.options()
-               << akonadiDataBase.name();
-    } else {
-        Q_EMIT error(i18n("Database driver \"%1\" not supported.", dbDriver));
-        return;
-    }
-    const QString dbDumpApp = QStandardPaths::findExecutable(dbDumpAppName);
-    if (dbDumpApp.isEmpty()) {
-        Q_EMIT error(i18n("Could not find \"%1\" necessary to dump database.", dbDumpAppName));
-        return;
-    }
-    KProcess *proc = new KProcess(this);
-    proc->setProgram(dbDumpApp, params);
-    const int result = proc->execute();
-    delete proc;
-    if (result != 0) {
-        qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Error during dump Database";
-        return;
-    }
-    const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::akonadiPath() + QLatin1String("akonadidatabase.sql"));
-    if (!fileAdded) {
-        Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QStringLiteral("akonadidatabase.sql")));
-    } else {
-        Q_EMIT info(i18n("Akonadi Database backup done."));
-    }
-}
-#endif
