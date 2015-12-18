@@ -50,6 +50,8 @@ public:
     void showFilterLogDialog(qlonglong windowId = 0);
     QString printCollectionMonitored();
 
+    void showConfigureDialog(qlonglong windowId = 0);
+
 protected:
     void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
 

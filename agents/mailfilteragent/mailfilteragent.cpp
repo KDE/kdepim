@@ -344,5 +344,10 @@ QString MailFilterAgent::printCollectionMonitored()
     return printDebugCollection;
 }
 
+void MailFilterAgent::showConfigureDialog(qlonglong windowId)
+{
+    //TODO
+}
+
 AKONADI_AGENT_MAIN(MailFilterAgent)
 
