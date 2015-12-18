@@ -45,6 +45,7 @@ void KAddressBookPluginInterface::initializeInterfaceRequires(PimCommon::Generic
         interface->setCurrentItems(mMainWidget->collectSelectedAllContactsItem());
     }
     if (requires & PimCommon::GenericPluginInterface::Items) {
+        interface->setItems(mMainWidget->selectedItems());
         qCDebug(KADDRESSBOOK_LOG) << "PimCommon::GenericPluginInterface::Items not implemented";
     }
     if (requires & PimCommon::GenericPluginInterface::CurrentCollection) {

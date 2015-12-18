@@ -84,6 +84,7 @@ public:
      */
     Akonadi::Collection currentAddressBook() const;
 
+    Akonadi::Item::List selectedItems();
 public Q_SLOTS:
     void newContact();
     void newGroup();

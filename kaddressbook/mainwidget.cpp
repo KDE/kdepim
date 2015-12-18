@@ -30,6 +30,7 @@
 #include "categoryselectwidget.h"
 #include "categoryfilterproxymodel.h"
 #include "kaddressbook_options.h"
+#include "contactselectiondialog.h"
 
 #include "gravatar/widgets/gravatarupdatedialog.h"
 
@@ -868,6 +869,23 @@ void MainWidget::setQRCodeShow(bool on)
 #else
     Q_UNUSED(on);
 #endif
+}
+
+Akonadi::Item::List MainWidget::selectedItems()
+{
+    Akonadi::Item::List items;
+    QPointer<ContactSelectionDialog> dlg =
+        new ContactSelectionDialog(mItemView->selectionModel(), false, this);
+    dlg->setDefaultAddressBook(currentAddressBook());
+    if (!dlg->exec() || !dlg) {
+        delete dlg;
+        return items;
+    }
+
+    //TODO items = dlg->selectedContacts().addressList();
+    delete dlg;
+
+    return items;
 }
 
 Akonadi::Collection MainWidget::currentAddressBook() const
