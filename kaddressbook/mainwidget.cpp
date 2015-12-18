@@ -882,7 +882,7 @@ Akonadi::Item::List MainWidget::selectedItems()
         return items;
     }
 
-    //TODO items = dlg->selectedContacts().addressList();
+    items = dlg->selectedItems();
     delete dlg;
 
     return items;

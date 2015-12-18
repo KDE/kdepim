@@ -25,7 +25,7 @@
 #include <QDialog>
 #include <contactlist.h>
 #include <xxport/vcard/vcardexportselectionwidget.h>
-
+#include <AkonadiCore/Item>
 class QItemSelectionModel;
 class ContactSelectionWidget;
 namespace Akonadi
@@ -68,6 +68,8 @@ public:
 
     VCardExportSelectionWidget::ExportFields exportType() const;
     void setAddGroupContact(bool addGroupContact);
+
+    Akonadi::Item::List selectedItems() const;
 private:
     ContactSelectionWidget *mSelectionWidget;
     VCardExportSelectionWidget *mVCardExport;

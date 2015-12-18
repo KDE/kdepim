@@ -71,12 +71,17 @@ public:
     ContactList selectedContacts() const;
 
     void setAddGroupContact(bool addGroupContact);
+    Akonadi::Item::List selectedItems() const;
 private:
     void initGui();
 
     ContactList collectAllContacts() const;
     ContactList collectSelectedContacts() const;
     ContactList collectAddressBookContacts() const;
+
+    Akonadi::Item::List collectAllItems() const;
+    Akonadi::Item::List collectSelectedItems() const;
+    Akonadi::Item::List collectAddressBookItems() const;
 
     QItemSelectionModel *mSelectionModel;
 

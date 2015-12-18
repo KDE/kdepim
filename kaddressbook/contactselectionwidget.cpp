@@ -67,6 +67,19 @@ void ContactSelectionWidget::setDefaultAddressBook(const Akonadi::Collection &ad
     mAddressBookSelection->setDefaultCollection(addressBook);
 }
 
+Akonadi::Item::List ContactSelectionWidget::selectedItems() const
+{
+    if (mAllContactsButton->isChecked()) {
+        return collectAllItems();
+    } else if (mSelectedContactsButton->isChecked()) {
+        return collectSelectedItems();
+    } else if (mAddressBookContactsButton->isChecked()) {
+        return collectAddressBookItems();
+    }
+
+    return Akonadi::Item::List();
+}
+
 ContactList ContactSelectionWidget::selectedContacts() const
 {
     if (mAllContactsButton->isChecked()) {
@@ -157,6 +170,21 @@ void ContactSelectionWidget::initGui()
     layout->addStretch(1);
 }
 
+Akonadi::Item::List ContactSelectionWidget::collectAllItems() const
+{
+    Akonadi::RecursiveItemFetchJob *job =
+        new Akonadi::RecursiveItemFetchJob(Akonadi::Collection::root(),
+                                           QStringList() << KContacts::Addressee::mimeType());
+    job->fetchScope().fetchFullPayload();
+
+    if (!job->exec()) {
+        return Akonadi::Item::List();
+    }
+
+    return job->items();
+}
+
+
 ContactList ContactSelectionWidget::collectAllContacts() const
 {
     ContactList contacts;
@@ -180,6 +208,25 @@ ContactList ContactSelectionWidget::collectAllContacts() const
     return contacts;
 }
 
+Akonadi::Item::List ContactSelectionWidget::collectSelectedItems() const
+{
+    Akonadi::Item::List items;
+
+    const QModelIndexList indexes = mSelectionModel->selectedRows(0);
+    for (int i = 0; i < indexes.count(); ++i) {
+        const QModelIndex index = indexes.at(i);
+        if (index.isValid()) {
+            const Akonadi::Item item =
+                index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+            if (item.isValid()) {
+                items.append(item);
+            }
+        }
+    }
+
+    return items;
+}
+
 ContactList ContactSelectionWidget::collectSelectedContacts() const
 {
     ContactList contacts;
@@ -199,6 +246,40 @@ ContactList ContactSelectionWidget::collectSelectedContacts() const
     }
 
     return contacts;
+}
+
+Akonadi::Item::List ContactSelectionWidget::collectAddressBookItems() const
+{
+    Akonadi::Item::List items;
+
+    const Akonadi::Collection collection = mAddressBookSelection->currentCollection();
+    if (!collection.isValid()) {
+        return items;
+    }
+
+    if (mAddressBookSelectionRecursive->isChecked()) {
+        Akonadi::RecursiveItemFetchJob *job =
+            new Akonadi::RecursiveItemFetchJob(collection,
+                                               QStringList() << KContacts::Addressee::mimeType());
+        job->fetchScope().fetchFullPayload();
+
+        if (!job->exec()) {
+            return items;
+        }
+
+        items = job->items();
+    } else {
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(collection);
+        job->fetchScope().fetchFullPayload();
+
+        if (!job->exec()) {
+            return items;
+        }
+        items = job->items();
+    }
+
+    return items;
+
 }
 
 ContactList ContactSelectionWidget::collectAddressBookContacts() const

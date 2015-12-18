@@ -70,6 +70,11 @@ void ContactSelectionDialog::setDefaultAddressBook(const Akonadi::Collection &ad
     mSelectionWidget->setDefaultAddressBook(addressBook);
 }
 
+Akonadi::Item::List ContactSelectionDialog::selectedItems() const
+{
+    return mSelectionWidget->selectedItems();
+}
+
 ContactList ContactSelectionDialog::selectedContacts() const
 {
     return mSelectionWidget->selectedContacts();
