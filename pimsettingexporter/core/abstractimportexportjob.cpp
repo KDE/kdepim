@@ -130,9 +130,9 @@ void AbstractImportExportJob::backupFile(const QString &filename, const QString 
     if (QFile(filename).exists()) {
         const bool fileAdded  = archive()->addLocalFile(filename, path + storedName);
         if (fileAdded) {
-            Q_EMIT info(i18n("\"%1\" backup done.", storedName));
+            Q_EMIT info(i18n("\"%1\" backup done.", path + storedName));
         } else {
-            Q_EMIT error(i18n("\"%1\" cannot be exported.", storedName));
+            Q_EMIT error(i18n("\"%1\" cannot be exported.", path + storedName));
         }
     } else {
         Q_EMIT error(i18n("\"%1\" does not exist.", filename));
