@@ -17,6 +17,7 @@
 
 #include "configuredialogtest.h"
 #include "../configuredialog.h"
+#include "../configurewidget.h"
 #include <QTest>
 #include <QStandardPaths>
 #include <QDialogButtonBox>
@@ -36,6 +37,9 @@ void ConfigureDialogTest::shouldHaveDefaultValue()
     ConfigureDialog dlg;
     QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
+
+    ConfigureWidget *configureWidget = dlg.findChild<ConfigureWidget *>(QStringLiteral("configurewidget"));
+    QVERIFY(configureWidget);
 }
 
 QTEST_MAIN(ConfigureDialogTest)

@@ -16,6 +16,7 @@
 */
 
 #include "configuredialog.h"
+#include "configurewidget.h"
 #include <KLocalizedString>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
@@ -28,6 +29,10 @@ ConfigureDialog::ConfigureDialog(QWidget *parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
+
+    mConfigureWidget = new ConfigureWidget(this);
+    mConfigureWidget->setObjectName(QStringLiteral("configurewidget"));
+    mainLayout->addWidget(mConfigureWidget);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));

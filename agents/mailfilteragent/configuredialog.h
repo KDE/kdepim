@@ -19,7 +19,7 @@
 #define CONFIGUREDIALOG_H
 
 #include <QDialog>
-
+class ConfigureWidget;
 class ConfigureDialog : public QDialog
 {
     Q_OBJECT
@@ -30,6 +30,7 @@ public:
 private:
     void readConfig();
     void writeConfig();
+    ConfigureWidget *mConfigureWidget;
 };
 
 #endif // CONFIGUREDIALOG_H

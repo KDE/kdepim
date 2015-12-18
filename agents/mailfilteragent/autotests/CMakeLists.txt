@@ -1,6 +1,6 @@
 # Convenience macro to add unit tests.
 macro(add_mailfilter_agent_test _source _extrasource)
-    set(_test ${_source} ../configuredialog.cpp ${_extrasource})
+    set(_test ${_source} ${_extrasource})
     get_filename_component(_name ${_source} NAME_WE)
     ecm_add_test(${_test}
         TEST_NAME ${_name}
@@ -9,5 +9,5 @@ macro(add_mailfilter_agent_test _source _extrasource)
     )
 endmacro()
 
-add_mailfilter_agent_test(configuredialogtest.cpp "../configurewidget.cpp")
-add_mailfilter_agent_test(configurewidgettest.cpp "")
+add_mailfilter_agent_test(configuredialogtest.cpp "../configurewidget.cpp;../configuredialog.cpp")
+add_mailfilter_agent_test(configurewidgettest.cpp "../configurewidget.cpp")
