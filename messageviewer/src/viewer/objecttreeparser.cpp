@@ -2212,9 +2212,7 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
             } else {
                 m->exec();
             }
-            if (sign) {
-                mNodeHelper->setBodyPartMemento(sign, mementoName, m);
-            }
+            mNodeHelper->setBodyPartMemento(sign, mementoName, m);
         }
     } else if (m->isRunning()) {
         messagePart.inProgress = true;

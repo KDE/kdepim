@@ -158,7 +158,32 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
 
     QCOMPARE(otp.plainTextContent().toLatin1().data(), "some random text");
     QCOMPARE(otp.convertedTextContent().toLatin1().data(), "some random text\n");
+
+    // This test is only a workaround, till we can set the memento to the propper node of the mail.
+    KMime::Content *content = new KMime::Content;
+    QVERIFY(nodeHelper.bodyPartMemento(content, "decryptverify"));
+
     QVERIFY(otp.htmlContent().isEmpty());
+}
+
+void ObjectTreeParserTester::test_inlinePGPSigned()
+{
+    KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("openpgp-inline-signed.mbox"));
+
+    QCOMPARE(msg->subject()->as7BitString(false).constData(), "test");
+    QCOMPARE(msg->contents().size(), 0);
+
+    TestHtmlWriter testWriter;
+    TestCSSHelper testCSSHelper;
+    NodeHelper nodeHelper;
+    MessageViewer::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
+    ObjectTreeParser otp(&emptySource, &nodeHelper);
+
+    emptySource.setAllowDecryption(true);
+    otp.parseObjectTree(msg.data());
+
+    // This test is only a workaround, till we can set the memento to the propper node of the mail.
+    QVERIFY(nodeHelper.bodyPartMemento(0, "verification"));
 }
 
 void ObjectTreeParserTester::test_HTML()
