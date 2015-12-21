@@ -696,29 +696,36 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
             signatureFound = verifyResult.signatures().size() > 0;
             signatures = verifyResult.signatures();
             bDecryptionOk = !decryptResult.error();
-            passphraseError =  decryptResult.error().isCanceled()
-                               || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
-            actuallyEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-            partMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
             partMetaData.auditLogError = m->auditLogError();
             partMetaData.auditLog = m->auditLogAsHtml();
-            partMetaData.isEncrypted = actuallyEncrypted;
-            if (actuallyEncrypted && decryptResult.numRecipients() > 0) {
-                partMetaData.keyId = decryptResult.recipient(0).keyID();
-            }
-
-            qCDebug(MESSAGEVIEWER_LOG) << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG";
-            if (bDecryptionOk) {
+            if (!bDecryptionOk && signatureFound) {
+                //Only a signed part
+                actuallyEncrypted = false;
+                bDecryptionOk = true;
                 decryptedData = plainText;
-            } else if (htmlWriter() && showWarning) {
-                decryptedData = "<div style=\"font-size:x-large; text-align:center;"
-                                "padding:20pt;\">"
-                                + errorMsg.toUtf8()
-                                + "</div>";
-                if (!passphraseError)
-                    partMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName)
-                                             + QLatin1String("<br />")
-                                             + i18n("Error: %1", partMetaData.errorText);
+            } else {
+                passphraseError =  decryptResult.error().isCanceled()
+                                   || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
+                actuallyEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
+                partMetaData.errorText = QString::fromLocal8Bit(decryptResult.error().asString());
+                partMetaData.isEncrypted = actuallyEncrypted;
+                if (actuallyEncrypted && decryptResult.numRecipients() > 0) {
+                    partMetaData.keyId = decryptResult.recipient(0).keyID();
+                }
+
+                qCDebug(MESSAGEVIEWER_LOG) << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG";
+                if (bDecryptionOk) {
+                    decryptedData = plainText;
+                } else if (htmlWriter() && showWarning) {
+                    decryptedData = "<div style=\"font-size:x-large; text-align:center; padding:20pt;\">"
+                                    + errorMsg.toUtf8()
+                                    + "</div>";
+                    if (!passphraseError) {
+                        partMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName)
+                                                 + QLatin1String("<br />")
+                                                 + i18n("Error: %1", partMetaData.errorText);
+                    }
+                }
             }
         }
     }
