@@ -566,23 +566,16 @@ void MainWidget::setupGui()
 void MainWidget::initializePluginActions()
 {
     if (mXmlGuiClient->factory()) {
-        const QHash<PimCommon::ActionType::Type, QList<QAction *> > localActionsType = mPluginInterface->actionsType();
-        QList<QAction *> lstTools = localActionsType.value(PimCommon::ActionType::Tools);
-        if (!lstTools.isEmpty()) {
-            mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_tools"));
-            mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_tools"), lstTools);
+        QHashIterator<PimCommon::ActionType::Type, QList<QAction *> > localActionsType(mPluginInterface->actionsType());
+        while (localActionsType.hasNext()) {
+            localActionsType.next();
+            QList<QAction *> lst = localActionsType.value();
+            if (!lst.isEmpty()) {
+                const QString actionlistname = QStringLiteral("kaddressbook") + PimCommon::PluginInterface::actionXmlExtension(localActionsType.key());
+                mXmlGuiClient->unplugActionList(actionlistname);
+                mXmlGuiClient->plugActionList(actionlistname, lst);
+            }
         }
-        QList<QAction *> lstActions = localActionsType.value(PimCommon::ActionType::Action);
-        if (!lstActions.isEmpty()) {
-            mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_actions"));
-            mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_actions"), lstActions);
-        }
-        QList<QAction *> lstPopupMenuActions = localActionsType.value(PimCommon::ActionType::PopupMenu);
-        if (!lstPopupMenuActions.isEmpty()) {
-            mXmlGuiClient->unplugActionList(QStringLiteral("kaddressbook_plugins_popupmenu_actions"));
-            mXmlGuiClient->plugActionList(QStringLiteral("kaddressbook_plugins_popupmenu_actions"), lstPopupMenuActions);
-        }
-
     }
 }
 
