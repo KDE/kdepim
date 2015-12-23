@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="37" translationDomain="kaddressbook">
+<kpartgui name="kaddressbook" version="38" translationDomain="kaddressbook">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -32,6 +32,8 @@
       <Action name="file_print"/>
       <Action name="file_print_preview"/>
       <Separator/>
+      <ActionList name="kaddressbook_plugins_file"/>
+      <Separator/>
       <Action name="file_quit"/>
     </Menu>
 
@@ -47,6 +49,8 @@
       <Action name="akonadi_item_delete" append="edit_delete_merge"/>
       <Separator/>
       <Action name="akonadi_resource_delete"/>
+      <Separator/>
+      <ActionList name="kaddressbook_plugins_edit"/>
     </Menu>
     
     <Menu name="tools" noMerge="1"><text>&amp;Tools</text>
@@ -56,6 +60,7 @@
     <Menu name="action" noMerge="1"><text>&amp;Action</text>
       <ActionList name="kaddressbook_plugins_actions"/>
     </Menu>
+
 
     <Menu name="view" noMerge="1"><text>&amp;View</text>
       <Action name="theme_menu"/>
@@ -127,6 +132,8 @@
     <Separator/>
     <Action name="quick_search"/>
     <Action name="category_filter"/>
+    <Separator/>
+    <ActionList name="kaddressbook_toolbar_actions"/>
   </ToolBar>
 
 </kpartgui>
