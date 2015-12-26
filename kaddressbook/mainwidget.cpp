@@ -565,18 +565,7 @@ void MainWidget::setupGui()
 
 void MainWidget::initializePluginActions()
 {
-    if (mXmlGuiClient->factory()) {
-        QHashIterator<PimCommon::ActionType::Type, QList<QAction *> > localActionsType(mPluginInterface->actionsType());
-        while (localActionsType.hasNext()) {
-            localActionsType.next();
-            QList<QAction *> lst = localActionsType.value();
-            if (!lst.isEmpty()) {
-                const QString actionlistname = QStringLiteral("kaddressbook") + PimCommon::PluginInterface::actionXmlExtension(localActionsType.key());
-                mXmlGuiClient->unplugActionList(actionlistname);
-                mXmlGuiClient->plugActionList(actionlistname, lst);
-            }
-        }
-    }
+    mPluginInterface->initializePluginActions(QStringLiteral("kaddressbook"), mXmlGuiClient);
 }
 
 void MainWidget::setupActions(KActionCollection *collection)
