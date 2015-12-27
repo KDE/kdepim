@@ -128,7 +128,6 @@ private:
 
     QAbstractItemModel *allContactsModel();
 
-
     Akonadi::EntityMimeTypeFilterModel *mCollectionTree;
     Akonadi::EntityMimeTypeFilterModel *mItemTree;
     Akonadi::EntityMimeTypeFilterModel *mAllContactsModel;

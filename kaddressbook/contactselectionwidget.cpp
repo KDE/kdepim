@@ -184,7 +184,6 @@ Akonadi::Item::List ContactSelectionWidget::collectAllItems() const
     return job->items();
 }
 
-
 ContactList ContactSelectionWidget::collectAllContacts() const
 {
     ContactList contacts;
