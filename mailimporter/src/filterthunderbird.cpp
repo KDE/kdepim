@@ -127,14 +127,20 @@ void FilterThunderbird::import()
     // Select directory from where I have to import files
     const QString maildir = QFileDialog::getExistingDirectory(0, QString(), thunderDir);
     if (!maildir.isEmpty()) {
-        importMails(maildir);
+        const QString mailDirThunderbird = maildir + QLatin1String("/Mail/Local Folders/");
+        if (QDir(mailDirThunderbird).exists()) {
+            importMails(mailDirThunderbird);
+        } else {
+            importMails(maildir);
+        }
     }
 }
 
 bool FilterThunderbird::excludeFiles(const QString  &file)
 {
     if ((file.endsWith(QLatin1String(".msf")) ||
-            file.endsWith(QLatin1String("msgFilterRules.dat")) ||
+         file.endsWith(QLatin1String(".dat")) ||
+         file.endsWith(QLatin1String(".json")) ||
             file.endsWith(QLatin1String(".html")))) {
         return true;
     }
@@ -209,8 +215,6 @@ void FilterThunderbird::importDirContents(const QString &dirName, const QString 
         return;
     }
     /** Here Import all archives in the current dir */
-    QDir dir(dirName);
-
     QDir importDir(dirName);
     const QStringList files = importDir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Files, QDir::Name);
     QStringList::ConstIterator mailFileEnd = files.constEnd();
