@@ -63,7 +63,16 @@
    </item>
    <item>
     <layout class="QVBoxLayout">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -72,7 +81,7 @@
      <item>
       <widget class="QLabel" name="textLabel1_2">
        <property name="text">
-        <string>Click 'Back' to import more emails or contacts</string>
+        <string>Click 'Back' to import more emails</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -90,7 +99,7 @@
    <header location="global">mailimporter/importmailswidget.h</header>
    <container>1</container>
   </customwidget>
- </customwidgets> 
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
