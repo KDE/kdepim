@@ -20,7 +20,7 @@
 #include "importexportprogressindicatorgui.h"
 #include "widgets/logwidget.h"
 #include "pimsettingexportgui_debug.h"
-#include "fullsynchronizeresourcesjob.h"
+#include "job/fullsynchronizeresourcesjob.h"
 
 #include "pimsettingexporterkernel.h"
 #include "dialog/selectiontypedialog.h"

@@ -23,16 +23,19 @@ set(pimsettingexporter_dialog_SRCS
   dialog/pimsettingexporterconfiguredialog.cpp
 )
 
+set(pimsettingexporter_job_SRCS
+   job/fullsynchronizeresourcesjob.cpp
+)
 
 set(pimsettingexporter_SRCS
     ${pimsettingexporter_kcfg_SRCS}
     ${pimsettingexporter_widget_SRCS}
     ${pimsettingexporter_dialog_SRCS}
+    ${pimsettingexporter_job_SRCS}
     pimsettingsbackuprestoreui.cpp
     importexportprogressindicatorgui.cpp
     pimsettingexporterwindow.cpp
     pimsettingcommandlineoption.cpp
-    fullsynchronizeresourcesjob.cpp
     main.cpp)
 
 qt5_add_resources(pimsettingexporter_SRCS pimsettingexporter.qrc)
