@@ -27,11 +27,16 @@ set(pimsettingexporter_job_SRCS
    job/fullsynchronizeresourcesjob.cpp
 )
 
+set(pimsettingexporter_trayicon_SRCS
+   trayicon/pimsettingstrayicon.cpp
+)
+
 set(pimsettingexporter_SRCS
     ${pimsettingexporter_kcfg_SRCS}
     ${pimsettingexporter_widget_SRCS}
     ${pimsettingexporter_dialog_SRCS}
     ${pimsettingexporter_job_SRCS}
+    ${pimsettingexporter_trayicon_SRCS}
     pimsettingsbackuprestoreui.cpp
     importexportprogressindicatorgui.cpp
     pimsettingexporterwindow.cpp
@@ -55,6 +60,7 @@ target_link_libraries(pimsettingexporter
   KF5::Archive
   KF5::ItemViews
   KF5::KIOFileWidgets
+  KF5::Notifications
 )
 
 add_subdirectory(kconf_update)
