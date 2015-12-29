@@ -154,6 +154,8 @@ void PimSettingExporterWindow::slotFullSyncFinished()
 {
     slotUpdateActions(false);
     slotAddInfo(i18n("Full sync finished."));
+    mTrayIcon->setStatus(KStatusNotifierItem::Passive);
+
 }
 
 void PimSettingExporterWindow::slotFullSyncInstanceDone(const QString &identifier)
@@ -169,6 +171,7 @@ void PimSettingExporterWindow::slotFullSyncInstanceFailed(const QString &identif
 void PimSettingExporterWindow::showFinishInformation()
 {
     KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QStringLiteral("setProgressDialogLabelBackupInfos"));
+    mTrayIcon->setStatus(KStatusNotifierItem::Passive);
 }
 
 void PimSettingExporterWindow::handleCommandLine(const QCommandLineParser &parser)
@@ -298,6 +301,7 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
         initializeBackupRestoreUi();
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
+        mTrayIcon->setStatus(KStatusNotifierItem::Active);
         if (!mPimSettingsBackupRestoreUI->backupStart(filename)) {
             qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " backup Start failed";
         }
@@ -360,6 +364,7 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
         initializeBackupRestoreUi();
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
+        mTrayIcon->setStatus(KStatusNotifierItem::Active);
         if (!mPimSettingsBackupRestoreUI->restoreStart(filename)) {
             qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " PimSettingExporterWindow restore failed";
         }
