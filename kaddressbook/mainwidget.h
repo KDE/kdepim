@@ -85,6 +85,8 @@ public:
     Akonadi::Collection currentAddressBook() const;
 
     Akonadi::Item::List selectedItems();
+    void initializePluginActions();
+
 public Q_SLOTS:
     void newContact();
     void newGroup();
@@ -116,7 +118,6 @@ private Q_SLOTS:
     void slotCurrentCollectionChanged(const Akonadi::Collection &col);
     void slotSelectionChanged();
 private:
-    void initializePluginActions();
     const Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
     void initGrantleeThemeName();
     void setupGui();

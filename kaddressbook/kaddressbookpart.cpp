@@ -93,6 +93,7 @@ void KAddressBookPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
     qCDebug(KADDRESSBOOK_LOG);
     KParts::ReadOnlyPart::guiActivateEvent(e);
+    mMainWidget->initializePluginActions();
 }
 
 #include "kaddressbookpart.moc"
