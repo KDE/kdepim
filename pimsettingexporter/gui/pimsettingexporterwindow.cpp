@@ -155,7 +155,6 @@ void PimSettingExporterWindow::slotFullSyncFinished()
     slotUpdateActions(false);
     slotAddInfo(i18n("Full sync finished."));
     mTrayIcon->setStatus(KStatusNotifierItem::Passive);
-
 }
 
 void PimSettingExporterWindow::slotFullSyncInstanceDone(const QString &identifier)
