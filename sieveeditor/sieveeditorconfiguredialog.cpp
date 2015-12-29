@@ -46,7 +46,13 @@ SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveEditorConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveEditorConfigureDialog::reject);
+
+    mTabWidget = new QTabWidget(this);
+    mTabWidget->setObjectName(QStringLiteral("tabwidget"));
+
+    //Server page
     QGroupBox *w = new QGroupBox(i18n("Sieve Server"));
+    mTabWidget->addTab(w, i18n("Sieve Server"));
 
     QVBoxLayout *layout = new QVBoxLayout;
     w->setLayout(layout);
@@ -56,7 +62,17 @@ SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
     layout->addWidget(mCloseWallet);
 
-    mainLayout->addWidget(w);
+    QWidget *editorWidget = new QWidget;
+    editorWidget->setObjectName(QStringLiteral("editorwidget"));
+    mTabWidget->addTab(editorWidget, i18n("Editor"));
+
+    layout = new QVBoxLayout;
+    editorWidget->setLayout(layout);
+    mWrapText = new QCheckBox(i18n("Wrap Text"));
+    mWrapText->setObjectName(QStringLiteral("wraptext"));
+    layout->addWidget(mWrapText);
+
+    mainLayout->addWidget(mTabWidget);
     mainLayout->addWidget(buttonBox);
     loadServerSieveConfig();
     readConfig();

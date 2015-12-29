@@ -35,4 +35,5 @@ macro(add_sieveserver_unittest _source _additionalSource)
 endmacro ()
 
 add_sieveserver_unittest( sieveeditorconfigureserverpagetest.cpp "../sieveeditorconfigureserverpage.cpp")
+add_sieveserver_unittest( sieveeditorconfiguredialogtest.cpp "")
 #add_sieveserver_unittest( sieveeditorbookmarkstest.cpp "../sieveeditorbookmarks.cpp")

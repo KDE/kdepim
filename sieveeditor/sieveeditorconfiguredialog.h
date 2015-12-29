@@ -23,6 +23,7 @@
 
 #include <QDialog>
 class QCheckBox;
+class QTabWidget;
 class SieveEditorConfigureServerWidget;
 class SieveEditorConfigureDialog : public QDialog
 {
@@ -39,6 +40,8 @@ private:
     void loadServerSieveConfig();
     SieveEditorConfigureServerWidget *mServerWidget;
     QCheckBox *mCloseWallet;
+    QCheckBox *mWrapText;
+    QTabWidget *mTabWidget;
 };
 
 #endif // SIEVEEDITORCONFIGUREDIALOG_H
