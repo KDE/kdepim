@@ -24,7 +24,7 @@ class KRecentFilesAction;
 class QAction;
 class QCommandLineParser;
 class PimSettingsBackupRestoreUI;
-
+class PimSettingsTrayIcon;
 class PimSettingExporterWindow: public KXmlGuiWindow
 {
     Q_OBJECT
@@ -73,6 +73,7 @@ private:
     QString mLastArchiveFileName;
     // Name, identifier
     QHash<QString, QString> mNeedToSyncResources;
+    PimSettingsTrayIcon *mTrayIcon;
 };
 
 #endif /* PIMSETTINGEXPORTERWINDOW_H */

@@ -21,6 +21,7 @@
 #include "widgets/logwidget.h"
 #include "pimsettingexportgui_debug.h"
 #include "job/fullsynchronizeresourcesjob.h"
+#include "trayicon/pimsettingstrayicon.h"
 
 #include "pimsettingexporterkernel.h"
 #include "dialog/selectiontypedialog.h"
@@ -62,7 +63,8 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
       mSaveLogAction(Q_NULLPTR),
       mArchiveStructureInfo(Q_NULLPTR),
       mShowArchiveInformationsAction(Q_NULLPTR),
-      mPimSettingsBackupRestoreUI(Q_NULLPTR)
+      mPimSettingsBackupRestoreUI(Q_NULLPTR),
+      mTrayIcon(Q_NULLPTR)
 {
     //Initialize filtermanager
     (void)MailCommon::FilterManager::instance();
@@ -78,6 +80,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     resize(800, 600);
     Akonadi::ControlGui::widgetNeedsAkonadi(this);
     statusBar()->hide();
+    mTrayIcon = new PimSettingsTrayIcon(this);
 }
 
 PimSettingExporterWindow::~PimSettingExporterWindow()
