@@ -87,12 +87,14 @@ void SieveEditorConfigureDialog::loadServerSieveConfig()
 {
     mServerWidget->readConfig();
     PimCommon::ConfigureImmutableWidgetUtils::loadWidget(mCloseWallet, SieveEditorGlobalConfig::self()->closeWalletItem());
+    PimCommon::ConfigureImmutableWidgetUtils::loadWidget(mWrapText, SieveEditorGlobalConfig::self()->wrapTextItem());
 }
 
 void SieveEditorConfigureDialog::saveServerSieveConfig()
 {
     mServerWidget->writeConfig();
     PimCommon::ConfigureImmutableWidgetUtils::saveCheckBox(mCloseWallet, SieveEditorGlobalConfig::self()->closeWalletItem());
+    PimCommon::ConfigureImmutableWidgetUtils::saveCheckBox(mWrapText, SieveEditorGlobalConfig::self()->wrapTextItem());
     SieveEditorGlobalConfig::self()->save();
 }
 
