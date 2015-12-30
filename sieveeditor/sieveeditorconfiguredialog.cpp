@@ -71,7 +71,7 @@ SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     mWrapText = new QCheckBox(i18n("Wrap Text"));
     mWrapText->setObjectName(QStringLiteral("wraptext"));
     layout->addWidget(mWrapText);
-
+    layout->addStretch(100);
     mainLayout->addWidget(mTabWidget);
     mainLayout->addWidget(buttonBox);
     loadServerSieveConfig();
