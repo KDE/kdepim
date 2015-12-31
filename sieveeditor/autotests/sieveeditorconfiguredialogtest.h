@@ -27,6 +27,9 @@ public:
     explicit SieveEditorConfigureDialogTest(QObject *parent = Q_NULLPTR);
     ~SieveEditorConfigureDialogTest();
 
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+
 };
 
 #endif // SIEVEEDITORCONFIGUREDIALOGTEST_H

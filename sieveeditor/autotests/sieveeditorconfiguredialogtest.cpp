@@ -16,16 +16,24 @@
 */
 
 #include "sieveeditorconfiguredialogtest.h"
+#include "../sieveeditorconfiguredialog.h"
 #include <QTest>
+#include <QStandardPaths>
 
 SieveEditorConfigureDialogTest::SieveEditorConfigureDialogTest(QObject *parent)
     : QObject(parent)
 {
-
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 SieveEditorConfigureDialogTest::~SieveEditorConfigureDialogTest()
 {
+
+}
+
+void SieveEditorConfigureDialogTest::shouldHaveDefaultValue()
+{
+    SieveEditorConfigureDialog dlg;
 
 }
 
