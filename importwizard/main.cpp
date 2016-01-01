@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
                          QStringLiteral(KDEPIM_VERSION),
                          i18n("PIM Import Tool"),
                          KAboutLicense::GPL_V2,
-                         i18n("Copyright © 2012-2015 importwizard authors"));
+                         i18n("Copyright © 2012-2016 importwizard authors"));
 
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact-import-wizard")));
