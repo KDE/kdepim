@@ -32,10 +32,10 @@ macro(add_sieveserver_unittest _source _additionalSource)
     KF5::Bookmarks
     KF5::XmlGui
     KF5::MailTransport
-    KF5::PimCommon
+
   )
 endmacro ()
 
 add_sieveserver_unittest( sieveeditorconfigureserverpagetest.cpp "../sieveeditorconfigureserverpage.cpp")
-#add_sieveserver_unittest( sieveeditorconfiguredialogtest.cpp "../sieveeditorconfiguredialog.cpp")
+
 #add_sieveserver_unittest( sieveeditorbookmarkstest.cpp "../sieveeditorbookmarks.cpp")
