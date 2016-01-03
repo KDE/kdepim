@@ -20,6 +20,7 @@
 
 #include "sieveeditorpagewidget.h"
 #include "ksieveui/sieveeditorwidget.h"
+#include "sieveeditorglobalconfig.h"
 
 #include <kmanagesieve/sievejob.h>
 
@@ -88,6 +89,7 @@ void SieveEditorPageWidget::loadScript(const QUrl &url, const QStringList &capab
     mCurrentURL = url;
     mSieveEditorWidget->setSieveCapabilities(capabilities);
     mSieveEditorWidget->setReadOnly(true);
+    mSieveEditorWidget->wordWrap(SieveEditorGlobalConfig::self()->wrapText());
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::get(url);
     connect(job, &KManageSieve::SieveJob::result, this, &SieveEditorPageWidget::slotGetResult);
 }
