@@ -38,7 +38,8 @@ using KContacts::Addressee;
 using namespace MessageViewer;
 
 VCardViewer::VCardViewer(QWidget *parent, const QByteArray &vCard)
-    : QDialog(parent)
+    : QDialog(parent),
+      mAddresseeListIndex(0)
 {
     setWindowTitle(i18n("vCard Viewer"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
@@ -66,8 +67,7 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray &vCard)
     VCardConverter vcc;
     mAddresseeList = vcc.parseVCards(vCard);
     if (!mAddresseeList.empty()) {
-        itAddresseeList = mAddresseeList.constBegin();
-        mContactViewer->setRawContact(*itAddresseeList);
+        mContactViewer->setRawContact(mAddresseeList.at(0));
         if (mAddresseeList.size() <= 1) {
             mUser2Button->setVisible(false);
             mUser3Button->setVisible(false);
@@ -83,7 +83,6 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray &vCard)
         mUser2Button->setVisible(false);
         mUser3Button->setVisible(false);
     }
-
     readConfig();
 }
 
@@ -110,7 +109,7 @@ void VCardViewer::writeConfig()
 
 void VCardViewer::slotUser1()
 {
-    const KContacts::Addressee contact = *itAddresseeList;
+    const KContacts::Addressee contact = mAddresseeList.at(mAddresseeListIndex);
 
     KPIM::AddContactJob *job = new KPIM::AddContactJob(contact, this, this);
     job->start();
@@ -119,8 +118,8 @@ void VCardViewer::slotUser1()
 void VCardViewer::slotUser2()
 {
     // next vcard
-    mContactViewer->setRawContact(*(++itAddresseeList));
-    if (itAddresseeList++ == (mAddresseeList.constEnd())) {
+    mContactViewer->setRawContact(mAddresseeList.at(++mAddresseeListIndex));
+    if ((mAddresseeListIndex + 1) == (mAddresseeList.count())) {
         mUser2Button->setEnabled(false);
     }
     mUser3Button->setEnabled(true);
@@ -129,8 +128,8 @@ void VCardViewer::slotUser2()
 void VCardViewer::slotUser3()
 {
     // previous vcard
-    mContactViewer->setRawContact(*(--itAddresseeList));
-    if (itAddresseeList == mAddresseeList.constBegin()) {
+    mContactViewer->setRawContact(mAddresseeList.at(--mAddresseeListIndex));
+    if (mAddresseeListIndex == 0) {
         mUser3Button->setEnabled(false);
     }
     mUser2Button->setEnabled(true);

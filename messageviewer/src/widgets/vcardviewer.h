@@ -54,9 +54,10 @@ private:
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
 
     KContacts::Addressee::List mAddresseeList;
-    KContacts::Addressee::List::ConstIterator itAddresseeList;
+    int mAddresseeListIndex;
     QPushButton *mUser2Button;
     QPushButton *mUser3Button;
+
 };
 
 }
