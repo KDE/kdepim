@@ -299,7 +299,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     Q_FOREACH (Akonadi::StandardActionManager::Type standardAction, standardActions) {
         mActionManager->createAction(standardAction);
     }
-
+    guiClient->actionCollection()->setDefaultShortcut(mActionManager->action(Akonadi::StandardActionManager::DeleteItems), QKeySequence(Qt::Key_Delete));
     QList<Akonadi::StandardContactActionManager::Type> contactActions;
     contactActions << Akonadi::StandardContactActionManager::CreateContact
                    << Akonadi::StandardContactActionManager::CreateContactGroup
