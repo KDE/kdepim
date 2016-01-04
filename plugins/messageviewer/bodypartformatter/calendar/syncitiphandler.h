@@ -32,7 +32,7 @@
 #ifndef SYNCITIPHANDLER_H
 #define SYNCITIPHANDLER_H
 
-#include <IncidenceEditorsng/GroupwareUiDelegate>
+#include <IncidenceEditor/GroupwareUiDelegate>
 #include <Akonadi/Calendar/ITIPHandler>
 
 #include <QObject>

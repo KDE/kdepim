@@ -59,7 +59,7 @@ target_link_libraries(korgac
   KF5::AkonadiCalendar
   KF5::AkonadiMime
   KF5::CalendarSupport
-  KF5::IncidenceEditorsng
+  KF5::IncidenceEditor
   KF5::AkonadiCore
   KF5::CalendarCore
   KF5::CalendarUtils
