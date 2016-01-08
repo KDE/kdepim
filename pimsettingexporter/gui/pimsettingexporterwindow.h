@@ -57,8 +57,8 @@ private Q_SLOTS:
     void slotConfigure();
 private:
     void initializeBackupRestoreUi();
-    void backupData(const QString &filename, const QString &templateFile = QString());
-    void loadData(const QString &filename, const QString &templateFile = QString());
+    void backupData(const QString &filename = QString(), const QString &templateFile = QString());
+    void loadData(const QString &filename = QString(), const QString &templateFile = QString());
     void setupActions(bool canZipFile);
     void showFinishInformation();
     LogWidget *mLogWidget;

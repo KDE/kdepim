@@ -50,7 +50,7 @@ ImportAddressbookJob::~ImportAddressbookJob()
 
 void ImportAddressbookJob::start()
 {
-    Q_EMIT title(i18n("Start import KAddressBook settings..."));
+    Q_EMIT title(i18n("Starting to import KAddressBook settings..."));
     mArchiveDirectory = archive()->directory();
     createProgressDialog(i18n("Import KAddressBook settings"));
     searchAllFiles(mArchiveDirectory, QString(), QStringLiteral("addressbook"));

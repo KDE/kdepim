@@ -96,7 +96,7 @@ bool PimSettingsBackupRestore::backupStart(const QString &filename)
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     addDate();
-    Q_EMIT addInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
+    Q_EMIT addInfo(i18n("Starting to backup data in \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
     //Add version
     Utils::addVersion(mArchiveStorage->archive());
@@ -288,7 +288,7 @@ bool PimSettingsBackupRestore::restoreStart(const QString &filename)
 
     addDate();
 
-    Q_EMIT addInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
+    Q_EMIT addInfo(i18n("Starting to restore data from \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
     restoreNextStep();
     return true;

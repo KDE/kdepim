@@ -39,7 +39,7 @@ ImportAkregatorJob::~ImportAkregatorJob()
 
 void ImportAkregatorJob::start()
 {
-    Q_EMIT title(i18n("Start import Akregator settings..."));
+    Q_EMIT title(i18n("Starting to import Akregator settings..."));
     mArchiveDirectory = archive()->directory();
     initializeListStep();
     createProgressDialog(i18n("Import Akregator settings"));

@@ -70,7 +70,7 @@ ImportMailJob::~ImportMailJob()
 
 void ImportMailJob::start()
 {
-    Q_EMIT title(i18n("Start import KMail settings..."));
+    Q_EMIT title(i18n("Starting to import KMail settings..."));
     createProgressDialog(i18n("Import KMail settings"));
     mArchiveDirectory = archive()->directory();
     searchAllMailsFiles(mArchiveDirectory, QString());
@@ -872,12 +872,12 @@ void ImportMailJob::importSimpleFilesInDirectory(const QString &relativePath)
 void ImportMailJob::restoreIdentity()
 {
     increaseProgressDialog();
-    setProgressDialogLabel(i18n("Restore identities..."));
+    setProgressDialogLabel(i18n("Restoring identities..."));
     const QString path(Utils::identitiesPath() + QLatin1String("emailidentities"));
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
     } else {
-        Q_EMIT info(i18n("Restore identities..."));
+        Q_EMIT info(i18n("Restoring identities..."));
 
         const KArchiveEntry *identity = mArchiveDirectory->entry(path);
         if (identity && identity->isFile()) {

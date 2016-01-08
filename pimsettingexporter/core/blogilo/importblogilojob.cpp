@@ -39,7 +39,7 @@ ImportBlogiloJob::~ImportBlogiloJob()
 
 void ImportBlogiloJob::start()
 {
-    Q_EMIT title(i18n("Start import Blogilo settings..."));
+    Q_EMIT title(i18n("Starting to import Blogilo settings..."));
     createProgressDialog(i18n("Import Blogilo settings"));
     mArchiveDirectory = archive()->directory();
     initializeListStep();

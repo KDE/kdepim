@@ -52,7 +52,7 @@ ImportAlarmJob::~ImportAlarmJob()
 
 void ImportAlarmJob::start()
 {
-    Q_EMIT title(i18n("Start import KAlarm settings..."));
+    Q_EMIT title(i18n("Starting to import KAlarm settings..."));
     createProgressDialog(i18n("Import KAlarm settings"));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory, QString(), QStringLiteral("alarm"));

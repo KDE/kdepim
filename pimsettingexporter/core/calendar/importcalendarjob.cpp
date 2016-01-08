@@ -54,7 +54,7 @@ ImportCalendarJob::~ImportCalendarJob()
 
 void ImportCalendarJob::start()
 {
-    Q_EMIT title(i18n("Start import KOrganizer settings..."));
+    Q_EMIT title(i18n("Starting to import KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
     createProgressDialog(i18n("Import KOrganizer settings"));
     searchAllFiles(mArchiveDirectory, QString(), QStringLiteral("calendar"));
