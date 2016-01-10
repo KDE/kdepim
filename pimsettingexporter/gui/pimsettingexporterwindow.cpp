@@ -195,11 +195,11 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     KActionCollection *ac = actionCollection();
 
     mBackupAction = ac->addAction(QStringLiteral("backup"), this, SLOT(slotBackupData()));
-    mBackupAction->setText(i18n("Back Up Data..."));
+    mBackupAction->setText(i18n("Export Data..."));
     mBackupAction->setEnabled(canZipFile);
 
     mRestoreAction = ac->addAction(QStringLiteral("restore"), this, SLOT(slotRestoreData()));
-    mRestoreAction->setText(i18n("Restore Data..."));
+    mRestoreAction->setText(i18n("Import Data..."));
     mRestoreAction->setEnabled(canZipFile);
 
     mSaveLogAction = ac->addAction(QStringLiteral("save_log"), this, SLOT(slotSaveLog()));
