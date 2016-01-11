@@ -355,9 +355,28 @@ CryptoMessagePart::~CryptoMessagePart()
 
 }
 
+void CryptoMessagePart::setDecryptMessage(bool decrypt)
+{
+    mDecryptMessage = decrypt;
+}
+
+bool CryptoMessagePart::decryptMessage() const
+{
+    return mDecryptMessage;
+}
+
+void CryptoMessagePart::setIsEncrypted(bool encrypted)
+{
+    mMetaData.isEncrypted = encrypted;
+}
+
+bool CryptoMessagePart::isEncrypted() const
+{
+    return mMetaData.isEncrypted;
+}
+
 void CryptoMessagePart::startDecryption(const QByteArray &text, const QTextCodec *aCodec)
 {
-    mDecryptMessage = true;
 
     KMime::Content *content = new KMime::Content;
     content->setBody(text);
@@ -379,8 +398,6 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
     if (!data) {
         data = mNode;
     }
-
-    mDecryptMessage = true;
 
     bool signatureFound;
     bool actuallyEncrypted = true;
@@ -412,14 +429,14 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
         mVerifiedText = mDecryptedData;
     }
 
-    if (mMetaData.isEncrypted && !mDecryptMessage) {
+    if (mMetaData.isEncrypted && !decryptMessage()) {
         mMetaData.isDecryptable = true;
     }
 
     if (mNode) {
         mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
 
-        if (mDecryptMessage) {
+        if (decryptMessage()) {
             auto tempNode = new KMime::Content();
             tempNode->setContent(KMime::CRLFtoLF(mDecryptedData.constData()));
             tempNode->parse();
@@ -479,8 +496,8 @@ void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 
 void CryptoMessagePart::writeDeferredDecryptionBlock() const
 {
-    Q_ASSERT(!mMetaData.isEncrypted);
-    Q_ASSERT(mDecryptMessage);
+    Q_ASSERT(mMetaData.isEncrypted);
+    Q_ASSERT(!decryptMessage());
 
     MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
     if (!writer) {
@@ -513,7 +530,7 @@ void CryptoMessagePart::html(bool decorate)
         return;
     }
 
-    if (mMetaData.isEncrypted && !mDecryptMessage) {
+    if (mMetaData.isEncrypted && !decryptMessage()) {
         const CryptoBlock block(mOtp, &mMetaData, mCryptoProto, mFromAddress, mNode);
         writeDeferredDecryptionBlock();
     } else if (mMetaData.inProgress) {

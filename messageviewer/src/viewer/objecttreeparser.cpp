@@ -1242,7 +1242,8 @@ MessagePart::Ptr ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Conte
     CryptoMessagePart::Ptr mp(new CryptoMessagePart(this,
                               data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
                               NodeHelper::fromAsString(data), node));
-
+    mp->setIsEncrypted(true);
+    mp->setDecryptMessage(mSource->decryptMessage());
     PartMetaData *messagePart(mp->partMetaData());
     if (!mSource->decryptMessage()) {
         mNodeHelper->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
@@ -1339,6 +1340,8 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
                              node->decodedText(), cryptoProtocol(),
                              NodeHelper::fromAsString(node), node);
 
+        mp.setIsEncrypted(true);
+        mp.setDecryptMessage(mSource->decryptMessage());
         PartMetaData *messagePart(mp.partMetaData());
         if (!mSource->decryptMessage()) {
             isEncrypted = true;
@@ -1391,7 +1394,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
         CryptoMessagePart mp(this,
                              aCodec->toUnicode(signaturetext), cryptoProtocol(),
                              NodeHelper::fromAsString(node), signTestNode);
-
+        mp.setDecryptMessage(mSource->decryptMessage());
         PartMetaData *messagePart(mp.partMetaData());
         if (cryptoProtocol()) {
             mp.startVerificationDetached(signaturetext, 0, QByteArray());
@@ -2400,6 +2403,8 @@ QVector<MessagePart::Ptr> ObjectTreeParser::writeBodyStr2(const QByteArray &aStr
                 mpl.append(MessagePart::Ptr(new MessagePart(this, aCodec->toUnicode(block.text()))));
             } else if (block.type() == PgpMessageBlock) {
                 CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, QString(), cryptoProtocol(), fromAddress, 0));
+                mp->setIsEncrypted(true);
+                mp->setDecryptMessage(mSource->decryptMessage());
                 mpl.append(mp);
                 if (!mSource->decryptMessage()) {
                     continue;

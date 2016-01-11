@@ -203,6 +203,12 @@ public:
 
     virtual ~CryptoMessagePart();
 
+    void setDecryptMessage(bool decrypt);
+    bool decryptMessage() const;
+
+    void setIsEncrypted(bool encrypted);
+    bool isEncrypted() const;
+
     void startDecryption(const QByteArray &text, const QTextCodec *aCodec);
     void startDecryption(KMime::Content *data = 0);
     void startVerification(const QByteArray &text, const QTextCodec *aCodec);

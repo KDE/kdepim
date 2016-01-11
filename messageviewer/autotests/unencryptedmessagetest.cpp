@@ -41,7 +41,8 @@ private Q_SLOTS:
     void testOpenPGPEncryptedNotDecrypted();
     void testAsync_data();
     void testAsync();
-    void testInlinePGPEncryptedNotDecrypted();
+    void testNotDecrypted_data();
+    void testNotDecrypted();
 };
 
 QTEST_MAIN(UnencryptedMessageTest)
@@ -251,20 +252,44 @@ void UnencryptedMessageTest::testAsync()
     }
 }
 
-void UnencryptedMessageTest::testInlinePGPEncryptedNotDecrypted()
+void UnencryptedMessageTest::testNotDecrypted_data()
 {
-    KMime::Message::Ptr originalMessage = readAndParseMail(QStringLiteral("inlinepgpencrypted.mbox"));
+    QTest::addColumn<QString>("mailFileName");
+    QTest::addColumn<bool>("decryptMessage");
+
+    QTest::newRow("openpgp-inline") << QStringLiteral("inlinepgpencrypted.mbox") << true;
+    QTest::newRow("openpgp-encrypt") << QStringLiteral("openpgp-encrypted.mbox") << true;
+    QTest::newRow("smime-encrypt") << QStringLiteral("smime-encrypted.mbox") << true;
+    QTest::newRow("openpgp-inline-encrypt") << QStringLiteral("openpgp-inline-charset-encrypted.mbox") << true;
+    QTest::newRow("smime-opaque-sign") << QStringLiteral("smime-opaque-sign.mbox") << false;
+    QTest::newRow("openpgp-inline-signed") << QStringLiteral("openpgp-inline-signed.mbox") << false;
+    QTest::newRow("openpgp-mime-signed") << QStringLiteral("openpgp-signed-mailinglist.mbox") << false;
+}
+
+void UnencryptedMessageTest::testNotDecrypted()
+{
+    QFETCH(QString, mailFileName);
+    QFETCH(bool, decryptMessage);
+    KMime::Message::Ptr originalMessage = readAndParseMail(mailFileName);
 
     NodeHelper nodeHelper;
-    EmptySource emptySource;
+    TestHtmlWriter testWriter;
+    TestCSSHelper testCSSHelper;
+    MessageViewer::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     emptySource.setAllowDecryption(false);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
     otp.parseObjectTree(originalMessage.data());
 
-    QCOMPARE(otp.plainTextContent().toLatin1().data(), "");
+    if (decryptMessage) {
+        QCOMPARE(otp.plainTextContent().toLatin1().data(), "");
+    } else {
+        QVERIFY(otp.plainTextContent().toLatin1().data());
+    }
+    QCOMPARE(testWriter.html.contains(QStringLiteral("<a href=\"kmail:decryptMessage\">")), decryptMessage);
 
     KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage(originalMessage);
     QCOMPARE((bool) unencryptedMessage, false);
 }
+
 
 #include "unencryptedmessagetest.moc"
