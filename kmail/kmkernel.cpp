@@ -404,6 +404,8 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
                     to += values.value( QLatin1String("to") ) + QLatin1String(", ");
                 if ( !values.value( QLatin1String("cc") ).isEmpty() )
                     cc += values.value( QLatin1String("cc") ) + QLatin1String(", ");
+                if ( !values.value( QLatin1String("bcc") ).isEmpty() )
+                    bcc += values.value( QLatin1String("bcc") ) + QLatin1String(", ");
                 if ( !values.value( QLatin1String("subject") ).isEmpty() )
                     subj = values.value( QLatin1String("subject") );
                 if ( !values.value( QLatin1String("body") ).isEmpty() )
