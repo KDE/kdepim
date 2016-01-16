@@ -262,11 +262,11 @@ void SylpheedSettings::readSignature(const KConfigGroup &accountConfig, KIdentit
     switch (signatureType) {
     case 0: //File
         signature.setType(KIdentityManagement::Signature::FromFile);
-        signature.setUrl(accountConfig.readEntry("signature_path"), false);
+        signature.setPath(accountConfig.readEntry("signature_path"), false);
         break;
     case 1: //Output
         signature.setType(KIdentityManagement::Signature::FromCommand);
-        signature.setUrl(accountConfig.readEntry("signature_path"), true);
+        signature.setPath(accountConfig.readEntry("signature_path"), true);
         break;
     case 2: //Text
         signature.setType(KIdentityManagement::Signature::Inlined);

@@ -109,7 +109,7 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
     if (!signaturePath.isEmpty()) {
         KIdentityManagement::Signature signature;
         if (grp.readEntry(QStringLiteral("SigExecutable"), false)) {
-            signature.setUrl(signaturePath, true);
+            signature.setPath(signaturePath, true);
             signature.setType(KIdentityManagement::Signature::FromCommand);
         } else {
             signature.setType(KIdentityManagement::Signature::FromFile);

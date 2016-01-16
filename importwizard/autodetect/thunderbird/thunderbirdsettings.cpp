@@ -788,7 +788,7 @@ void ThunderbirdSettings::readIdentity(const QString &account)
     if (attachSignature) {
         const QString fileSignature = mHashConfig.value(identity + QStringLiteral(".sig_file")).toString();
         signature.setType(KIdentityManagement::Signature::FromFile);
-        signature.setUrl(fileSignature, false);
+        signature.setPath(fileSignature, false);
     } else {
         const QString textSignature = mHashConfig.value(identity + QStringLiteral(".htmlSigText")).toString();
         signature.setType(KIdentityManagement::Signature::Inlined);

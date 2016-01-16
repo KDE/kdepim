@@ -222,10 +222,10 @@ void EvolutionSettings::extractSignatureInfo(const QString &info)
 
             if (tag == QLatin1String("filename")) {
                 if (e.hasAttribute(QStringLiteral("script")) && e.attribute(QStringLiteral("script")) == QLatin1String("true")) {
-                    signature.setUrl(e.text(), true);
+                    signature.setPath(e.text(), true);
                     signature.setType(KIdentityManagement::Signature::FromCommand);
                 } else {
-                    signature.setUrl(QDir::homePath() + QLatin1String(".local/share/evolution/signatures/") + e.text(), false);
+                    signature.setPath(QDir::homePath() + QLatin1String("/.local/share/evolution/signatures/") + e.text(), false);
                     signature.setType(KIdentityManagement::Signature::FromFile);
                 }
             }
