@@ -12,6 +12,7 @@
   <name xml:lang="de">Blogilo</name>
   <name xml:lang="en-GB">Blogilo</name>
   <name xml:lang="es">Blogilo</name>
+  <name xml:lang="et">Blogilo</name>
   <name xml:lang="fi">Blogilo</name>
   <name xml:lang="fr">Blogilo</name>
   <name xml:lang="gl">Blogilo</name>
@@ -46,6 +47,7 @@
   <summary xml:lang="de">Ein Blogging-Programm für KDE</summary>
   <summary xml:lang="en-GB">A KDE Blogging Client</summary>
   <summary xml:lang="es">Un cliente de blogueo para KDE</summary>
+  <summary xml:lang="et">KDE ajaveebiklient</summary>
   <summary xml:lang="fi">KDE:n blogausasiakas</summary>
   <summary xml:lang="fr">Un client de blog pour KDE</summary>
   <summary xml:lang="gl">Un cliente de KDE para blogues</summary>
@@ -79,6 +81,7 @@
     <p xml:lang="de">Blogilo ist ein Blogging-Programm für KDE, das verschiedene Programmier-Schnittstellen (APIs) für Blog-Systeme unterstützt.</p>
     <p xml:lang="en-GB">Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
     <p xml:lang="es">Blogilo en un cliente de blogueo para KDE, que implementa varias API de blogueo.</p>
+    <p xml:lang="et">Blogilo on KDE ajaveebiklient, mis toetab mitmeid blogimise API-sid.</p>
     <p xml:lang="fi">Blogilo on KDE:n blogausasiakas, joka tukee useampaa eri blogaus-APIa.</p>
     <p xml:lang="fr">Blogilo est un client de blog pour KDE qui prend en charge diverses interfaces de programmation pour blogs.</p>
     <p xml:lang="gl">Blogilo é un cliente de KDE para blogues compatíbel coas API de varios tipos de blogue.</p>
@@ -113,6 +116,7 @@
     <p xml:lang="de">Funktionen:</p>
     <p xml:lang="en-GB">Features:</p>
     <p xml:lang="es">Características:</p>
+    <p xml:lang="et">Omadused:</p>
     <p xml:lang="fi">Ominaisuudet:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
     <p xml:lang="gl">Funcionalidades:</p>
@@ -147,6 +151,7 @@
       <li xml:lang="de">Ein leistungsfähiger WYSIWYG-Editor für HTML</li>
       <li xml:lang="en-GB">A full featured WYSIWYG editor + An HTML editor</li>
       <li xml:lang="es">Un completo editor WYSIWYG + un editor HTML</li>
+      <li xml:lang="et">Kõigi võimalustega WYSIWYG redaktor + HTML-i redaktor</li>
       <li xml:lang="fi">Täysominaisuuksinen WYSIWYG-muokkain ja HTML-muokkain</li>
       <li xml:lang="fr">Un éditeur visuel complet et un éditeur HTML</li>
       <li xml:lang="gl">Un potente editor visual e máis un editor HTML.</li>
@@ -178,6 +183,7 @@
       <li xml:lang="de">Vorschau Ihrer Posts im Stil Ihres Blogs</li>
       <li xml:lang="en-GB">Previewing your post with your blog style</li>
       <li xml:lang="es">Previsualiza su envío con su estilo de blog</li>
+      <li xml:lang="et">Postituse eelvaatlus ajaveebile omases stiilis</li>
       <li xml:lang="fi">Viestiesi esikatselu blogityylilläsi</li>
       <li xml:lang="fr">Afficher un aperçu de votre article avec votre style du blog</li>
       <li xml:lang="gl">Vista previa dos artigos usando o estilo do blogue.</li>
@@ -208,6 +214,7 @@
       <li xml:lang="de">Unterstützung für die Programmier-Schnittstellen (APIs) von Blogger1.0, MetaWeblog, MovableType (alle von Wordpress verwendet) und Google GData (verwendet auf Blogspot.com blogs)</li>
       <li xml:lang="en-GB">Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="es">Reconoce las API Blogger1.0, MetaWeblog, MovableType (¡Wordpress reconoce todos esos!) y Google GData (usado en blogs de Blogspot.com b)</li>
+      <li xml:lang="et">Blogger1.0, MetaWeblogi, MovableType'i (Wordpress toetab neid kõiki!) ja Google GData (kasutsel Blogspot.com-i ajaveebides) API.de toetus</li>
       <li xml:lang="fi">API-tuki Blogger 1.0:lle, MetaWeblogille, MovableTypelle (Wordpress tukee näitä kaikkia!) ja Googlen GDatalle (jota Blogspot.comin blogit käyttävät)</li>
       <li xml:lang="fr">Prise en charge des interfaces Blogger1.0, MetaWeblog, MovableType (Wordpress les gérant tous !) et Google GData (utilisé sur les blogs de Blogspot.com)</li>
       <li xml:lang="gl">Compatíbel coas API Blogger1.0, MetaWeblog, MovableType (Wordpress é compatíbel con todos estes!) e Google GData (usada nos blogues de Blogspot.com).</li>
@@ -239,6 +246,7 @@
       <li xml:lang="de">Unterstützung für das Erstellen/Verändern/Löschen von Posts.</li>
       <li xml:lang="en-GB">Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="es">Implementa creación/modificación/borrado de envíos.</li>
+      <li xml:lang="et">Postituste loomise/muutmise/kustutamise toetus</li>
       <li xml:lang="fi">Tuki viestien luomiseen, muuttamiseen ja poistamiseen.</li>
       <li xml:lang="fr">Prise en charge de la création, modification et suppression d'articles.</li>
       <li xml:lang="gl">Permite crear, modificar e eliminar artigos.</li>
@@ -270,6 +278,7 @@
       <li xml:lang="de">Unterstützung für das Erstellen von Entwürfen und geplanten Posts</li>
       <li xml:lang="en-GB">Support for creating drafts and scheduled posts</li>
       <li xml:lang="es">Implementa la creación de borradores y envíos planificados</li>
+      <li xml:lang="et">Mustandite ja ajastatud postituste loomise toetus</li>
       <li xml:lang="fi">Tuki luonnosten ja ajastettujen viestien luomiseksi</li>
       <li xml:lang="fr">Prise en charge de la création de d'articles brouillons et planifiés.</li>
       <li xml:lang="gl">Permite crear borradores e programar a publicación futura de artigos.</li>
@@ -300,6 +309,7 @@
       <li xml:lang="de">Unterstützung für das Hochladen von Medien zu Ihrem Blog, nur z. B. für MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa la subida de archivos multimedia a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
+      <li xml:lang="et">Meediafailide ajaveebi üleslaadimise toetus (ainult seda toetava API korral, nt. MetaWeblog ja MovableType)</li>
       <li xml:lang="fi">Tuki mediatiedostojen lähettämiseksi blogiisi (vain tuetut APIt kuten MetaWeblog ja MovableType)</li>
       <li xml:lang="fr">Prise en charge de l'envoi de fichiers multimédia vers votre blog (uniquement avec les interfaces prises en charge comme MetaWeblog et MovableType)</li>
       <li xml:lang="gl">Permite enviar ficheiros multimedia ao blogue (só mediante as API que o permiten, como MetaWeblog ou MovableType).</li>
@@ -331,6 +341,7 @@
       <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen</li>
       <li xml:lang="en-GB">Support for Fetching your recent blog entries.</li>
       <li xml:lang="es">Implementa la recuperación de sus entradas recientes de blog.</li>
+      <li xml:lang="et">Uuemate ajaveebipostituste tõmbamise toetus</li>
       <li xml:lang="fi">Tuki viimeisimpien blogimerkintöjesi noutoon.</li>
       <li xml:lang="fr">Prise en charge de l'accès à vos articles de blog récents.</li>
       <li xml:lang="gl">Permite obter os artigos máis recentes do blogue.</li>
@@ -361,6 +372,7 @@
       <li xml:lang="de">Unterstützung für das Hinzufügen von Bildern von Ihrem System zu Ihren Posts. Die Bilder werden beim Hochladen zusammen mit Ihrem Text zum Blog hochgeladen, das funktioniert nur bei unterstützten Programmier-Schnittstellen (APIs) wie MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa el añadido de imágenes al envió desde su sistema. Las cargará al aplicar los envíos a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
+      <li xml:lang="et">Süsteemist postitusele piltide lisamise toetus. Need laaditakse üles koos postitusega (ainult seda toetava API korral, nt. MetaWeblog ja MovableType)</li>
       <li xml:lang="fi">Tuki kuvien lisäämiseksi viesteihisi. Kuvat lähetetään blogiin yhdessä viestin kanssa (vain tuetut APIt kuten MetaWeblog ja MovableType)</li>
       <li xml:lang="fr">Prise en charge de l'ajout d'images de votre système vers l'article. Le fichier sera envoyé lors de la soumission de l'article sur le blog (uniquement avec les interfaces prises en charge comme MetaWeblog et MovableType)</li>
       <li xml:lang="gl">Permite engadir imaxes locais aos artigos. Cando envíe o artigo ao blogue, enviaranse tamén as imaxes (só pode facerse coas API que o permiten, como MetaWeblog ou MovableType).</li>
@@ -392,6 +404,7 @@
       <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung</li>
       <li xml:lang="en-GB">Support for saving local entries before publishing.</li>
       <li xml:lang="es">Implementa el guardado de entradas locales antes de publicarlas.</li>
+      <li xml:lang="et">Kohalike sissekannete enne avaldamist salvestamise toetus</li>
       <li xml:lang="fi">Tuki paikallisten merkintöjen tallentamiseen ennen julkaisua.</li>
       <li xml:lang="fr">Prise en charge de l'enregistrement d'entrées en local avant publication.</li>
       <li xml:lang="gl">Permite gardar os artigos en local antes de publicalos.</li>
@@ -423,6 +436,7 @@
       <li xml:lang="de">Speicherung einer Kopie Ihrer Texte in einstellbaren Intervallen, um Datenverlust zu verhindern</li>
       <li xml:lang="en-GB">Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="es">Guardado de su copia escrita para evitar pérdidas de datos, a intervalos configurables.</li>
+      <li xml:lang="et">Kirjutatust koopia salvestamine seadistatava ajavahemiku järel andmekao vältimiseks</li>
       <li xml:lang="fi">Tekstisi kopion tallennus säädettävin aikavälein tiedon katoamisen estämiseksi.</li>
       <li xml:lang="fr">Enregistrement de votre copie de travail pour éviter de perdre les données, à intervalle configurable.</li>
       <li xml:lang="gl">Garda copias dos seus artigos a medida que os escribe para evitar a perda de dato. Pode configurar os intervalos nos que se garda o seu traballo.</li>
@@ -454,6 +468,7 @@
       <li xml:lang="de">Interne automatische Rechtschreibprüfung, dabei wird die KDE-Rechtschreibprüfung verwendet und damit viele Sprachen unterstützt</li>
       <li xml:lang="en-GB">Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="es">Auto corrector ortográfico interno. (El corrector ortográfico de KDE usado para la mayoría de idiomas está reconocido)</li>
+      <li xml:lang="et">Sisemine automaatne õigekirja kontroll (kasutatakse KDE õigekirja kontrolli, niisiis on toetatud enamik keeli)</li>
       <li xml:lang="fi">Sisäinen automaattinen oikoluku. (Käyttää KDE:n oikolukua, joka tukee useimpia kieliä)</li>
       <li xml:lang="fr">Vérificateur orthographique automatique intégré (utilisant le vérificateur de KDE, donc la plupart des langues sont prises en charge)</li>
       <li xml:lang="gl">Fornece un corretor ortográfico compatíbel con case todos os idiomas.</li>
