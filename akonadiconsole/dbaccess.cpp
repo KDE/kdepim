@@ -20,7 +20,6 @@
 #include "dbaccess.h"
 
 #include <AkonadiCore/servermanager.h>
-#include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QSettings>
 #include <QSqlDatabase>
@@ -42,7 +41,7 @@ public:
 
     void init()
     {
-        const QString serverConfigFile = saveDir("config") + QLatin1String("/akonadiserverrc");
+        const QString serverConfigFile = ServerManager::serverConfigFilePath(ServerManager::ReadWrite);
         QSettings settings(serverConfigFile, QSettings::IniFormat);
 
         const QString driver = settings.value(QStringLiteral("General/Driver"), QStringLiteral("QMYSQL")).toString();
@@ -58,17 +57,6 @@ public:
         }
     }
 
-    QString saveDir(const char *resource, const QString &relPath = QString())
-    {
-        QString fullRelPath = QStringLiteral("akonadi");
-        if (ServerManager::hasInstanceIdentifier()) {
-            fullRelPath += QLatin1String("/instance/") + ServerManager::instanceIdentifier();
-        }
-        if (!relPath.isEmpty()) {
-            fullRelPath += QLatin1Char('/') + relPath;
-        }
-        return XdgBaseDirs::saveDir(resource, fullRelPath);
-    }
 
     QSqlDatabase database;
 };

@@ -60,7 +60,7 @@ qt5_add_dbus_interface(akonadiconsole_bin_SRCS
 )
 
 set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
-  PROPERTIES INCLUDE "akonadi/private/protocol_p.h"
+  PROPERTIES INCLUDE ${AKONADI_INCLUDE_DIR}/akonadi/private/protocol_p.h
 )
 
 qt5_add_dbus_interface(akonadiconsole_bin_SRCS
