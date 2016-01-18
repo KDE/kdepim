@@ -66,7 +66,12 @@ QStringList DefaultCompletion::defaultCompetion()
         << QStringLiteral("header.isprinting")
         << QStringLiteral("header.vcardi18n")
         << QStringLiteral("header.resentto")
-        << QStringLiteral("header.resenttoi18n");
+        << QStringLiteral("header.resenttoi18n")
+        << QStringLiteral("header.trashaction")
+        << QStringLiteral("header.replyaction")
+        << QStringLiteral("header.replyallaction")
+        << QStringLiteral("header.forwardaction")
+        << QStringLiteral("header.newmessageaction");
     return lst;
 }
 
