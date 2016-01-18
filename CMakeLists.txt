@@ -74,6 +74,7 @@ set(KMIME_LIB_VERSION "5.1.40")
 set(XMLRPCCLIENT_LIB_VERSION "5.1.40")
 set(KBLOG_LIB_VERSION "5.1.40")
 set(KPIMTEXTEDIT_LIB_VERSION "5.1.42")
+set(AKONAD_VERSION "5.1.52")
 
 set(KDEPIM_LIB_VERSION "${KDEPIM_VERSION_NUMBER}")
 set(KDEPIM_LIB_SOVERSION "5")
@@ -112,7 +113,7 @@ find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
 
 # Find KdepimLibs Package
 find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
 find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5CalendarCore ${KCALENDARCORE_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
@@ -191,9 +192,6 @@ find_package(KF5GAPI "4.72.0" CONFIG)
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
 include_directories(${kdepim_SOURCE_DIR} ${kdepim_BINARY_DIR})
-
-set(KF5AkonadiServer_MIN_VERSION "5.1.51")
-find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 
 find_package(Xsltproc)
 set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
