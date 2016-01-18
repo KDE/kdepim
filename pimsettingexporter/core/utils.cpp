@@ -20,8 +20,6 @@
 #include "MailCommon/MailUtil"
 #include "PimCommon/PimUtil"
 
-#include <akonadi/private/xdgbasedirs_p.h>
-
 #include <QSettings>
 #include <KConfigGroup>
 
@@ -268,16 +266,6 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     }
 
     return QString();
-}
-
-QString Utils::akonadiAgentConfigPath(const QString &identifier)
-{
-    const QString relativeFileName = QStringLiteral("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
-    const QString configFile = Akonadi::XdgBaseDirs::findResourceFile("config", relativeFileName);
-    if (!configFile.isEmpty()) {
-        return configFile;
-    }
-    return configFile;
 }
 
 QString Utils::akonadiAgentName(const QString &configPath)

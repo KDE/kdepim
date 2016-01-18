@@ -18,7 +18,7 @@
 
 #include "akonadidatabase.h"
 
-#include <akonadi/private/xdgbasedirs_p.h>
+#include <AkonadiCore/ServerManager>
 
 #include <QSettings>
 
@@ -49,7 +49,7 @@ QString AkonadiDataBase::name() const
 
 void AkonadiDataBase::init()
 {
-    const QString serverConfigFile = Akonadi::XdgBaseDirs::akonadiServerConfigFile(Akonadi::XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = Akonadi::ServerManager::serverConfigFilePath(Akonadi::ServerManager::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
 
     m_dbdriver = settings.value(QStringLiteral("General/Driver"), QStringLiteral("QMYSQL")).toString();

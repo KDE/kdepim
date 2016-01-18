@@ -103,7 +103,6 @@ void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentK
 QString resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
 QString adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
-QString akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
 
 void addVersion(KZip *archive);

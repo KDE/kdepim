@@ -29,6 +29,8 @@
 #include <QTemporaryDir>
 #include <KLocalizedString>
 
+#include <AkonadiCore/ServerManager>
+
 #include <QTemporaryFile>
 
 #include <QFile>
@@ -348,7 +350,7 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
             }
             Q_EMIT info(i18n("\"%1\" was backed up.", filename));
 
-            url = Utils::akonadiAgentConfigPath(identifier);
+            url = Akonadi::ServerManager::agentConfigFilePath(identifier);
             if (!url.isEmpty()) {
                 fi = QFileInfo(url);
                 filename = fi.fileName();

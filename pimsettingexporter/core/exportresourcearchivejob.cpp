@@ -24,6 +24,8 @@
 #include <QDebug>
 #include <QFileInfo>
 
+#include <AkonadiCore/ServerManager>
+
 ExportResourceArchiveJob::ExportResourceArchiveJob(QObject *parent)
     : QObject(parent),
       mZip(Q_NULLPTR),
@@ -84,7 +86,7 @@ void ExportResourceArchiveJob::slotTerminated(bool success)
         if (!errorStr.isEmpty()) {
             Q_EMIT error(errorStr);
         }
-        const QString url = Utils::akonadiAgentConfigPath(mIdentifier);
+        const QString url = Akonadi::ServerManager::agentConfigFilePath(mIdentifier);
         if (!url.isEmpty()) {
             const QFileInfo fi(url);
             const QString filename = fi.fileName();
