@@ -67,6 +67,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
                        "locked when moving to other folders or when narrowing the search "
                        "by message status." ) );
     slotLockSearchClicked(false);
+
     connect( mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
     hbox->addWidget( mLockSearch );
 
@@ -174,6 +175,13 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mQuickSearchFilterWidget->installEventFilter(this);
     mExtraOption->installEventFilter(this);
     changeQuicksearchVisibility(Settings::self()->showQuickSearch());
+
+    mLockSearch->hide();
+    mExtraOption->hide();
+    mTagFilterCombo->hide();
+    mLockSearch->hide();
+    mMoreOptions->hide();
+
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -221,10 +229,14 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
     }
     if (!text.trimmed().isEmpty()) {
         if (text.length() >= minimumStringLength) {
+#if 0
             mExtraOption->show();
+#endif
             Q_EMIT searchEditTextEdited(text);
         } else {
+#if 0
             mExtraOption->hide();
+#endif
         }
     } else {
         slotClearButtonClicked();
@@ -442,7 +454,9 @@ bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
 void QuickSearchLine::changeQuicksearchVisibility(bool show)
 {
     mSearchEdit->setVisible( show );
+#if 0
     mTagFilterCombo->setVisible( show && mTagFilterCombo->count());
     mLockSearch->setVisible( show );
     mMoreOptions->setVisible( show );
+#endif
 }

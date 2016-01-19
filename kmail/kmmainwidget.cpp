@@ -256,7 +256,6 @@ KMMainWidget::KMMainWidget( QWidget *parent, KXMLGUIClient *aGUIClient,
     createWidgets();
     setupActions();
 
-
     readConfig();
 
     if ( !kmkernel->isOffline() ) { //kmail is set to online mode, make sure the agents are also online
