@@ -24,6 +24,7 @@
 
 #include "viewer_p.h"
 #include "viewer.h"
+#include "viewer/viewertoolbaraction.h"
 #include "viewer/objecttreeemptysource.h"
 #include "viewer/objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
@@ -1511,6 +1512,8 @@ void ViewerPrivate::createWidgets() {
 
     mColorBar->setObjectName( QLatin1String("mColorBar") );
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
+
+    mViewerToolBar = new MessageViewer::ViewerToolBarAction(readerBox);
 
     mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
 
@@ -3287,4 +3290,9 @@ void ViewerPrivate::slotRefreshMessage(const Akonadi::Item &item)
     if (item.id() == mMessageItem.id()) {
         setMessageItem( item, MessageViewer::Viewer::Force );
     }
+}
+
+void ViewerPrivate::updateViewerToolBar()
+{
+    mViewerToolBar->updateViewerToolBar(mActionCollection);
 }

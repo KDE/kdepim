@@ -293,6 +293,12 @@ void Viewer::setUseFixedFont( bool useFixedFont )
     d->setUseFixedFont( useFixedFont );
 }
 
+void Viewer::updateViewerToolBar()
+{
+    Q_D(Viewer);
+    d->updateViewerToolBar();
+}
+
 QWidget* Viewer::mainWindow()
 {
     Q_D(Viewer);

@@ -276,6 +276,11 @@ void KMReaderWin::readConfig(void)
     mViewer->readConfig();
 }
 
+void KMReaderWin::updateViewerToolBar()
+{
+    mViewer->updateViewerToolBar();
+}
+
 void KMReaderWin::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
     mViewer->setAttachmentStrategy( strategy );
 }

@@ -3504,6 +3504,10 @@ void KMMainWidget::setupActions()
     connect( mArchiveAction, SIGNAL(triggered(bool)),
              SLOT(slotArchiveMails()) );
 
+    // Update viewer toolbar after create them
+    if (mMsgView) {
+        mMsgView->updateViewerToolBar();
+    }
 
 }
 

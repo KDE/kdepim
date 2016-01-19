@@ -229,6 +229,8 @@ public:
 
     bool isFixedFont() const;
     void setUseFixedFont( bool useFixedFont );
+    void updateViewerToolBar();
+
 
     QWidget* mainWindow();
 

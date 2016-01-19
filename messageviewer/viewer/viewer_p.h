@@ -78,7 +78,7 @@ class MailWebView;
 class ScamDetectionWarningWidget;
 class MimePartTreeView;
 class OpenAttachmentFolderWidget;
-
+class ViewerToolBarAction;
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
 
@@ -455,6 +455,7 @@ public:
 
     bool mimePartTreeIsEmpty() const;
 
+    void updateViewerToolBar();
 private slots:
     void slotModifyItemDone(KJob* job);
     void slotMessageMayBeAScam();
@@ -727,6 +728,7 @@ public:
     qreal mZoomFactor;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
     PimCommon::SlideContainer *mSliderContainer;
+    MessageViewer::ViewerToolBarAction *mViewerToolBar;
 };
 
 }

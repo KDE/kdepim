@@ -57,6 +57,7 @@ public:
     /** Read settings from app's config file. */
     void readConfig();
 
+    void updateViewerToolBar();
     MessageViewer::HeaderStyle * headerStyle() const;
 
     /** Set the header style and strategy. We only want them to be set
