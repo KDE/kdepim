@@ -294,11 +294,11 @@ void QuickSearchLine::slotLockSearchClicked(bool locked)
 {
     if (locked) {
         mLockSearch->setIcon(QIcon::fromTheme(QStringLiteral("object-locked")));
-        mLockSearch->setToolTip(i18nc("@info:tooltip", "Clear the quick search field when changing folders"));
-    } else {
-        mLockSearch->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
         mLockSearch->setToolTip(i18nc("@info:tooltip",
                                       "Prevent the quick search field from being cleared when changing folders"));
+    } else {
+        mLockSearch->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
+        mLockSearch->setToolTip(i18nc("@info:tooltip", "Clear the quick search field when changing folders"));
     }
 }
 
