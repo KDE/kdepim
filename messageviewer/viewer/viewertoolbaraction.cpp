@@ -17,6 +17,7 @@
 
 #include "viewertoolbaraction.h"
 #include <KActionCollection>
+#include <QLayout>
 #include <QDebug>
 using namespace MessageViewer;
 
@@ -39,7 +40,17 @@ void ViewerToolBarAction::updateViewerToolBar(KActionCollection *ac)
         addAction(ac->action(QLatin1String("create_todo")));
         addAction(ac->action(QLatin1String("send_queued")));
         addAction(ac->action(QLatin1String("file_print")));
-        addAction(ac->action(QLatin1String("reply")));
+
+        QAction *act = ac->action(QLatin1String("reply"));
+        addAction(act);
+
+        QWidget *spacer = new QWidget;
+        QHBoxLayout *hbox = new QHBoxLayout;
+        spacer->setLayout(hbox);
+        QSpacerItem *item = new QSpacerItem(1,1, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        hbox->addSpacerItem(item);
+        insertWidget(act, spacer);
+
         addAction(ac->action(QLatin1String("reply_all")));
         addAction(ac->action(QLatin1String("message_forward")));
     }
