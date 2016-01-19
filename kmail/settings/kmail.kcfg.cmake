@@ -211,7 +211,7 @@
       <entry name="PreviousDictionary" type="String" />
       <entry name="CurrentTransport" type="String" key="current-transport" />
       <entry name="UseHtmlMarkup" type="Bool" key="html-markup">
-        <default>false</default>
+        <default>true</default>
       </entry>
       <entry name="NeverEncryptDrafts" type="Bool" key="never-encrypt-drafts">
         <default>true</default>
