@@ -74,7 +74,7 @@ set(KMIME_LIB_VERSION "5.1.40")
 set(XMLRPCCLIENT_LIB_VERSION "5.1.40")
 set(KBLOG_LIB_VERSION "5.1.40")
 set(KPIMTEXTEDIT_LIB_VERSION "5.1.42")
-set(AKONAD_VERSION "5.1.52")
+set(AKONADI_VERSION "5.1.52")
 
 set(KDEPIM_LIB_VERSION "${KDEPIM_VERSION_NUMBER}")
 set(KDEPIM_LIB_SOVERSION "5")
@@ -83,13 +83,15 @@ set(AKONADINOTES_LIB_VERSION "5.1.40")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KF5_VERSION "5.17.0")
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
-
+option(QTWEBENGINE_EXPERIMENTAL_OPTION "Enable support for qtwebengine. False by default." FALSE)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
 find_package(Gpgme REQUIRED)
-
+if (QTWEBENGINE_EXPERIMENTAL_OPTION)
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED WebEngine)
+endif()
 
 # Find KF5 package
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
