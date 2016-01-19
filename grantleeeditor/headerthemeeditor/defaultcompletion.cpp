@@ -71,7 +71,9 @@ QStringList DefaultCompletion::defaultCompetion()
         << QStringLiteral("header.replyaction")
         << QStringLiteral("header.replyallaction")
         << QStringLiteral("header.forwardaction")
-        << QStringLiteral("header.newmessageaction");
+        << QStringLiteral("header.newmessageaction")
+        << QStringLiteral("header.createtodoaction");
+
     return lst;
 }
 
