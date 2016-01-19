@@ -193,6 +193,7 @@ if (KDEPIM_BUILD_DESKTOP)
      tag/tagselectdialog.cpp
   )
   set(kmailprivate_LIB_SRCS
+     foldertreeaction.cpp
      kmmainwin.cpp
      settings/globalsettings.cpp
      kmreaderwin.cpp

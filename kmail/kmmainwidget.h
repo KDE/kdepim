@@ -48,6 +48,7 @@ class Tag;
 namespace KMime {
 class Message;
 }
+class FolderTreeAction;
 class KUrl;
 class QVBoxLayout;
 class QSplitter;
@@ -607,6 +608,7 @@ private:
     KMLaunchExternalComponent *mLaunchExternalComponent;
     ManageShowCollectionProperties *mManageShowCollectionProperties;
     KAction *mShowIntroductionAction;
+    FolderTreeAction *mFolderTreeAction;
 };
 
 #endif

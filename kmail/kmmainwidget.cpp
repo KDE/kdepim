@@ -185,6 +185,7 @@ using KSieveUi::SieveDebugDialog;
 #include <QDBusConnection>
 #include <QTextDocument>
 #include <QMenu>
+#include <foldertreeaction.h>
 
 #include <akonadi/standardactionmanager.h>
 #include <job/manageserversidesubscriptionjob.h>
@@ -628,11 +629,28 @@ void KMMainWidget::layoutSplitters()
     if ( mFavoriteCollectionsView ) {
         mFolderViewSplitter = new QSplitter( Qt::Vertical );
         mFolderViewSplitter->setOpaqueResize( opaqueResize );
-        //mFolderViewSplitter->setChildrenCollapsible( false );
-        mFolderViewSplitter->addWidget( mFavoriteCollectionsView );
-        mFavoriteCollectionsView->setParent( mFolderViewSplitter );
+        mFolderViewSplitter->setChildrenCollapsible( false );
+
+        //Add toolbar
+        QWidget *actionWidget = new QWidget;
+        QVBoxLayout *vbox = new QVBoxLayout;
+        actionWidget->setLayout(vbox);
+        vbox->setMargin(0);
+        vbox->addWidget(mFolderTreeAction);
+        vbox->addWidget(mFavoriteCollectionsView);
+
+        mFolderViewSplitter->addWidget(actionWidget);
+        //mFavoriteCollectionsView->setParent( mFolderViewSplitter );
         mFolderViewSplitter->addWidget( mSearchAndTree );
         folderTreeWidget = mFolderViewSplitter;
+    } else {
+        QWidget *actionWidget = new QWidget;
+        QVBoxLayout *vbox = new QVBoxLayout;
+        actionWidget->setLayout(vbox);
+        vbox->setMargin(0);
+        vbox->addWidget(mFolderTreeAction);
+        vbox->addWidget(folderTreeWidget);
+        folderTreeWidget = actionWidget;
     }
 
     if ( mLongFolderList ) {
@@ -952,6 +970,7 @@ void KMMainWidget::deleteWidgets()
     mSplitter1 = 0;
     mSplitter2 = 0;
     mFavoritesModel = 0;
+    mFolderTreeAction = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -1026,6 +1045,9 @@ void KMMainWidget::createWidgets()
     // the "folder tree" consists of a quicksearch input field and the tree itself
     //
 
+    mFolderTreeAction = new FolderTreeAction(this);
+    connect(mFolderTreeAction, SIGNAL(checkMail()), this, SLOT(slotCheckMail()));
+    connect(mFolderTreeAction, SIGNAL(newMessage()), this, SLOT(slotCompose()));
     mSearchAndTree = new QWidget( this );
     QVBoxLayout *vboxlayout = new QVBoxLayout;
     vboxlayout->setMargin(0);
