@@ -500,6 +500,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mDummyComposer->globalPart()->setParentWidgetForGui( this );
 
     connect(mStorageService, SIGNAL(insertShareLink(QString)), this, SLOT(slotShareLinkDone(QString)));
+    statusBar()->hide();
 }
 
 
