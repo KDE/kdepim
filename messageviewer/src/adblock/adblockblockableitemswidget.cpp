@@ -212,6 +212,7 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
     foreach (QWebFrame *childFrame, frame->childFrames()) {
         searchBlockableElement(childFrame);
     }
+    mListItems->setShowDefaultText(mListItems->model()->rowCount() == 0);
 }
 
 void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
