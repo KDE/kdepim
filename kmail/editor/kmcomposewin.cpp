@@ -118,6 +118,7 @@
 #include "mailcommon/folder/foldercollection.h"
 
 #include "widgets/statusbarlabeltoggledstate.h"
+#include <KMenuBar>
 
 // LIBKDEPIM includes
 #include <libkdepim/addressline/recentaddress/recentaddresses.h>
@@ -501,6 +502,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
     connect(mStorageService, SIGNAL(insertShareLink(QString)), this, SLOT(slotShareLinkDone(QString)));
     statusBar()->hide();
+    menuBar()->hide();
 }
 
 
