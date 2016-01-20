@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd" >
-<kpartgui version="432" name="kmcomposer" >
+<kpartgui version="434" name="kmcomposer" >
  <MenuBar>
   <Menu noMerge="1" name="file" >
    <text>&amp;Message</text>
@@ -103,26 +103,19 @@
    <Action name="setup_spellchecker" append="save_merge"/>
   </Menu>
  </MenuBar>
- <ToolBar noMerge="1" name="mainToolBar" fullWidth="true" ><text>Main Toolbar</text>
+ <ToolBar newline="true" noMerge="1" name="mainToolBar" fullWidth="true" position="bottom"><text>Main Toolbar</text>
   <Action name="send_default_via" />
-  <Action name="send_alternative_via" />
-  <Separator/>
-  <Action name="html" />
   <Separator/>
   <Action name="spellcheck" />
   <Separator/> 
   <Action name="attach_menu" />
-  <Separator/>
-  <Action name="edit_cut" />
-  <Action name="edit_copy" />
-  <Action name="edit_paste" />
   <Separator/>
   <Action name="sign_message" />
   <Action name="encrypt_message" />
   <Separator/>
   <Action name="add_emoticon" />
  </ToolBar>
- <ToolBar noMerge="1" newline="true" hidden="true" enable="0" name="htmlToolBar" iconText="icononly" >
+ <ToolBar noMerge="1" newline="true" hidden="true" enable="0" name="htmlToolBar" iconText="icononly" position="bottom">
   <text>HTML Toolbar</text>
   <Action name="format_list_style" />
   <Action name="format_font_family" />
