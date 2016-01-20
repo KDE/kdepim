@@ -196,6 +196,9 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     if ( !style->vCardName().isEmpty() )
         headerObject.insert( QLatin1String( "vcardname" ) , style->vCardName() );
 
+    if ( !style->collectionName().isEmpty() )
+        headerObject.insert( QLatin1String( "collectionname" ) , style->collectionName() );
+
     if ( isPrinting ) {
         //provide a bit more left padding when printing
         //kolab/issue3254 (printed mail cut at the left side)

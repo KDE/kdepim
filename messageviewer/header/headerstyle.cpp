@@ -75,6 +75,16 @@ bool HeaderStyle::hasAttachmentQuickList() const
     return false;
 }
 
+void HeaderStyle::setCollectionName(const QString &name)
+{
+    mCollectionName = name;
+}
+
+QString HeaderStyle::collectionName() const
+{
+    return mCollectionName;
+}
+
 HeaderStyle * HeaderStyle::create( Type type ) {
     switch ( type ) {
     case Brief:  return brief();
