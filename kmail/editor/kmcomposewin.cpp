@@ -503,8 +503,30 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     connect(mStorageService, SIGNAL(insertShareLink(QString)), this, SLOT(slotShareLinkDone(QString)));
     statusBar()->hide();
     menuBar()->hide();
-    QToolBar *mainToolBar = toolBar(QLatin1String("mainToolBar"));
+    QToolBar *mainToolBar = new QToolBar(this);
+    mainToolBar->setMovable(false);
+    mainToolBar->setFloatable(false);
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("spellcheck")));
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("attach_menu")));
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("sign_message")));
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("encrypt_message")));
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("add_emoticon")));
     mainToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+
+    QAction *sendAction = actionCollection()->action(QLatin1String("send_mail_default"));
+    sendAction->setIcon(QIcon());
+    mainToolBar->addAction(sendAction);
+    QWidget *spacer = new QWidget;
+    QHBoxLayout *hbox = new QHBoxLayout;
+    spacer->setLayout(hbox);
+    QSpacerItem *item = new QSpacerItem(1,1, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    hbox->addSpacerItem(item);
+    mainToolBar->insertWidget(sendAction, spacer);
+
+
     addToolBar(Qt::BottomToolBarArea, mainToolBar);
 
     addToolBarBreak(Qt::BottomToolBarArea);
