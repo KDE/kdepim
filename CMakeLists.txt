@@ -90,7 +90,7 @@ find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
 find_package(Gpgme REQUIRED)
 if (QTWEBENGINE_EXPERIMENTAL_OPTION)
-    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED WebEngine)
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED WebEngine WebEngineWidgets)
 endif()
 
 # Find KF5 package
