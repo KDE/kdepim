@@ -503,6 +503,14 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     connect(mStorageService, SIGNAL(insertShareLink(QString)), this, SLOT(slotShareLinkDone(QString)));
     statusBar()->hide();
     menuBar()->hide();
+    QToolBar *mainToolBar = toolBar(QLatin1String("mainToolBar"));
+    mainToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    addToolBar(Qt::BottomToolBarArea, mainToolBar);
+
+    addToolBarBreak(Qt::BottomToolBarArea);
+    QToolBar *htmlToolBar = toolBar(QLatin1String("htmlToolBar"));
+    htmlToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    addToolBar(Qt::BottomToolBarArea, htmlToolBar);
 }
 
 
