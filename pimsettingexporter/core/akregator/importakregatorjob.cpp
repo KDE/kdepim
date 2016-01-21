@@ -70,9 +70,7 @@ void ImportAkregatorJob::restoreConfig()
     increaseProgressDialog();
     setProgressDialogLabel(i18n("Restore configs..."));
     restoreConfigFile(akregatorStr);
-    restoreUiRcFile(QStringLiteral("pageviewer.rc"), QStringLiteral("akregator"));
     restoreUiRcFile(QStringLiteral("akregator_part.rc"), QStringLiteral("akregator"));
-    restoreUiRcFile(QStringLiteral("articleviewer.rc"), QStringLiteral("akregator"));
     restoreUiRcFile(QStringLiteral("akregator_shell.rc"), QStringLiteral("akregator"));
     restoreConfigFile(QStringLiteral("akregator.notifyrc"));
 
