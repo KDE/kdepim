@@ -41,10 +41,10 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ), IconSize( KIconLoader::Desktop ) ), qApp->windowIcon().pixmap(IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );
     addModule( QLatin1String("kmail_config_identity") );
     addModule( QLatin1String("kmail_config_accounts") );
-    addModule( QLatin1String("kmail_config_appearance") );
-    addModule( QLatin1String("kmail_config_composer") );
-    addModule( QLatin1String("kmail_config_security") );
-    addModule( QLatin1String("kmail_config_misc") );
+    //addModule( QLatin1String("kmail_config_appearance") );
+    //addModule( QLatin1String("kmail_config_composer") );
+    //addModule( QLatin1String("kmail_config_security") );
+    //addModule( QLatin1String("kmail_config_misc") );
 
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
     connect( this, SIGNAL(applyClicked()), SLOT(slotApply()) );
