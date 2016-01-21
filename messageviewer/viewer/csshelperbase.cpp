@@ -185,6 +185,22 @@ QString CSSHelperBase::htmlHead( bool /*fixed*/ ) const {
                           "<body>\n");
 }
 
+QString CSSHelperBase::endBlockQuote(int level ) const {
+    QString blockQuote;
+    for (int i = 0; i < level; ++i) {
+        blockQuote += QLatin1String("</blockquote>");
+    }
+    return blockQuote;
+}
+
+QString CSSHelperBase::startBlockQuote(int level ) const {
+    QString blockQuote;
+    for (int i = 0; i < level; ++i) {
+        blockQuote += QLatin1String("<blockquote>");
+    }
+    return blockQuote;
+}
+
 QString CSSHelperBase::quoteFontTag( int level ) const {
     if ( level < 0 )
         level = 0;
@@ -328,12 +344,11 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
         quoteCSS += QLatin1String("  font-weight: bold ! important;\n");
     if ( !quoteCSS.isEmpty() )
         quoteCSS = QLatin1String("div.noquote {\n") + quoteCSS + QLatin1String("}\n\n");
-
     // CSS definitions for quote levels 1-3
     for ( int i = 0 ; i < 3 ; ++i ) {
         quoteCSS += QString::fromLatin1( "div.quotelevel%1 {\n"
                                          "  color: %2 ! important;\n" )
-                .arg( QString::number(i+1), mQuoteColor[i].name() );
+                .arg( QString::number(i+1), quoteColorName(i) );
         if ( mQuoteFont[i].italic() )
             quoteCSS += QLatin1String("  font-style: italic ! important;\n");
         if ( mQuoteFont[i].bold() )
@@ -348,7 +363,7 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
     for ( int i = 0 ; i < 3 ; ++i ) {
         quoteCSS += QString::fromLatin1( "div.deepquotelevel%1 {\n"
                                          "  color: %2 ! important;\n" )
-                .arg( QString::number(i+1), mQuoteColor[i].name() );
+                .arg( QString::number(i+1), quoteColorName(i) );
         if ( mQuoteFont[i].italic() )
             quoteCSS += QLatin1String("  font-style: italic ! important;\n");
         if ( mQuoteFont[i].bold() )
@@ -357,8 +372,18 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
             quoteCSS += QLatin1String("  font-size: 70% ! important;\n");
         quoteCSS += QLatin1String("}\n\n");
     }
-
-    return
+    QString blockQuote;
+    for (int i = 0; i < 9; ++i) {
+        blockQuote += QLatin1String("blockquote ");
+        quoteCSS += QString::fromLatin1("%2{\n"
+                                        "  margin: 4pt 0 4pt 0;\n"
+                                        "  padding: 0 0 0 1em;\n"
+                                        "  border-left: 2px solid %1;\n"
+                                        "  unicode-bidi: -webkit-plaintext\n"
+                                        "}\n\n").arg(quoteColorName(i)).arg(blockQuote);
+    }
+    quoteCSS += QLatin1String(".quotemarks{color:transparent;font-size:0px;}");
+    QString str =
             QString::fromLatin1( "body {\n"
                                  "  font-family: \"%1\" ! important;\n"
                                  "  font-size: %2 ! important;\n"
@@ -549,6 +574,8 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
                   pal.color( QPalette::Background ).name() )
             .arg( pal.color( QPalette::Mid ).name() )
             + quoteCSS;
+    qDebug()<<" CSS "<<str;
+    return str;
 }
 
 QString CSSHelperBase::commonCssDefinitions() const {
@@ -686,9 +713,14 @@ void CSSHelperBase::setPrintFont( const QFont& font )
     mPrintFont = font;
 }
 
-QColor CSSHelperBase::quoteColor( int level )
+QString CSSHelperBase::quoteColorName( int level ) const
 {
-    const int actualLevel = qMin( qMax( level, 0 ), 2 );
+    return quoteColor(level).name();
+}
+
+QColor CSSHelperBase::quoteColor( int level ) const
+{
+    const int actualLevel = qMax( level, 0 ) % 3;
     return mQuoteColor[actualLevel];
 }
 

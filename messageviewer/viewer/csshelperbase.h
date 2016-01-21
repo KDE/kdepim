@@ -69,10 +69,13 @@ public:
     void setPrintFont( const QFont& font );
 
     /** @return the quote color for the given level, where level ranges from 0 to 2 **/
-    QColor quoteColor( int level );
+    QColor quoteColor( int level ) const;
 
     QColor pgpWarnColor() const;
 
+    QString endBlockQuote(int level) const;
+    QString startBlockQuote(int level) const;
+    QString quoteColorName(int level) const;
 protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */

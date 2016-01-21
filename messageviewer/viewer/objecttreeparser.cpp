@@ -3248,6 +3248,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
                         IconNameCache::instance()->iconPath( QLatin1String("quoteexpand"), 0 ));
     }
 
+    int previousQuoteDepth = -1;
     while (beg<length)
     {
         /* search next occurrence of '\n' */
@@ -3261,24 +3262,25 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
         /* calculate line's current quoting depth */
         int actQuoteLevel = -1;
         const int numberOfCaracters( line.length() );
+        int quoteLength = 0;
         for (int p=0; p<numberOfCaracters; ++p) {
             switch (line[p].toLatin1()) {
             case '>':
             case '|':
                 actQuoteLevel++;
+                quoteLength = p;
                 break;
             case ' ':  // spaces and tabs are allowed between the quote markers
             case '\t':
             case '\r':
+                quoteLength = p;
                 break;
             default:  // stop quoting depth calculation
                 p = numberOfCaracters;
                 break;
             }
         } /* for() */
-
         bool actHidden = false;
-
         // This quoted line needs be hidden
         if (GlobalSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
                 && mSource->levelQuote() <= ( actQuoteLevel ) )
@@ -3289,9 +3291,12 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
             if (currQuoteLevel == -1) {
                 htmlStr.append( normalEndTag );
             } else if ( currQuoteLevel >= 0 && !curHidden ) {
-                htmlStr.append( quoteEnd );
+                htmlStr += quoteEnd;
             }
-
+            //Close blockquote
+            if (previousQuoteDepth > actQuoteLevel) {
+                htmlStr += cssHelper()->endBlockQuote((previousQuoteDepth - actQuoteLevel));
+            }
             /* start new quotelevel */
             if (actQuoteLevel == -1) {
                 htmlStr += normalStartTag;
@@ -3323,6 +3328,10 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
                         }
                     }
                 } else {
+                    // Add blockquote
+                    if (previousQuoteDepth < actQuoteLevel) {
+                        htmlStr += cssHelper()->startBlockQuote(actQuoteLevel - previousQuoteDepth);
+                    }
                     if ( actQuoteLevel < 3 ) {
                         htmlStr += quoteFontTag[actQuoteLevel];
                     } else {
@@ -3344,7 +3353,19 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
                 if ( startNewPara )
                     paraIsRTL = line.isRightToLeft();
                 htmlStr += QString::fromLatin1( "<div dir=\"%1\">" ).arg( paraIsRTL ? QLatin1String("rtl") : QLatin1String("ltr") );
-                htmlStr += LinkLocator::convertToHtml( line, convertFlags );
+                if (quoteLength == 0) {
+                    htmlStr += LinkLocator::convertToHtml( line, convertFlags );
+                } else if (quoteLength > 0) {
+                    quoteLength++;
+                    htmlStr += QString::fromLatin1("<span class=\"quotemarks\">%1</span>").arg(line.left(quoteLength));
+                    const int rightString = (line.length())-quoteLength;
+                    if (rightString > 0) {
+                        htmlStr += LinkLocator::convertToHtml(line.right(rightString), convertFlags);
+                    }
+                } else {
+                    htmlStr += LinkLocator::convertToHtml( line, convertFlags );
+                }
+
                 htmlStr += QLatin1String( "</div>" );
                 startNewPara = looksLikeParaBreak( s, pos );
             }
@@ -3355,13 +3376,14 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
                 startNewPara = true;
             }
         }
+        previousQuoteDepth = actQuoteLevel;
     } /* while() */
 
     /* really finish the last quotelevel */
     if (currQuoteLevel == -1) {
         htmlStr.append( normalEndTag );
     } else {
-        htmlStr.append( quoteEnd );
+        htmlStr += quoteEnd + cssHelper()->endBlockQuote(currQuoteLevel + 1);
     }
 
     //kDebug() << "========================================\n"
