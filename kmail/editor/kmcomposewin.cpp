@@ -504,6 +504,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     statusBar()->hide();
     menuBar()->hide();
     QToolBar *mainToolBar = new QToolBar(this);
+    mainToolBar->setObjectName(QLatin1String("mailtoolbar"));
     mainToolBar->setMovable(false);
     mainToolBar->setFloatable(false);
     mainToolBar->addAction(actionCollection()->action(QLatin1String("spellcheck")));
