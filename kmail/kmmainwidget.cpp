@@ -1052,6 +1052,10 @@ void KMMainWidget::createWidgets()
     mSearchAndTree->setLayout( vboxlayout );
 
     vboxlayout->addWidget( mFolderTreeWidget );
+    KPushButton *mailSettings = new KPushButton(KIcon(QLatin1String("configure")), i18n("Mail settings"), this);
+    connect(mailSettings, SIGNAL(clicked()), kmkernel, SLOT(slotShowConfigurationDialog()));
+
+    vboxlayout->addWidget(mailSettings);
 
     if ( !GlobalSettings::self()->enableFolderQuickSearch() ) {
         mFolderTreeWidget->filterFolderLineEdit()->hide();
