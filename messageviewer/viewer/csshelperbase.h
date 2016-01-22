@@ -100,6 +100,7 @@ protected:
     QColor cHtmlWarning;
 
 private:
+    QString quoteCssDefinition() const;
     int fontSize( bool fixed, bool print = false ) const;
     // returns CSS rules specific to the print media type
     QString printCssDefinitions( bool fixed ) const;

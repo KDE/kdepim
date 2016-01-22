@@ -236,6 +236,27 @@ int pointsToPixel( const QPaintDevice *pd, int pointSize ) {
 
 static const char * const quoteFontSizes[] = { "85", "80", "75" };
 
+QString CSSHelperBase::quoteCssDefinition() const
+{
+    QString quoteCSS;
+    QString blockQuote;
+    for (int i = 0; i < 9; ++i) {
+        blockQuote += QLatin1String("blockquote ");
+        quoteCSS += QString::fromLatin1("%2{\n"
+                                        "  margin: 4pt 0 4pt 0;\n"
+                                        "  padding: 0 0 0 1em;\n"
+                                        "  border-left: 2px solid %1;\n"
+                                        "  unicode-bidi: -webkit-plaintext\n"
+                                        "}\n\n").arg(quoteColorName(i)).arg(blockQuote);
+    }
+    quoteCSS += QLatin1String(".quotemarks{\n"
+                              "  color:transparent;\n"
+                              "  font-size:0px;\n"
+                              "}\n\n");
+    return quoteCSS;
+}
+
+
 QString CSSHelperBase::printCssDefinitions( bool fixed ) const {
     const QString headerFont = QString::fromLatin1( "  font-family: \"%1\" ! important;\n"
                                                     "  font-size: %2pt ! important;\n" )
@@ -252,6 +273,7 @@ QString CSSHelperBase::printCssDefinitions( bool fixed ) const {
     if ( !quoteCSS.isEmpty() )
         quoteCSS = QLatin1String("div.noquote {\n") + quoteCSS + QLatin1String("}\n\n");
 
+    quoteCSS += quoteCssDefinition();
     return
             QString::fromLatin1( "body {\n"
                                  "  font-family: \"%1\" ! important;\n"
@@ -372,17 +394,7 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
             quoteCSS += QLatin1String("  font-size: 70% ! important;\n");
         quoteCSS += QLatin1String("}\n\n");
     }
-    QString blockQuote;
-    for (int i = 0; i < 9; ++i) {
-        blockQuote += QLatin1String("blockquote ");
-        quoteCSS += QString::fromLatin1("%2{\n"
-                                        "  margin: 4pt 0 4pt 0;\n"
-                                        "  padding: 0 0 0 1em;\n"
-                                        "  border-left: 2px solid %1;\n"
-                                        "  unicode-bidi: -webkit-plaintext\n"
-                                        "}\n\n").arg(quoteColorName(i)).arg(blockQuote);
-    }
-    quoteCSS += QLatin1String(".quotemarks{color:transparent;font-size:0px;}");
+    quoteCSS += quoteCssDefinition();
     QString str =
             QString::fromLatin1( "body {\n"
                                  "  font-family: \"%1\" ! important;\n"
