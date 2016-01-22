@@ -157,8 +157,9 @@ void KMReaderMainWin::showMessage( const QString & encoding, const Akonadi::Item
     const bool canChange = mParentCollection.isValid() ? (bool)( mParentCollection.rights() & Akonadi::Collection::CanDeleteItem ) : false;
     mTrashAction->setEnabled( canChange );
 
-    menuBar()->show();
-    toolBar( QLatin1String("mainToolBar") )->show();
+    menuBar()->hide();
+    toolBar( QLatin1String("mainToolBar") )->hide();
+    statusBar()->hide();
 }
 
 void KMReaderMainWin::showMessage( const QString& encoding, KMime::Message::Ptr message )
@@ -181,8 +182,9 @@ void KMReaderMainWin::showMessage( const QString& encoding, KMime::Message::Ptr 
 
     mTrashAction->setEnabled( false );
 
-    menuBar()->show();
-    toolBar( QLatin1String("mainToolBar") )->show();
+    menuBar()->hide();
+    toolBar( QLatin1String("mainToolBar") )->hide();
+    statusBar()->hide();
 }
 
 
