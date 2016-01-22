@@ -98,7 +98,7 @@ View::View( Widget *pParent )
 
     setItemDelegate( d->mDelegate );
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
-    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+    setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
     setAlternatingRowColors( true );
     setAllColumnsShowFocus( true );
     setSelectionMode( QAbstractItemView::ExtendedSelection );
