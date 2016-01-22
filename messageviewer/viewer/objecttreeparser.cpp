@@ -2218,7 +2218,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
     if ( inlineImage ) {
         const QString fileName = mNodeHelper->writeNodeToTempFile( msgPart );
         // show the filename of the image below the embedded image
-        htmlWriter()->queue( QLatin1String("<div><a href=\"") + href + QLatin1String("\">"
+        htmlWriter()->queue( QLatin1String("<hr><div><a href=\"") + href + QLatin1String("\">"
                                                                                      "<img src=\"file:///") + fileName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\"/></a>"
                                                                                                                                        "</div>"
                                                                                                                                        "<div><a href=\"") + href + QLatin1String("\">") + label + QLatin1String("</a>"
@@ -2231,7 +2231,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
             mNodeHelper->magicSetType( msgPart );
             //iconName = mNodeHelper->iconName( msgPart );
         }
-        htmlWriter()->queue( QLatin1String("<div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
+        htmlWriter()->queue( QLatin1String("<hr><div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
                              iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/>") + label +
                              QLatin1String("</a></div>"
                                            "<div>") + comment +QLatin1String( "</div><br/>") );
