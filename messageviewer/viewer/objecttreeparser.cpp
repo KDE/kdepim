@@ -3259,6 +3259,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
         QString line( s.mid(beg,pos-beg) );
         beg = pos+1;
 
+        bool foundQuote = false;
         /* calculate line's current quoting depth */
         int actQuoteLevel = -1;
         const int numberOfCaracters( line.length() );
@@ -3269,6 +3270,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
             case '|':
                 actQuoteLevel++;
                 quoteLength = p;
+                foundQuote = true;
                 break;
             case ' ':  // spaces and tabs are allowed between the quote markers
             case '\t':
@@ -3280,6 +3282,9 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
                 break;
             }
         } /* for() */
+        if (!foundQuote) {
+            quoteLength = 0;
+        }
         bool actHidden = false;
         // This quoted line needs be hidden
         if (GlobalSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
@@ -3353,9 +3358,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
                 if ( startNewPara )
                     paraIsRTL = line.isRightToLeft();
                 htmlStr += QString::fromLatin1( "<div dir=\"%1\">" ).arg( paraIsRTL ? QLatin1String("rtl") : QLatin1String("ltr") );
-                if (quoteLength == 0) {
-                    htmlStr += LinkLocator::convertToHtml( line, convertFlags );
-                } else if (quoteLength > 0) {
+                if (foundQuote) {
                     quoteLength++;
                     htmlStr += QString::fromLatin1("<span class=\"quotemarks\">%1</span>").arg(line.left(quoteLength));
                     const int rightString = (line.length())-quoteLength;
