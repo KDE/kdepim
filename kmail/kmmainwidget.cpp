@@ -338,7 +338,6 @@ KMMainWidget::KMMainWidget( QWidget *parent, KXMLGUIClient *aGUIClient,
     mCheckMailTimer.setInterval( 3 * 1000 );
     mCheckMailTimer.setSingleShot( true );
     connect( &mCheckMailTimer, SIGNAL(timeout()), SLOT(slotUpdateActionsAfterMailChecking()) );
-
 }
 
 void KMMainWidget::restoreCollectionFolderViewConfig()
@@ -792,7 +791,7 @@ void KMMainWidget::layoutSplitters()
         mFolderTreeWidget->folderTreeView()->hideColumn( 3 );
         mFolderTreeWidget->folderTreeView()->header()->resizeSection( 0, folderViewWidth * 0.8 );
     }
-
+    mFolderTreeWidget->folderTreeView()->header()->hide();
     // Make the copy action work, see disconnect comment above
     if ( mMsgView )
         connect( mMsgView->copyAction(), SIGNAL(triggered(bool)),
