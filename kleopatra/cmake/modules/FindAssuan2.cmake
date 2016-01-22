@@ -14,8 +14,6 @@ macro( macro_bool_to_bool FOUND_VAR )
   endforeach()
 endmacro()
 
-include (MacroBoolTo01)
-
 if ( WIN32 )
 
   # On Windows, we don't have a libassuan-config script, so we need to
@@ -76,7 +74,11 @@ if ( WIN32 )
 
   endif()
 
-  macro_bool_to_01( ASSUAN2_FOUND HAVE_ASSUAN2 )
+  if (ASSUAN2_FOUND)
+    set (HAVE_ASSUAN2 1)
+  else()
+    set (HAVE_ASSUAN2 0)
+  endif()
 
 else() # not WIN32
 
@@ -203,7 +205,11 @@ else() # not WIN32
 
   endif()
 
-  macro_bool_to_01( ASSUAN2_FOUND         HAVE_ASSUAN2         )
+  if (ASSUAN2_FOUND)
+    set (HAVE_ASSUAN2 1)
+  else()
+    set (HAVE_ASSUAN2 0)
+  endif()
 
 endif() # WIN32 | Unix
 

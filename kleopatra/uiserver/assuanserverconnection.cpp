@@ -36,7 +36,6 @@
 # define QT_NO_CAST_FROM_ASCII
 #endif
 
-#include "config-kdepim.h"
 #include <config-kleopatra.h>
 #include <version-kleopatra.h>
 

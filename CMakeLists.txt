@@ -88,7 +88,6 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidge
 find_package(Qt5X11Extras NO_MODULE)
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
-find_package(Gpgme REQUIRED)
 if (QTWEBENGINE_EXPERIMENTAL_OPTION)
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED WebEngine WebEngineWidgets)
 endif()
@@ -232,8 +231,6 @@ endif()
 
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
-
-include (kleopatra/ConfigureChecks.cmake)
 
 if(KF5Gpgmepp_FOUND)
   if(Boost_TOPOLOGICAL_SORT_DIR)

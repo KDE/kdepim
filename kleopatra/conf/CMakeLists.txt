@@ -1,4 +1,4 @@
-include_directories(${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+include_directories(${kleopatra_SOURCE_DIR})
 
 if(KDEPIM_ONLY_KLEO)
   add_definitions(-DKDEPIM_ONLY_KLEO)
@@ -20,7 +20,7 @@ if(BUILD_libkleopatraclient)
   )
 
   kconfig_add_kcfg_files(_kcm_kleopatra_libkleopatraclient_extra_SRCS
-    ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/smimevalidationpreferences.kcfgc
+    ${kleopatra_SOURCE_DIR}/kcfg/smimevalidationpreferences.kcfgc
   )
 
   set(_kcm_kleopatra_libkleopatraclient_extra_LIBS kleopatraclientgui)
@@ -44,7 +44,7 @@ set(kcm_kleopatra_PART_SRCS
   appearanceconfigpage.cpp
   appearanceconfigwidget.cpp
   gnupgsystemconfigurationpage.cpp
-  ../kleopatra_debug.cpp
+  ${kleopatra_BINARY_DIR}/kleopatra_debug.cpp
   ${_kcm_kleopatra_libkleopatraclient_extra_SRCS}
 )
 
@@ -55,9 +55,9 @@ ki18n_wrap_ui(kcm_kleopatra_PART_SRCS
 )
 
 kconfig_add_kcfg_files(kcm_kleopatra_PART_SRCS
-  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/tooltippreferences.kcfgc
-  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/emailoperationspreferences.kcfgc
-  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/fileoperationspreferences.kcfgc
+  ${kleopatra_SOURCE_DIR}/kcfg/tooltippreferences.kcfgc
+  ${kleopatra_SOURCE_DIR}/kcfg/emailoperationspreferences.kcfgc
+  ${kleopatra_SOURCE_DIR}/kcfg/fileoperationspreferences.kcfgc
 )
 
 if(KLEO_STATIC_KCMODULES)
@@ -70,6 +70,7 @@ target_link_libraries(kcm_kleopatra
   KF5::Libkleo
   KF5::KCMUtils
   KF5::IconThemes
+  KF5::I18n
   Qt5::DBus
   ${_kcm_kleopatra_extra_libs}
   ${_kcm_kleopatra_libkleopatraclient_extra_LIBS}
