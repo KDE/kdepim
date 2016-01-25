@@ -34,10 +34,12 @@
 #include <KUser>
 #include <KUrl>
 #include <KDebug>
-
+#include <KLocalizedString>
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
+#include <kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
 #include <kpimtextedit/textutils.h>
 
 using namespace KMime;
@@ -734,7 +736,7 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
     int numberAddresses = 0;
     bool expandableInserted = false;
 
-
+    KPIMIdentities::IdentityManager *im = new KPIMIdentities::IdentityManager( true );
     foreach( const KMime::Types::Mailbox& mailbox, mailboxList ) {
         if( !mailbox.prettyAddress().isEmpty() ) {
             numberAddresses++;
@@ -749,13 +751,16 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
                         + QString::fromLatin1(KUrl::toPercentEncoding( KPIMUtils::encodeMailtoUrl( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ) ).path() ))
                         + QLatin1String("\" ")+cssStyle+QLatin1Char('>');
             }
+            const bool foundMe = im->identityForAddress( mailbox.prettyAddress() ) != KPIMIdentities::Identity::null();
             if ( display == DisplayNameOnly ) {
-                if ( !mailbox.name().isEmpty() ) // Fallback to the email address when the name is not set.
-                    result += quoteHtmlChars( mailbox.name(), true );
-                else
-                    result += quoteHtmlChars( mailbox.prettyAddress(), true );
+                const QString mailBoxName = mailbox.name();
+                if ( !mailbox.name().isEmpty() ) { // Fallback to the email address when the name is not set.
+                    result += foundMe ? i18n("Me") : quoteHtmlChars( mailBoxName, true );
+                } else {
+                    result += foundMe ? i18n("Me") : quoteHtmlChars( mailbox.prettyAddress(), true );
+                }
             } else {
-                result += quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
+                result += foundMe ? i18n("Me") : quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
             }
             if( link == ShowLink ) {
                 result += QLatin1String("</a>, ");
@@ -771,6 +776,7 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
     if( expandableInserted ) {
         result += QLatin1String("</span>");
     }
+    delete im;
     return result;
 }
 
