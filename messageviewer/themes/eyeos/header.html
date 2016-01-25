@@ -1,0 +1,42 @@
+<div>
+     {% if header.subjecti18n %}
+        {% with header.subjecti18n as title %}
+        {% with header.subject|safe as value %}
+        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
+     {% if header.fromi18n %}
+        {% with header.fromi18n as title %}
+        {% with header.from|safe as value %}
+        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
+     {% if header.cci18n %}
+        {% with header.cci18n as title %}
+        {% with header.cc|safe as value %}
+        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
+     {% if header.bcci18n %}
+        {% with header.bcci18n as title %}
+        {% with header.bcc|safe as value %}
+        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
+     {% if header.datei18n %}
+        {% with header.datei18n as title %}
+        {% with header.dateshort|safe as value %}
+        {% include "header_row.html" %}
+        {% endwith %}
+        {% endwith %}
+     {% endif %}
+
+     {% if header.spamHTML %}
+        {{ spamHTML|safe }}
+     {% endif %}
+
+</div>
