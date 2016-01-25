@@ -1,42 +1,15 @@
-<div>
-     {% if header.subjecti18n %}
-        {% with header.subjecti18n as title %}
-        {% with header.subject|safe as value %}
-        {% include "header_row.html" %}
-        {% endwith %}
-        {% endwith %}
-     {% endif %}
-     {% if header.fromi18n %}
-        {% with header.fromi18n as title %}
-        {% with header.from|safe as value %}
-        {% include "header_row.html" %}
-        {% endwith %}
-        {% endwith %}
-     {% endif %}
-     {% if header.cci18n %}
-        {% with header.cci18n as title %}
-        {% with header.cc|safe as value %}
-        {% include "header_row.html" %}
-        {% endwith %}
-        {% endwith %}
-     {% endif %}
-     {% if header.bcci18n %}
-        {% with header.bcci18n as title %}
-        {% with header.bcc|safe as value %}
-        {% include "header_row.html" %}
-        {% endwith %}
-        {% endwith %}
-     {% endif %}
-     {% if header.datei18n %}
-        {% with header.datei18n as title %}
-        {% with header.dateshort|safe as value %}
-        {% include "header_row.html" %}
-        {% endwith %}
-        {% endwith %}
-     {% endif %}
-
-     {% if header.spamHTML %}
-        {{ spamHTML|safe }}
-     {% endif %}
-
+<link href="{{ header.absoluteThemePath }}/style.css" rel="stylesheet" type="text/css" />
+<div class="fancy header" id="cont">
 </div>
+
+<table style="width:100%">
+   <tr>
+     <td> <div id="subject" dir="{{ header.subjectDir }}">{{ header.subject|safe }}</div> </td>
+     <td> <div align="right" dir="{{ dateDir }}">{{ header.datelocalelong }}</div>
+  </tr>
+      <td> <div class="headerright"> {{ header.from|safe }} </div> </td>
+      <td> <div class="headerright" align="right"> {{ header.collectionname }} </div> </td>
+   </tr>
+       <td> 
+</table>
+<div id="kmailContent">
