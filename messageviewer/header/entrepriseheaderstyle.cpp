@@ -86,7 +86,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
 
     headerStr +=
             QLatin1String("<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 0.8em; font-weight: bold;\">")
-            + MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* shortDate */ false ) + QLatin1String("</span></div>"
+            + MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* shortDate */ MessageViewer::HeaderStyleUtil::CustomDate ) + QLatin1String("</span></div>"
             // #0057ae
             "<table style=\"background: ")+activeColorDark.name()+QLatin1String("; border-collapse:collapse; top: 14px; min-width: 200px; \" cellpadding=0> \n"
             "  <tr> \n"

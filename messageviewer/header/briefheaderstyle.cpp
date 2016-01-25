@@ -109,7 +109,7 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
         headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly );
 
     if ( strategy->showHeader( QLatin1String("date") ) )
-        headerParts << MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* shortDate = */ true ) );
+        headerParts << MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* shortDate = */ MessageViewer::HeaderStyleUtil::ShortDate ) );
 
     // remove all empty (modulo whitespace) entries and joins them via ", \n"
     headerStr += QLatin1String(" (") + headerParts.filter( QRegExp( QLatin1String("\\S") ) ).join( QLatin1String(",\n") ) + QLatin1Char(')');

@@ -164,8 +164,18 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     }
     headerObject.insert(QLatin1String("datei18n"), i18n("Date:"));
 
-    headerObject.insert( QLatin1String( "dateshort" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,true ) ) );
-    headerObject.insert( QLatin1String( "datelong" ) , MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting,false ) ) );
+    headerObject.insert( QLatin1String( "dateshort" ) ,
+                         MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, MessageViewer::HeaderStyleUtil::ShortDate ) ) );
+
+    headerObject.insert( QLatin1String( "datefancylong" ) ,
+                         MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, MessageViewer::HeaderStyleUtil::FancyLongDate ) ) );
+    headerObject.insert( QLatin1String( "datefancyshort" ) ,
+                         MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, MessageViewer::HeaderStyleUtil::FancyShortDate ) ) );
+    headerObject.insert( QLatin1String( "datelocalelong" ) ,
+                         MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, MessageViewer::HeaderStyleUtil::LongDate ) ) );
+
+    headerObject.insert( QLatin1String( "datelong" ) ,
+                         MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, MessageViewer::HeaderStyleUtil::CustomDate ) ) );
     headerObject.insert( QLatin1String( "date" ), MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) );
 
     if ( GlobalSettings::self()->showUserAgent() ) {

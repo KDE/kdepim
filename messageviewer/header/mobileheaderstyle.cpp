@@ -135,7 +135,7 @@ static QString formatMobileHeader( KMime::Message *message, bool extendedFormat,
     headerStr += QLatin1String("      </td>\n");
     headerStr += QLatin1String("      <td align=\"right\" width=\"50%\">\n");
     headerStr += QLatin1String("        <div style=\"font-size: 15px; color: #24353F; text-align: right; margin-right: 15px\">") + i18n( "sent: " );
-    headerStr += MessageViewer::HeaderStyleUtil::dateString( message, style->isPrinting(), /* shortDate = */ false ) + QLatin1String("</div>\n");
+    headerStr += MessageViewer::HeaderStyleUtil::dateString( message, style->isPrinting(), /* shortDate = */ MessageViewer::HeaderStyleUtil::CustomDate ) + QLatin1String("</div>\n");
     headerStr += QLatin1String("      </td>\n");
     headerStr += QLatin1String("    </tr>\n");
     headerStr += QLatin1String("  </table>\n");

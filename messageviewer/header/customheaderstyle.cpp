@@ -89,7 +89,7 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
             headerStr += QString::fromLatin1("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
                                  MessageViewer::HeaderStyleUtil::subjectString( message ) + QLatin1String("</b></div>\n");
         } else if (headerToDisplay.toLower() == QLatin1String("date")) {
-            headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false ) ) + QLatin1String("<br/>\n") );
+            headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ MessageViewer::HeaderStyleUtil::CustomDate ) ) + QLatin1String("<br/>\n") );
         } else if (headerToDisplay.toLower() == QLatin1String("from")) {
             headerStr.append( i18n("From: ") +
                               StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, QString(), StringUtil::ShowLink ) );

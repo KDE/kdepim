@@ -51,7 +51,7 @@ QString strToHtml( const QString &str, int flags ) {
 }
 
 // Prepare the date string (when printing always use the localized date)
-QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
+QString dateString(KMime::Message *message, bool printing, HeaderStyleUtilDateFormat dateFormat ) {
     const KDateTime dateTime = message->date()->dateTime();
     if ( !dateTime.isValid() )
         return i18nc( "Unknown date", "Unknown" );
@@ -59,10 +59,19 @@ QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
         KLocale * locale = KGlobal::locale();
         return locale->formatDateTime( dateTime );
     } else {
-        if ( shortDate )
-            return dateShortStr( dateTime );
-        else
+        switch(dateFormat) {
+        case ShortDate:
+            return KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
+        case LongDate:
+            return KGlobal::locale()->formatDateTime( dateTime, KLocale::LongDate );
+        case FancyShortDate:
+            return dateShortStr(dateTime);
+        case FancyLongDate:
+            return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyLongDate );
+        case CustomDate:
+        default:
             return dateStr( dateTime );
+        }
     }
 }
 

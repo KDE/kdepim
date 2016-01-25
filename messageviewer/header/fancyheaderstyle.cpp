@@ -179,7 +179,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                                              "<td dir=\"%2\">%3</td></tr>\n")
                          .arg(i18n("Date: "))
                          .arg( MessageViewer::HeaderStyleUtil::directionOf( MessageViewer::HeaderStyleUtil::dateStr( message->date()->dateTime() ) ) )
-                         .arg(MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* short = */ false ) ) ) );
+                         .arg(MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* short = */ MessageViewer::HeaderStyleUtil::CustomDate ) ) ) );
     if ( GlobalSettings::self()->showUserAgent() ) {
         if ( strategy->showHeader( QLatin1String("user-agent") ) ) {
             if ( message->headerByType("User-Agent") ) {
