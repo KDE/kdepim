@@ -49,6 +49,10 @@ QStringList DefaultCompletion::defaultCompetion()
         << QStringLiteral("header.datei18n")
         << QStringLiteral("header.dateshort")
         << QStringLiteral("header.date")
+        << QStringLiteral("header.datelong")
+        << QStringLiteral("header.datefancylong")
+        << QStringLiteral("header.datefancyshort")
+        << QStringLiteral("header.datelocalelong")
         << QStringLiteral("header.useragent")
         << QStringLiteral("header.xmailer")
         << QStringLiteral("header.resentfrom")
@@ -72,7 +76,11 @@ QStringList DefaultCompletion::defaultCompetion()
         << QStringLiteral("header.replyallaction")
         << QStringLiteral("header.forwardaction")
         << QStringLiteral("header.newmessageaction")
-        << QStringLiteral("header.collectionname");
+        << QStringLiteral("header.collectionname")
+        << QStringLiteral("header.replyToNameOnly")
+        << QStringLiteral("header.ccNameOnly")
+        << QStringLiteral("header.bccNameOnly")
+        << QStringLiteral("header.toNameOnly");
 
     return lst;
 }
