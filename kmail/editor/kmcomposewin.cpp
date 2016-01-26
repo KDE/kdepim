@@ -353,6 +353,11 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mBtnDictionary = new QCheckBox( sticky, mHeadersArea );
     mBtnDictionary->setToolTip( i18n( "Use the selected value as your dictionary for future messages" ) );
 
+    mBtnIdentity->setVisible(false);
+    mBtnFcc->setVisible(false);
+    mBtnTransport->setVisible(false);
+    mBtnDictionary->setVisible(false);
+
     mShowHeaders = GlobalSettings::self()->headers();
     mDone = false;
     mGrid = 0;
