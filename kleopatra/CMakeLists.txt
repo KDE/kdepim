@@ -381,21 +381,6 @@ kconfig_add_kcfg_files(_kleopatra_SRCS
   kcfg/smimevalidationpreferences.kcfgc
 )
 
-if(KDEPIM_ONLY_KLEO)
-  add_definitions(-DKDEPIM_ONLY_KLEO -DKDEPIM_EXPORT=)
-  set(_kleopatra_libkdepim_SRCS
-    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/progressmanager.cpp
-    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/progressdialog.cpp
-    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/ssllabel.cpp
-    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/statusbarprogresswidget.cpp
-    ${CMAKE_SOURCE_DIR}/libkdepim/widgets/overlaywidget.cpp
-  )
-  set(_kleopatra_libkdepim_LIBS)
-else()
-  set(_kleopatra_libkdepim_SRCS)
-  set(_kleopatra_libkdepim_LIBS KF5::Libkdepim)
-endif()
-
 set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kleopatra.png")
@@ -418,7 +403,7 @@ target_link_libraries(kleopatra_bin
   KF5::DBusAddons
   Qt5::Network
   ${_kleopatra_uiserver_extra_libs}
-  ${_kleopatra_libkdepim_LIBS}
+  KF5::Libkdepim
 )
 
 if(USABLE_ASSUAN_FOUND)

@@ -113,9 +113,5 @@ if(USABLE_ASSUAN_FOUND)
   )
   endif()
 
-  if(KDEPIM_ONLY_KLEO)
-    install(TARGETS test_uiserver ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-  endif()
-
 endif()
 

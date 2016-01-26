@@ -463,7 +463,6 @@ void KeyListController::createActions(KActionCollection *coll)
             "tools_refresh_openpgp_certificates", i18n("Refresh OpenPGP Certificates"), QString(),
             "view-refresh", 0, 0, QString(), false, true
         },
-#ifndef KDEPIM_ONLY_KLEO
         {
             "crl_clear_crl_cache", i18n("Clear CRL Cache"), QString(),
             0, 0, 0, QString(), false, true
@@ -472,7 +471,6 @@ void KeyListController::createActions(KActionCollection *coll)
             "crl_dump_crl_cache", i18n("Dump CRL Cache"), QString(),
             0, 0, 0, QString(), false, true
         },
-#endif // KDEPIM_ONLY_KLEO
         {
             "crl_import_crl", i18n("Import CRL From File..."), QString(),
             0, 0, 0, QString(), false, true

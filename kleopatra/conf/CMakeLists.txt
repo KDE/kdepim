@@ -1,10 +1,5 @@
 include_directories(${kleopatra_SOURCE_DIR})
 
-if(KDEPIM_ONLY_KLEO)
-  add_definitions(-DKDEPIM_ONLY_KLEO)
-  set(_kcm_kleopatra_kleo_only_SRCS ../utils/kleo_kicondialog.cpp)
-endif()
-
 if(BUILD_libkleopatraclient)
 
   set(_kcm_kleopatra_libkleopatraclient_extra_SRCS

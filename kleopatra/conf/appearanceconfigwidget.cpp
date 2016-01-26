@@ -43,11 +43,7 @@
 #include "Libkleo/Dn"
 #include "Libkleo/DNAttributeOrderConfigWidget"
 
-#ifdef KDEPIM_ONLY_KLEO
-# include <utils/kleo_kicondialog.h>
-#else
-# include <kicondialog.h>
-#endif
+#include <kicondialog.h>
 #include <QIcon>
 
 #include <kconfig.h>
@@ -72,9 +68,6 @@
 using namespace Kleo;
 using namespace Kleo::Config;
 using namespace boost;
-#ifdef KDEPIM_ONLY_KLEO
-using namespace Kleo::KioAvoidance;
-#endif
 
 enum {
     HasNameRole = Qt::UserRole + 0x1234, /*!< Records that the user has assigned a name (to avoid comparing with i18n-strings) */
