@@ -699,10 +699,10 @@ void KMMainWidget::layoutSplitters()
     //
     mSplitter1->setObjectName( QLatin1String("splitter1") );
     mSplitter1->setOpaqueResize( opaqueResize );
-    //mSplitter1->setChildrenCollapsible( false );
+    mSplitter1->setChildrenCollapsible( false );
     mSplitter2->setObjectName( QLatin1String("splitter2") );
     mSplitter2->setOpaqueResize( opaqueResize );
-    //mSplitter2->setChildrenCollapsible( false );
+    mSplitter2->setChildrenCollapsible( false );
 
     //
     // Set the stretch factors
