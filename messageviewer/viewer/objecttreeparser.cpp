@@ -1226,7 +1226,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
         if ( mSource->htmlMail() ) {
             QString bodyText = bodyHTML;
             HTMLQuoteColorer colorer;
-            colorer.setEnableHtmlQuoteColorer(GlobalSettings::self()->htmlQuoteColorerEnabled());
+            colorer.setEnableHtmlQuoteColorer(false);
             QString extraHead;
             for ( int i = 0; i < 3; ++i )
                 colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
@@ -3363,7 +3363,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
                     htmlStr += QString::fromLatin1("<span class=\"quotemarks\">%1</span>").arg(line.left(quoteLength));
                     const int rightString = (line.length())-quoteLength;
                     if (rightString > 0) {
-                        htmlStr += LinkLocator::convertToHtml(line.right(rightString), convertFlags);
+                        htmlStr += QString::fromLatin1("<font color=\"%1\">").arg(cssHelper()->quoteTextColorName(actQuoteLevel)) +LinkLocator::convertToHtml(line.right(rightString), convertFlags);
                     }
                 } else {
                     htmlStr += LinkLocator::convertToHtml( line, convertFlags );

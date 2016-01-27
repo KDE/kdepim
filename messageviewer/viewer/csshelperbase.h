@@ -76,6 +76,7 @@ public:
     QString endBlockQuote(int level) const;
     QString startBlockQuote(int level) const;
     QString quoteColorName(int level) const;
+    QString quoteTextColorName(int level) const;
 protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */
@@ -85,6 +86,7 @@ protected:
     QFont mBodyFont, mPrintFont, mFixedFont, mFixedPrintFont;
     QFont mQuoteFont[3];
     QColor mQuoteColor[3];
+    QColor mTextQuoteColor[3];
     bool mRecycleQuoteColors;
     bool mBackingPixmapOn;
     bool mShrinkQuotes;

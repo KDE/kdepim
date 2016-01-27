@@ -87,13 +87,27 @@ CSSHelperBase::CSSHelperBase( const QPaintDevice *pd ) :
     cPgpErrH  = Qt::red;
 
     if(MessageCore::GlobalSettings::self()->useDefaultColors()) {
+        mQuoteColor[0] = QColor(75,200,231);
+        mQuoteColor[1] = QColor(157,118,203);
+        mQuoteColor[2] = QColor(24,64,174);
+
+        mTextQuoteColor[0] = QColor(53,163,190);
+        mTextQuoteColor[1] = QColor(126,81,179);
+        mTextQuoteColor[2] = QColor(24,64,174);
+
+#if 0
         for ( int i = 0 ; i < 3 ; ++i ) {
             mQuoteColor[i] = QColor( 0x00, 0x80 - i * 0x10, 0x00 ); // shades of green
         }
+#endif
     } else {
         mQuoteColor[0] = MessageCore::GlobalSettings::self()->quotedText1();
         mQuoteColor[1] = MessageCore::GlobalSettings::self()->quotedText2();
         mQuoteColor[2] = MessageCore::GlobalSettings::self()->quotedText3();
+        mTextQuoteColor[0] = mQuoteColor[0];
+        mTextQuoteColor[1] = mQuoteColor[1];
+        mTextQuoteColor[2] = mQuoteColor[2];
+
     }
     mRecycleQuoteColors = false;
 
@@ -728,6 +742,12 @@ void CSSHelperBase::setPrintFont( const QFont& font )
 QString CSSHelperBase::quoteColorName( int level ) const
 {
     return quoteColor(level).name();
+}
+
+QString CSSHelperBase::quoteTextColorName(int level) const
+{
+    const int actualLevel = qMax( level, 0 ) % 3;
+    return mTextQuoteColor[actualLevel].name();
 }
 
 QColor CSSHelperBase::quoteColor( int level ) const
