@@ -600,7 +600,6 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
                   pal.color( QPalette::Background ).name() )
             .arg( pal.color( QPalette::Mid ).name() )
             + quoteCSS;
-    qDebug()<<" CSS "<<str;
     return str;
 }
 
