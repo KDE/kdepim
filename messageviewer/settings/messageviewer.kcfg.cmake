@@ -133,11 +133,11 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
     <entry name="headerStyle" type="String" key="header-style">
       <label>What style of headers should be displayed</label>
-      <default>fancy</default>
+      <default>grantlee</default>
     </entry>
     <entry name="headerSetDisplayed" type="String" key="header-set-displayed">
       <label>How much of headers should be displayed</label>
-      <default>rich</default>
+      <default>grantlee</default>
     </entry>
      <entry name="htmlMail" type="Bool">
        <label>Prefer HTML to plain text</label>

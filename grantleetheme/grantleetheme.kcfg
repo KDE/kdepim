@@ -6,7 +6,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
    <group name="GrantleeTheme">
     <entry name="grantleeMailThemeName" type="String" key="grantlee-mail-theme-name">
       <label></label>
-      <default></default>
+      <default>eyeos</default>
     </entry>
     <entry name="grantleeAddressBookThemeName" type="String" key="grantlee-addressbook-theme-name">
       <label></label>
