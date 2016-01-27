@@ -45,6 +45,7 @@ void RecipientComboBox::keyPressEvent( QKeyEvent *ev )
 
 RecipientLineEdit::RecipientLineEdit ( QWidget* parent ) : ComposerLineEdit ( parent )
 {
+    setFrame(false);
 }
 
 void RecipientLineEdit::keyPressEvent( QKeyEvent *ev )

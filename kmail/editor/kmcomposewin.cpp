@@ -314,10 +314,12 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     connect(transport, SIGNAL(activated(int)), this, SLOT(slotTransportChanged()));
 
     mEdtFrom = new MessageComposer::ComposerLineEdit( false, mHeadersArea );
+    mEdtFrom->setFrame(false);
     mEdtFrom->setObjectName( QLatin1String("fromLine") );
     mEdtFrom->setRecentAddressConfig( MessageComposer::MessageComposerSettings::self()->config() );
     mEdtFrom->setToolTip( i18n( "Set the \"From:\" email address for this message" ) );
     mEdtReplyTo = new MessageComposer::ComposerLineEdit( true, mHeadersArea );
+    mEdtReplyTo->setFrame(false);
     mEdtReplyTo->setObjectName( QLatin1String("replyToLine") );
     mEdtReplyTo->setRecentAddressConfig( MessageComposer::MessageComposerSettings::self()->config() );
     mEdtReplyTo->setToolTip( i18n( "Set the \"Reply-To:\" email address for this message" ) );
@@ -336,6 +338,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mEdtSubject->setActivateLanguageMenu(false);
     mEdtSubject->setToolTip( i18n( "Set a subject for this message" ) );
     mEdtSubject->setAutocorrection(KMKernel::self()->composerAutoCorrection());
+    mEdtSubject->setFrameShape(QFrame::NoFrame);
     mLblIdentity = new QLabel( i18n("&Identity:"), mHeadersArea );
     mDictionaryLabel = new QLabel( i18n("&Dictionary:"), mHeadersArea );
     mLblFcc = new QLabel( i18n("&Sent-Mail folder:"), mHeadersArea );
