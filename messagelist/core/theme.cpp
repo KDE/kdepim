@@ -668,7 +668,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
 Theme::Theme()
     : OptionSet()
 {
-    mGroupHeaderBackgroundMode = AutoColor;
+    mGroupHeaderBackgroundMode = Transparent;
     mViewHeaderPolicy = ShowHeaderAlways;
     mIconSize = gThemeDefaultIconSize;
     mGroupHeaderBackgroundStyle = StyledJoinedRect;
@@ -677,7 +677,7 @@ Theme::Theme()
 Theme::Theme( const QString &name, const QString &description, bool readOnly )
     : OptionSet( name, description, readOnly )
 {
-    mGroupHeaderBackgroundMode = AutoColor;
+    mGroupHeaderBackgroundMode = Transparent;
     mGroupHeaderBackgroundStyle = StyledJoinedRect;
     mViewHeaderPolicy = ShowHeaderAlways;
     mIconSize = gThemeDefaultIconSize;
