@@ -3,7 +3,7 @@
   Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
                           Tobias Koenig <tokoe@kde.org>
 
-  Copyright (c) 2009-2015 Laurent Montel <montel@kde.org>
+  Copyright (c) 2009-2016 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
