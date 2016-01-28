@@ -2516,7 +2516,7 @@ codes:</para>
 <varlistentry>
 <term>%t</term>
 <listitem>
-<para>KAlarm's name in the current language will be substituted.</para>
+<para>&kalarm;'s name in the current language will be substituted.</para>
 </listitem>
 </varlistentry>
 </variablelist>
