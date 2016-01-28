@@ -27,7 +27,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kleopatra_SOURCE_DIR})
 
   include(KDEInstallDirs)
   include(KDECMakeSettings)
-  include(KDECompilerSettings)
+  include(KDECompilerSettings NO_POLICY_SCOPE)
   include(ECMAddAppIcon)
   include(ECMQtDeclareLoggingCategory)
 
