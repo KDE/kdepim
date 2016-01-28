@@ -143,7 +143,7 @@
         <default code="true">QLatin1String(KDEPIM_VERSION)</default>
       </entry>
       <entry key="ShowMenuBar" type="Bool">
-        <default>true</default>
+        <default>false</default>
          <!-- label and whatsthis are already provided by KStandardAction::showMenubar -->
         <label></label>
         <whatsthis></whatsthis>
