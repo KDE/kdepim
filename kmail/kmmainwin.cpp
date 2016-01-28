@@ -76,8 +76,6 @@ KMMainWin::KMMainWin(QWidget *)
                                   actionCollection() );
 
     mHideMenuBarAction = KStandardAction::showMenubar( this, SLOT(slotToggleMenubar()), actionCollection() );
-    mHideMenuBarAction->setChecked( GlobalSettings::self()->showMenuBar() );
-    slotToggleMenubar( true );
 
 
     KStandardAction::quit( this, SLOT(slotQuit()), actionCollection() );
@@ -96,6 +94,8 @@ KMMainWin::KMMainWin(QWidget *)
         QTimer::singleShot( 200, this, SLOT(slotShowTipOnStart()) );
 
     mKMMainWidget->updateQuickSearchLineText();
+    mHideMenuBarAction->setChecked( GlobalSettings::self()->showMenuBar() );
+    slotToggleMenubar( true );
 }
 
 KMMainWin::~KMMainWin()
