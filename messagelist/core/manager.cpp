@@ -289,6 +289,24 @@ void Manager::createDefaultAggregations()
 {
     addAggregation(
                 new Aggregation(
+                    i18n( "Threaded" ),
+                    i18n( "This view uses smart date range groups. " \
+                          "Messages are threaded. " \
+                          "So for example, in \"Today\" you will find all the messages arrived today " \
+                          "and all the threads that have been active today."
+                          ),
+                    Aggregation::NoGrouping,
+                    Aggregation::ExpandRecentGroups,
+                    Aggregation::PerfectReferencesAndSubject,
+                    Aggregation::MostRecentMessage,
+                    Aggregation::ExpandThreadsWithUnreadOrImportantMessages,
+                    Aggregation::FavorInteractivity,
+                    true
+                    )
+                );
+
+    addAggregation(
+                new Aggregation(
                     i18n( "Current Activity, Threaded" ),
                     i18n( "This view uses smart date range groups. " \
                           "Messages are threaded. " \
