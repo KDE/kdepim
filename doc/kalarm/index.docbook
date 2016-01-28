@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year><year>2010</year><year>2011</year><year>2012</year><year>2013</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year><year>2010</year><year>2011</year><year>2012</year><year>2013</year><year>2016</year>
 <holder>&David.Jarvie;</holder>
 </copyright>
 
@@ -2511,6 +2511,12 @@ codes:</para>
 <term>%W</term>
 <listitem>
 <para>A temporary command file containing the alarm's command string will be created with a <literal>sleep</literal> appended, and the command to execute the file will be substituted.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>%t</term>
+<listitem>
+<para>KAlarm's name in the current language will be substituted.</para>
 </listitem>
 </varlistentry>
 </variablelist>
