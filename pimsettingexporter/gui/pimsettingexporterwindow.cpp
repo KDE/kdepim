@@ -293,8 +293,8 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
         if (currentFileName.isEmpty()) {
             QString recentDirClass;
             currentFileName = QFileDialog::getSaveFileName(this, i18n("Create backup"),
-                                                                  KFileWidget::getStartUrl(QUrl(QStringLiteral("kfiledialog:///pimsettingexporter")), recentDirClass).toLocalFile(),
-                                                                  i18n("Zip file (*.zip)"));
+                              KFileWidget::getStartUrl(QUrl(QStringLiteral("kfiledialog:///pimsettingexporter")), recentDirClass).toLocalFile(),
+                              i18n("Zip file (*.zip)"));
             if (currentFileName.isEmpty()) {
                 return;
             }
@@ -359,8 +359,8 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
         if (currentFileName.isEmpty()) {
             QString recentDirClass;
             currentFileName = QFileDialog::getOpenFileName(this, i18n("Restore backup"),
-                                                                  KFileWidget::getStartUrl(QUrl(QStringLiteral("kfiledialog:///pimsettingexporter")), recentDirClass).toLocalFile(),
-                                                                  i18n("Zip File (*.zip)"));
+                              KFileWidget::getStartUrl(QUrl(QStringLiteral("kfiledialog:///pimsettingexporter")), recentDirClass).toLocalFile(),
+                              i18n("Zip File (*.zip)"));
             if (currentFileName.isEmpty()) {
                 return;
             }

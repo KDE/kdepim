@@ -51,7 +51,6 @@ ConfigureDialog::~ConfigureDialog()
     writeConfig();
 }
 
-
 void ConfigureDialog::readConfig()
 {
     KConfigGroup group(KSharedConfig::openConfig(), "ConfigureDialog");

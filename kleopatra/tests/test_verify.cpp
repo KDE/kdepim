@@ -186,8 +186,8 @@ private Q_SLOTS:
         QVERIFY(sigFile.open(QFile::ReadOnly));
         const QByteArray ciphertext = sigFile.readAll();
 
-        Kleo::DecryptVerifyJob * job = mBackend->decryptVerifyJob();
-        result = job->exec (ciphertext, plaintext);
+        Kleo::DecryptVerifyJob *job = mBackend->decryptVerifyJob();
+        result = job->exec(ciphertext, plaintext);
         QVERIFY(result.first.error().code());
 
         QVERIFY(result.second.numSignatures());

@@ -39,7 +39,6 @@ void PimSettingExporterConfigureWidgetTest::shouldHaveDefaultValue()
     QGroupBox *importGroupBox = w.findChild<QGroupBox *>(QStringLiteral("import_groupbox"));
     QVERIFY(importGroupBox);
 
-
     QCheckBox *alwaysOverrideFile = w.findChild<QCheckBox *>(QStringLiteral("alwaysoverridefile"));
     QVERIFY(alwaysOverrideFile);
 
