@@ -96,6 +96,7 @@ KMMainWin::KMMainWin(QWidget *)
     mKMMainWidget->updateQuickSearchLineText();
     mHideMenuBarAction->setChecked( GlobalSettings::self()->showMenuBar() );
     slotToggleMenubar( true );
+    statusBar()->hide();
 }
 
 KMMainWin::~KMMainWin()
