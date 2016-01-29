@@ -113,16 +113,18 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
     headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
 
-    headerObject.insert(QLatin1String("toi18n"), i18n("To:") );
-    headerObject.insert(QLatin1String("to"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ));
-    headerObject.insert(QLatin1String("toNameOnly"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayNameOnly ));
-    headerObject.insert(QLatin1String("toStr"), message->to()->asUnicodeString());
-    const QString val = MessageCore::StringUtil::emailAddrAsAnchor( message->to(), MessageCore::StringUtil::DisplayFullAddress,
-                                                                     QString(), MessageCore::StringUtil::ShowLink,
-                                                                     MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList"),
-                                                                     GlobalSettings::self()->numberOfAddressesToShow() );
-    headerObject.insert(QLatin1String("toExpandable"), val);
-    headerObject.insert(QLatin1String("toMailbox"), QVariant::fromValue(message->to()));
+    if ( message->replyTo( false )) {
+        headerObject.insert(QLatin1String("toi18n"), i18n("To:") );
+        headerObject.insert(QLatin1String("to"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ));
+        headerObject.insert(QLatin1String("toNameOnly"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayNameOnly ));
+        headerObject.insert(QLatin1String("toStr"), message->to()->asUnicodeString());
+        const QString val = MessageCore::StringUtil::emailAddrAsAnchor( message->to(), MessageCore::StringUtil::DisplayFullAddress,
+                                                                        QString(), MessageCore::StringUtil::ShowLink,
+                                                                        MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList"),
+                                                                        GlobalSettings::self()->numberOfAddressesToShow() );
+        headerObject.insert(QLatin1String("toExpandable"), val);
+        headerObject.insert(QLatin1String("toMailbox"), QVariant::fromValue(message->to()));
+    }
 
     if ( message->replyTo( false )) {
         headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:") );
