@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    mainwindow_desktop.cpp
+    mainwindow.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,7 +32,7 @@
 
 #include <config-kleopatra.h>
 
-#include "mainwindow_desktop.h"
+#include "mainwindow.h"
 #include "aboutdata.h"
 
 #include "models/keylistmodel.h"
@@ -590,4 +590,4 @@ void MainWindow::saveProperties(KConfigGroup &cg)
     }
 }
 
-#include "moc_mainwindow_desktop.cpp"
+#include "moc_mainwindow.cpp"

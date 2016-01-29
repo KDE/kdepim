@@ -347,6 +347,7 @@ set(_kleopatra_SRCS
   aboutdata.cpp
   systrayicon.cpp
   kleopatraapplication.cpp
+  mainwindow.cpp
   main.cpp
 )
 
@@ -384,14 +385,13 @@ kconfig_add_kcfg_files(_kleopatra_SRCS
   kcfg/smimevalidationpreferences.kcfgc
 )
 
-set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kleopatra.png")
-ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})
+ecm_add_app_icon(_kleopatra_SRCS ICONS ${ICONS_SRCS})
 
 qt5_add_resources(_kleopatra_SRCS kleopatra.qrc)
 
-add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
+add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_uiserver_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
 
 target_link_libraries(kleopatra_bin
