@@ -56,7 +56,7 @@ void MemoryCalendarMemento::slotCalendarLoaded(bool success, const QString &erro
 void MemoryCalendarMemento::finalize()
 {
     mFinished = true;
-    Q_EMIT update(Viewer::Delayed);
+    Q_EMIT update(Delayed);
 }
 
 bool MemoryCalendarMemento::finished() const
@@ -72,6 +72,6 @@ KCalCore::MemoryCalendar::Ptr MemoryCalendarMemento::calendar() const
 
 void MemoryCalendarMemento::detach()
 {
-    disconnect(this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0);
+    disconnect(this, &MemoryCalendarMemento::update, 0, 0);
 }
 

@@ -232,8 +232,8 @@ public:
             bodyPart->setBodyPartMemento(memento);
 
             if (asyncResultObserver) {
-                QObject::connect(memento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                                 asyncResultObserver, SLOT(update(MessageViewer::Viewer::UpdateMode)));
+                QObject::connect(memento, SIGNAL(update(MessageViewer::UpdateMode)),
+                                 asyncResultObserver, SLOT(update(MessageViewer::UpdateMode)));
             }
         }
 

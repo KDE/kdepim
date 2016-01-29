@@ -20,9 +20,8 @@
 #ifndef MEMORYCALENDARMEMENTO_H
 #define MEMORYCALENDARMEMENTO_H
 
-#include <messageviewer/bodypart.h>
-
-#include <messageviewer/viewer.h>
+#include <MessageViewer/BodyPart>
+#include <MessageViewer/Enums>
 
 #include <KCalCore/MemoryCalendar>
 #include <QObject>
@@ -45,7 +44,7 @@ public:
 
 Q_SIGNALS:
     // TODO: Factor our update and detach into base class
-    void update(MessageViewer::Viewer::UpdateMode);
+    void update(MessageViewer::UpdateMode);
 
 private Q_SLOTS:
     void slotCalendarLoaded(bool success, const QString &errorMessage);
