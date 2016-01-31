@@ -35,18 +35,20 @@ SieveEditorEmptyTabWidgetLabel::~SieveEditorEmptyTabWidgetLabel()
 void SieveEditorEmptyTabWidgetLabel::init()
 {
     //TODO improve text
-    const QString placeholderText = i18n("<html><body style=\"color:#909090; font-size:14px\">"
+    const QString placeholderText = QStringLiteral("<html><body style=\"color:#909090; font-size:14px\">"
                                          "<div align='center'>"
-                                         "<div style=\"font-size:20px\">Debug a script:</div>"
+                                         "<div style=\"font-size:20px\">%1</div>"
                                          "<div></div>"
-                                         "<li>Tools > Debug Sieve Script"
-                                         "<div style=\"font-size:20px\">Autogenerate script:</div>"
+                                         "<li>%2"
+                                         "<div style=\"font-size:20px\">%3</div>"
                                          "<div></div>"
-                                         "<li>Tools > Autogenerate script"
-                                         "<div style=\"font-size:20px\">Import script:</div>"
-                                         "<li>File > Import"
+                                         "<li>%4"
+                                         "<div style=\"font-size:20px\">%5</div>"
+                                         "<li>%6"
                                          "<div></div>"
                                          "</div>"
-                                         "</body></html>");
+                                         "</body></html>").arg(i18n("Debug a script:"), i18nc("These action in from menu tools submenu debug sieve script", "Tools > Debug Sieve Script"),
+                                                               i18n("Autogenerate script:"), i18nc("Action is from menu tools, submenu autogenerate script", "Tools > Autogenerate script"),
+                                                               i18n("Import script:"), i18nc("Action is from file menu, import submenu", "File > Import"));
     setText(placeholderText);
 }
