@@ -50,7 +50,6 @@ void KAddressBookPluginInterface::initializeInterfaceRequires(PimCommon::Generic
     }
     if (requires & PimCommon::GenericPluginInterface::Items) {
         interface->setItems(mMainWidget->selectedItems());
-        qCDebug(KADDRESSBOOK_LOG) << "PimCommon::GenericPluginInterface::Items not implemented";
     }
     if (requires & PimCommon::GenericPluginInterface::CurrentCollection) {
         interface->setCurrentCollection(mMainWidget->currentAddressBook());
