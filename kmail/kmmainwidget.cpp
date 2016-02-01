@@ -1072,6 +1072,7 @@ void KMMainWidget::createWidgets()
     if ( mEnableFavoriteFolderView ) {
 
         mFavoriteCollectionsView = new FavoriteCollectionWidget( mGUIClient, this );
+        mFavoriteCollectionsView->setFrameShape(QFrame::NoFrame);
         refreshFavoriteFoldersViewProperties();
 
         connect( mFavoriteCollectionsView, SIGNAL(currentChanged(Akonadi::Collection)), this, SLOT(slotFolderChanged(Akonadi::Collection)) );

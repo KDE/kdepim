@@ -41,6 +41,7 @@ FolderTreeView::FolderTreeView( QWidget *parent, bool showUnreadCount )
       mbDisableSaveConfig( false )
 {
     init(showUnreadCount);
+    setFrameShape(QFrame::NoFrame);
 }
 
 FolderTreeView::FolderTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent, bool showUnreadCount )
@@ -49,6 +50,7 @@ FolderTreeView::FolderTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent, bo
       mbDisableSaveConfig( false )
 {
     init( showUnreadCount );
+    setFrameShape(QFrame::NoFrame);
 }
 
 FolderTreeView::~FolderTreeView()
