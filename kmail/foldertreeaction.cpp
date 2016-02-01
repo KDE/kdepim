@@ -41,7 +41,7 @@ void FolderTreeAction::initializeWidgets()
     KPushButton *newMessage = new KPushButton(i18n("New Message"), this);
     connect(newMessage, SIGNAL(clicked()), this, SIGNAL(newMessage()));
     hboxLayout->addWidget(newMessage);
-    QToolButton *checkMail = new QToolButton(this);
+    KPushButton *checkMail = new KPushButton(this);
     checkMail->setIcon(KIcon(QLatin1String("mail-receive")));
     connect(checkMail, SIGNAL(clicked()), this, SIGNAL(checkMail()));
     hboxLayout->addWidget(checkMail);
