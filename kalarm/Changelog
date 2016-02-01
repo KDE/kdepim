@@ -1,10 +1,11 @@
 KAlarm Change Log
 
-=== Version 2.10.13 --- 27 January 2016 ===
+=== Version 2.10.13 --- 1 February 2016 ===
 - Fix conversion error in sub-repetition value from command line or D-Bus command.
 - Enable typing into New Alarm dialogue while alarm is displayed (Unity desktop) [KDE Bug 352889]
 - Warn user if sendmail fails due to akonadi_mailfilter_agent not installed [KDE Bug 338575]
 - Fix specification on command line of a reminder after the alarm.
+- Fix deferral time of date-only recurring alarms [KDE Bug 346060]
 
 === Version 2.10.12 (KDE 4.14.2) --- 30 September 2014 ===
 - Make New Audio Alarm dialogue use sound file repeat preference setting.
