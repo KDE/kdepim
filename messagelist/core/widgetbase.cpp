@@ -132,6 +132,8 @@ Widget::Widget( QWidget *pParent )
     setAutoFillBackground( true );
     setObjectName( QLatin1String( "messagelistwidget" ) );
 
+
+
     QVBoxLayout * g = new QVBoxLayout( this );
     g->setMargin( 10 );
     g->setSpacing( 10 );
@@ -155,6 +157,9 @@ Widget::Widget( QWidget *pParent )
     connect( d->mView->header(), SIGNAL(sectionClicked(int)),
              SLOT(slotViewHeaderSectionClicked(int)) );
     d->mSearchTimer = 0;
+    QPalette p( palette() );
+    p.setColor( QPalette::Window, p.color(QPalette::Inactive, QPalette::Button));
+    setPalette( p );
 }
 
 Widget::~Widget()
