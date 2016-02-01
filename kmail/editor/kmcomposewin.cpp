@@ -512,6 +512,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     statusBar()->hide();
     menuBar()->hide();
     QToolBar *mainToolBar = new QToolBar(this);
+    mainToolBar->setIconSize(QSize(16,16));
     mainToolBar->setObjectName(QLatin1String("mailtoolbar"));
     mainToolBar->setMovable(false);
     mainToolBar->setFloatable(false);
@@ -540,6 +541,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
     addToolBarBreak(Qt::BottomToolBarArea);
     QToolBar *htmlToolBar = toolBar(QLatin1String("htmlToolBar"));
+    htmlToolBar->setIconSize(QSize(16,16));
     htmlToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
     addToolBar(Qt::BottomToolBarArea, htmlToolBar);
 }
