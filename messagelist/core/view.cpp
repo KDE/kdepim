@@ -129,6 +129,11 @@ View::View( Widget *pParent )
 
     // as in KDE3, when a root-item of a message thread is expanded, expand all children
     connect( this, SIGNAL(expanded(QModelIndex)), this, SLOT(expandFullThread(QModelIndex)) );
+    QPalette p( palette() );
+
+
+    p.setColor( QPalette::Base, p.color(QPalette::Inactive, QPalette::Button));
+    setPalette( p );
 }
 
 View::~View()

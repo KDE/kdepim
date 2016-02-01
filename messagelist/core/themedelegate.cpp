@@ -566,6 +566,8 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
         MessageItem * msgItem = static_cast< MessageItem * >( item );
         if ( msgItem->backgroundColor().isValid() )
             opt.backgroundBrush = QBrush( msgItem->backgroundColor() );
+        else
+            opt.backgroundBrush = QBrush( Qt::white );
     }
 
     QStyle * style = mItemView->style();
