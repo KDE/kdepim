@@ -70,10 +70,20 @@ SendLaterAgent::SendLaterAgent(const QString &id)
         QTimer::singleShot(1000 * 60 * 4, this, &SendLaterAgent::slotStartAgent);
 #endif
     }
+    mReloadListTimer = new QTimer(this);
+    mReloadListTimer->setSingleShot(false);
+    connect(mReloadListTimer, &QTimer::timeout, this, &SendLaterAgent::slotReloadListTimeout);
+    mReloadListTimer->start(1000 * 60 * 60); //1 hour
 }
 
 SendLaterAgent::~SendLaterAgent()
 {
+}
+
+void SendLaterAgent::slotReloadListTimeout()
+{
+    reload();
+    mReloadListTimer->start();
 }
 
 void SendLaterAgent::slotStartAgent()
