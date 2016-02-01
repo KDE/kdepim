@@ -380,6 +380,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     QVBoxLayout *vbox = new QVBoxLayout(editorAndCryptoStateIndicators);
     vbox->setMargin(0);
     KMComposerEditor* editor = new KMComposerEditor( this, mCryptoStateIndicatorWidget );
+    editor->setFrameShape(QFrame::NoFrame);
 
     connect( editor, SIGNAL(textChanged()),
              this, SLOT(slotEditorTextChanged()) );
