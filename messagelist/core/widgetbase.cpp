@@ -129,13 +129,12 @@ Widget::Widget( QWidget *pParent )
              this, SLOT(aggregationsChanged()) );
     connect( Manager::instance(), SIGNAL(themesChanged()),
              this, SLOT(themesChanged()) );
-
     setAutoFillBackground( true );
     setObjectName( QLatin1String( "messagelistwidget" ) );
 
     QVBoxLayout * g = new QVBoxLayout( this );
-    g->setMargin( 0 );
-    g->setSpacing( 0 );
+    g->setMargin( 10 );
+    g->setSpacing( 10 );
 
     d->quickSearchLine = new QuickSearchLine;
     d->quickSearchLine->setObjectName(QLatin1String("quicksearchline"));
