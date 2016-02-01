@@ -156,6 +156,7 @@ RedirectDialog::RedirectDialog(SendMode mode, QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainWidget->setLayout(mainLayout);
     mainLayout->setSpacing(0);
+    mainLayout->setMargin(0);
     QLabel *LabelTo = new QLabel(i18n("Select the recipient addresses to redirect:"));
     mainLayout->addWidget(LabelTo);
 
