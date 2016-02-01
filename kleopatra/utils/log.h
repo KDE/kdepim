@@ -54,7 +54,8 @@ public:
         Write = 0x2
     };
 
-    static void messageHandler(QtMsgType type, const char *msg);
+    static void messageHandler(QtMsgType type, const QMessageLogContext &ctx,
+                               const QString &msg);
 
     static boost::shared_ptr<const Log> instance();
     static boost::shared_ptr<Log> mutableInstance();

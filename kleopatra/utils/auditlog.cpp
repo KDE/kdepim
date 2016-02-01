@@ -37,6 +37,7 @@
 #include <Libkleo/Job>
 
 #include <QUrl>
+#include <QUrlQuery>
 #include "kleopatra_debug.h"
 #include <KLocalizedString>
 

@@ -494,7 +494,7 @@ private:
 
             QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Help |
                     QDialogButtonBox::Close);
-            chainTW->header()->setResizeMode(0, QHeaderView::Stretch);
+            chainTW->header()->setSectionResizeMode(0, QHeaderView::Stretch);
 
             dumpLTW->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
             dumpLTW->setMinimumVisibleLines(15);

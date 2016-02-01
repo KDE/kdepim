@@ -120,7 +120,7 @@ public:
         }
         ensureNumSections(newCount);
         for (unsigned int i = 0, end = std::min<unsigned int>(newCount, modes.size()); i < end; ++i) {
-            q->QHeaderView::setResizeMode(i, modes[i]);
+            q->QHeaderView::setSectionResizeMode(i, modes[i]);
         }
         apply_section_sizes(q, sizes);
     }
@@ -217,7 +217,7 @@ void HeaderView::setSectionResizeMode(unsigned int section, ResizeMode mode)
     d->ensureNumSections(section + 1);
     d->modes[section] = mode;
     if (section < static_cast<unsigned int>(count())) {
-        QHeaderView::setResizeMode(section, mode);
+        QHeaderView::setSectionResizeMode(section, mode);
     }
 }
 

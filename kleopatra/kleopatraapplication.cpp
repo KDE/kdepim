@@ -177,7 +177,7 @@ public:
         if (logAll || options.contains("io")) {
             log->setIOLoggingEnabled(true);
         }
-        qInstallMsgHandler(Log::messageHandler);
+        qInstallMessageHandler(Log::messageHandler);
 
 #ifdef HAVE_USABLE_ASSUAN
         if (logAll || options.contains("pipeio")) {

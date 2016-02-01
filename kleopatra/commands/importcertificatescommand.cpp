@@ -3,6 +3,7 @@
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007, 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2016 Intevation GmbH
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -198,7 +199,13 @@ ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
 static QString format_ids(const QStringList &ids)
 {
-    return kdtools::transform_if<QStringList>(ids, Qt::escape, !boost::bind(&QString::isEmpty, _1)).join(QStringLiteral("<br>"));
+    QStringList escapedIds;
+    Q_FOREACH (const QString &id, ids) {
+        if (!id.isEmpty()) {
+            escapedIds << id.toHtmlEscaped();
+        }
+    }
+    return escapedIds.join(QStringLiteral("<br>"));
 }
 
 static QString make_tooltip(const QStringList &ids)

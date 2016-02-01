@@ -83,13 +83,16 @@ void SubkeyListModel::setKey(const Key &key)
 
     const Key oldKey = d->key;
 
-    d->key = key;
 
     if (qstricmp(key.primaryFingerprint(), oldKey.primaryFingerprint()) != 0) {
         // different key -> reset
-        reset();
+        beginResetModel();
+        d->key = key;
+        endResetModel();
         return;
     }
+
+    d->key = key;
 
     // ### diff them, and signal more fine-grained than this:
 
@@ -144,8 +147,9 @@ QList<QModelIndex> SubkeyListModel::indexes(const std::vector<Subkey> &subkeys) 
 
 void SubkeyListModel::clear()
 {
+    beginResetModel();
     d->key = Key::null;
-    reset();
+    endResetModel();
 }
 
 int SubkeyListModel::columnCount(const QModelIndex &) const

@@ -103,14 +103,15 @@ void UserIDListModel::setKey(const Key &key)
 
     const Key oldKey = d->key;
 
-    d->key = key;
-
     if (qstricmp(key.primaryFingerprint(), oldKey.primaryFingerprint()) != 0) {
         // different key -> reset
-        reset();
+        beginResetModel();
+        d->key = key;
+        endResetModel();
         return;
     }
 
+    d->key = key;
     // ### diff them, and signal more fine-grained than this:
 
     if (key.numUserIDs() > 0 && oldKey.numUserIDs() == key.numUserIDs()) {
@@ -218,8 +219,9 @@ QList<QModelIndex> UserIDListModel::indexes(const std::vector<UserID::Signature>
 
 void UserIDListModel::clear()
 {
+    beginResetModel();
     d->key = Key::null;
-    reset();
+    endResetModel();
 }
 
 int UserIDListModel::columnCount(const QModelIndex &) const

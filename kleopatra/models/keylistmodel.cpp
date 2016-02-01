@@ -246,9 +246,10 @@ QList<QModelIndex> AbstractKeyListModel::addKeys(const std::vector<Key> &keys)
 
 void AbstractKeyListModel::clear()
 {
+    beginResetModel();
     doClear();
     d->prettyEMailCache.clear();
-    reset();
+    endResetModel();
 }
 
 int AbstractKeyListModel::columnCount(const QModelIndex &) const
