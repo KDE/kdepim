@@ -74,7 +74,6 @@
 #include <QShowEvent>
 #include <QScrollBar>
 #include <QTimer>
-#include <QCursor>
 
 using namespace KCal;
 using namespace KAlarmCal;

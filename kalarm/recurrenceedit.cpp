@@ -1,7 +1,7 @@
 /*
  *  recurrenceedit.cpp  -  widget to edit the event's recurrence definition
  *  Program:  kalarm
- *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2016 by David Jarvie <djarvie@kde.org>
  *
  *  Based originally on KOrganizer module koeditorrecurrence.cpp,
  *  Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
@@ -1344,18 +1344,17 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mButtonGroup = new ButtonGroup(this);
 
     // Month day selector
-    KHBox* box = new KHBox(this);
-    box->setMargin(0);
-    box->setSpacing(KDialog::spacingHint());
-    layout()->addWidget(box);
+    QGridLayout* boxLayout = new QGridLayout(this);
+    layout()->addLayout(boxLayout);
 
-    mDayButton = new RadioButton(i18nc("@option:radio On day number in the month", "O&n day"), box);
+    mDayButton = new RadioButton(i18nc("@option:radio On day number in the month", "O&n day"), this);
     mDayButton->setFixedSize(mDayButton->sizeHint());
     mDayButton->setReadOnly(readOnly);
     mButtonGroup->addButton(mDayButton);
     mDayButton->setWhatsThis(i18nc("@info:whatsthis", "Repeat the alarm on the selected day of the month"));
+    boxLayout->addWidget(mDayButton, 0, 0);
 
-    mDayCombo = new ComboBox(box);
+    mDayCombo = new ComboBox(this);
     mDayCombo->setEditable(false);
     mDayCombo->setMaxVisibleItems(11);
     for (int i = 0;  i < 31;  ++i)
@@ -1367,23 +1366,17 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mDayButton->setFocusWidget(mDayCombo);
     connect(mDayCombo, SIGNAL(activated(int)), SLOT(slotDaySelected(int)));
     connect(mDayCombo, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
-
-    box->setStretchFactor(new QWidget(box), 1);    // left adjust the controls
-    box->setFixedHeight(box->sizeHint().height());
+    boxLayout->addWidget(mDayCombo, 0, 1, 1, 2, Qt::AlignLeft);
 
     // Month position selector
-    box = new KHBox(this);
-    box->setMargin(0);
-    box->setSpacing(KDialog::spacingHint());
-    layout()->addWidget(box);
-
-    mPosButton = new RadioButton(i18nc("@option:radio On the 1st Tuesday", "On t&he"), box);
+    mPosButton = new RadioButton(i18nc("@option:radio On the 1st Tuesday", "On t&he"), this);
     mPosButton->setFixedSize(mPosButton->sizeHint());
     mPosButton->setReadOnly(readOnly);
     mButtonGroup->addButton(mPosButton);
     mPosButton->setWhatsThis(i18nc("@info:whatsthis", "Repeat the alarm on one day of the week, in the selected week of the month"));
+    boxLayout->addWidget(mPosButton, 1, 0);
 
-    mWeekCombo = new ComboBox(box);
+    mWeekCombo = new ComboBox(this);
     mWeekCombo->setEditable(false);
     mWeekCombo->addItem(i18nc("@item:inlistbox", "1st"));
     mWeekCombo->addItem(i18nc("@item:inlistbox", "2nd"));
@@ -1405,8 +1398,9 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mWeekCombo->setReadOnly(readOnly);
     mPosButton->setFocusWidget(mWeekCombo);
     connect(mWeekCombo, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
+    boxLayout->addWidget(mWeekCombo, 1, 1);
 
-    mDayOfWeekCombo = new ComboBox(box);
+    mDayOfWeekCombo = new ComboBox(this);
     mDayOfWeekCombo->setEditable(false);
     const KCalendarSystem* calendar = KGlobal::locale()->calendar();
     for (int i = 0;  i < 7;  ++i)
@@ -1417,9 +1411,8 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
     mDayOfWeekCombo->setReadOnly(readOnly);
     mDayOfWeekCombo->setWhatsThis(i18nc("@info:whatsthis", "Select the day of the week on which to repeat the alarm"));
     connect(mDayOfWeekCombo, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
+    boxLayout->addWidget(mDayOfWeekCombo, 1, 2, Qt::AlignLeft);
 
-    box->setStretchFactor(new QWidget(box), 1);    // left adjust the controls
-    box->setFixedHeight(box->sizeHint().height());
     connect(mButtonGroup, SIGNAL(buttonSet(QAbstractButton*)), SLOT(clicked(QAbstractButton*)));
     connect(mButtonGroup, SIGNAL(buttonSet(QAbstractButton*)), SIGNAL(changed()));
 }
