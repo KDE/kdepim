@@ -63,7 +63,7 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, 
                 i18nc( "@info:tooltip", "Save recipients as distribution list") );
 
     mSelectButton = new QPushButton(
-                i18nc( "@action:button Open recipient selection dialog.", "Se&lect..."), this );
+                i18nc( "@action:button Open recipient selection dialog.", "Se&lect"), this );
     topLayout->addWidget( mSelectButton );
     connect( mSelectButton, SIGNAL(clicked()), SLOT(pickRecipient()) );
     mSelectButton->setToolTip( i18nc("@info:tooltip","Select recipients from address book") );
