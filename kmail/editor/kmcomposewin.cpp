@@ -518,15 +518,13 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mainToolBar->setObjectName(QLatin1String("mailtoolbar"));
     mainToolBar->setMovable(false);
     mainToolBar->setFloatable(false);
-    mainToolBar->addAction(actionCollection()->action(QLatin1String("spellcheck")));
-    mainToolBar->addSeparator();
     mainToolBar->addAction(actionCollection()->action(QLatin1String("attach_menu")));
-    mainToolBar->addSeparator();
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("spellcheck")));
     mainToolBar->addAction(actionCollection()->action(QLatin1String("sign_message")));
-    mainToolBar->addAction(actionCollection()->action(QLatin1String("encrypt_message")));
-    mainToolBar->addSeparator();
-    QAction *addemoticon = actionCollection()->action(QLatin1String("add_emoticon"));
-    mainToolBar->addAction(addemoticon);
+
+    QAction *addencryptAction = actionCollection()->action(QLatin1String("encrypt_message"));
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("add_emoticon")));
+    mainToolBar->addAction(addencryptAction);
     mainToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
     QWidget *spacer = new QWidget;
