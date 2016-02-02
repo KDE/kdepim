@@ -90,6 +90,7 @@
 #include "kleo/exportjob.h"
 #include "kleo/specialjob.h"
 #include <messageviewer/viewer/objecttreeemptysource.h>
+#include <KPushButton>
 
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
@@ -524,18 +525,23 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mainToolBar->addAction(actionCollection()->action(QLatin1String("sign_message")));
     mainToolBar->addAction(actionCollection()->action(QLatin1String("encrypt_message")));
     mainToolBar->addSeparator();
-    mainToolBar->addAction(actionCollection()->action(QLatin1String("add_emoticon")));
+    QAction *addemoticon = actionCollection()->action(QLatin1String("add_emoticon"));
+    mainToolBar->addAction(addemoticon);
     mainToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
-    QAction *sendAction = actionCollection()->action(QLatin1String("send_mail_default"));
-    sendAction->setIcon(QIcon());
-    mainToolBar->addAction(sendAction);
     QWidget *spacer = new QWidget;
     QHBoxLayout *hbox = new QHBoxLayout;
+
+    KPushButton *sendButton = new KPushButton(i18n("Send Mail"), this);
+    sendButton->setDefault(true);
+    connect( sendButton, SIGNAL(clicked()), SLOT(slotSendNow()));
+
+
     spacer->setLayout(hbox);
     QSpacerItem *item = new QSpacerItem(1,1, QSizePolicy::Expanding, QSizePolicy::Fixed);
     hbox->addSpacerItem(item);
-    mainToolBar->insertWidget(sendAction, spacer);
+    hbox->addWidget(sendButton);
+    mainToolBar->addWidget(spacer);
 
 
     addToolBar(Qt::BottomToolBarArea, mainToolBar);
