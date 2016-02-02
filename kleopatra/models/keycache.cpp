@@ -40,7 +40,6 @@
 #include "smimevalidationpreferences.h"
 
 #include <utils/filesystemwatcher.h>
-#include <utils/progressmanager.h>
 
 #include <Libkleo/Stl_Util>
 #include <Libkleo/CryptoBackendFactory>
@@ -1048,11 +1047,6 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing(const char *backend)
     }
     connect(job, SIGNAL(result(GpgME::KeyListResult,std::vector<GpgME::Key>)),
             q, SLOT(listAllKeysJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)));
-
-    const QString label = protocol == Kleo::CryptoBackendFactory::instance()->smime()
-                          ? i18n("Listing X.509 certificates")
-                          : i18n("Listing OpenPGP certificates");
-    (void)ProgressManager::createForJob(job, label);
 
     connect(q, &RefreshKeysJob::canceled,
             job, &Job::slotCancel);

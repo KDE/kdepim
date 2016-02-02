@@ -47,7 +47,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kleopatra_SOURCE_DIR})
   find_package(KF5Libkleo ${LIBKLEO_VERSION} CONFIG REQUIRED)
   find_package(KF5Mime ${KMIME_VERSION} CONFIG REQUIRED)
   find_package(KF5Gpgmepp ${GPGMEPP_VERSION} CONFIG REQUIRED)
-  find_package(KF5Libkdepim ${LIBKDEPIM_VERSION} CONFIG REQUIRED)
 
   find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Network)
 endif() # Standalone build
@@ -201,7 +200,6 @@ set(_kleopatra_SRCS
   utils/scrollarea.cpp
   utils/dragqueen.cpp
   utils/multivalidator.cpp
-  utils/progressmanager.cpp
   utils/systemtrayicon.cpp
 
   utils/hex.cpp
@@ -406,7 +404,6 @@ target_link_libraries(kleopatra_bin
   KF5::DBusAddons
   Qt5::Network
   ${_kleopatra_uiserver_extra_libs}
-  KF5::Libkdepim
 )
 
 if(USABLE_ASSUAN_FOUND)

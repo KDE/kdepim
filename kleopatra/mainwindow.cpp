@@ -55,10 +55,6 @@
 #include "utils/filedialog.h"
 #include "utils/clipboardmenu.h"
 
-// from libkdepim
-#include "libkdepim/statusbarprogresswidget.h"
-#include "libkdepim/progressdialog.h"
-#include <QStatusBar>
 #include <KXMLGUIFactory>
 #include <QApplication>
 #include <KActionCollection>
@@ -258,14 +254,6 @@ MainWindow::Private::UI::UI(MainWindow *q)
     vbox->addWidget(&tabWidget);
 
     q->setCentralWidget(mainWidget);
-    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog(q->statusBar(), q);
-    KDAB_SET_OBJECT_NAME(progressDialog);
-    progressDialog->hide();
-    KPIM::StatusbarProgressWidget *statusBarProgressWidget
-        = new KPIM::StatusbarProgressWidget(progressDialog, q->statusBar());
-    KDAB_SET_OBJECT_NAME(statusBarProgressWidget);
-    q->statusBar()->addPermanentWidget(statusBarProgressWidget, 0);
-    statusBarProgressWidget->show();
 }
 
 MainWindow::Private::Private(MainWindow *qq)
@@ -291,7 +279,6 @@ MainWindow::Private::Private(MainWindow *qq)
 
     setupActions();
 
-    connect(&controller, &KeyListController::message,  q->statusBar(), &QStatusBar::showMessage);
     connect(&controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)), q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)));
 
     q->createGUI(QStringLiteral("kleopatra.rc"));
@@ -369,7 +356,6 @@ void MainWindow::Private::setupActions()
     clipboadMenu->clipboardMenu()->setDelayed(false);
     coll->addAction(QStringLiteral("clipboard_menu"), clipboadMenu->clipboardMenu());
 
-    q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled(true);
 
     controller.createActions(coll);
