@@ -83,12 +83,15 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version-kleopatra.h.cmake ${CMAKE_CUR
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 include (ConfigureChecks.cmake)
 
+find_package(Gpgme REQUIRED)
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h)
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/
   ${Boost_INCLUDE_DIR}
+  ${GPGME_INCLUDES}
 )
 
 if(USABLE_ASSUAN_FOUND)
