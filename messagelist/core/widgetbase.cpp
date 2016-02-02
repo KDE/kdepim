@@ -135,7 +135,7 @@ Widget::Widget( QWidget *pParent )
 
 
     QVBoxLayout * g = new QVBoxLayout( this );
-    g->setMargin( 10 );
+    g->setMargin( 23 );
     g->setSpacing( 10 );
 
     d->quickSearchLine = new QuickSearchLine;
