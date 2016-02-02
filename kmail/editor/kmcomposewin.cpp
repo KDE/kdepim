@@ -531,6 +531,8 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
     QWidget *spacer = new QWidget;
     QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    hbox->setSpacing(0);
 
     KPushButton *sendButton = new KPushButton(i18n("Send Mail"), this);
     sendButton->setDefault(true);
