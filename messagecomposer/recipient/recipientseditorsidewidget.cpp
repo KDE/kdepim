@@ -64,6 +64,23 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, 
 
     mSelectButton = new QPushButton(
                 i18nc( "@action:button Open recipient selection dialog.", "Se&lect"), this );
+
+    QPalette pal = palette();
+
+    pal.setColor(QPalette::Inactive, QPalette::ButtonText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Active, QPalette::ButtonText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Disabled, QPalette::ButtonText, QColor("#4BC8E7"));
+
+    pal.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor("#4BC8E7"));
+
+    pal.setColor(QPalette::Disabled, QPalette::Button, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Active, QPalette::Button, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Inactive, QPalette::Button, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Active, QPalette::Highlight, QColor("#FFFFFF"));
+    mSelectButton->setPalette(pal);
     topLayout->addWidget( mSelectButton );
     connect( mSelectButton, SIGNAL(clicked()), SLOT(pickRecipient()) );
     mSelectButton->setToolTip( i18nc("@info:tooltip","Select recipients from address book") );
