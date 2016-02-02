@@ -37,11 +37,14 @@ void FolderTreeAction::initializeWidgets()
 {
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     setLayout(hboxLayout);
-    hboxLayout->setMargin(0);
+    hboxLayout->setMargin(18);
+    hboxLayout->setSpacing(4);
     KPushButton *newMessage = new KPushButton(i18n("New Message"), this);
+    newMessage->setDefault(true);
     connect(newMessage, SIGNAL(clicked()), this, SIGNAL(newMessage()));
     hboxLayout->addWidget(newMessage);
     KPushButton *checkMail = new KPushButton(this);
+    checkMail->setDefault(true);
     checkMail->setIcon(KIcon(QLatin1String("mail-receive")));
     connect(checkMail, SIGNAL(clicked()), this, SIGNAL(checkMail()));
     hboxLayout->addWidget(checkMail);
