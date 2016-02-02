@@ -38,7 +38,7 @@ void FolderTreeAction::initializeWidgets()
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     setLayout(hboxLayout);
     hboxLayout->setMargin(18);
-    hboxLayout->setSpacing(4);
+    hboxLayout->setSpacing(10);
     KPushButton *newMessage = new KPushButton(i18n("New Message"), this);
     newMessage->setDefault(true);
     connect(newMessage, SIGNAL(clicked()), this, SIGNAL(newMessage()));
