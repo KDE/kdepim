@@ -1053,6 +1053,23 @@ void KMMainWidget::createWidgets()
 
     vboxlayout->addWidget( mFolderTreeWidget );
     KPushButton *mailSettings = new KPushButton(KIcon(QLatin1String("configure")), i18n("Mail settings"), this);
+    QPalette pal = palette();
+
+    pal.setColor(QPalette::Inactive, QPalette::ButtonText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Active, QPalette::ButtonText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Disabled, QPalette::ButtonText, QColor("#4BC8E7"));
+
+    pal.setColor(QPalette::Inactive, QPalette::HighlightedText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Active, QPalette::HighlightedText, QColor("#4BC8E7"));
+    pal.setColor(QPalette::Disabled, QPalette::HighlightedText, QColor("#4BC8E7"));
+
+    pal.setColor(QPalette::Disabled, QPalette::Button, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Active, QPalette::Button, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Inactive, QPalette::Button, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#FFFFFF"));
+    pal.setColor(QPalette::Active, QPalette::Highlight, QColor("#FFFFFF"));
+    mailSettings->setPalette(pal);
+
     connect(mailSettings, SIGNAL(clicked()), kmkernel, SLOT(slotShowConfigurationDialog()));
 
     vboxlayout->addWidget(mailSettings);
