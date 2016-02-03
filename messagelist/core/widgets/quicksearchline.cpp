@@ -85,7 +85,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     vbox->addWidget(mQuickSearchFilterWidget);
 
     mSearchEdit = new SearchLineEdit( this );
-    mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
+    mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search mail" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
     mSearchEdit->setClearButtonShown( true );
 
