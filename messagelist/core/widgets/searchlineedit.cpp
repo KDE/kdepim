@@ -319,11 +319,7 @@ void SearchLineEdit::updateClearButtonIcon(const QString& text)
     // set proper icon if necessary
     if (d->clearButton->pixmap().isNull()) {
         const int clearButtonState = KIconLoader::DefaultState;
-        if (layoutDirection() == Qt::LeftToRight) {
-            d->clearButton->setPixmap(SmallIcon("edit-clear-locationbar-rtl", 0, clearButtonState));
-        } else {
-            d->clearButton->setPixmap(SmallIcon("edit-clear-locationbar-ltr", 0, clearButtonState));
-        }
+        d->clearButton->setPixmap(SmallIcon("search-indicator", 0, clearButtonState));
     }
 
     // trigger animation
