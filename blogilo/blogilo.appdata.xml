@@ -17,6 +17,7 @@
   <name xml:lang="fr">Blogilo</name>
   <name xml:lang="gl">Blogilo</name>
   <name xml:lang="hu">Blogilo</name>
+  <name xml:lang="ia">Blogilo</name>
   <name xml:lang="it">Blogilo</name>
   <name xml:lang="ko">Blogilo</name>
   <name xml:lang="lt">Blogilo</name>
@@ -51,6 +52,7 @@
   <summary xml:lang="fr">Un client de blog pour KDE</summary>
   <summary xml:lang="gl">Un cliente de KDE para blogues</summary>
   <summary xml:lang="hu">KDE-s blogkliens</summary>
+  <summary xml:lang="ia">Un cliente KDE de blogging</summary>
   <summary xml:lang="it">Client KDE per il blog</summary>
   <summary xml:lang="ko">KDE 블로그 클라이언트</summary>
   <summary xml:lang="lt">KDE tinklaraštinimo klientas</summary>
@@ -118,6 +120,7 @@
     <p xml:lang="fr">Fonctionnalités :</p>
     <p xml:lang="gl">Funcionalidades:</p>
     <p xml:lang="hu">Szolgáltatások:</p>
+    <p xml:lang="ia">Characteristicas:</p>
     <p xml:lang="it">Caratteristiche:</p>
     <p xml:lang="ko">기능:</p>
     <p xml:lang="lt">Ypatybės:</p>
