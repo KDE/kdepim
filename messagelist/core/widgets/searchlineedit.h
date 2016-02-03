@@ -27,8 +27,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef SEARCHKLINEEDIT_H
-#define SEARCHKLINEEDIT_H
+#ifndef SEARCHSearchLineEdit_H
+#define SEARCHSearchLineEdit_H
 
 #include <QtGui/QLineEdit>
 
@@ -38,7 +38,7 @@ class QAction;
 class QMenu;
 class KCompletionBox;
 class KUrl;
-class KLineEditPrivate;
+class SearchLineEditPrivate;
 
 /**
  * An enhanced QLineEdit widget for inputting text.
@@ -52,7 +52,7 @@ class KLineEditPrivate;
  * popup-menu item that can be used to allow the user to set text completion
  * modes on the fly based on their preference.
  *
- * To support these new features KLineEdit also emits a few more
+ * To support these new features SearchLineEdit also emits a few more
  * additional signals.  These are: completion( const QString& ),
  * textRotation( KeyBindingType ), and returnPressed( const QString& ).
  * The completion signal can be connected to a slot that will assist the
@@ -67,7 +67,7 @@ class KLineEditPrivate;
  * the completionObject( bool ) member function for the first time or
  * use setCompletionObject( KCompletion*, bool ) to assign your own
  * completion object.  Additionally, to make this widget more functional,
- * KLineEdit will by default handle the text rotation and completion
+ * SearchLineEdit will by default handle the text rotation and completion
  * events internally when a completion object is created through either one
  * of the methods mentioned above.  If you do not need this functionality,
  * simply use KCompletionBase::setHandleSignals( bool ) or set the
@@ -87,21 +87,21 @@ class KLineEditPrivate;
  * cached in KCompletion's list. Hence, if the @p EchoMode is not QLineEdit::Normal, the
  * completion mode is automatically disabled.
  *
- * A read-only KLineEdit will have the same background color as a
- * disabled KLineEdit, but its foreground color will be the one used
+ * A read-only SearchLineEdit will have the same background color as a
+ * disabled SearchLineEdit, but its foreground color will be the one used
  * for the read-write mode. This differs from QLineEdit's implementation
  * and is done to give visual distinction between the three different modes:
  * disabled, read-only, and read-write.
  *
- * KLineEdit has also a password mode which depends of globals KDE settings.  Use
- * KLineEdit::setPasswordMode instead of QLineEdit::echoMode property to have a password field.
+ * SearchLineEdit has also a password mode which depends of globals KDE settings.  Use
+ * SearchLineEdit::setPasswordMode instead of QLineEdit::echoMode property to have a password field.
  *
  * \b Usage \n
  *
  * To enable the basic completion feature:
  *
  * \code
- * KLineEdit *edit = new KLineEdit( this );
+ * SearchLineEdit *edit = new SearchLineEdit( this );
  * KCompletion *comp = edit->completionObject();
  * // Connect to the return pressed signal - optional
  * connect(edit,SIGNAL(returnPressed(const QString&)),comp,SLOT(addItem(const QString&)));
@@ -111,7 +111,7 @@ class KLineEditPrivate;
  * own completion object:
  *
  * \code
- * KLineEdit *edit = new KLineEdit( this );
+ * SearchLineEdit *edit = new SearchLineEdit( this );
  * KUrlCompletion *comp = new KUrlCompletion();
  * edit->setCompletionObject( comp );
  * // Connect to the return pressed signal - optional
@@ -119,7 +119,7 @@ class KLineEditPrivate;
  * \endcode
  *
  * Note if you specify your own completion object you have to either delete
- * it when you don't need it anymore, or you can tell KLineEdit to delete it
+ * it when you don't need it anymore, or you can tell SearchLineEdit to delete it
  * for you:
  * \code
  * edit->setAutoDeleteCompletionObject( true );
@@ -141,14 +141,14 @@ class KLineEditPrivate;
  * edit->useGlobalKeyBindings();
  * \endcode
  *
- * \image html klineedit.png "KDE Line Edit Widgets with clear-button and clickMessage"
+ * \image html SearchLineEdit.png "KDE Line Edit Widgets with clear-button and clickMessage"
  *
  * @author Dawit Alemayehu <adawit@kde.org>
  */
-class KLineEdit : public QLineEdit, public KCompletionBase //krazy:exclude=qclasses
+class SearchLineEdit : public QLineEdit, public KCompletionBase //krazy:exclude=qclasses
 {
     friend class KComboBox;
-    friend class KLineEditStyle;
+    friend class SearchLineEditStyle;
 
     Q_OBJECT
 #ifndef KDE_NO_DEPRECATED
@@ -164,24 +164,24 @@ class KLineEdit : public QLineEdit, public KCompletionBase //krazy:exclude=qclas
 public:
 
     /**
-     * Constructs a KLineEdit object with a default text, a parent,
+     * Constructs a SearchLineEdit object with a default text, a parent,
      * and a name.
      *
      * @param string Text to be shown in the edit widget.
      * @param parent The parent widget of the line edit.
      */
-    explicit KLineEdit( const QString &string, QWidget *parent = 0 );
+    explicit SearchLineEdit( const QString &string, QWidget *parent = 0 );
 
     /**
      * Constructs a line edit
      * @param parent The parent widget of the line edit.
      */
-    explicit KLineEdit( QWidget *parent = 0 );
+    explicit SearchLineEdit( QWidget *parent = 0 );
 
     /**
      *  Destructor.
      */
-    virtual ~KLineEdit ();
+    virtual ~SearchLineEdit ();
 
     /**
      * Sets @p url into the lineedit. It uses KUrl::prettyUrl() so
@@ -248,11 +248,11 @@ public:
     bool urlDropsEnabled() const;
 
     /**
-     * By default, KLineEdit recognizes @p Key_Return and @p Key_Enter and emits
+     * By default, SearchLineEdit recognizes @p Key_Return and @p Key_Enter and emits
      * the returnPressed() signals, but it also lets the event pass,
      * for example causing a dialog's default-button to be called.
      *
-     * Call this method with @p trap = @p true to make @p KLineEdit stop these
+     * Call this method with @p trap = @p true to make @p SearchLineEdit stop these
      * events. The signals will still be emitted of course.
      *
      * @see trapReturnKey()
@@ -420,7 +420,7 @@ Q_SIGNALS:
      * Emitted when the text rotation key-bindings are pressed.
      *
      * The argument indicates which key-binding was pressed.
-     * In KLineEdit's case this can be either one of two values:
+     * In SearchLineEdit's case this can be either one of two values:
      * PrevCompletionMatch or NextCompletionMatch. See
      * KCompletionBase::setKeyBinding for details.
      *
@@ -666,8 +666,8 @@ private:
     void updateClearButton();
 
 private:
-    friend class KLineEditPrivate;
-    KLineEditPrivate *const d;
+    friend class SearchLineEditPrivate;
+    SearchLineEditPrivate *const d;
 
 };
 #endif

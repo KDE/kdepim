@@ -19,8 +19,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef SEARCHKLINEEDIT_P_H
-#define SEARCHKLINEEDIT_P_H
+#ifndef SEARCHSearchLineEdit_P_H
+#define SEARCHSearchLineEdit_P_H
 
 #include <QLabel>
 #include <QPainter>
@@ -31,13 +31,13 @@
 #include <kglobalsettings.h>
 
 #include "kdeuiwidgetsproxystyle_p.h"
-class KLineEditButton : public QWidget
+class SearchLineEditButton : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY( int opacity READ opacity WRITE setOpacity )
 
 public:
-    KLineEditButton(QWidget *parent)
+    SearchLineEditButton(QWidget *parent)
         : QWidget(parent),
           m_opacity(0)
     {
@@ -176,11 +176,11 @@ private:
     QIcon m_icon;
 };
 
-class KLineEditStyle : public KdeUiProxyStyle
+class SearchLineEditStyle : public KdeUiProxyStyle
 {
     Q_OBJECT
 public:
-  KLineEditStyle(KLineEdit *parent)
+  SearchLineEditStyle(SearchLineEdit *parent)
     : KdeUiProxyStyle(parent),
       m_overlap(0),
       m_sentinel(false)

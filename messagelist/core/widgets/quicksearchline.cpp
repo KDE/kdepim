@@ -19,6 +19,7 @@
 */
 
 #include "quicksearchline.h"
+#include "searchlineedit.h"
 #include "core/settings.h"
 #include <akonadi/kmime/messagestatus.h>
 #include "pimcommon/widgets/lineeditwithcompleter.h"
@@ -83,13 +84,13 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     initializeStatusSearchButton(quickSearchButtonLayout);
     vbox->addWidget(mQuickSearchFilterWidget);
 
-    mSearchEdit = new PimCommon::LineEditWithCompleter( this );
+    mSearchEdit = new SearchLineEdit( this );
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
     mSearchEdit->setClearButtonShown( true );
 
     connect( mSearchEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
-    connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
+    //connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
 
 
     hbox->addWidget( mSearchEdit );
@@ -294,7 +295,8 @@ KComboBox *QuickSearchLine::tagFilterComboBox() const
     return mTagFilterCombo;
 }
 
-KLineEdit *QuickSearchLine::searchEdit() const
+
+SearchLineEdit *QuickSearchLine::searchEdit() const
 {
     return mSearchEdit;
 }

@@ -33,7 +33,7 @@
 #include "messagelistutil.h"
 
 #include "messagecore/utils/stringutil.h"
-
+#include "widgets/searchlineedit.h"
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
 #include <Akonadi/Item>

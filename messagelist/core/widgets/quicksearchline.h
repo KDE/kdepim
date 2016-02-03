@@ -26,6 +26,7 @@
 #include <akonadi/kmime/messagestatus.h>
 
 class KLineEdit;
+class SearchLineEdit;
 class KComboBox;
 class QToolButton;
 class QPushButton;
@@ -57,7 +58,7 @@ public:
     void focusQuickSearch(const QString &selectedText);
 
     KComboBox *tagFilterComboBox() const;
-    KLineEdit *searchEdit() const;
+    SearchLineEdit *searchEdit() const;
     QToolButton *openFullSearchButton() const;
     QToolButton *lockSearch() const;
     void resetFilter();
@@ -91,7 +92,7 @@ private:
     void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
     void changeSearchAgainstFromOrToText();
     QList<QToolButton *> mListStatusButton;
-    KLineEdit *mSearchEdit;
+    SearchLineEdit *mSearchEdit;
     KComboBox *mTagFilterCombo;
     QToolButton *mLockSearch;
     KPushButton *mMoreOptions;

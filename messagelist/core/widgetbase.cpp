@@ -30,6 +30,7 @@
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
 #include "core/settings.h"
+#include "widgets/searchlineedit.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"
@@ -179,7 +180,7 @@ Widget::~Widget()
 
 void Widget::changeQuicksearchVisibility(bool show)
 {
-    KLineEdit * const lineEdit = d->quickSearchLine->searchEdit();
+    SearchLineEdit * const lineEdit = d->quickSearchLine->searchEdit();
     if ( !show ) {
         //if we hide it we do not want to apply the filter,
         //otherwise someone is maybe stuck with x new emails
@@ -369,7 +370,7 @@ StorageModel *Widget::storageModel() const
     return d->mStorageModel;
 }
 
-KLineEdit *Widget::quickSearch() const
+SearchLineEdit *Widget::quickSearch() const
 {
     return d->quickSearchLine->searchEdit();
 }
