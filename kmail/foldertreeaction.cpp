@@ -42,7 +42,7 @@ void FolderTreeAction::initializeWidgets()
     KPushButton *newMessage = new KPushButton(i18n("New mail"), this);
     newMessage->setDefault(true);
     connect(newMessage, SIGNAL(clicked()), this, SIGNAL(newMessage()));
-    hboxLayout->addWidget(newMessage);
+    hboxLayout->addWidget(newMessage, 1);
     KPushButton *checkMail = new KPushButton(this);
     checkMail->setDefault(true);
     checkMail->setIcon(KIcon(QLatin1String("mail-receive")));
