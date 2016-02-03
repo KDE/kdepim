@@ -1777,7 +1777,7 @@ void SearchLineEdit::paintEvent( QPaintEvent *ev )
 
         }
 
-        QRect lineRect(cr.x() + horizontalMargin, vscroll, cr.width() - 2*horizontalMargin, fm.height());
+        QRect lineRect(cr.x() + horizontalMargin + 20, vscroll, cr.width() - 2*horizontalMargin, fm.height());
         p.drawText(lineRect, Qt::AlignLeft|Qt::AlignVCenter, d->clickMessage);
 
     }
