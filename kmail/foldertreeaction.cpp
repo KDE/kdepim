@@ -44,6 +44,10 @@ void FolderTreeAction::initializeWidgets()
     connect(newMessage, SIGNAL(clicked()), this, SIGNAL(newMessage()));
     hboxLayout->addWidget(newMessage, 1);
     KPushButton *checkMail = new KPushButton(this);
+    QPalette palette = checkMail->palette();
+    palette.setColor(QPalette::Highlight, QColor("#7FDFF7"));
+    checkMail->setFixedSize(checkMail->sizeHint().height(), checkMail->sizeHint().height());
+    checkMail->setPalette(palette);
     checkMail->setDefault(true);
     checkMail->setIcon(KIcon(QLatin1String("mail-receive")));
     connect(checkMail, SIGNAL(clicked()), this, SIGNAL(checkMail()));
