@@ -36,20 +36,19 @@ public:
 
     void setEnableAgent(bool b);
     bool enabledAgent() const;
-    void reload();
 
 
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
+    void reload();
     void configure(WId windowId) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotSendNow(Akonadi::Item::Id id);
 
     void slotStartAgent();
-    void slotReloadListTimeout();
 protected:
     void itemsRemoved(const Akonadi::Item::List &item) Q_DECL_OVERRIDE;
     void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection) Q_DECL_OVERRIDE;
@@ -58,7 +57,6 @@ protected:
 private:
     bool mAgentInitialized;
     SendLaterManager *mManager;
-    QTimer *mReloadListTimer;
 };
 
 #endif // SENDLATERAGENT_H
