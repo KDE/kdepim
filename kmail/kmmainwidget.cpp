@@ -1786,12 +1786,13 @@ void KMMainWidget::moveSelectedMessagesToFolder( const Akonadi::Collection & des
 }
 
 
-void KMMainWidget::copyMessageSelected( const QList<Akonadi::Item> &selectMsg, const Akonadi::Collection &dest )
+void KMMainWidget::copyMessageSelected( const QList<Akonadi::Item> &selectMsg, const Akonadi::Collection &dest,
+                                        KMCopyCommand::CopyOptions options )
 {
     if ( selectMsg.isEmpty() )
         return;
     // And stuff them into a KMCopyCommand :)
-    KMCommand *command = new KMCopyCommand( dest, selectMsg );
+    KMCommand *command = new KMCopyCommand( dest, selectMsg, options );
     QObject::connect(
                 command, SIGNAL(completed(KMCommand*)),
                 this, SLOT(slotCopyMessagesCompleted(KMCommand*))
@@ -1818,22 +1819,33 @@ void KMMainWidget::slotCopyMessagesCompleted( KMCommand *command )
 
 void KMMainWidget::slotCopySelectedMessagesToFolder()
 {
+    copySelectedMessagesToFolder( KMCopyCommand::NoOptions );
+}
+
+void KMMainWidget::slotCopyDecryptedSelectedMessagesToFolder()
+{
+    copySelectedMessagesToFolder( KMCopyCommand::Decrypt );
+}
+
+void KMMainWidget::copySelectedMessagesToFolder( KMCopyCommand::CopyOptions options )
+{
     QPointer<MailCommon::FolderSelectionDialog> dialog( moveOrCopyToDialog() );
     dialog->setCaption( i18n( "Copy Messages to Folder" ) );
 
     if ( dialog->exec() && dialog ) {
         const Akonadi::Collection dest = dialog->selectedCollection();
         if ( dest.isValid() ) {
-            copySelectedMessagesToFolder( dest );
+            copySelectedMessagesToFolder( dest, options );
         }
     }
 }
 
-void KMMainWidget::copySelectedMessagesToFolder( const Akonadi::Collection& dest )
+void KMMainWidget::copySelectedMessagesToFolder( const Akonadi::Collection& dest,
+                                                 KMCopyCommand::CopyOptions options )
 {
     const QList<Akonadi::Item > lstMsg = mMessagePane->selectionAsMessageItemList();
     if ( !lstMsg.isEmpty() ) {
-        copyMessageSelected( lstMsg, dest );
+        copyMessageSelected( lstMsg, dest, options );
     }
 }
 
@@ -2715,6 +2727,7 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
         menu->addSeparator();
 
         menu->addAction( mCopyActionMenu );
+        menu->addAction( mCopyDecryptActionMenu );
         menu->addAction( mMoveActionMenu );
 
         menu->addSeparator();
@@ -3045,6 +3058,15 @@ void KMMainWidget::setupActions()
     {
         KAction *action = mAkonadiStandardActionManager->action( Akonadi::StandardActionManager::CopyItemToMenu );
         action->setText(i18n("Copy Message To...") );
+
+        mCopyDecryptActionMenu = new KActionMenu( i18n("Copy Decrypted Mesage To..."), actionCollection() );
+        mCopyDecryptActionMenu->setDelayed( true );
+        mCopyDecryptActionMenu->menu()->setProperty( "actionType", Akonadi::StandardActionManager::CopyItemToMenu );
+        connect(mAkonadiStandardActionManager->standardActionManager(), SIGNAL(actionStateUpdated()),
+                this, SLOT(slotUpdateCopyDecryptedActionMenu()));
+        actionCollection()->addAction( QLatin1String("copy_decrypted_message_to"), mCopyDecryptActionMenu );
+        slotUpdateCopyDecryptedActionMenu();
+
         action = mAkonadiStandardActionManager->action( Akonadi::StandardActionManager::MoveItemToMenu );
         action->setText(i18n("Move Message To...") );
     }
@@ -3382,6 +3404,12 @@ void KMMainWidget::setupActions()
         action->setShortcut( QKeySequence( Qt::Key_C ) );
     }
     {
+        KAction *action = new KAction( i18n("Copy Decrypted Message to Folder"), this );
+        actionCollection()->addAction(QLatin1String( "copy_decrypted_message_to_folder" ), action );
+        connect( action, SIGNAL(triggered(bool)),
+                 SLOT(slotCopyDecryptedSelectedMessagesToFolder()) );
+    }
+    {
         KAction *action = new KAction( i18n("Jump to Folder..."), this );
         actionCollection()->addAction( QLatin1String("jump_to_folder"), action );
         connect( action, SIGNAL(triggered(bool)),
@@ -3519,6 +3547,29 @@ void KMMainWidget::slotAddFavoriteFolder()
             mFavoritesModel->addCollection( collection );
         }
     }
+}
+
+void KMMainWidget::slotUpdateCopyDecryptedActionMenu()
+{
+    KMenu *menu = mCopyDecryptActionMenu->menu();
+    delete menu;
+    menu = new KMenu();
+    // Will populate our menu with folders
+    connect(menu, SIGNAL(aboutToShow()),
+            mAkonadiStandardActionManager->standardActionManager(), SLOT(aboutToShowMenu()));
+    connect(menu, SIGNAL(triggered(QAction*)),
+            this, SLOT(slotCopyDecryptedActionTriggered(QAction*)));
+    mCopyDecryptActionMenu->setMenu(menu);
+}
+
+void KMMainWidget::slotCopyDecryptedActionTriggered(QAction *action)
+{
+    const QModelIndex index = action->data().value<QModelIndex>();
+    Q_ASSERT(index.isValid());
+
+    const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+
+    copySelectedMessagesToFolder( collection, KMCopyCommand::Decrypt );
 }
 
 //-----------------------------------------------------------------------------

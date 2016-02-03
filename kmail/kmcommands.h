@@ -506,16 +506,29 @@ class KMAIL_EXPORT KMCopyCommand : public KMCommand
     Q_OBJECT
 
 public:
-    KMCopyCommand( const Akonadi::Collection &destFolder, const QList<Akonadi::Item> &msgList );
-    KMCopyCommand( const Akonadi::Collection& destFolder, const Akonadi::Item &msg );
+    enum CopyOptions {
+      NoOptions = 0x0,
+      Decrypt = 0x1
+    };
+
+    KMCopyCommand( const Akonadi::Collection &destFolder, const QList<Akonadi::Item> &msgList,
+                   CopyOptions options = NoOptions );
+    KMCopyCommand( const Akonadi::Collection& destFolder, const Akonadi::Item &msg,
+                   CopyOptions options = NoOptions );
 
 protected slots:
+    void slotFetchResult( KJob * job);
     void slotCopyResult( KJob * job );
+
 private:
     virtual Result execute();
+    bool decrypt( KMime::Message::Ptr &message ) const;
 
     Akonadi::Collection mDestFolder;
+    int mJobCount;
+    CopyOptions mOptions;
 };
+
 
 namespace KPIM {
 class ProgressItem;

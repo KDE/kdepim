@@ -24,6 +24,7 @@
 #include "kmail_export.h"
 #include "kmreaderwin.h" //for inline actions
 #include "kmkernel.h" // for access to config
+#include "kmcommands.h"
 
 #include "foldertreewidget.h"
 
@@ -180,6 +181,7 @@ public slots:
      * messages (in MessageListView) into it.
      */
     void slotCopySelectedMessagesToFolder();
+    void slotCopyDecryptedSelectedMessagesToFolder();
 
     /**
      * Implements the "move to trash" action
@@ -275,7 +277,9 @@ protected:
     void layoutSplitters();
     void newFromTemplate( const Akonadi::Item& );
     void moveSelectedMessagesToFolder( const Akonadi::Collection & dest );
-    void copySelectedMessagesToFolder( const Akonadi::Collection& dest );
+    void copySelectedMessagesToFolder( KMCopyCommand::CopyOptions options );
+    void copySelectedMessagesToFolder( const Akonadi::Collection& dest,
+                                       KMCopyCommand::CopyOptions options );
 
 
     virtual void showEvent( QShowEvent *event );
@@ -428,7 +432,8 @@ private:
 
     void moveMessageSelected( MessageList::Core::MessageItemSetReference ref, const Akonadi::Collection &dest, bool confirmOnDeletion = true );
 
-    void copyMessageSelected( const QList<Akonadi::Item> &selectMsg, const Akonadi::Collection &dest );
+    void copyMessageSelected( const QList<Akonadi::Item> &selectMsg, const Akonadi::Collection &dest,
+                              KMCopyCommand::CopyOptions options );
 
 
     /**
@@ -513,6 +518,9 @@ private slots:
     void slotChangeDisplayMessageFormat(MessageViewer::Viewer::DisplayFormatMessage format);
 
     void slotCollectionRemoved(const Akonadi::Collection &col);
+
+    void slotUpdateCopyDecryptedActionMenu();
+    void slotCopyDecryptedActionTriggered(QAction *action);
 private:
     // Message actions
     KAction *mDeleteAction, *mTrashThreadAction,
@@ -531,6 +539,7 @@ private:
 
     KActionMenu *mThreadStatusMenu, *mApplyFilterActionsMenu;
     KAction *mCopyActionMenu;
+    KActionMenu *mCopyDecryptActionMenu;
     KAction *mMoveActionMenu;
     KAction *mMarkThreadAsReadAction;
     KAction *mMarkThreadAsUnreadAction;

@@ -83,6 +83,7 @@
 #ifndef QT_NO_CURSOR
 #include "messageviewer/utils/kcursorsaver.h"
 #endif
+#include "messageviewer/viewer/objecttreeemptysource.h"
 #include "messageviewer/viewer/objecttreeparser.h"
 #include "messageviewer/viewer/csshelper.h"
 #include "messageviewer/utils/util.h"
@@ -105,6 +106,7 @@ using KMail::SecondaryWindow;
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemdeletejob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/tag.h>
 #include <akonadi/tagcreatejob.h>
 #include <mailtransport/transportattribute.h>
@@ -1379,13 +1381,15 @@ KMCommand::Result KMMailingListFilterCommand::execute()
 }
 
 KMCopyCommand::KMCopyCommand( const Akonadi::Collection& destFolder,
-                              const QList<Akonadi::Item> &msgList)
-    :KMCommand( 0, msgList ), mDestFolder( destFolder )
+                              const QList<Akonadi::Item> &msgList,
+                              CopyOptions options )
+    :KMCommand( 0, msgList ), mDestFolder( destFolder ), mJobCount( 0 ), mOptions( options )
 {
 }
 
-KMCopyCommand::KMCopyCommand( const Akonadi::Collection& destFolder, const Akonadi::Item& msg)
-    :KMCommand( 0,msg ), mDestFolder( destFolder )
+KMCopyCommand::KMCopyCommand( const Akonadi::Collection& destFolder, const Akonadi::Item& msg,
+                              CopyOptions options )
+    :KMCommand( 0,msg ), mDestFolder( destFolder ), mJobCount( 0 ), mOptions( options )
 {
 }
 
@@ -1394,10 +1398,52 @@ KMCommand::Result KMCopyCommand::execute()
     setDeletesItself( true );
 
     QList<Akonadi::Item> listItem = retrievedMsgs();
-    Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( listItem, Akonadi::Collection(mDestFolder.id()),this );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCopyResult(KJob*)) );
+    if ( mOptions & Decrypt ) {
+        Akonadi::ItemFetchJob *fetch = createFetchJob( listItem );
+        fetch->fetchScope().fetchFullPayload(true);
+        fetch->fetchScope().fetchAllAttributes(true);
+        fetch->fetchScope().setFetchRemoteIdentification(false);
+        connect(fetch, SIGNAL(result(KJob*)), this, SLOT(slotFetchResult(KJob*)) );
+    } else {
+        Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( listItem, Akonadi::Collection(mDestFolder.id()),this );
+        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCopyResult(KJob*)) );
+        ++mJobCount;
+    }
 
     return OK;
+}
+
+void KMCopyCommand::slotFetchResult( KJob * job )
+{
+    if ( job->error() ) {
+        showJobError(job);
+        setResult( Failed );
+        deleteLater();
+        return;
+    }
+
+    const QList<Akonadi::Item> items = qobject_cast<Akonadi::ItemFetchJob*>(job)->items();
+    Q_FOREACH ( Akonadi::Item item, items ) {
+        KMime::Message::Ptr msg = MessageCore::Util::message( item );
+        if ( !msg ) {
+            // Error handling?
+            continue;
+        }
+
+        Akonadi::Job *job = 0;
+        if ( decrypt( msg ) ) {
+            item.setPayload( msg );
+            job = new Akonadi::ItemCreateJob( item, Akonadi::Collection(mDestFolder.id()), this );
+        } else {
+            job = new Akonadi::ItemCopyJob( item, Akonadi::Collection(mDestFolder.id()), this );
+        }
+        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCopyResult(KJob*)) );
+        ++mJobCount;
+    }
+
+    if (mJobCount == 0) {
+        slotCopyResult( job );
+    }
 }
 
 void KMCopyCommand::slotCopyResult( KJob * job )
@@ -1406,8 +1452,30 @@ void KMCopyCommand::slotCopyResult( KJob * job )
         // handle errors
         showJobError(job);
         setResult( Failed );
+        mJobCount = 0;
     }
-    deleteLater();
+
+    --mJobCount;
+    if ( mJobCount <= 0 ) {
+        deleteLater();
+    }
+}
+
+bool KMCopyCommand::decrypt( KMime::Message::Ptr &msg ) const
+{
+    if ( !KMime::isEncrypted( msg.get() ) ) {
+        return false;
+    }
+
+    MessageViewer::EmptySource source;
+    source.setAllowDecryption(true);
+    MessageViewer::NodeHelper nodeHelper;
+
+    MessageViewer::ObjectTreeParser otp( &source, &nodeHelper, 0 , true, false, true );
+    otp.parseObjectTree( msg->topLevel() );
+
+    msg = nodeHelper.unencryptedMessage( msg );
+    return true;
 }
 
 KMMoveCommand::KMMoveCommand( const Akonadi::Collection& destFolder,
