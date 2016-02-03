@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd" >
-<kpartgui version="440" name="kmcomposer" >
+<kpartgui version="441" name="kmcomposer" >
  <MenuBar>
   <Menu noMerge="1" name="file" >
    <text>&amp;Message</text>
@@ -115,6 +115,7 @@
   <Action name="format_align_left" />
   <Action name="format_align_center" />
   <Action name="format_align_right" />
+  <Action name="format_align_justify"/>
   <Separator/>
   <Action name="list_orderer"/>
   <Action name="list_unorderer"/>
