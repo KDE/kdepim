@@ -11,6 +11,10 @@ body {
 div#collectioname {
     color: rgb(133,143,169) !important;
 }
+div#toname {
+   color: rgb(133,143,169) !important;
+}
+
 div#subject {
     color: rgb(64,68,85) !important;
     font-size: 22px;
