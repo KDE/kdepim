@@ -184,6 +184,8 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <editor/potentialphishingemail/potentialphishingemailjob.h>
 
+#include "htmllistaction.h"
+
 using Sonnet::DictionaryComboBox;
 using MailTransport::TransportManager;
 using MailTransport::Transport;
@@ -461,6 +463,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
     mExternalEditorWarning = new ExternalEditorWarning(this);
     v->addWidget(mExternalEditorWarning);
+    HtmlListAction *htmlActionList = new HtmlListAction(actionCollection(), this);
 
     readConfig();
     setupStatusBar(attachmentView->widget());
@@ -546,6 +549,8 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
 
     addToolBar(Qt::BottomToolBarArea, mainToolBar);
+
+
 
     addToolBarBreak(Qt::BottomToolBarArea);
     QToolBar *htmlToolBar = toolBar(QLatin1String("htmlToolBar"));

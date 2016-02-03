@@ -19,6 +19,7 @@
 #define HTMLLISTACTION_H
 
 #include <QObject>
+class KToggleAction;
 class KActionCollection;
 class HtmlListAction : public QObject
 {
@@ -26,8 +27,25 @@ class HtmlListAction : public QObject
 public:
     explicit HtmlListAction(KActionCollection *ac, QObject *parent = 0);
     ~HtmlListAction();
+
+    enum OrdererListType {
+        None = 0,
+        ListOrderer,
+        ListUnorderer
+    };
+
+Q_SIGNALS:
+    void ordererChanged(HtmlListAction::OrdererListType type);
+
+private slots:
+    void slotListOrderer(bool b);
+    void slotListUnorderer(bool b);
+
 private:
     void initializeActions();
+    KActionCollection *mActionCollection;
+    KToggleAction *mListOrderer;
+    KToggleAction *mUnorderer;
 };
 
 #endif // HTMLLISTACTION_H

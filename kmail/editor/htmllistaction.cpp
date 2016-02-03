@@ -21,9 +21,11 @@
 #include <KLocalizedString>
 #include <KAction>
 #include <KActionCollection>
+#include <KToggleAction>
 
 HtmlListAction::HtmlListAction(KActionCollection *ac, QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mActionCollection(ac)
 {
     initializeActions();
 }
@@ -33,14 +35,39 @@ HtmlListAction::~HtmlListAction()
 
 }
 
+void HtmlListAction::slotListOrderer(bool b)
+{
+    if (b) {
+        mUnorderer->setChecked(false);
+        Q_EMIT ordererChanged(HtmlListAction::ListOrderer);
+    } else {
+        mListOrderer->setChecked(false);
+        mUnorderer->setChecked(false);
+        Q_EMIT ordererChanged(HtmlListAction::None);
+    }
+}
+
+void HtmlListAction::slotListUnorderer(bool b)
+{
+    if (b) {
+        mListOrderer->setChecked(false);
+        Q_EMIT ordererChanged(HtmlListAction::ListUnorderer);
+    } else {
+        mListOrderer->setChecked(false);
+        mUnorderer->setChecked(false);
+        Q_EMIT ordererChanged(HtmlListAction::None);
+    }
+}
+
 void HtmlListAction::initializeActions()
 {
-#if 0
-    markupAction = new KToggleAction( i18n("Rich Text Editing"), this );
-    markupAction->setIcon( KIcon( QLatin1String("switch_html" )) );
-    markupAction->setIconText( i18n("Rich Text") );
-    markupAction->setToolTip( i18n( "Toggle rich text editing mode" ) );
-    actionCollection()->addAction( QLatin1String("html"), markupAction );
-    connect( markupAction, SIGNAL(triggered(bool)), SLOT(slotToggleMarkup()) );
-#endif
+    mListOrderer = new KToggleAction(i18n("List Orderer"), this);
+    mActionCollection->addAction( QLatin1String("list_orderer"),  mListOrderer);
+    mListOrderer->setIcon( KIcon( QLatin1String("format-list-ordered" )) );
+    connect( mListOrderer, SIGNAL(triggered(bool)), SLOT(slotListOrderer(bool)) );
+
+    mUnorderer = new KToggleAction(i18n("List Unorderer"), this);
+    mActionCollection->addAction( QLatin1String("list_unorderer"), mUnorderer);
+    mUnorderer->setIcon( KIcon( QLatin1String("format-list-unordered" )) );
+    connect( mUnorderer, SIGNAL(triggered(bool)), SLOT(slotListUnorderer(bool)) );
 }
