@@ -1518,6 +1518,7 @@ void ViewerPrivate::createWidgets() {
     QMargins margins = readerBox->layout()->contentsMargins();
     margins.setBottom(0);
     readerBox->layout()->setContentsMargins(margins);
+    readerBox->layout()->setSpacing(0);
 
     mColorBar->setObjectName( QLatin1String("mColorBar") );
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
