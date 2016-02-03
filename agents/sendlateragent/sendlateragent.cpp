@@ -67,6 +67,12 @@ SendLaterAgent::SendLaterAgent(const QString &id)
         QTimer::singleShot(1000*60*4, this, SLOT(slotStartAgent()));
 #endif
     }
+
+    // For extra safety, check list every hour, in case we didn't properly get
+    // notified about the network going up or down.
+    QTimer *reloadListTimer = new QTimer(this);
+    connect(reloadListTimer, SIGNAL(timeout()), this, SLOT(reload()));
+    reloadListTimer->start(1000 * 60 * 60); //1 hour
 }
 
 SendLaterAgent::~SendLaterAgent()

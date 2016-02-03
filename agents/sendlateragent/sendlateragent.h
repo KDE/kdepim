@@ -36,12 +36,11 @@ public:
     void setEnableAgent(bool b);
     bool enabledAgent() const;
 
-    void reload();
-
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
+    void reload();
     void configure( WId windowId );
 
 private Q_SLOTS:
