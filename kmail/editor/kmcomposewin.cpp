@@ -75,6 +75,7 @@
 #include "pimcommon/storageservice/storageservicemanager.h"
 #include "pimcommon/storageservice/storageserviceprogressmanager.h"
 
+#include "handlelisthtml.h"
 #include "messagecomposer/utils/util.h"
 
 #include <kabc/vcardconverter.h>
@@ -3478,14 +3479,17 @@ void KMComposeWin::slotOverwriteModeWasChanged(bool state)
 
 void KMComposeWin::slotListOrdererChanged(HtmlListAction::OrdererListType type)
 {
+    HandleListHtml htlist(mComposerBase->editor());
     switch (type) {
     case HtmlListAction::None:
+        htlist.handleOnBulletType(0);
         break;
     case HtmlListAction::ListOrderer:
+        htlist.handleOnBulletType(5);
         break;
     case HtmlListAction::ListUnorderer:
+        htlist.handleOnBulletType(1);
         break;
     }
 
-    //TODO
 }

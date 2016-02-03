@@ -21,6 +21,7 @@
 #include <QTextCursor>
 #include <QTextList>
 #include <QTextEdit>
+#include <QDebug>
 
 HandleListHtml::HandleListHtml(QTextEdit *te)
     : mTextEdit(te)
@@ -37,6 +38,7 @@ HandleListHtml::~HandleListHtml()
 
 void HandleListHtml::handleOnBulletType(int styleIndex)
 {
+    qDebug()<<" styleIndex"<<styleIndex;
     QTextCursor cursor = mTextEdit->textCursor();
     if (styleIndex != 0) {
         QTextListFormat::Style style = (QTextListFormat::Style)styleIndex;
@@ -64,6 +66,7 @@ void HandleListHtml::handleOnBulletType(int styleIndex)
 
     reformatBoundingItemSpacing();
     reformatList();
+    mTextEdit->setTextCursor(cursor);
 }
 
 void HandleListHtml::reformatBoundingItemSpacing(QTextBlock block)
