@@ -113,7 +113,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     headerObject.insert(QLatin1String("subjecti18n"), i18n("Subject:") );
     headerObject.insert(QLatin1String("subject"), MessageViewer::HeaderStyleUtil::subjectString( message ) );
 
-    if ( message->replyTo( false )) {
+    if ( message->to( false )) {
         headerObject.insert(QLatin1String("toi18n"), i18n("To:") );
         headerObject.insert(QLatin1String("to"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ));
         headerObject.insert(QLatin1String("toNameOnly"), StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayNameOnly ));
