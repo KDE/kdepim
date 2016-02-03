@@ -464,6 +464,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mExternalEditorWarning = new ExternalEditorWarning(this);
     v->addWidget(mExternalEditorWarning);
     HtmlListAction *htmlActionList = new HtmlListAction(actionCollection(), this);
+    connect(htmlActionList, SIGNAL(ordererChanged(HtmlListAction::OrdererListType)), this, SLOT(slotListOrdererChanged(HtmlListAction::OrdererListType)));
 
     readConfig();
     setupStatusBar(attachmentView->widget());
@@ -3473,4 +3474,18 @@ void KMComposeWin::slotOverwriteModeWasChanged(bool state)
 {
     mComposerBase->editor()->setCursorWidth( state ? 5 : 1 );
     mComposerBase->editor()->setOverwriteMode (state);
+}
+
+void KMComposeWin::slotListOrdererChanged(HtmlListAction::OrdererListType type)
+{
+    switch (type) {
+    case HtmlListAction::None:
+        break;
+    case HtmlListAction::ListOrderer:
+        break;
+    case HtmlListAction::ListUnorderer:
+        break;
+    }
+
+    //TODO
 }

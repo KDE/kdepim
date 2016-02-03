@@ -140,6 +140,7 @@ if (KDEPIM_BUILD_DESKTOP)
      editor/validatesendmailshortcut.cpp
      editor/kmcomposerglobalaction.cpp
      editor/htmllistaction.cpp
+     editor/handlelisthtml.cpp
   )
   set(kmailprivate_warningwidgets_LIB_SRCS
      warningwidgets/externaleditorwarning.cpp

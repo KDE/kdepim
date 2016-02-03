@@ -25,6 +25,7 @@
 
 // KMail includes
 #include "editor/composer.h"
+#include "htmllistaction.h"
 #include "messagecomposer/recipient/recipientseditor.h"
 
 // Qt includes
@@ -429,6 +430,7 @@ private slots:
     void slotCheckSendNowStep2();
     void slotPotentialPhishingEmailsFound(const QStringList &list);
     void slotInsertTextFile(KJob *job);
+    void slotListOrdererChanged(HtmlListAction::OrdererListType);
 public: // kmcommand
     // FIXME we need to remove these, but they're pure virtual in Composer.
     void addAttach( KMime::Content *msgPart );
