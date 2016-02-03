@@ -26,7 +26,6 @@ ViewerToolBarAction::ViewerToolBarAction(QWidget *parent)
 {
     setFloatable(false);
     setMovable(false);
-    setIconSize(QSize(16,16));
 }
 
 ViewerToolBarAction::~ViewerToolBarAction()
