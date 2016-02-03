@@ -3485,10 +3485,10 @@ void KMComposeWin::slotListOrdererChanged(HtmlListAction::OrdererListType type)
         htlist.handleOnBulletType(0);
         break;
     case HtmlListAction::ListOrderer:
-        htlist.handleOnBulletType(5);
+        htlist.handleOnBulletType(-4);
         break;
     case HtmlListAction::ListUnorderer:
-        htlist.handleOnBulletType(1);
+        htlist.handleOnBulletType(-1);
         break;
     }
 

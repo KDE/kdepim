@@ -63,10 +63,9 @@ void HandleListHtml::handleOnBulletType(int styleIndex)
         cursor.setBlockFormat(bfmt);
         reformatBoundingItemSpacing();
     }
-
+    mTextEdit->setTextCursor(cursor);
     reformatBoundingItemSpacing();
     reformatList();
-    mTextEdit->setTextCursor(cursor);
 }
 
 void HandleListHtml::reformatBoundingItemSpacing(QTextBlock block)
