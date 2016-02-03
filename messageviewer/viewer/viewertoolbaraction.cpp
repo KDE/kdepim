@@ -53,6 +53,6 @@ void ViewerToolBarAction::updateViewerToolBar(KActionCollection *ac)
         insertWidget(act, spacer);
 
         addAction(ac->action(QLatin1String("reply_all")));
-        addAction(ac->action(QLatin1String("message_forward")));
+        addAction(ac->action(QLatin1String("message_forward_inline")));
     }
 }
