@@ -158,7 +158,7 @@ Widget::Widget( QWidget *pParent )
              SLOT(slotViewHeaderSectionClicked(int)) );
     d->mSearchTimer = 0;
     QPalette p( palette() );
-    p.setColor( QPalette::Window, p.color(QPalette::Inactive, QPalette::Button));
+    p.setColor( QPalette::Window, p.color(QPalette::AlternateBase));
     setPalette( p );
 }
 

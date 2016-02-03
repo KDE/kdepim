@@ -132,7 +132,7 @@ View::View( Widget *pParent )
     QPalette p( palette() );
 
 
-    p.setColor( QPalette::Base, p.color(QPalette::Inactive, QPalette::Button));
+    p.setColor( QPalette::Base, p.color(QPalette::AlternateBase));
     setPalette( p );
 }
 
