@@ -1348,7 +1348,7 @@ void KMComposeWin::setupActions( void )
     connect( mComposerBase->editor(), SIGNAL(externalEditorStarted()), this, SLOT(slotExternalEditorStarted()));
     //these are checkable!!!
     markupAction = new KToggleAction( i18n("Rich Text Editing"), this );
-    markupAction->setIcon( KIcon( QLatin1String("preferences-desktop-font" )) );
+    markupAction->setIcon( KIcon( QLatin1String("switch_html" )) );
     markupAction->setIconText( i18n("Rich Text") );
     markupAction->setToolTip( i18n( "Toggle rich text editing mode" ) );
     actionCollection()->addAction( QLatin1String("html"), markupAction );
