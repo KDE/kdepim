@@ -1515,6 +1515,9 @@ void ViewerPrivate::createWidgets() {
     // Restore layout defaults
     delete readerBox->layout();
     readerBox->setLayout(new QVBoxLayout(readerBox));
+    QMargins margins = readerBox->layout()->contentsMargins();
+    margins.setBottom(0);
+    readerBox->layout()->setContentsMargins(margins);
 
     mColorBar->setObjectName( QLatin1String("mColorBar") );
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
