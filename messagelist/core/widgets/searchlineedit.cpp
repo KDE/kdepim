@@ -345,7 +345,7 @@ void SearchLineEdit::updateClearButton()
     }
 
     const QSize geom = size();
-    const int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth,0,this);
+    const int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth,0,this) + 20;
     const int buttonWidth = d->clearButton->sizeHint().width();
     const QSize newButtonSize(buttonWidth, geom.height());
     const QFontMetrics fm(font());
