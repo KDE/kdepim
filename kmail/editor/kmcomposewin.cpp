@@ -518,6 +518,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mainToolBar->setObjectName(QLatin1String("mailtoolbar"));
     mainToolBar->setMovable(false);
     mainToolBar->setFloatable(false);
+    mainToolBar->addAction(actionCollection()->action(QLatin1String("html")));
     mainToolBar->addAction(actionCollection()->action(QLatin1String("attach_menu")));
     mainToolBar->addAction(actionCollection()->action(QLatin1String("spellcheck")));
     mainToolBar->addAction(actionCollection()->action(QLatin1String("sign_message")));
