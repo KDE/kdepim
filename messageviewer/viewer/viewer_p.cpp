@@ -1512,6 +1512,9 @@ void ViewerPrivate::createWidgets() {
     KVBox *readerBox = new KVBox( mBox );
     mColorBar = new HtmlStatusBar( mBox );
 #endif
+    // Restore layout defaults
+    delete readerBox->layout();
+    readerBox->setLayout(new QVBoxLayout(readerBox));
 
     mColorBar->setObjectName( QLatin1String("mColorBar") );
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );

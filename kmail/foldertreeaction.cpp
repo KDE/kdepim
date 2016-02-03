@@ -37,7 +37,9 @@ void FolderTreeAction::initializeWidgets()
 {
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     setLayout(hboxLayout);
-    hboxLayout->setMargin(18);
+    QMargins margins = hboxLayout->contentsMargins();
+    margins.setBottom(margins.bottom() - 5);
+    hboxLayout->setContentsMargins(margins);
     hboxLayout->setSpacing(5);
     KPushButton *newMessage = new KPushButton(i18n("New mail"), this);
     newMessage->setDefault(true);
