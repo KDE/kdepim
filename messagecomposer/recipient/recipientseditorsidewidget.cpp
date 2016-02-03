@@ -81,6 +81,7 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, 
     pal.setColor(QPalette::Inactive, QPalette::Highlight, QColor("#FFFFFF"));
     pal.setColor(QPalette::Active, QPalette::Highlight, QColor("#FFFFFF"));
     mSelectButton->setPalette(pal);
+    mDistributionListButton->setPalette(pal);
     topLayout->addWidget( mSelectButton );
     connect( mSelectButton, SIGNAL(clicked()), SLOT(pickRecipient()) );
     mSelectButton->setToolTip( i18nc("@info:tooltip","Select recipients from address book") );
