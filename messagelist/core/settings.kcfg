@@ -6,7 +6,7 @@
 
   <group name="MessageListView">
     <entry name="MessageToolTipEnabled" type="Bool">
-      <default>true</default>
+      <default>false</default>
       <label>Display tooltips for messages and group headers</label>
       <whatsthis>Enable this option to display tooltips when hovering over an item in the message list.</whatsthis>
     </entry>
