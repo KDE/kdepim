@@ -1033,7 +1033,6 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
         status.setStatusFromFlags( mMessageItem.flags() );
 
         headerStyle()->setMessageStatus( status );
-        headerStyle()->setCollectionName(mMessageItem.parentCollection().remoteId());
     } else {
         headerStyle()->setCollectionName(QString());
     }
