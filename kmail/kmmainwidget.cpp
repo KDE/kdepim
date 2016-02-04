@@ -4354,7 +4354,9 @@ void KMMainWidget::itemsReceived(const Akonadi::Item::List &list )
     }
 
     Akonadi::Item copyItem(item);
-    copyItem.setParentCollection(mCurrentFolder->collection());
+    if (mCurrentFolder) {
+        copyItem.setParentCollection(mCurrentFolder->collection());
+    }
     mMsgView->setMessage( copyItem );
     // reset HTML override to the folder setting
     mMsgView->setDisplayFormatMessageOverwrite(mFolderDisplayFormatPreference);
