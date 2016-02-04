@@ -874,9 +874,14 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
 
             switch ( ci->type() )
             {
-            case Theme::ContentItem::Subject:
-                paint_right_aligned_elided_text( item->subject(), ci, painter, l, top, r, layoutDir, font );
+            case Theme::ContentItem::Subject: {
+                QFont newFont(font);
+                if ( item->status().isRead() ) {
+                    newFont.setBold(false);
+                }
+                paint_right_aligned_elided_text( item->subject(), ci, painter, l, top, r, layoutDir, newFont );
                 break;
+            }
             case Theme::ContentItem::SenderOrReceiver:
                 paint_right_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->senderOrReceiver() ),
                                                  ci, painter, l, top, r, layoutDir, font );
@@ -1044,8 +1049,15 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
 
             switch ( ci->type() )
             {
-            case Theme::ContentItem::Subject:
-                paint_left_aligned_elided_text( item->subject(), ci, painter, l, top, r, layoutDir, font );
+            case Theme::ContentItem::Subject: {
+                QFont newFont(font);
+                if ( !item->status().isRead() ) {
+                    newFont.setWeight(QFont::DemiBold);
+                } else {
+                    newFont.setBold(false);
+                }
+                paint_left_aligned_elided_text( item->subject(), ci, painter, l, top, r, layoutDir, newFont );
+            }
                 break;
             case Theme::ContentItem::SenderOrReceiver:
                 paint_left_aligned_elided_text( MessageCore::StringUtil::stripEmailAddr( item->senderOrReceiver() ),
