@@ -87,7 +87,7 @@ void FolderTreeView::init( bool showUnreadCount )
     setIconSize( QSize( 22, 22 ) );
     setUniformRowHeights( true );
     mSortingPolicy = FolderTreeWidget::SortByCurrentColumn;
-    mToolTipDisplayPolicy = FolderTreeWidget::DisplayAlways;
+    mToolTipDisplayPolicy = FolderTreeWidget::DisplayNever;
 
     header()->setContextMenuPolicy( Qt::CustomContextMenu );
     connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
@@ -128,7 +128,7 @@ void FolderTreeView::readConfig()
     mToolTipDisplayPolicy =
             static_cast<FolderTreeWidget::ToolTipDisplayPolicy>(
                 myGroup.readEntry( "ToolTipDisplayPolicy",
-                                   static_cast<int>( FolderTreeWidget::DisplayAlways ) ) );
+                                   static_cast<int>( FolderTreeWidget::DisplayNever ) ) );
 
     emit changeTooltipsPolicy( mToolTipDisplayPolicy );
 
