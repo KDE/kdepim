@@ -380,7 +380,7 @@ static inline void paint_permanent_icon( const QPixmap * pix, Theme::ContentItem
 {
     if ( alignOnRight )
     {
-        right -= iconSize; // this icon is always present
+        right -= iconSize + 10; // this icon is always present
         if ( right < 0 )
             return;
         painter->drawPixmap( right, top, iconSize, iconSize, *pix );
