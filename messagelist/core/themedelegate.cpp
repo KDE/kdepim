@@ -838,7 +838,7 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
 
             if ( ci->canUseCustomColor() )
             {
-                if ( ci->useCustomColor() && ( !(opt.state & QStyle::State_Selected) ) )
+                if ( ci->useCustomColor() /*&& ( !(opt.state & QStyle::State_Selected) ) */)
                 {
                     if ( usingNonDefaultTextColor )
                     {
@@ -854,8 +854,9 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
                     } else {
                         painter->setPen( QPen( ci->customColor() ) );
                     }
-                } else
+                } else {
                     painter->setPen( defaultPen );
+                }
             } // otherwise setting a pen is useless at this time
 
             QFont font = itemFont( ci, item );
@@ -1007,7 +1008,7 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
 
             if ( ci->canUseCustomColor() )
             {
-                if ( ci->useCustomColor() && ( !(opt.state & QStyle::State_Selected) ) )
+                if ( ci->useCustomColor() /*&& ( !(opt.state & QStyle::State_Selected) ) */)
                 {
                     if ( usingNonDefaultTextColor )
                     {
