@@ -134,6 +134,17 @@ FolderTreeWidget::FolderTreeWidget(
     d->entityOrderProxy->setOrderConfig( grp );
     d->folderTreeView->setModel( d->entityOrderProxy );
 
+    // Make it look like a non collapsible flat list
+    d->folderTreeView->setItemsExpandable(false);
+    d->folderTreeView->setRootIsDecorated(false);
+    connect(d->entityOrderProxy, SIGNAL(rowsInserted(QModelIndex, int, int)),
+            d->folderTreeView, SLOT(expandAll()));
+    connect(d->entityOrderProxy, SIGNAL(layoutChanged()),
+            d->folderTreeView, SLOT(expandAll()));
+    connect(d->entityOrderProxy, SIGNAL(modelReset()),
+            d->folderTreeView, SLOT(expandAll()));
+    d->folderTreeView->setStyleSheet( "QTreeView::branch { border-image: url(none.png); }" );
+
     if ( options & UseDistinctSelectionModel ) {
         d->folderTreeView->setSelectionModel( new QItemSelectionModel( d->entityOrderProxy, this ) );
     }
