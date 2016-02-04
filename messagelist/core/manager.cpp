@@ -687,73 +687,6 @@ void Manager::createDefaultThemes()
     Theme::Row * r;
     Theme::ContentItem * i;
 
-    // The "Classic" backward compatible theme
-
-    s = new Theme(
-                i18nc( "Default theme name", "Classic" ),
-                i18n( "A simple, backward compatible, single row theme" ), true /*readOnly*/
-                );
-
-    c = new Theme::Column();
-    c->setLabel( i18nc( "@title:column Subject of messages", "Subject" ) );
-    c->setMessageSorting( SortOrder::SortMessagesBySubject );
-
-    r = new Theme::Row();
-    i = new Theme::ContentItem( Theme::ContentItem::ExpandedStateIcon );
-    r->addLeftItem( i );
-    i = new Theme::ContentItem( Theme::ContentItem::GroupHeaderLabel );
-    QFont bigFont = KGlobalSettings::generalFont();
-    bigFont.setBold( true );
-    i->setFont( bigFont );
-    i->setUseCustomFont( true );
-    r->addLeftItem( i );
-    c->addGroupHeaderRow( r );
-
-    r = new Theme::Row();
-    i = new Theme::ContentItem( Theme::ContentItem::CombinedReadRepliedStateIcon );
-    r->addLeftItem( i );
-    i = new Theme::ContentItem( Theme::ContentItem::AttachmentStateIcon );
-    i->setHideWhenDisabled( true );
-    r->addLeftItem( i );
-    i = new Theme::ContentItem( Theme::ContentItem::AnnotationIcon );
-    i->setHideWhenDisabled( true );
-    r->addLeftItem( i );
-    i = new Theme::ContentItem( Theme::ContentItem::InvitationIcon );
-    i->setHideWhenDisabled( true );
-    r->addLeftItem( i );
-    i = new Theme::ContentItem( Theme::ContentItem::SignatureStateIcon );
-    i->setHideWhenDisabled( true );
-    r->addLeftItem( i );
-    i = new Theme::ContentItem( Theme::ContentItem::EncryptionStateIcon );
-    i->setHideWhenDisabled( true );
-    r->addLeftItem( i );
-    i = new Theme::ContentItem( Theme::ContentItem::Subject );
-    r->addLeftItem( i );
-    c->addMessageRow( r );
-
-    s->addColumn( c );
-
-    c = add_theme_simple_text_column( s, i18n( "Sender/Receiver" ), Theme::ContentItem::SenderOrReceiver, true, SortOrder::SortMessagesBySenderOrReceiver, false, false);
-    c->setIsSenderOrReceiver( true );
-    add_theme_simple_text_column( s, i18nc( "Sender of a message", "Sender" ), Theme::ContentItem::Sender, false, SortOrder::SortMessagesBySender, false, false );
-    add_theme_simple_text_column( s, i18nc( "Receiver of a message", "Receiver" ), Theme::ContentItem::Receiver, false, SortOrder::SortMessagesByReceiver, false, false );
-    add_theme_simple_text_column( s, i18nc( "Date of a message", "Date" ), Theme::ContentItem::Date, true, SortOrder::SortMessagesByDateTime, false, false );
-    add_theme_simple_text_column( s, i18n( "Most Recent Date" ), Theme::ContentItem::MostRecentDate, false, SortOrder::SortMessagesByDateTimeOfMostRecent, false, true );
-    add_theme_simple_text_column( s, i18nc( "Size of a message", "Size" ), Theme::ContentItem::Size, false, SortOrder::SortMessagesBySize, false, false );
-    add_theme_simple_icon_column( s, i18nc( "Attachement indication", "Attachment" ), QLatin1String( "mail-attachment" ), Theme::ContentItem::AttachmentStateIcon, false, SortOrder::SortMessagesByAttachmentStatus );
-    add_theme_simple_icon_column( s, i18n( "Read/Unread" ), QLatin1String( "mail-unread-new" ), Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByUnreadStatus );
-    add_theme_simple_icon_column( s, i18n( "Replied" ), QLatin1String( "mail-replied" ), Theme::ContentItem::RepliedStateIcon, false, SortOrder::NoMessageSorting );
-    add_theme_simple_icon_column( s, i18nc( "Message importance indication", "Important" ), QLatin1String( "emblem-important" ), Theme::ContentItem::ImportantStateIcon, false, SortOrder::SortMessagesByImportantStatus );
-    add_theme_simple_icon_column( s, i18n( "Action Item" ), QLatin1String( "mail-task" ), Theme::ContentItem::ActionItemStateIcon, false, SortOrder::SortMessagesByActionItemStatus );
-    add_theme_simple_icon_column( s, i18n( "Spam/Ham" ), QLatin1String( "mail-mark-junk" ), Theme::ContentItem::SpamHamStateIcon, false, SortOrder::NoMessageSorting );
-    add_theme_simple_icon_column( s, i18n( "Watched/Ignored" ), QLatin1String( "mail-thread-watch" ), Theme::ContentItem::WatchedIgnoredStateIcon, false, SortOrder::NoMessageSorting );
-    add_theme_simple_icon_column( s, i18n( "Encryption" ), QLatin1String( "mail-encrypted-full" ), Theme::ContentItem::EncryptionStateIcon, false, SortOrder::NoMessageSorting );
-    add_theme_simple_icon_column( s, i18n( "Signature" ), QLatin1String( "mail-signed-verified" ), Theme::ContentItem::SignatureStateIcon, false, SortOrder::NoMessageSorting );
-    add_theme_simple_icon_column( s, i18n( "Tag List" ), QLatin1String( "feed-subscribe" ), Theme::ContentItem::TagList, false, SortOrder::NoMessageSorting );
-
-    s->resetColumnState(); // so it's initially set from defaults
-
-    addTheme( s );
 
     // The Fancy theme
 
@@ -778,6 +711,14 @@ void Manager::createDefaultThemes()
 
     r = new Theme::Row();
     i = new Theme::ContentItem( Theme::ContentItem::Subject );
+    QFont aSubjectFont = KGlobalSettings::generalFont();
+    aSubjectFont.setBold( true );
+    aSubjectFont.setPixelSize(20);
+    i->setFont( aSubjectFont );
+    i->setUseCustomColor(true);
+    i->setCustomColor(QColor(64,68,85));
+    i->setUseCustomFont( true );
+
     r->addLeftItem( i );
     i = new Theme::ContentItem( Theme::ContentItem::ReadStateIcon );
     r->addRightItem( i );
@@ -809,14 +750,17 @@ void Manager::createDefaultThemes()
     r = new Theme::Row();
     i = new Theme::ContentItem( Theme::ContentItem::SenderOrReceiver );
     i->setSoftenByBlending( true );
+
+    //TODO use color
     QFont aItalicFont = KGlobalSettings::generalFont();
-    aItalicFont.setItalic( true );
+    aItalicFont.setPixelSize(18);
     i->setFont( aItalicFont );
     i->setUseCustomFont( true );
     r->addLeftItem( i );
     i = new Theme::ContentItem( Theme::ContentItem::Date );
     i->setSoftenByBlending( true );
     i->setFont( aItalicFont );
+    //TODO use color
     i->setUseCustomFont( true );
     r->addRightItem( i );
     c->addMessageRow( r );
@@ -886,6 +830,75 @@ void Manager::createDefaultThemes()
     s->resetColumnState(); // so it's initially set from defaults
 
     addTheme( s );
+
+    // The "Classic" backward compatible theme
+
+    s = new Theme(
+                i18nc( "Default theme name", "Classic" ),
+                i18n( "A simple, backward compatible, single row theme" ), true /*readOnly*/
+                );
+
+    c = new Theme::Column();
+    c->setLabel( i18nc( "@title:column Subject of messages", "Subject" ) );
+    c->setMessageSorting( SortOrder::SortMessagesBySubject );
+
+    r = new Theme::Row();
+    i = new Theme::ContentItem( Theme::ContentItem::ExpandedStateIcon );
+    r->addLeftItem( i );
+    i = new Theme::ContentItem( Theme::ContentItem::GroupHeaderLabel );
+    QFont bigFont = KGlobalSettings::generalFont();
+    bigFont.setBold( true );
+    i->setFont( bigFont );
+    i->setUseCustomFont( true );
+    r->addLeftItem( i );
+    c->addGroupHeaderRow( r );
+
+    r = new Theme::Row();
+    i = new Theme::ContentItem( Theme::ContentItem::CombinedReadRepliedStateIcon );
+    r->addLeftItem( i );
+    i = new Theme::ContentItem( Theme::ContentItem::AttachmentStateIcon );
+    i->setHideWhenDisabled( true );
+    r->addLeftItem( i );
+    i = new Theme::ContentItem( Theme::ContentItem::AnnotationIcon );
+    i->setHideWhenDisabled( true );
+    r->addLeftItem( i );
+    i = new Theme::ContentItem( Theme::ContentItem::InvitationIcon );
+    i->setHideWhenDisabled( true );
+    r->addLeftItem( i );
+    i = new Theme::ContentItem( Theme::ContentItem::SignatureStateIcon );
+    i->setHideWhenDisabled( true );
+    r->addLeftItem( i );
+    i = new Theme::ContentItem( Theme::ContentItem::EncryptionStateIcon );
+    i->setHideWhenDisabled( true );
+    r->addLeftItem( i );
+    i = new Theme::ContentItem( Theme::ContentItem::Subject );
+    r->addLeftItem( i );
+    c->addMessageRow( r );
+
+    s->addColumn( c );
+
+    c = add_theme_simple_text_column( s, i18n( "Sender/Receiver" ), Theme::ContentItem::SenderOrReceiver, true, SortOrder::SortMessagesBySenderOrReceiver, false, false);
+    c->setIsSenderOrReceiver( true );
+    add_theme_simple_text_column( s, i18nc( "Sender of a message", "Sender" ), Theme::ContentItem::Sender, false, SortOrder::SortMessagesBySender, false, false );
+    add_theme_simple_text_column( s, i18nc( "Receiver of a message", "Receiver" ), Theme::ContentItem::Receiver, false, SortOrder::SortMessagesByReceiver, false, false );
+    add_theme_simple_text_column( s, i18nc( "Date of a message", "Date" ), Theme::ContentItem::Date, true, SortOrder::SortMessagesByDateTime, false, false );
+    add_theme_simple_text_column( s, i18n( "Most Recent Date" ), Theme::ContentItem::MostRecentDate, false, SortOrder::SortMessagesByDateTimeOfMostRecent, false, true );
+    add_theme_simple_text_column( s, i18nc( "Size of a message", "Size" ), Theme::ContentItem::Size, false, SortOrder::SortMessagesBySize, false, false );
+    add_theme_simple_icon_column( s, i18nc( "Attachement indication", "Attachment" ), QLatin1String( "mail-attachment" ), Theme::ContentItem::AttachmentStateIcon, false, SortOrder::SortMessagesByAttachmentStatus );
+    add_theme_simple_icon_column( s, i18n( "Read/Unread" ), QLatin1String( "mail-unread-new" ), Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByUnreadStatus );
+    add_theme_simple_icon_column( s, i18n( "Replied" ), QLatin1String( "mail-replied" ), Theme::ContentItem::RepliedStateIcon, false, SortOrder::NoMessageSorting );
+    add_theme_simple_icon_column( s, i18nc( "Message importance indication", "Important" ), QLatin1String( "emblem-important" ), Theme::ContentItem::ImportantStateIcon, false, SortOrder::SortMessagesByImportantStatus );
+    add_theme_simple_icon_column( s, i18n( "Action Item" ), QLatin1String( "mail-task" ), Theme::ContentItem::ActionItemStateIcon, false, SortOrder::SortMessagesByActionItemStatus );
+    add_theme_simple_icon_column( s, i18n( "Spam/Ham" ), QLatin1String( "mail-mark-junk" ), Theme::ContentItem::SpamHamStateIcon, false, SortOrder::NoMessageSorting );
+    add_theme_simple_icon_column( s, i18n( "Watched/Ignored" ), QLatin1String( "mail-thread-watch" ), Theme::ContentItem::WatchedIgnoredStateIcon, false, SortOrder::NoMessageSorting );
+    add_theme_simple_icon_column( s, i18n( "Encryption" ), QLatin1String( "mail-encrypted-full" ), Theme::ContentItem::EncryptionStateIcon, false, SortOrder::NoMessageSorting );
+    add_theme_simple_icon_column( s, i18n( "Signature" ), QLatin1String( "mail-signed-verified" ), Theme::ContentItem::SignatureStateIcon, false, SortOrder::NoMessageSorting );
+    add_theme_simple_icon_column( s, i18n( "Tag List" ), QLatin1String( "feed-subscribe" ), Theme::ContentItem::TagList, false, SortOrder::NoMessageSorting );
+
+    s->resetColumnState(); // so it's initially set from defaults
+
+    addTheme( s );
+
 }
 
 void Manager::removeAllThemes()
