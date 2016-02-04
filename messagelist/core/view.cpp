@@ -100,7 +100,7 @@ View::View( Widget *pParent )
     setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
     setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
     setAlternatingRowColors( false );
-    setAllColumnsShowFocus( true );
+    setAllColumnsShowFocus( false );
     setSelectionMode( QAbstractItemView::ExtendedSelection );
     viewport()->setAcceptDrops( true );
 
