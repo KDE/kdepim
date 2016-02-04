@@ -195,17 +195,17 @@ QColor KMail::Util::misspelledColor()
 
 QColor KMail::Util::quoteL1Color()
 {
-    return QColor( 0x00, 0x80, 0x00 );
+    return QColor(53,163,190);
 }
 
 QColor KMail::Util::quoteL2Color()
 {
-    return QColor( 0x00, 0x70, 0x00 );
+    return QColor(126,81,179);
 }
 
 QColor KMail::Util::quoteL3Color()
 {
-    return QColor( 0x00, 0x60, 0x00 );
+    return QColor(24,64,174);
 }
 
 
