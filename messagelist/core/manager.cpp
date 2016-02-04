@@ -62,8 +62,8 @@ Manager::Manager()
     mDateFormatter = new KMime::DateFormatter();
 
     mPixmapMessageNew = new QPixmap( SmallIcon( QLatin1String( "mail-unread-new" ) ) );
-    mPixmapMessageUnread = new QPixmap( SmallIcon( QLatin1String( "mail-unread" ) ) );
-    mPixmapMessageRead = new QPixmap( SmallIcon( QLatin1String( "mail-read" ) ) );
+    mPixmapMessageUnread = new QPixmap( SmallIcon( QLatin1String( "messagelist-unread-mail" ) ) );
+    mPixmapMessageRead = new QPixmap( SmallIcon( QLatin1String( "messagelist-read-mail" ) ) );
     mPixmapMessageDeleted = new QPixmap( SmallIcon( QLatin1String( "mail-deleted" ) ) );
     mPixmapMessageReplied = new QPixmap( SmallIcon( QLatin1String( "mail-replied" ) ) );
     mPixmapMessageRepliedAndForwarded = new QPixmap( SmallIcon( QLatin1String( "mail-forwarded-replied" ) ) );
