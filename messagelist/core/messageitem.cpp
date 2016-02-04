@@ -341,6 +341,7 @@ QColor MessageItem::textColor() const
         return bestTag->textColor();
     }
     QColor clr;
+#if 0
     Akonadi::MessageStatus messageStatus = status();
     if ( !messageStatus.isRead() ) {
         clr = s_settings->mColorUnreadMessage;
@@ -349,6 +350,7 @@ QColor MessageItem::textColor() const
     } else if ( messageStatus.isToAct() ) {
         clr = s_settings->mColorToDoMessage;
     }
+#endif
 
     return clr;
 }
