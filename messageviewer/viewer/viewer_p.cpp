@@ -1031,7 +1031,7 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
     if ( mMessageItem.isValid() ) {
         Akonadi::MessageStatus status;
         status.setStatusFromFlags( mMessageItem.flags() );
-
+        headerStyle()->setCollectionName(mMessageItem.parentCollection().displayName());
         headerStyle()->setMessageStatus( status );
     } else {
         headerStyle()->setCollectionName(QString());

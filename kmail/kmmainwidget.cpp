@@ -4353,15 +4353,14 @@ void KMMainWidget::itemsReceived(const Akonadi::Item::List &list )
         }
     }
 
-    mMsgView->setMessage( item );
+    Akonadi::Item copyItem(item);
+    copyItem.setParentCollection(mCurrentFolder->collection());
+    mMsgView->setMessage( copyItem );
     // reset HTML override to the folder setting
     mMsgView->setDisplayFormatMessageOverwrite(mFolderDisplayFormatPreference);
     mMsgView->setHtmlLoadExtOverride(mFolderHtmlLoadExtPreference);
     mMsgView->setDecryptMessageOverwrite( false );
-    mMsgActions->setCurrentMessage( item );
-    if (messageView() && messageView()->viewer()) {
-        messageView()->viewer()->headerStyle()->setCollectionName(mCurrentFolder->collection().displayName());
-    }
+    mMsgActions->setCurrentMessage( copyItem );
 }
 
 void KMMainWidget::itemsFetchDone( KJob *job )
