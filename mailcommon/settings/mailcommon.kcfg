@@ -25,7 +25,7 @@
            <label>Show favorite folders in list mode.</label>
          </choice>
        </choices>
-       <default>ListMode</default>
+       <default>HiddenMode</default>
     </entry>
   </group>
  <group name="AccountOrder">
