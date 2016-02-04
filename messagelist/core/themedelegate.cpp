@@ -571,6 +571,11 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
     }
 
     QStyle * style = mItemView->style();
+    // Add space between item
+    const bool isSelectedItem = (opt.state & QStyle::State_Selected);
+    opt.state = opt.state &~ QStyle::State_Selected;
+    opt.state = opt.state &~ QStyle::State_HasFocus;
+    opt.rect = opt.rect.adjusted(0, 6, 0, -6);
     style->drawControl( QStyle::CE_ItemViewItem, &opt, painter, mItemView );
 
     if ( !mTheme )
@@ -1166,6 +1171,15 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
         }
 
         top = bottom;
+    }
+
+    if (isSelectedItem) {
+        painter->save();
+        QPen pen(QColor(166, 174, 198));
+        pen.setWidth(1);
+        painter->setPen( pen );
+        painter->drawRect(opt.rect.adjusted(0,0,-1,0));
+        painter->restore();
     }
 
     painter->setFont( oldFont );
