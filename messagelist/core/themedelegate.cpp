@@ -45,7 +45,10 @@ static const int gGroupHeaderInnerHorizontalMargin = 1;
 static const int gMessageVerticalMargin = 2;
 static const int gMessageHorizontalMargin = 2;
 static const int gHorizontalItemSpacing = 2;
-
+static const int spacerBetweenText = 10;
+static const int defaultMarginLeft = 24;
+static const int defaultTopMargin = 16;
+static const int miniItemHeight = 105;
 
 ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
     : QStyledItemDelegate( parent )
@@ -619,7 +622,7 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
             painter->setOpacity( 0.5 );
             defaultPen = QPen( opt.palette.brush( QPalette::Disabled, QPalette::Text ), 0 );
         } else {
-
+#if 0
             QPalette::ColorGroup cg;
 
             if ( opt.state & QStyle::State_Active )
@@ -639,6 +642,7 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
                     defaultPen = QPen( opt.palette.brush( cg, QPalette::Text ), 0 );
                 }
             }
+#endif
         }
 
         top += gMessageVerticalMargin;
@@ -824,18 +828,20 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
 
     Qt::LayoutDirection layoutDir = mItemView->layoutDirection();
 
+    top += defaultTopMargin;
     QList< Theme::Row * >::ConstIterator end( rows->constEnd() );
     for ( QList< Theme::Row * >::ConstIterator rowit = rows->constBegin(); rowit != end; ++rowit )
     {
         QSize rowSizeHint = compute_size_hint_for_row( ( *rowit ), mTheme->iconSize(), item );
 
-        int bottom = top + rowSizeHint.height();
+
+        int bottom = top + rowSizeHint.height() + spacerBetweenText;
 
         // paint right aligned stuff first
         const QList< Theme::ContentItem * > * items = &( ( *rowit )->rightItems() );
 
-        int r = right;
-        int l = left;
+        int r = right - defaultMarginLeft;
+        int l = left + defaultMarginLeft;
         QList< Theme::ContentItem * >::ConstIterator endit( items->constEnd() );
         for ( QList< Theme::ContentItem * >::ConstIterator itemit = items->constBegin(); itemit != endit ; ++itemit )
         {
@@ -1673,7 +1679,9 @@ QSize ThemeDelegate::sizeHint( const QStyleOptionViewItem &, const QModelIndex &
 
     //Item::Type type = item->type();
 
-    return sizeHintForItemTypeAndColumn( item->type(), index.column(), item );
+    QSize size = sizeHintForItemTypeAndColumn( item->type(), index.column(), item ) ;
+    size.setHeight(qMax(size.height(), miniItemHeight));
+    return size;
 }
 
 QFont ThemeDelegate::itemFont( const Theme::ContentItem *ci, const Item *item )
