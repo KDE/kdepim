@@ -470,6 +470,7 @@ KMMsgSignatureState NodeHelper::overallSignatureState( KMime::Content* node ) co
 
 QString NodeHelper::iconName( KMime::Content *node, int size )
 {
+    return IconNameCache::instance()->iconPath( QString::fromLatin1("mail-attachment"), size );
   if ( !node )
     return QString();
 
