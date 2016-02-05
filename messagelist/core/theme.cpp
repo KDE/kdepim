@@ -56,7 +56,7 @@ static const int gThemeMinimumVersionWithAnnotationIcon = 0x1018;
 static const int gThemeMinimumVersionWithInvitationIcon = 0x1019;
 
 // the default icon size
-static const int gThemeDefaultIconSize = 16;
+static const int gThemeDefaultIconSize = 22;
 
 
 Theme::ContentItem::ContentItem( Type type )
