@@ -45,11 +45,11 @@ static const int gGroupHeaderInnerHorizontalMargin = 1;
 static const int gMessageVerticalMargin = 2;
 static const int gMessageHorizontalMargin = 2;
 static const int gHorizontalItemSpacing = 2;
-static const int spacerBetweenText = 10;
-static const int defaultMarginLeft = 24;
+static const int spacerBetweenText = 12;
+static const int defaultMarginLeft = 22;
 static const int defaultMarginLeftIcon = 8;
-static const int defaultTopMargin = 14;
-static const int miniItemHeight = 127;
+static const int defaultTopMargin = 11;
+static const int miniItemHeight = 110;
 
 ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
     : QStyledItemDelegate( parent )
