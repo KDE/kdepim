@@ -1515,6 +1515,8 @@ void ViewerPrivate::createWidgets() {
     delete readerBox->layout();
     readerBox->setLayout(new QVBoxLayout(readerBox));
     QMargins margins = readerBox->layout()->contentsMargins();
+    margins.setLeft(35);
+    margins.setRight(35);
     margins.setBottom(0);
     readerBox->layout()->setContentsMargins(margins);
     readerBox->layout()->setSpacing(0);
