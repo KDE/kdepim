@@ -1523,6 +1523,12 @@ void ViewerPrivate::createWidgets() {
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
     mViewerToolBar = new MessageViewer::ViewerToolBarAction(readerBox);
+    QStyleOptionFrameV2 opt;
+    opt.initFrom(mViewerToolBar);
+    const int lineEditHeight = q->style()->sizeFromContents(QStyle::CT_LineEdit, &opt, QSize(100, qApp->fontMetrics().height())).height();
+    mViewerToolBar->setFixedHeight(lineEditHeight);
+
+    static_cast<QVBoxLayout*>(readerBox->layout())->addSpacing(20);
 
     mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
 

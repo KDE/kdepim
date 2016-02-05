@@ -26,6 +26,11 @@ ViewerToolBarAction::ViewerToolBarAction(QWidget *parent)
 {
     setFloatable(false);
     setMovable(false);
+
+    QMargins margins = layout()->contentsMargins();
+    margins.setLeft(0);
+    margins.setRight(0);
+    layout()->setContentsMargins(margins);
 }
 
 ViewerToolBarAction::~ViewerToolBarAction()
