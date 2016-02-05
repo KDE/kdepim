@@ -198,11 +198,7 @@ static inline void compute_bounding_rect_for_left_aligned_elided_text( const QSt
 
 static inline const QPixmap * get_read_state_icon( Item * item )
 {
-    if ( item->status().isQueued() )
-        return Manager::instance()->pixmapMessageQueued();
-    else if ( item->status().isSent() )
-        return Manager::instance()->pixmapMessageSent();
-    else if ( item->status().isRead() )
+    if ( item->status().isRead() )
         return Manager::instance()->pixmapMessageRead();
     else if ( !item->status().isRead() )
         return Manager::instance()->pixmapMessageUnread();
