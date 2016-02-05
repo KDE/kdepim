@@ -266,7 +266,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     if (messageHasAttachment) {
         const QString iconPath = IconNameCache::instance()->iconPath(QLatin1String("mail-attachment"), KIconLoader::Toolbar);
         const QString html = QString::fromLatin1("<img height=\"22\" width=\"22\" src=\"file:///%1\"></a>").arg(iconPath);
-        headerObject.insert( QLatin1String( "subjectAttachmentIcon" ), html);
+        headerObject.insert( QLatin1String( "attachmentIcon" ), html);
     }
 
     QVariantHash mapping;
