@@ -2231,10 +2231,9 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
             mNodeHelper->magicSetType( msgPart );
             //iconName = mNodeHelper->iconName( msgPart );
         }
-        htmlWriter()->queue( QLatin1String("<hr><div><a href=\"") + href + QString::fromLatin1("\"><img align=\"center\" height=\"22\" width=\"22\" src=\"file:///") +
+        htmlWriter()->queue( QLatin1String("<hr><div>") + QString::fromLatin1("<img align=\"center\" height=\"22\" width=\"22\" src=\"file:///") +
                              iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/> ") + label +
-                             QLatin1String("</a></div>"
-                                           "<div>") + comment +QLatin1String( "</div>") );
+                             QLatin1String("<a href=\"") + href + QString::fromLatin1("\">") + i18n("Download") + QString::fromLatin1("</a><div>") + comment + QLatin1String( "</div>") );
     }
 }
 
