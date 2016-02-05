@@ -43,6 +43,7 @@ void ViewerToolBarAction::updateViewerToolBar(KActionCollection *ac)
     if (ac) {
         addAction(ac->action(QLatin1String("akonadi_move_to_trash")));
         addAction(ac->action(QLatin1String("create_todo")));
+        addAction(ac->action(QLatin1String("create_event")));
         addAction(ac->action(QLatin1String("file_print")));
 
         QAction *act = ac->action(QLatin1String("reply"));
