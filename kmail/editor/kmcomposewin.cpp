@@ -176,6 +176,9 @@
 #include <QSplitter>
 #include <QMimeData>
 #include <QTextDocumentWriter>
+#include <kfontaction.h>
+#include <kfontsizeaction.h>
+#include <kfontcombobox.h>
 
 // System includes
 #include <stdlib.h>
@@ -563,6 +566,26 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     htmlToolBar->setIconSize(QSize(22,22));
     htmlToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
     addToolBar(Qt::BottomToolBarArea, htmlToolBar);
+
+    //KFontAction *action_font_family;
+    //KFontSizeAction *action_font_size;
+
+    QAction *fontFamilyAction = actionCollection()->action( QLatin1String("format_font_family") );
+    if (fontFamilyAction) {
+        QWidget *w =  htmlToolBar->widgetForAction(fontFamilyAction);
+        KFontComboBox *cb = qobject_cast<KFontComboBox *>(w);
+        if (cb) {
+            cb->setFrame(false);
+        }
+    }
+    QAction *fontSizeAction = actionCollection()->action( QLatin1String("format_font_size") );
+    if (fontSizeAction) {
+        QWidget *w =  htmlToolBar->widgetForAction(fontSizeAction);
+        KComboBox *cb  = qobject_cast<KComboBox *>(w);
+        if (cb) {
+            cb->setFrame(false);
+        }
+    }
 }
 
 
