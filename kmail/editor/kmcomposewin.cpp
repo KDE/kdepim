@@ -691,7 +691,7 @@ void KMComposeWin::readConfig( bool reload /* = false */ )
     mEdtReplyTo->setCompletionMode( (KGlobalSettings::Completion)GlobalSettings::self()->completionMode() );
 
     if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        mBodyFont = KGlobalSettings::generalFont();
+        mBodyFont = QFont(QLatin1String("Source Sans Pro"));
         mFixedFont = KGlobalSettings::fixedFont();
     } else {
         mBodyFont = GlobalSettings::self()->composerFont();
