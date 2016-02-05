@@ -711,9 +711,8 @@ void Manager::createDefaultThemes()
 
     r = new Theme::Row();
     i = new Theme::ContentItem( Theme::ContentItem::Subject );
-    QFont aSubjectFont = KGlobalSettings::generalFont();
-    aSubjectFont.setBold( true );
-    aSubjectFont.setPixelSize(20);
+    QFont aSubjectFont = QFont(QLatin1String("Source Sans Pro"));
+    aSubjectFont.setPixelSize(26);
     i->setFont( aSubjectFont );
     i->setUseCustomColor(true);
     i->setCustomColor(QColor(64,68,85));
@@ -751,16 +750,14 @@ void Manager::createDefaultThemes()
     i = new Theme::ContentItem( Theme::ContentItem::SenderOrReceiver );
     i->setSoftenByBlending( true );
 
-    //TODO use color
-    QFont aItalicFont = KGlobalSettings::generalFont();
-    aItalicFont.setPixelSize(18);
+    QFont aItalicFont = QFont(QLatin1String("Source Sans Pro"));
+    aItalicFont.setPixelSize(22);
     i->setFont( aItalicFont );
     i->setUseCustomFont( true );
     r->addLeftItem( i );
     i = new Theme::ContentItem( Theme::ContentItem::Date );
     i->setSoftenByBlending( true );
     i->setFont( aItalicFont );
-    //TODO use color
     i->setUseCustomFont( true );
     r->addRightItem( i );
     c->addMessageRow( r );

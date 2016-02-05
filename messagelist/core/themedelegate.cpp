@@ -47,8 +47,8 @@ static const int gMessageHorizontalMargin = 2;
 static const int gHorizontalItemSpacing = 2;
 static const int spacerBetweenText = 10;
 static const int defaultMarginLeft = 24;
-static const int defaultTopMargin = 16;
-static const int miniItemHeight = 105;
+static const int defaultTopMargin = 14;
+static const int miniItemHeight = 127;
 
 ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
     : QStyledItemDelegate( parent )
