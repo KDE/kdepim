@@ -116,7 +116,6 @@ CSSHelperBase::CSSHelperBase( const QPaintDevice *pd ) :
     mBodyFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont: MessageCore::GlobalSettings::self()->bodyFont();
     mPrintFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::GlobalSettings::self()->printFont();
     mFixedFont = mFixedPrintFont = defaultFixedFont;
-    defaultFont.setItalic( true );
     for ( int i = 0 ; i < 3 ; ++i )
         mQuoteFont[i] = defaultFont;
 
