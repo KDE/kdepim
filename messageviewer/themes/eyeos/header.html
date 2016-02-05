@@ -1,18 +1,19 @@
 <link href="{{ header.absoluteThemePath }}/style.css" rel="stylesheet" type="text/css" />
 <div id="kmailPage">
 
-<table class="headertable" style="width:100%">
-   <tr>
-     <td> <div id="subject" dir="{{ header.subjectDir }}">{{ header.subject|safe }}</div> </td>
-     <td> <div id="date" align="right" dir="{{ dateDir }}">{{ header.datelocalelong }}</div>
-  </tr>
-  <tr>
-      <td> <div id="fromname"> {{ header.fromNameOnly|safe }} </div> </td>
-      <td> <div id="collectioname" align="right"> {{ header.collectionname }} </div> </td>
-   </tr>
-   <tr>
-      <td colspan="2"> <div id="toname"> {{ header.toi18n }} {{ header.toNameOnly|safe }} {{ header.cci18n }} {{ header.ccNameOnly|safe }} {{ header.bcci18n }} {{ header.bccNameOnly|safe }}</div>
-      </td>
-   </tr>
-</table>
+<div id="headers">
+    <div id="leftheaders">
+        <div id="subject" dir="{{ header.subjectDir }}">{{ header.subject|safe }} {{ header.attachmentIcon|safe }}</div>
+        <div id="fromname">{{ header.fromNameOnly|safe }}</div>
+        <div id="toname">{{ header.toi18n }} {{ header.toNameOnly|safe }} {{ header.cci18n }} {{ header.ccNameOnly|safe }} {{ header.bcci18n }} {{ header.bccNameOnly|safe }}</div>
+    </div>
+
+    <div id="rightheaders">
+        <div id="date" dir="{{ dateDir }}">{{ header.datelocalelong }}</div>
+        <div id="collection">{{ header.collectionname }}</div>
+    </div>
+
+    <br style="clear: both;"/>
+</div>
+
 <div id="kmailContent">

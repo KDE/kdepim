@@ -1,108 +1,98 @@
-
 body {
-    height: 100%;
-    line-height: 18px;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
-}
-div#collectioname {
-    color: rgb(133,143,169) !important;
-}
-div#toname {
-   color: rgb(133,143,169) !important;
+    margin: 0;
+    padding: 0;
 }
 
-div#subject {
-    color: rgb(64,68,85) !important;
-    font-size: 22px;
-    font-weight: normal;
-    line-height: 24px;
-    padding-bottom: 5px;
-    padding-top: 5px;
-}
-
-div#date {
-    color: rgb(64,68,85) !important;
-    #display: table-cell;
-    font-weight: normal;
-    padding: 0.1em;
-    align: right
-}
-
-div#fromname {
-    color: rgb(64,68,85) !important;
-    display: table-cell;
-    font-weight: normal;
-    #padding: 0.1em;
-}
-
-
-table#headertable {
-top: 10px;
-left: 10px;
-bottom: 10px;
-right: 10px;
-padding: 20px;
-
-}
-div#kmailPage {
-    display: inline;
-    position: fixed;
-    top: 1px;
-    left: 1px;
-    bottom: 1px;
-    right: 2px;
+hr {
+    height: 1px;
     border: none;
-    overflow: auto;
-    background-color: #fff;
+    background-color: #E7E9EE
 }
 
-table.outer {
-    display: inline;
-    position: fixed !important;
-    top: -1px;
-    left: -1px;
-    bottom: -1px;
-    right: 0px;
-    /*width: 110%;
-    height: 110%;*/
-    border: none !important;
-    table-collapse: collapse;
+@media screen {
+    body {
+        font-family: "Source Sans Pro, Sans" ! important;
+        font-size: 16px ! important;
+        font-weight: normal ! important;
+        color: #515668 ! important;
+        background-color: #FFF ! important;
+    }
 }
-div#headerbox {
-    /*background: #31363b  none repeat scroll 0 0;*/
-    border-radius: 3px;
-    border-bottom: 1px solid rgb(190, 190, 190);
-    color: rgb(100, 100, 100) !important;
-    overflow: auto;
-    padding: 5px 20px;
+
+#headers {
 }
-div#photo {
+
+#leftheaders {
     float: left;
-    margin: 5px;
 }
-div.table {
-    display: table;
-    padding-right: 12px;
-    padding-top: 6px;
+
+#rightheaders {
+    float: right;
+    text-align: right;
+    margin-top: 4px;
 }
-div.row {
-    display: table-row;
+
+#subject {
+    font-size: 22px;
+    line-height: 25px;
 }
-div.headerleft {
-    display: table-cell;
-    padding: 0.1em 1em;
-}
-div.headerright {
-    display: table-cell;
+
+#fromname {
     font-weight: bold;
-    padding: 0.1em;
+    color: #404455;
 }
+
+#fromname a {
+    color: #404455 ! important;
+}
+
+#toname {
+    font-size: 14px;
+    color: #97A1B8;
+}
+
+#toname a {
+    color: #97A1B8 ! important;
+}
+
+#date {
+    font-size: 14px;
+    line-height: 23px;
+}
+
+#collection {
+    font-size: 14px;
+    color: #97A1B8;
+}
+
 #kmailContent {
-    clear: both;
-    margin-top: 10px;
-    #padding: 20px;
+    margin-top: 50px;
 }
 
+.attachment {
+    width: 100%;
+    height: 22px;
+    line-height: 22px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #97A1B8;
+}
 
+.attachment a {
+    color: #58D2EC ! important;
+}
+
+.attachment img {
+    width: 22px;
+    height: 22px;
+    float: left;
+    margin-right: 10px;
+}
+
+.attachmentname {
+    float: left;
+}
+
+.attachmentsave {
+    float: right;
+}
