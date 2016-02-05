@@ -19,7 +19,7 @@
 #ifndef FOLDERTREEACTION_H
 #define FOLDERTREEACTION_H
 
-#include <QToolBar>
+#include <QWidget>
 
 class FolderTreeAction : public QWidget
 {
