@@ -23,12 +23,14 @@
 
 #include <kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
+#include <utils/iconnamecache.h>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 
 #include <KLocalizedString>
 #include <KStandardDirs>
+#include <kiconloader.h>
 
 #include <grantlee/templateloader.h>
 #include <grantlee/engine.h>
@@ -258,7 +260,14 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     }
 
     headerObject.insert( QLatin1String( "vcardi18n" ), i18n("[vcard]") );
+    const bool messageHasAttachment = KMime::hasAttachment(message);
+    headerObject.insert( QLatin1String( "hasAttachment" ), messageHasAttachment);
 
+    if (messageHasAttachment) {
+        const QString iconPath = IconNameCache::instance()->iconPath(QLatin1String("mail-attachment"), KIconLoader::Toolbar);
+        const QString html = QString::fromLatin1("<img height=\"22\" width=\"22\" src=\"file:///%1\"></a>").arg(iconPath);
+        headerObject.insert( QLatin1String( "subjectAttachmentIcon" ), html);
+    }
 
     QVariantHash mapping;
     mapping.insert( QLatin1String("header"), headerObject );
