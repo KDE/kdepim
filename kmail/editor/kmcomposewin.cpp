@@ -538,6 +538,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     hbox->setSpacing(0);
 
     KPushButton *sendButton = new KPushButton(i18n("Send"), this);
+    sendButton->setMinimumWidth(120);
     sendButton->setDefault(true);
     connect( sendButton, SIGNAL(clicked()), SLOT(slotSendNow()));
 
