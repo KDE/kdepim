@@ -383,14 +383,18 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
     QVBoxLayout *vbox = new QVBoxLayout(editorAndCryptoStateIndicators);
     vbox->setMargin(0);
+    QWidget *editorWidget = new QWidget;
+    QHBoxLayout *editorWidgetLayout = new QHBoxLayout(editorWidget);
+    editorWidgetLayout->setContentsMargins(25, 5, 25, 5);
     KMComposerEditor* editor = new KMComposerEditor( this, mCryptoStateIndicatorWidget );
     editor->setFrameShape(QFrame::NoFrame);
+    editorWidgetLayout->addWidget(editor);
 
     connect( editor, SIGNAL(textChanged()),
              this, SLOT(slotEditorTextChanged()) );
     mComposerBase->setEditor( editor );
     vbox->addWidget( mCryptoStateIndicatorWidget );
-    vbox->addWidget( editor );
+    vbox->addWidget( editorWidget );
 
     mSnippetSplitter->insertWidget( 0, editorAndCryptoStateIndicators );
     mSnippetSplitter->setOpaqueResize( true );
