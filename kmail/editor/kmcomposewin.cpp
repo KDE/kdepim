@@ -1027,17 +1027,20 @@ void KMComposeWin::rethinkHeaderLine( int aValue, int aMask, int &aRow,
                                       QPushButton *aBtn )
 {
     if ( aValue & aMask ) {
+        QLabel *lab = new QLabel(this);
+        lab->setFixedWidth( 0 );
         aLbl->setFixedWidth( mLabelWidth );
         aLbl->setBuddy( aEdt );
-        mGrid->addWidget( aLbl, aRow, 0 );
+        mGrid->addWidget( lab, aRow, 0 );
+        mGrid->addWidget( aLbl, aRow, 1 );
         aEdt->show();
 
         if ( aBtn ) {
-            mGrid->addWidget( aEdt, aRow, 1 );
-            mGrid->addWidget( aBtn, aRow, 2 );
+            mGrid->addWidget( aEdt, aRow, 2 );
+            mGrid->addWidget( aBtn, aRow, 3 );
             aBtn->show();
         } else {
-            mGrid->addWidget( aEdt, aRow, 1, 1, 2 );
+            mGrid->addWidget( aEdt, aRow, 2, 1, 2 );
         }
         aRow++;
     } else {
