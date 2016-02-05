@@ -2231,9 +2231,22 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
             mNodeHelper->magicSetType( msgPart );
             //iconName = mNodeHelper->iconName( msgPart );
         }
+        QString attachmentHtml;
+        attachmentHtml += QLatin1String("<hr>");
+        attachmentHtml += QLatin1String("<div class=\"attachment\">");
+        attachmentHtml += QLatin1String("<img align=\"center\" height=\"22\" width=\"22\" src=\"file:///") + iconName
+                + QLatin1String("\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/>");
+        //Add space between icon and name.
+        attachmentHtml += QString::fromLatin1("<div class=\"attachmentname\"> %1</div>").arg(label);
+        attachmentHtml += QString::fromLatin1("<div class=\"attachmentsave\"><a href=\"%2\">%1</a></div>").arg(i18n("Download"), href);
+        attachmentHtml += QLatin1String("</div>");
+        htmlWriter()->queue(attachmentHtml);
+
+#if 0
         htmlWriter()->queue( QLatin1String("<hr><div align=\"left\">") + QString::fromLatin1("<img align=\"center\" height=\"22\" width=\"22\" src=\"file:///") +
                              iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/> ") + label +
                              QLatin1String("<div align=\"right\"><a href=\"") + href + QString::fromLatin1("\">") + i18n("Download") + QString::fromLatin1("</a></div><div>") + comment + QLatin1String( "</div>") );
+#endif
     }
 }
 
