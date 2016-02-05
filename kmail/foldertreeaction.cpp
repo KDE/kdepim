@@ -42,13 +42,14 @@ void FolderTreeAction::initializeWidgets()
     hboxLayout->setContentsMargins(margins);
     hboxLayout->setSpacing(5);
     KPushButton *newMessage = new KPushButton(i18n("New mail"), this);
+    newMessage->setFixedHeight(newMessage->sizeHint().height() - 2);
     newMessage->setDefault(true);
     connect(newMessage, SIGNAL(clicked()), this, SIGNAL(newMessage()));
     hboxLayout->addWidget(newMessage, 1);
     KPushButton *checkMail = new KPushButton(this);
     QPalette palette = checkMail->palette();
     palette.setColor(QPalette::Highlight, QColor("#7FDFF7"));
-    checkMail->setFixedSize(checkMail->sizeHint().height(), checkMail->sizeHint().height());
+    checkMail->setFixedSize(checkMail->sizeHint().height() - 2, checkMail->sizeHint().height() - 2);
     checkMail->setPalette(palette);
     checkMail->setDefault(true);
     checkMail->setIcon(KIcon(QLatin1String("mail-receive")));

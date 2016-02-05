@@ -1053,6 +1053,7 @@ void KMMainWidget::createWidgets()
 
     vboxlayout->addWidget( mFolderTreeWidget );
     KPushButton *mailSettings = new KPushButton(KIcon(QLatin1String("configure")), i18n("Mail settings"), this);
+    mailSettings->setFixedHeight(mailSettings->sizeHint().height() - 2);
     QPalette pal = palette();
 
     pal.setColor(QPalette::Inactive, QPalette::ButtonText, QColor("#4BC8E7"));
