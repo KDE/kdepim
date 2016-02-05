@@ -215,6 +215,7 @@ protected:
      */
     virtual void keyPressEvent ( QKeyEvent * e );
 
+    virtual void paintEvent(QPaintEvent *ev);
 private:
     void fixHtmlFontSize(QString &cleanHtml);
 

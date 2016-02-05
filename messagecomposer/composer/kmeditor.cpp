@@ -49,6 +49,7 @@
 #include <QTextLayout>
 #include <QTimer>
 #include <QDebug>
+#include <QPainter>
 
 using namespace KPIMTextEdit;
 
@@ -65,6 +66,7 @@ public:
           mExtEditorTempFile( 0 ),
           mAutoCorrection( 0 )
     {
+        mClickMessage = i18n("Write your message here");
     }
 
     ~KMeditorPrivate()
@@ -116,6 +118,8 @@ public:
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
     PimCommon::AutoCorrection *mAutoCorrection;
+    QString mClickMessage;
+    QRect clickMessageRect() const;
 private:
     void canStartProcess(const QString &commandLine);
 };
@@ -326,8 +330,36 @@ KMeditor::~KMeditor()
     delete d;
 }
 
+
+void KMeditor::paintEvent(QPaintEvent *ev)
+{
+    TextEdit::paintEvent(ev);
+
+    if (document()->isEmpty()) {
+        QPainter p(viewport());
+
+        QFont f = font();
+        p.setFont(f);
+
+        QColor color(palette().color(viewport()->foregroundRole()));
+        color.setAlphaF(0.5);
+        p.setPen(color);
+
+        QRect cr = d->clickMessageRect();
+        p.drawText(cr, Qt::AlignTop | Qt::TextWordWrap, d->mClickMessage);
+    }
+}
+
+QRect KMeditorPrivate::clickMessageRect() const
+{
+    int margin = int(q->document()->documentMargin());
+    QRect rect = q->viewport()->rect().adjusted(margin, margin, -margin, -margin);
+    return q->fontMetrics().boundingRect(rect, Qt::AlignTop | Qt::TextWordWrap, mClickMessage);
+}
+
 void KMeditorPrivate::init()
 {
+    //q->setClickMessage(i18n("Write your message here"));
     q->showAutoCorrectButton(true);
     QShortcut * insertMode = new QShortcut( QKeySequence( Qt::Key_Insert ), q );
     q->connect( insertMode, SIGNAL(activated()),
