@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8.12)
 set(LIBRARY_NAMELINK LIBRARY NAMELINK_SKIP)
 
 # we need some parts of the ECM CMake helpers
-find_package(ECM 5.18.0 REQUIRED NO_MODULE)
+find_package(ECM 5.19.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
@@ -81,7 +81,7 @@ set(KDEPIM_LIB_SOVERSION "5")
 set(AKONADINOTES_LIB_VERSION "5.1.40")
 
 set(QT_REQUIRED_VERSION "5.5.0")
-set(KF5_VERSION "5.18.0")
+set(KF5_VERSION "5.19.0")
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(QTWEBENGINE_EXPERIMENTAL_OPTION "Enable support for qtwebengine. False by default." FALSE)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools OpenGL)
