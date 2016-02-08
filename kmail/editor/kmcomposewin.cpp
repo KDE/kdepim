@@ -346,6 +346,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mEdtSubject->setToolTip( i18n( "Set a subject for this message" ) );
     mEdtSubject->setAutocorrection(KMKernel::self()->composerAutoCorrection());
     mEdtSubject->setFrameShape(QFrame::NoFrame);
+    mEdtSubject->setFixedHeight(20);
     mLblIdentity = new QLabel( i18n("&Identity:"), mHeadersArea );
     mDictionaryLabel = new QLabel( i18n("&Dictionary:"), mHeadersArea );
     mLblFcc = new QLabel( i18n("&Sent-Mail folder:"), mHeadersArea );
