@@ -78,10 +78,15 @@ RecipientLineNG::RecipientLineNG( QWidget* parent )
 
     const QStringList recipientTypes = Recipient::allTypeLabels();
 
+    topLayout->addSpacing( 3 );
+
     mCombo = new RecipientComboBox( this );
     mCombo->addItems( recipientTypes );
     topLayout->addWidget( mCombo );
     mCombo->setToolTip( i18nc("@label:listbox","Select type of recipient") );
+
+    topLayout->addSpacing( 3 );
+
     mEdit = new RecipientLineEdit( this );
     mEdit->setToolTip( i18n( "Set the list of email addresses to receive this message" ) );
     mEdit->setClearButtonShown( false );
