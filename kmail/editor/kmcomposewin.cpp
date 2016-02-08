@@ -576,6 +576,12 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
         KFontComboBox *cb = qobject_cast<KFontComboBox *>(w);
         if (cb) {
             cb->setFrame(false);
+
+            KLineEdit *le = qobject_cast<KLineEdit *>(cb->lineEdit());
+
+            if (le) {
+                le->setClearButtonShown(false);
+            }
         }
     }
     QAction *fontSizeAction = actionCollection()->action( QLatin1String("format_font_size") );
