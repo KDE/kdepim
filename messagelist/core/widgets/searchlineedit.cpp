@@ -195,6 +195,7 @@ QRect SearchLineEditStyle::subElementRect(SubElement element, const QStyleOption
     unconstThis->m_sentinel = true;
     QStyle *s = m_subStyle ? m_subStyle.data() : style();
     QRect rect = s->subElementRect(SE_LineEditContents, option, widget);
+    rect.adjust(18, 0, -20, 0);
     unconstThis->m_sentinel = false;
 
     if (option->direction == Qt::LeftToRight) {
@@ -1777,7 +1778,7 @@ void SearchLineEdit::paintEvent( QPaintEvent *ev )
 
         }
 
-        QRect lineRect(cr.x() + horizontalMargin + 20, vscroll, cr.width() - 2*horizontalMargin, fm.height());
+        QRect lineRect(cr.x() + horizontalMargin, vscroll, cr.width() - 2*horizontalMargin, fm.height());
         p.drawText(lineRect, Qt::AlignLeft|Qt::AlignVCenter, d->clickMessage);
 
     }
