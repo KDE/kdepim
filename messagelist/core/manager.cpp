@@ -304,7 +304,7 @@ void Manager::createDefaultAggregations()
                     true
                     )
                 );
-
+#if 0
     addAggregation(
                 new Aggregation(
                     i18n( "Current Activity, Threaded" ),
@@ -454,6 +454,7 @@ void Manager::createDefaultAggregations()
         )
     );
 */
+     #endif
 }
 
 void Manager::removeAllAggregations()
@@ -901,7 +902,6 @@ void Manager::createDefaultThemes()
     s->resetColumnState(); // so it's initially set from defaults
 
     addTheme( s );
-
 }
 
 void Manager::removeAllThemes()
