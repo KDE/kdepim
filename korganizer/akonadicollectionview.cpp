@@ -642,6 +642,11 @@ Akonadi::EntityTreeModel *AkonadiCollectionView::entityTreeModel() const
 void AkonadiCollectionView::checkNewCalendar( const QModelIndex &parent, int begin, int end )
 {
   // HACK: Check newly created calendars
+
+  if (begin < end) {
+    return;
+  }
+
   Akonadi::EntityTreeModel *etm = entityTreeModel();
   if ( etm && etm->isCollectionTreeFetched() ) {
     QAbstractItemModel *model = mCollectionView->model();
@@ -649,6 +654,7 @@ void AkonadiCollectionView::checkNewCalendar( const QModelIndex &parent, int beg
       QModelIndex index = model->index( row, 0, parent );
       if ( index.isValid() ) {
         model->setData( index, Qt::Checked, Qt::CheckStateRole );
+        checkNewCalendar( index, 0, model->rowCount(index) - 1 );
       }
     }
     if ( parent.isValid() ) {
