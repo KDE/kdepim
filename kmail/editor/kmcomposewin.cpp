@@ -557,6 +557,14 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     hbox->addWidget(sendButton);
     mainToolBar->addWidget(spacer);
 
+    spacer = new QWidget;
+    spacer->setFixedWidth(10);
+    mainToolBar->insertWidget(mainToolBar->actions().first(), spacer);
+
+    spacer = new QWidget;
+    spacer->setFixedWidth(10);
+    mainToolBar->addWidget(spacer);
+    mainToolBar->setFixedHeight(64);
 
     addToolBar(Qt::BottomToolBarArea, mainToolBar);
 
@@ -566,6 +574,15 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     QToolBar *htmlToolBar = toolBar(QLatin1String("htmlToolBar"));
     htmlToolBar->setIconSize(QSize(22,22));
     htmlToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+
+    spacer = new QWidget;
+    spacer->setFixedWidth(10);
+    htmlToolBar->insertWidget(htmlToolBar->actions().first(), spacer);
+
+    spacer = new QWidget;
+    spacer->setFixedWidth(10);
+    htmlToolBar->addWidget(spacer);
+
     addToolBar(Qt::BottomToolBarArea, htmlToolBar);
 
     //KFontAction *action_font_family;
@@ -917,7 +934,7 @@ void KMComposeWin::rethinkFields( bool fromSlot )
     delete mGrid;
     mGrid = new QGridLayout( mHeadersArea );
     mGrid->setSpacing( KDialog::spacingHint() );
-    mGrid->setContentsMargins(26, 5, 26, 0);
+    mGrid->setContentsMargins(20, 5, 20, 12);
     mGrid->setColumnStretch( 0, 1 );
     mGrid->setColumnStretch( 1, 100 );
     mGrid->setColumnStretch( 2, 1 );
