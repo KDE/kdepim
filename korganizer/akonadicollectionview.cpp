@@ -643,7 +643,7 @@ void AkonadiCollectionView::checkNewCalendar( const QModelIndex &parent, int beg
 {
   // HACK: Check newly created calendars
   Akonadi::EntityTreeModel *etm = entityTreeModel();
-  if ( etm && entityTreeModel()->isCollectionTreeFetched() ) {
+  if ( etm && etm->isCollectionTreeFetched() ) {
     for( int row=begin; row<=end; ++row ) {
       QModelIndex index = mCollectionView->model()->index( row, 0, parent );
       if ( index.isValid() )
