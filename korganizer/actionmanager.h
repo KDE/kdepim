@@ -289,12 +289,6 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     /** Open kcontrol module for configuring date and time formats */
     void configureDateTime();
 
-    /** Show tip of the day */
-    void showTip();
-
-    /** Show tip of the day */
-    void showTipOnStart();
-
     void downloadNewStuff();
 
     void toggleDateNavigator();

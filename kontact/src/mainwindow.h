@@ -79,8 +79,6 @@ protected slots:
     void slotNewClicked();
     void slotSyncClicked();
     void slotQuit();
-    void slotShowTip();
-    void slotShowTipOnStart();
     void slotNewToolbarConfig();
     void slotShowIntroduction();
     void showAboutDialog();
@@ -105,7 +103,6 @@ private:
     void addPlugin( KontactInterface::Plugin *plugin );
     void partLoaded( KontactInterface::Plugin *plugin, KParts::ReadOnlyPart *part );
     void setupActions();
-    void showTip( bool );
     virtual bool queryClose();
     virtual void readProperties( const KConfigGroup &config );
     virtual void saveProperties( KConfigGroup &config );

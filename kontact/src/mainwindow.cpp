@@ -59,7 +59,6 @@ using namespace Kontact;
 #include <KStandardAction>
 #include <KStandardDirs>
 #include <KStatusBar>
-#include <KTipDialog>
 #include <KToolBar>
 #include <KToolInvocation>
 #include <KXMLGUIFactory>
@@ -247,8 +246,6 @@ void MainWindow::initObject()
     loadSettings();
 
     statusBar()->show();
-
-    QTimer::singleShot( 200, this, SLOT(slotShowTipOnStart()) );
 
     // done initializing
     slotShowStatusMsg( QString::null );        //krazy:exclude=nullstrassign for old broken gcc
@@ -477,17 +474,6 @@ void MainWindow::setupActions()
     actionCollection()->addAction( QLatin1String("help_introduction"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotShowIntroduction()) );
 
-    action =
-            new KAction( KIcon( QLatin1String("ktip") ),
-                         i18nc( "@action:inmenu", "&Tip of the Day" ), this );
-    action->setHelpText(
-                i18nc( "@info:status", "Show the Tip-of-the-Day dialog" ) );
-    action->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "You will be presented with a dialog showing small tips to help "
-                       "you use this program more effectively." ) );
-    actionCollection()->addAction( QLatin1String("help_tipofday"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotShowTip()) );
     //TODO 4.12: add description
     QShortcut *shortcut = new QShortcut( QKeySequence(Qt::Key_F9), this );
     connect(shortcut, SIGNAL(activated()), this, SLOT(slotShowHideSideBar()));
@@ -994,33 +980,9 @@ void MainWindow::saveSettings()
     }
 }
 
-void MainWindow::slotShowTip()
-{
-    showTip( true );
-}
-
-void MainWindow::slotShowTipOnStart()
-{
-    showTip( false );
-}
-
 void MainWindow::slotShowIntroduction()
 {
     mPartsStack->setCurrentIndex( 0 );
-}
-
-void MainWindow::showTip( bool force )
-{
-    QStringList tips;
-    PluginList::ConstIterator end = mPlugins.constEnd();
-    for ( PluginList::ConstIterator it = mPlugins.constBegin(); it != end; ++it ) {
-        const QString file = (*it)->tipFile();
-        if ( !file.isEmpty() ) {
-            tips.append( file );
-        }
-    }
-
-    KTipDialog::showMultiTip( this, tips, force );
 }
 
 void MainWindow::slotQuit()

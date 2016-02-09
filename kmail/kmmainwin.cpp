@@ -90,8 +90,6 @@ KMMainWin::KMMainWin(QWidget *)
     connect( mKMMainWidget, SIGNAL(captionChangeRequest(QString)),
              SLOT(setCaption(QString)) );
 
-    if ( kmkernel->firstInstance() )
-        QTimer::singleShot( 200, this, SLOT(slotShowTipOnStart()) );
 
     mKMMainWidget->updateQuickSearchLineText();
     mHideMenuBarAction->setChecked( GlobalSettings::self()->showMenuBar() );
@@ -210,11 +208,6 @@ bool KMMainWin::queryClose()
     if ( kmkernel->shuttingDown() || kapp->sessionSaving() || mReallyClose )
         return true;
     return kmkernel->canQueryClose();
-}
-
-void KMMainWin::slotShowTipOnStart()
-{
-    KTipDialog::showTip( this );
 }
 
 void KMMainWin::slotConfigureShortcuts()

@@ -58,7 +58,6 @@ protected:
 
 protected slots:
     void slotQuit();
-    void slotShowTipOnStart();
 
 private slots:
     void slotToggleMenubar(bool dontShowWarning = false);    

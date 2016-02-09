@@ -82,7 +82,6 @@
 #include <KStandardAction>
 #include <KStandardDirs>
 #include <KTemporaryFile>
-#include <KTipDialog>
 #include <KToggleAction>
 #include <KWindowSystem>
 #include <KIO/NetAccess>
@@ -1256,18 +1255,6 @@ void ActionManager::configureDateTime()
     KMessageBox::sorry( dialogParent(),
                         i18n( "Could not start control module for date and time format." ) );
   }
-}
-
-void ActionManager::showTip()
-{
-  KTipDialog::showTip( dialogParent(), QString(), true );
-}
-
-void ActionManager::showTipOnStart()
-{
-  KConfigGroup config( KGlobal::config(), "TipOfDay" );
-  KTipDialog::setShowOnStart( config.readEntry( "RunOnStart", false ) );
-  KTipDialog::showTip( dialogParent() );
 }
 
 KOrg::MainWindow *ActionManager::findInstance( const KUrl &url )
