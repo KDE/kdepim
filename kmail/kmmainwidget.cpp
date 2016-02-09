@@ -4058,7 +4058,7 @@ void KMMainWidget::slotShowStartupFolder()
     mFolderShortcutActionManager->createActions();
     mTagActionManager->createActions();
     messageActions()->setupForwardingActionsList( mGUIClient );
-
+#if 0
     QString newFeaturesMD5 = KMReaderWin::newFeaturesMD5();
     if ( kmkernel->firstStart() ||
          GlobalSettings::self()->previousNewFeaturesMD5() != newFeaturesMD5 ) {
@@ -4066,6 +4066,7 @@ void KMMainWidget::slotShowStartupFolder()
         slotIntro();
         return;
     }
+#endif
 }
 
 void KMMainWidget::checkAkonadiServerManagerState()
