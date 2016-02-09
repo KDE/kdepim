@@ -498,7 +498,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     connect( kmkernel, SIGNAL(configChanged()),
              this, SLOT(slotConfigChanged()) );
 
-    mMainWidget->resize( 480, 510 );
+    mMainWidget->resize( 600, 800 );
     setCentralWidget( mMainWidget );
 
     if ( GlobalSettings::self()->useHtmlMarkup() )
