@@ -21,7 +21,6 @@
 #include <pimsettingbackupthread.h>
 #include <KLocalizedString>
 #include <KZip>
-#include <QDebug>
 #include <QFileInfo>
 
 #include <AkonadiCore/ServerManager>
@@ -103,7 +102,7 @@ void ExportResourceArchiveJob::slotTerminated(bool success)
 
 void ExportResourceArchiveJob::slotTaskCanceled()
 {
-    qDebug() << " void ExportResourceArchiveJob::slotTaskCanceled()";
+    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " void ExportResourceArchiveJob::slotTaskCanceled()";
     //TODO
     if (mThread) {
         mThread->exit();
