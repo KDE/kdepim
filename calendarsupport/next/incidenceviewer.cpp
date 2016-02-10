@@ -27,6 +27,7 @@
 #include "incidenceattachmentmodel.h"
 
 #include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/calendar/calendarbase.h>
 
@@ -242,7 +243,7 @@ void IncidenceViewer::itemChanged( const Akonadi::Item &item )
   d->mParentCollectionFetchJob =
     new Akonadi::CollectionFetchJob( d->mCurrentItem.parentCollection(),
                                      Akonadi::CollectionFetchJob::Base, this );
-
+  d->mParentCollectionFetchJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
   connect( d->mParentCollectionFetchJob, SIGNAL(result(KJob*)),
            this, SLOT(slotParentCollectionFetched(KJob*)) );
 }

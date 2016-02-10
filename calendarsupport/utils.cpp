@@ -514,7 +514,7 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
     QString ownerStr;        // folder owner: "fred", "ethel", etc
     QString nameStr;         // folder name: "Public", "Test", etc
     if ( calendar ) {
-      Akonadi::Collection p = c.parentCollection();
+      Akonadi::Collection p = fullCollection.parentCollection();
       while ( p != Akonadi::Collection::root() ) {
         Akonadi::Collection tCol = calendar->collection( p.id() );
         const QString tName = tCol.name();
@@ -592,14 +592,14 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   if ( resourceName.contains( QLatin1String( "google" ) ) ) {
     QString ownerStr;        // folder owner: "user@gmail.com"
     if ( calendar ) {
-      Akonadi::Collection p = c.parentCollection();
+      Akonadi::Collection p = fullCollection.parentCollection();
       ownerStr = calendar->collection( p.id() ).displayName();
     }
 
-    const QString nameStr = c.displayName(); // folder name: can be anything
+    const QString nameStr = fullCollection.displayName(); // folder name: can be anything
 
     QString typeStr;
-    const QString mimeStr = c.contentMimeTypes().join( QLatin1String(",") );
+    const QString mimeStr = fullCollection.contentMimeTypes().join( QLatin1String(",") );
     if ( mimeStr.contains( QLatin1String(".event") ) ) {
       typeStr = i18n( "Calendar" );
     } else if ( mimeStr.contains( QLatin1String(".todo") ) ) {
