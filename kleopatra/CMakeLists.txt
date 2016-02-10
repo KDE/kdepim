@@ -153,18 +153,7 @@ if(USABLE_ASSUAN_FOUND)
     uiserver/createchecksumscommand.cpp
     uiserver/verifychecksumscommand.cpp
 
-    libkleopatraclient/core/command.cpp
-    libkleopatraclient/core/libkleopatraclientcore_debug.cpp
     selftest/uiservercheck.cpp
-  )
-  set_source_files_properties(libkleopatraclient/core/command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
-
-  qt5_generate_moc(libkleopatraclient/core/command_p.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp")
-  qt5_generate_moc(libkleopatraclient/core/command.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp")
-
-  list(APPEND _kleopatra_uiserver_SRCS
-    "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp"
-    "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp"
   )
 
   if(ASSUAN2_FOUND)
@@ -404,6 +393,7 @@ target_link_libraries(kleopatra_bin
   KF5::DBusAddons
   Qt5::Network
   ${_kleopatra_uiserver_extra_libs}
+  kleopatraclientcore
 )
 
 if(USABLE_ASSUAN_FOUND)
