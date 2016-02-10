@@ -188,6 +188,7 @@ set(libpimcommon_util_SRCS
   util/editorutil.cpp
   util/imapresourcecapabilitiesmanager.cpp
   util/vcardutil.cpp
+  util/indexerutils.cpp
 )
 
 
@@ -257,6 +258,7 @@ target_link_libraries(pimcommon
     ${KDEPIMLIBS_KIMAP_LIBS}
     ${KDEPIMLIBS_KPIMUTILS_LIBS}
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
     ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}

@@ -45,6 +45,7 @@ class SelectMultiCollectionDialog;
 
 namespace Akonadi {
 class StandardMailActionManager;
+class EntityTreeModel;
 }
 
 namespace KMime {
@@ -153,6 +154,9 @@ private Q_SLOTS:
     void slotJumpToFolder();
 private:
     void doSearch();
+    QVector<qint64> checkIncompleteIndex(const Akonadi::Collection::List &searchCols, bool recursive);
+    Akonadi::Collection::List searchCollectionsRecursive(const Akonadi::Collection::List &baseCols) const;
+
     QPointer<PimCommon::SelectMultiCollectionDialog> mSelectMultiCollectionDialog;
     QList<Akonadi::Collection> mCollectionId;
     Akonadi::SearchQuery mQuery;

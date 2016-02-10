@@ -113,6 +113,7 @@ if (KDEPIM_BUILD_DESKTOP)
      searchdialog/kmailsearchpatternedit.cpp
      searchdialog/searchwindow.cpp
      searchdialog/searchdescriptionattribute.cpp
+     searchdialog/incompleteindexdialog.cpp
   )
   set(kmailprivate_storageservice_LIB_SRCS
      storageservice/storageservicesettingsjob.cpp
@@ -272,6 +273,7 @@ if (KDEPIM_BUILD_DESKTOP)
     ui/securitypagemdntab.ui
     ui/identitypage.ui
     ui/accountspagereceivingtab.ui
+    ui/incompleteindexdialog.ui
     ui/searchwindow.ui
   )
 

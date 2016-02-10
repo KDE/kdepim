@@ -19,6 +19,7 @@
 #include "collectionmaintenancepage.h"
 #include "util/mailutil.h"
 #include "kmkernel.h"
+#include "pimcommon/util/indexerutils.h"
 
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/collection.h>
@@ -114,7 +115,7 @@ void CollectionMaintenancePage::load(const Collection & col)
         if(!indexingWasEnabled)
             mLastIndexed->hide();
         else {
-            QDBusInterface interfaceBalooIndexer( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_baloo_indexer"), QLatin1String("/") );
+            QDBusInterface interfaceBalooIndexer(PimCommon::indexerServiceName(), QLatin1String("/") );
             if(interfaceBalooIndexer.isValid()) {
                 if (!interfaceBalooIndexer.callWithCallback(QLatin1String("indexedItems"), QList<QVariant>() << (qlonglong)mCurrentCollection.id(), this, SLOT(onIndexedItemsReceived(qint64)))) {
                     kWarning() << "Failed to request indexed items";

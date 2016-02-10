@@ -20,6 +20,7 @@
 
 #include "core/widgetbase.h"
 #include "core/widgets/quicksearchwarning.h"
+#include "core/widgets/searchcollectionindexingwarning.h"
 #include "core/aggregation.h"
 #include "core/theme.h"
 #include "core/filter.h"
@@ -102,6 +103,7 @@ public:
 
     QuickSearchWarning *quickSearchWarning;
     QuickSearchLine *quickSearchLine;
+    SearchCollectionIndexingWarning *searchCollectionIndexingWarning;
     View *mView;
     QString mLastAggregationId;
     QString mLastThemeId;
@@ -147,6 +149,8 @@ Widget::Widget( QWidget *pParent )
     g->addWidget( d->quickSearchLine, 0 );
     d->quickSearchWarning = new QuickSearchWarning(this);
     g->addWidget( d->quickSearchWarning, 0 );
+    d->searchCollectionIndexingWarning = new SearchCollectionIndexingWarning(this);
+    g->addWidget( d->searchCollectionIndexingWarning, 0);
     d->mView = new View( this );
     d->mView->setFrameStyle( QFrame::NoFrame );
     d->mView->setSortOrder( &d->mSortOrder );
@@ -1085,6 +1089,7 @@ bool Widget::selectionEmpty() const
 void Widget::setCurrentFolder( const Akonadi::Collection &collection )
 {
     d->mCurrentFolder = collection;
+    d->searchCollectionIndexingWarning->setCollection(collection);
 }
 
 bool Widget::searchEditHasFocus() const

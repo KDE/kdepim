@@ -22,7 +22,6 @@
  */
 
 #include "searchwindow.h"
-
 #include "folderrequester.h"
 #include "kmcommands.h"
 #include "kmmainwidget.h"
@@ -35,6 +34,8 @@
 #include "kmsearchfilterproxymodel.h"
 #include "searchpatternwarning.h"
 #include "pimcommon/folderdialog/selectmulticollectiondialog.h"
+#include "pimcommon/util/indexerutils.h"
+#include "incompleteindexdialog.h"
 
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/CollectionFetchJob>
@@ -61,6 +62,10 @@
 #include <QKeyEvent>
 #include <QMenu>
 #include <QVBoxLayout>
+#include <QDBusInterface>
+#include <QDBusConnection>
+#include <QDBusReply>
+#include <QScopedPointer>
 
 using namespace KPIM;
 using namespace MailCommon;
@@ -501,6 +506,20 @@ void SearchWindow::doSearch()
     kDebug() << mQuery.toJSON();
     mUi.mSearchFolderOpenBtn->setEnabled( true );
 
+    QVector<qint64> unindexedCollections = checkIncompleteIndex(searchCollections, recursive);
+    if (!unindexedCollections.isEmpty()) {
+        QScopedPointer<IncompleteIndexDialog> dlg(new IncompleteIndexDialog(unindexedCollections));
+        if (dlg->exec() == QDialog::Accepted) {
+            const Akonadi::Collection::List collectionsToReindex = dlg->collectionsToReindex();
+            QDBusInterface indexer(PimCommon::indexerServiceName(), QLatin1String("/"),
+                                   QLatin1String("org.freedesktop.Akonadi.BalooIndexer"),
+                                   QDBusConnection::sessionBus(), this);
+            Q_FOREACH (const Akonadi::Collection &col, collectionsToReindex) {
+                indexer.asyncCall(QLatin1String("reindexCollection"), col.id());
+            }
+        }
+    }
+
     if ( !mFolder.isValid() ) {
         kDebug()<<" create new folder " << mUi.mSearchFolderEdt->text();
         Akonadi::SearchCreateJob *searchJob = new Akonadi::SearchCreateJob( mUi.mSearchFolderEdt->text(), mQuery, this );
@@ -865,6 +884,72 @@ void SearchWindow::slotJumpToFolder()
         mKMMainWidget->slotSelectCollectionFolder( selectedMessage().parentCollection() );
     }
 }
+
+QVector<qint64> SearchWindow::checkIncompleteIndex(const Akonadi::Collection::List &searchCols, bool recursive)
+{
+    Akonadi::Collection::List cols;
+    if (recursive) {
+        cols = searchCollectionsRecursive(searchCols);
+    } else {
+        cols = searchCols;
+    }
+
+    PimCommon::CollectionIndexStatusJob *statsJob = new PimCommon::CollectionIndexStatusJob(cols, this);
+    {
+        mSearchJob = statsJob;
+        enableGUI();
+        mUi.mProgressIndicator->start();
+        mUi.mStatusLbl->setText(i18n("Checking index status..."));
+
+        // TODO: No blocking jobs!
+        statsJob->exec();
+
+        mSearchJob = 0;
+    }
+
+    QVector<qint64> results;
+    const QMap<qint64, qint64> stats = statsJob->resultStats();
+    Q_FOREACH (const Akonadi::Collection &col, cols) {
+        kDebug() << "Collection:" << col.displayName() << "(" << col.id() << "), count:" << col.statistics().count() << ", index:" << stats.value(col.id());
+        if (col.statistics().count() != stats.value(col.id())) {
+            results.push_back(col.id());
+        }
+    }
+
+    return results;
+}
+
+Akonadi::Collection::List SearchWindow::searchCollectionsRecursive(const Akonadi::Collection::List &cols) const
+{
+    QAbstractItemModel *etm = KMKernel::self()->collectionModel();
+    Akonadi::Collection::List result;
+
+    Q_FOREACH (const Akonadi::Collection &col, cols) {
+        const QModelIndex colIdx = Akonadi::EntityTreeModel::modelIndexForCollection(etm, col);
+        if (col.statistics().count() > -1) {
+            result.push_back(col);
+        } else {
+            const Akonadi::Collection collection = etm->data(colIdx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+            result.push_back(collection);
+        }
+
+        const int childrenCount = etm->rowCount(colIdx);
+        if (childrenCount > 0) {
+            Akonadi::Collection::List subCols;
+            subCols.reserve(childrenCount);
+            for (int i = 0; i < childrenCount; ++i) {
+                const QModelIndex idx = etm->index(i, 0, colIdx);
+                subCols.push_back(etm->data(idx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>());
+            }
+
+            result += searchCollectionsRecursive(subCols);
+        }
+    }
+
+    return result;
+}
+
+
 
 }
 
