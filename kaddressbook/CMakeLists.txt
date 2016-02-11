@@ -117,6 +117,7 @@ else()
 endif()
 if (BUILD_TESTING)
    add_subdirectory(autotests)
+   add_subdirectory(tests)
 endif()
 
 if(KF5Gpgmepp_FOUND)
