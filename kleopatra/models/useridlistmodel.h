@@ -3,6 +3,7 @@
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
+                  2016 Andre Heinecke <aheinecke@gnupg.org>
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,11 +35,9 @@
 
 #include <QAbstractItemModel>
 
-#include <vector>
-
-#include <utils/pimpl_ptr.h>
-
 #include <gpgme++/key.h> // since Signature is nested in UserID...
+
+class UIDModelItem;
 
 namespace Kleo
 {
@@ -52,37 +51,16 @@ public:
 
     GpgME::Key key() const;
 
-    enum Columns {
-        PrettyName,
-        PrettyEMail,
-        ValidFrom,
-        ValidUntil,
-        Status,
-        ID,
-
-        NumColumns,
-        Icon = PrettyName // which column shall the icon be displayed in?
-    };
-
-    GpgME::UserID userID(const QModelIndex &idx, bool strict = false) const;
-    std::vector<GpgME::UserID> userIDs(const QList<QModelIndex> &indexes, bool strict = false) const;
-
-    GpgME::UserID::Signature signature(const QModelIndex &idx) const;
-    std::vector<GpgME::UserID::Signature> signatures(const QList<QModelIndex> &indexes) const;
-
-    using QAbstractItemModel::index;
-    QModelIndex index(const GpgME::UserID &userID, int col = 0) const;
-    QModelIndex index(const GpgME::UserID::Signature &signature, int col = 0) const;
-    QList<QModelIndex> indexes(const std::vector<GpgME::UserID> &userIDs, int col = 0) const;
-    QList<QModelIndex> indexes(const std::vector<GpgME::UserID::Signature> &signatures, int col = 0) const;
+public:
+    QVector<GpgME::UserID> userIDs(const QModelIndexList &indexs) const;
+    QVector<GpgME::UserID::Signature> signatures(const QModelIndexList &indexs) const;
 
 public Q_SLOTS:
     void setKey(const GpgME::Key &key);
-    void clear();
 
 public:
-    int columnCount(const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &pindex = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &pindex = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation o, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
@@ -90,8 +68,8 @@ public:
     QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
+    GpgME::Key mKey;
+    UIDModelItem *mRootItem;
 };
 
 }

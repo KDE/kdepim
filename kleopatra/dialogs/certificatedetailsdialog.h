@@ -73,7 +73,6 @@ private:
     Q_PRIVATE_SLOT(d, void slotCertifyUserIDClicked())
     Q_PRIVATE_SLOT(d, void slotSignCertificateCommandFinished())
     Q_PRIVATE_SLOT(d, void slotRevokeCertificationClicked())
-    Q_PRIVATE_SLOT(d, void slotShowCertificationsClicked())
     Q_PRIVATE_SLOT(d, void slotSignatureListingNextKey(GpgME::Key))
     Q_PRIVATE_SLOT(d, void slotSignatureListingDone(GpgME::KeyListResult))
     Q_PRIVATE_SLOT(d, void slotCertificationSelectionChanged())

@@ -3,6 +3,7 @@
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
+                  2016 Andre Heinecke <aheinecke@gnupg.org>
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -79,7 +80,7 @@ using namespace Kleo::Commands;
 using namespace GpgME;
 using namespace boost;
 
-static bool own(const std::vector<UserID::Signature> &sigs)
+static bool own(const QVector<UserID::Signature> &sigs)
 {
     const shared_ptr<const KeyCache> kc = KeyCache::instance();
     Q_FOREACH (const UserID::Signature &sig, sigs) {
@@ -122,8 +123,6 @@ public:
                 q, SLOT(slotCertifyUserIDClicked()));
         connect(ui.revokeCertificationPB, SIGNAL(clicked()),
                 q, SLOT(slotRevokeCertificationClicked()));
-        connect(ui.showCertificationsPB, SIGNAL(clicked()),
-                q, SLOT(slotShowCertificationsClicked()));
 
         ui.subkeyTV->setModel(&subkeysModel);
         // no selection (yet)
@@ -213,11 +212,13 @@ private:
 
     void slotCertifyUserIDClicked()
     {
-        const std::vector<UserID> uids = selectedUserIDs();
-        if (uids.empty()) {
+        const QVector<UserID> uids = selectedUserIDs();
+        if (uids.isEmpty()) {
             return;
         }
-        startCommand<CertifyCertificateCommand>(signCertificateCommand, uids, SLOT(slotSignCertificateCommandFinished()));
+        startCommand<CertifyCertificateCommand>(signCertificateCommand,
+                                                uids.toStdVector(),
+                                                SLOT(slotSignCertificateCommandFinished()));
     }
     void slotSignCertificateCommandFinished()
     {
@@ -237,12 +238,6 @@ private:
     void slotRevokeCertificationClicked()
     {
 
-    }
-
-    void slotShowCertificationsClicked()
-    {
-        startSignatureListing();
-        enableDisableWidgets();
     }
 
     void startSignatureListing()
@@ -360,7 +355,6 @@ private:
         ui.addUserIDPB->setVisible(secret);
         ui.expandAllCertificationsPB->setVisible(pgp && sigs);
         ui.collapseAllCertificationsPB->setVisible(pgp && sigs);
-        ui.showCertificationsPB->setVisible(!external && pgp && !sigs);
 
         // Technical Details Tab
         ui.tabWidget->setTabEnabled(ui.tabWidget->indexOf(ui.detailsTab), pgp);
@@ -382,20 +376,16 @@ private:
         return ui.certificationsTV->selectionModel()->selectedRows();
     }
 
-    std::vector<UserID> selectedUserIDs() const
+    QVector<UserID> selectedUserIDs() const
     {
         const QModelIndexList mil = selectedCertificationsIndexes();
-        std::vector<UserID> uids = certificationsModel.userIDs(mil, true);
-        uids.erase(std::remove_if(uids.begin(), uids.end(), mem_fn(&UserID::isNull)), uids.end());
-        return uids;
+        return certificationsModel.userIDs(mil);
     }
 
-    std::vector<UserID::Signature> selectedSignatures() const
+    QVector<UserID::Signature> selectedSignatures() const
     {
         const QModelIndexList mil = selectedCertificationsIndexes();
-        std::vector<UserID::Signature> sigs = certificationsModel.signatures(mil);
-        sigs.erase(std::remove_if(sigs.begin(), sigs.end(), mem_fn(&UserID::Signature::isNull)), sigs.end());
-        return sigs;
+        return certificationsModel.signatures(mil);
     }
 
     void enableDisableWidgets()
@@ -407,13 +397,9 @@ private:
 
         // Certifications Tab
         ui.addUserIDPB->setEnabled(!addUserIDCommand);
-        ui.showCertificationsPB->setEnabled(!keyListJob);
-        ui.showCertificationsPB->setText(keyListJob
-                                         ? i18n("(please wait while certifications are being loaded)")
-                                         : i18n("Load Certifications (may take a while)"));
 
-        const std::vector<UserID> uids = selectedUserIDs();
-        const std::vector<UserID::Signature> sigs = selectedSignatures();
+        const QVector<UserID> uids = selectedUserIDs();
+        const QVector<UserID::Signature> sigs = selectedSignatures();
 
         ui.certifyUserIDPB->setEnabled(!uids.empty() &&  sigs.empty() && !signCertificateCommand);
         ui.revokeUserIDPB->setEnabled(!uids.empty() &&  sigs.empty());
@@ -457,11 +443,6 @@ private:
     void propagateKey()
     {
         certificationsModel.setKey(key);
-        const QModelIndexList uidIndexes = certificationsModel.indexes(key.userIDs());
-        Q_FOREACH (const QModelIndex &idx, uidIndexes) {
-            ui.certificationsTV->setFirstColumnSpanned(idx.row(), idx.parent(), true);
-        }
-
         subkeysModel.setKey(key);
         ui.subkeyTV->header()->resizeSections(QHeaderView::ResizeToContents);
 
@@ -533,6 +514,7 @@ void CertificateDetailsDialog::setKey(const Key &key)
     d->updateLabel();
     d->propagateKey();
     d->enableDisableWidgets();
+    d->startSignatureListing();
 }
 
 Key CertificateDetailsDialog::key() const

@@ -3,6 +3,7 @@
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
+                  2016 Andre Heinecke <aheinecke@gnupg.org>
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,324 +44,269 @@
 #include <QVariant>
 #include <QDate>
 
-#include <boost/bind.hpp>
-
-#include <algorithm>
-#include <iterator>
-
 using namespace GpgME;
 using namespace Kleo;
-using namespace boost;
 
-namespace
+class UIDModelItem
 {
-
-static inline bool is_userid_level(const QModelIndex &idx)
-{
-    return idx.isValid()/* && idx.internalId() < 0 */;
-}
-
-static inline int extract_uid_number(const QModelIndex &idx)
-{
-    return idx.internalId();
-}
-
-static inline bool is_signature_level(const QModelIndex &idx)
-{
-    return idx.isValid()/* && idx.internalId() >= 0*/;
-}
-
-}
-
-class UserIDListModel::Private
-{
-    friend class ::Kleo::UserIDListModel;
-    UserIDListModel *const q;
+    // A uid model item can either be a UserID::Signature or a UserID.
+    // you can find out which it is if the uid or the signature return
+    // null values. (Not null but isNull)
+    //
 public:
-    explicit Private(UserIDListModel *qq)
-        : q(qq), key() {}
+    explicit UIDModelItem(const UserID::Signature &sig, UIDModelItem *parentItem)
+    {
+        mItemData  << QString::fromUtf8(sig.signerKeyID())
+                   << Formatting::prettyName(sig)
+                   << Formatting::prettyEMail(sig)
+                   << Formatting::creationDateString(sig)
+                   << Formatting::expirationDateString(sig)
+                   << Formatting::validityShort(sig);
+        mSig = sig;
+        mParentItem = parentItem;
+    }
+
+    explicit UIDModelItem(const UserID &uid, UIDModelItem *parentItem)
+    {
+        mItemData << Formatting::prettyUserID(uid);
+        mUid = uid;
+        mParentItem = parentItem;
+    }
+
+    // The root item
+    explicit UIDModelItem() : mParentItem(0)
+    {
+        mItemData << i18n("ID")
+                  << i18n("Name")
+                  << i18n("EMail")
+                  << i18n("Valid From")
+                  << i18n("Valid Until")
+                  << i18n("Status");
+    }
+
+    ~UIDModelItem()
+    {
+        qDeleteAll(mChildItems);
+    }
+
+    void appendChild(UIDModelItem *child)
+    {
+        mChildItems << child;
+    }
+
+    UIDModelItem *child(int row) const
+    {
+        return mChildItems.value(row);
+    }
+
+    const UIDModelItem *constChild(int row) const
+    {
+        return mChildItems.value(row);
+    }
+
+    int childCount() const
+    {
+        return mChildItems.count();
+    }
+
+    int columnCount() const
+    {
+        if (childCount()) {
+            // We take the value from the first child
+            // as we are likely a UID and our children
+            // are UID Signatures.
+            return constChild(0)->columnCount();
+        }
+        return mItemData.count();
+    }
+
+    QVariant data(int column) const
+    {
+        return mItemData.value(column);
+    }
+
+    int row() const
+    {
+        if (mParentItem) {
+            return mParentItem->mChildItems.indexOf(const_cast<UIDModelItem*>(this));
+        }
+        return 0;
+    }
+
+    UIDModelItem *parentItem() const
+    {
+        return mParentItem;
+    }
+
+    UserID::Signature signature() const
+    {
+        return mSig;
+    }
+
+    UserID uid() const
+    {
+        return mUid;
+    }
 
 private:
-    Key key;
+    QList<UIDModelItem*> mChildItems;
+    QList<QVariant> mItemData;
+    UIDModelItem *mParentItem;
+    UserID::Signature mSig;
+    UserID mUid;
 };
 
 UserIDListModel::UserIDListModel(QObject *p)
-    : QAbstractItemModel(p), d(new Private(this))
+    : QAbstractItemModel(p), mRootItem(0)
 {
-
 }
 
-UserIDListModel::~UserIDListModel() {}
+UserIDListModel::~UserIDListModel()
+{
+    delete mRootItem;
+}
 
 Key UserIDListModel::key() const
 {
-    return d->key;
+    return mKey;
 }
 
-// slot
 void UserIDListModel::setKey(const Key &key)
 {
-
-    const Key oldKey = d->key;
-
-    if (qstricmp(key.primaryFingerprint(), oldKey.primaryFingerprint()) != 0) {
-        // different key -> reset
-        beginResetModel();
-        d->key = key;
-        endResetModel();
-        return;
-    }
-
-    d->key = key;
-    // ### diff them, and signal more fine-grained than this:
-
-    if (key.numUserIDs() > 0 && oldKey.numUserIDs() == key.numUserIDs()) {
-        bool identical = true;
-        for (unsigned int i = 0, end = key.numUserIDs(); i != end; ++i) {
-            if (key.userID(i).numSignatures() != oldKey.userID(i).numSignatures()) {
-                identical = false;
-                break;
-            }
-        }
-        if (identical) {
-            Q_EMIT dataChanged(index(0, 0), index(key.numUserIDs() - 1, NumColumns - 1));
-            return;
-        }
-    }
-    Q_EMIT layoutAboutToBeChanged();
-    Q_EMIT layoutChanged();
-}
-
-UserID UserIDListModel::userID(const QModelIndex &idx, bool strict) const
-{
-    if (is_userid_level(idx)) {
-        return d->key.userID(idx.row());
-    }
-    if (!strict && is_signature_level(idx)) {
-        return d->key.userID(extract_uid_number(idx));
-    }
-    return UserID();
-}
-
-std::vector<UserID> UserIDListModel::userIDs(const QList<QModelIndex> &indexes, bool strict) const
-{
-    std::vector<UserID> result;
-    result.reserve(indexes.size());
-    std::transform(indexes.begin(), indexes.end(),
-                   std::back_inserter(result),
-                   boost::bind(&UserIDListModel::userID, this, _1, strict));
-    return result;
-}
-
-UserID::Signature UserIDListModel::signature(const QModelIndex &idx) const
-{
-    if (is_signature_level(idx)) {
-        return d->key.userID(extract_uid_number(idx)).signature(idx.row());
-    } else {
-        return UserID::Signature();
-    }
-}
-
-std::vector<UserID::Signature> UserIDListModel::signatures(const QList<QModelIndex> &indexes) const
-{
-    std::vector<UserID::Signature> result;
-    result.reserve(indexes.size());
-    std::transform(indexes.begin(), indexes.end(),
-                   std::back_inserter(result),
-                   boost::bind(&UserIDListModel::signature, this, _1));
-    return result;
-}
-
-QModelIndex UserIDListModel::index(const UserID &userID, int col) const
-{
-    // O(N), but not sorted, so no better way...
-    for (unsigned int row = 0, end = d->key.numUserIDs(); row != end; ++row)
-        if (qstricmp(userID.id(), d->key.userID(row).id()) == 0) {
-            return createIndex(row, col, -1);
-        }
-    return QModelIndex();
-}
-
-QList<QModelIndex> UserIDListModel::indexes(const std::vector<UserID> &userIDs, int col) const
-{
-    // O(N*M), but who cares...?
-    QList<QModelIndex> result;
-    Q_FOREACH (const UserID &uid, userIDs) {
-        result.push_back(index(uid, col));
-    }
-    return result;
-}
-
-QModelIndex UserIDListModel::index(const UserID::Signature &sig, int col) const
-{
-    const UserID uid = sig.parent();
-    const QModelIndex pidx = index(uid);
-    if (!pidx.isValid()) {
-        return QModelIndex();
-    }
-    const std::vector<UserID::Signature> sigs = uid.signatures();
-    const std::vector<UserID::Signature>::const_iterator it
-        = std::find_if(sigs.begin(), sigs.end(),
-                       boost::bind(qstricmp, boost::bind(&UserID::Signature::signerKeyID, _1), sig.signerKeyID()) == 0);
-    if (it == sigs.end()) {
-        return QModelIndex();
-    }
-    return createIndex(std::distance(sigs.begin(), it), col, pidx.row());
-}
-
-QList<QModelIndex> UserIDListModel::indexes(const std::vector<UserID::Signature> &signatures, int col) const
-{
-    QList<QModelIndex> result;
-    Q_FOREACH (const UserID::Signature &sig, signatures) {
-        result.push_back(index(sig, col));
-    }
-    return result;
-}
-
-void UserIDListModel::clear()
-{
     beginResetModel();
-    d->key = Key::null;
+    delete mRootItem;
+    mKey = key;
+
+    mRootItem = new UIDModelItem();
+    for (int i = 0, ids = key.numUserIDs(); i < ids; ++i) {
+        UserID uid = key.userID(i);
+        UIDModelItem *uidItem = new UIDModelItem(uid, mRootItem);
+        mRootItem->appendChild(uidItem);
+        for (int j = 0, sigs = uid.numSignatures(); j < sigs; ++j) {
+            UserID::Signature sig = uid.signature(j);
+            UIDModelItem *sigItem = new UIDModelItem(sig, uidItem);
+            uidItem->appendChild(sigItem);
+        }
+    }
+
     endResetModel();
 }
 
-int UserIDListModel::columnCount(const QModelIndex &) const
+int UserIDListModel::columnCount(const QModelIndex &parent) const
 {
-    return NumColumns;
+    if (parent.isValid()) {
+        return static_cast<UIDModelItem*>(parent.internalPointer())->columnCount();
+    }
+
+    if (!mRootItem) {
+        return 0;
+    }
+
+    return mRootItem->columnCount();
 }
 
-int UserIDListModel::rowCount(const QModelIndex &pidx) const
+int UserIDListModel::rowCount(const QModelIndex &parent) const
 {
-    if (!pidx.isValid()) {
-        return d->key.numUserIDs();
+    UIDModelItem *parentItem;
+    if (parent.column() > 0 || !mRootItem) {
+        return 0;
     }
-    if (is_userid_level(pidx)) {
-        return d->key.userID(pidx.row()).numSignatures();
+
+    if (!parent.isValid()) {
+        parentItem = mRootItem;
+    } else {
+        parentItem = static_cast<UIDModelItem*>(parent.internalPointer());
     }
-    return 0;
+
+    return parentItem->childCount();
 }
 
-QModelIndex UserIDListModel::index(int row, int col, const QModelIndex &pidx) const
+QModelIndex UserIDListModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (row < 0 || col < 0 || col >= NumColumns) {
+    if (!hasIndex(row, column, parent)) {
         return QModelIndex();
     }
 
-    if (!pidx.isValid()) {
-        if (static_cast<unsigned>(row) < d->key.numUserIDs()) {
-            return createIndex(row, col, -1);
-        } else {
-            return QModelIndex();
-        }
+    UIDModelItem *parentItem;
+
+    if (!parent.isValid()) {
+        parentItem = mRootItem;
+    } else {
+        parentItem = static_cast<UIDModelItem*>(parent.internalPointer());
     }
 
-    if (!is_userid_level(pidx)) {
-        return QModelIndex();
-    }
-
-    const int numSigs = userID(pidx).numSignatures();
-    if (row < numSigs) {
-        return createIndex(row, col, pidx.row());
-    }
-
-    return QModelIndex();
-}
-
-QModelIndex UserIDListModel::parent(const QModelIndex &idx) const
-{
-    if (is_signature_level(idx)) {
-        return createIndex(idx.internalId(), 0, -1);
+    UIDModelItem *childItem = parentItem->child(row);
+    if (childItem) {
+        return createIndex(row, column, childItem);
     } else {
         return QModelIndex();
     }
+}
+
+QModelIndex UserIDListModel::parent(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return QModelIndex();
+    }
+    UIDModelItem *childItem = static_cast<UIDModelItem*>(index.internalPointer());
+    UIDModelItem *parentItem = childItem->parentItem();
+
+    if (parentItem == mRootItem) {
+        return QModelIndex();
+    }
+
+    return createIndex(parentItem->row(), 0, parentItem);
 }
 
 QVariant UserIDListModel::headerData(int section, Qt::Orientation o, int role) const
 {
-    if (o == Qt::Horizontal)
-        if (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole)
-            switch (section) {
-            case ID:          return i18n("ID");
-            case PrettyName:  return i18n("Name");
-            case PrettyEMail: return i18n("EMail");
-            case ValidFrom:   return i18n("Valid From");
-            case ValidUntil:  return i18n("Valid Until");
-            case Status:      return i18n("Status");
-            case NumColumns:;
-            }
+    if (o == Qt::Horizontal && mRootItem) {
+        if (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole) {
+            return mRootItem->data(section);
+        }
+    }
     return QVariant();
 }
 
-QVariant UserIDListModel::data(const QModelIndex &idx, int role) const
+QVariant UserIDListModel::data(const QModelIndex &index, int role) const
 {
+    if (!index.isValid()) {
+        return QVariant();
+    }
 
     if (role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::ToolTipRole) {
         return QVariant();
     }
 
-    if (is_userid_level(idx)) {
+    UIDModelItem *item = static_cast<UIDModelItem*>(index.internalPointer());
 
-        const UserID uid = this->userID(idx);
-        if (uid.isNull()) {
-            return QVariant();
-        }
-
-        if (idx.column() == 0)
-            // we assume that the top-level items are spanned
-        {
-            return Formatting::prettyUserID(uid);
-        } else {
-            return QVariant();
-        }
-
-    } else if (is_signature_level(idx)) {
-
-        const UserID::Signature signature = this->signature(idx);
-        if (signature.isNull()) {
-            return QVariant();
-        }
-
-        switch (idx.column()) {
-
-        case ID:
-            return QString::fromLatin1(signature.signerKeyID());
-        case PrettyName:
-            return Formatting::prettyName(signature);
-        case PrettyEMail:
-            return Formatting::prettyEMail(signature);
-        case ValidFrom:
-            if (role == Qt::EditRole) {
-                return Formatting::creationDate(signature);
-            } else {
-                return Formatting::creationDateString(signature);
-            }
-        case ValidUntil:
-            if (role == Qt::EditRole) {
-                return Formatting::expirationDate(signature);
-            } else {
-                return Formatting::expirationDateString(signature);
-            }
-        case Status:
-            return Formatting::validityShort(signature);
-#if 0
-            if (userID.isRevoked()) {
-                return i18n("revoked");
-            }
-            if (userID.isExpired()) {
-                return i18n("expired");
-            }
-            if (userID.isDisabled()) {
-                return i18n("disabled");
-            }
-            if (userID.isInvalid()) {
-                return i18n("invalid");
-            }
-            return i18n("good");
-#endif
-        }
-
-    }
-
-    return QVariant();
+    return item->data(index.column());
 }
 
+QVector<UserID> UserIDListModel::userIDs (const QModelIndexList &indexs) const {
+    QVector<GpgME::UserID> ret;
+    Q_FOREACH (const QModelIndex &idx, indexs) {
+        if (!idx.isValid()) {
+            continue;
+        }
+        UIDModelItem *item = static_cast<UIDModelItem*>(idx.internalPointer());
+        if (!item->uid().isNull()) {
+            ret << item->uid();
+        }
+    }
+    return ret;
+}
+
+QVector<UserID::Signature> UserIDListModel::signatures (const QModelIndexList &indexs) const {
+    QVector<GpgME::UserID::Signature> ret;
+    Q_FOREACH (const QModelIndex &idx, indexs) {
+        if (!idx.isValid()) {
+            continue;
+        }
+        UIDModelItem *item = static_cast<UIDModelItem*>(idx.internalPointer());
+        if (!item->signature().isNull()) {
+            ret << item->signature();
+        }
+    }
+    return ret;
+}
