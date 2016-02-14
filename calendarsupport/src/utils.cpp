@@ -525,7 +525,7 @@ QString CalendarSupport::displayName(Akonadi::ETMCalendar *calendar, const Akona
     const QString resourceName = fullCollection.resource();
 
     // Kolab Groupware
-    if (resourceName.contains(QStringLiteral("kolabproxy"))) {
+    if (resourceName.contains(QStringLiteral("kolab"))) {
         QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
         QString ownerStr;        // folder owner: "fred", "ethel", etc
         QString nameStr;         // folder name: "Public", "Test", etc
