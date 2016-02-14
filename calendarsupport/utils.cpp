@@ -510,7 +510,7 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   const QString resourceName = fullCollection.resource();
 
   // Kolab Groupware
-  if ( resourceName.contains( QLatin1String( "kolabproxy" ) ) ) {
+  if ( resourceName.contains( QLatin1String( "kolab" ) ) ) {
     QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
     QString ownerStr;        // folder owner: "fred", "ethel", etc
     QString nameStr;         // folder name: "Public", "Test", etc
@@ -558,7 +558,9 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
       if ( ownerStr.toUpper() == QLatin1String( "INBOX" ) ) {
         return i18nc( "%1 is folder contents",
                       "My Kolab %1", typeStr );
-      } else if ( ownerStr.toUpper() == QLatin1String( "SHARED" ) ) {
+      } else if ( ownerStr.toUpper() == QLatin1String( "SHARED" ) ||
+                  ownerStr.toUpper() == QLatin1String( "CALENDAR") ||
+                  ownerStr.toUpper() == QLatin1String( "RESOURCES") ) {
         return i18nc( "%1 is folder name, %2 is folder contents",
                       "Shared Kolab %1 %2", nameStr, typeStr );
       } else {
