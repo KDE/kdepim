@@ -27,7 +27,8 @@ namespace Global
 {
 QStringList typeFilter();
 void setTypeFilter(const QStringList &filter);
-
+void setPoFileName(const QString &poFileName);
+QString poFileName();
 QString assistant();
 void setAssistant(const QString &assistant);
 

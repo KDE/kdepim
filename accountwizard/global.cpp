@@ -31,6 +31,7 @@ class GlobalPrivate
 public:
     QStringList filter;
     QString assistant;
+    QString poFileName;
 };
 
 Q_GLOBAL_STATIC(GlobalPrivate, sInstance)
@@ -123,3 +124,13 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
     }
 }
 
+
+void Global::setPoFileName(const QString &poFileName)
+{
+    sInstance->poFileName = poFileName;
+}
+
+QString Global::poFileName()
+{
+    return sInstance->poFileName;
+}

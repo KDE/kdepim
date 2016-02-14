@@ -25,6 +25,9 @@
 #include <QFile>
 #include <qboxlayout.h>
 #include <qscrollarea.h>
+#include "global.h"
+#include <KLocalizedTranslator>
+#include <QCoreApplication>
 
 DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page(parent)
 {
@@ -35,11 +38,21 @@ DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page
     QWidget *pageParent = this;
 
     QUiLoader loader;
+    loader.setLanguageChangeEnabled(true);
     QFile file(uiFile);
     if (file.open(QFile::ReadOnly)) {
         qCDebug(ACCOUNTWIZARD_LOG) << uiFile;
         m_dynamicWidget = loader.load(&file, pageParent);
         file.close();
+        if (!Global::poFileName().isEmpty()) {
+            KLocalizedTranslator *translator = new KLocalizedTranslator(this);
+            QCoreApplication::instance()->installTranslator(translator);
+            translator->setTranslationDomain(Global::poFileName());
+
+            translator->addContextToMonitor(m_dynamicWidget->objectName());
+            QEvent le(QEvent::LanguageChange);
+            QCoreApplication::sendEvent(m_dynamicWidget, &le);
+        }
     } else {
         qCDebug(ACCOUNTWIZARD_LOG) << "Unable to open: " << uiFile;
     }
