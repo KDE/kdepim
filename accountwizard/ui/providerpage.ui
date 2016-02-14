@@ -14,7 +14,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Select your provider from the list below or click advanced if your provider is not listed</string>
+      <string>Select your provider from the list below or click back if your provider is not listed</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -41,9 +41,6 @@
      <property name="headerHidden">
       <bool>true</bool>
      </property>
-     <attribute name="headerShowSortIndicator" stdset="0">
-      <bool>true</bool>
-     </attribute>
      <attribute name="headerShowSortIndicator" stdset="0">
       <bool>true</bool>
      </attribute>
