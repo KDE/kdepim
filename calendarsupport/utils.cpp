@@ -555,7 +555,7 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
     }
 
     if ( !ownerStr.isEmpty() ) {
-      if ( ownerStr.toUpper() == QLatin1String( "INBOX" ) ) {
+      if ( !ownerStr.compare( QLatin1String( "INBOX" ), Qt::CaseInsensitive ) ) {
         return i18nc( "%1 is folder contents",
                       "My Kolab %1", typeStr );
       } else if ( !ownerStr.compare( QLatin1String( "SHARED" ), Qt::CaseInsensitive) ||
