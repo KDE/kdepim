@@ -224,13 +224,7 @@ static std::map<std::string, std::string> parse_commandline(const char *line)
 
 static WId wid_from_string(const QString &winIdStr, bool *ok = 0)
 {
-    return
-#if defined(Q_OS_WIN32)
-        reinterpret_cast<WId>
-#else
-        static_cast<WId>
-#endif
-        (winIdStr.toULongLong(ok, 16));
+    return static_cast<WId>(winIdStr.toULongLong(ok, 16));
 }
 
 static void apply_window_id(QWidget *widget, const QString &winIdStr)

@@ -113,7 +113,7 @@ void ExecutionContextUser::bringToForeground(QWidget *wid)
         wid->show();
     }
 #ifdef Q_OS_WIN
-    SetForegroundWindow(wid->winId());
+    SetForegroundWindow(reinterpret_cast<HWND>(wid->winId()));
 #endif
 }
 
