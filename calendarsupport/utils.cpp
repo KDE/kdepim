@@ -558,9 +558,9 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
       if ( ownerStr.toUpper() == QLatin1String( "INBOX" ) ) {
         return i18nc( "%1 is folder contents",
                       "My Kolab %1", typeStr );
-      } else if ( ownerStr.toUpper() == QLatin1String( "SHARED" ) ||
-                  ownerStr.toUpper() == QLatin1String( "CALENDAR") ||
-                  ownerStr.toUpper() == QLatin1String( "RESOURCES") ) {
+      } else if ( !ownerStr.compare( QLatin1String( "SHARED" ), Qt::CaseInsensitive) ||
+                  !ownerStr.compare( QLatin1String( "CALENDAR"), Qt::CaseInsensitive) ||
+                  !ownerStr.compare( QLatin1String( "RESOURCES"), Qt::CaseInsensitive)) {
         return i18nc( "%1 is folder name, %2 is folder contents",
                       "Shared Kolab %1 %2", nameStr, typeStr );
       } else {
