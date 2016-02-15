@@ -1008,12 +1008,18 @@ Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const
 void MainWidget::slotCheckNewCalendar(const QModelIndex &parent, int begin, int end)
 {
     // HACK: Check newly created calendars
+
+    if ( begin < end ) {
+        return;
+    }
+
     Akonadi::EntityTreeModel *etm = entityTreeModel();
     if (etm && etm->isCollectionTreeFetched()) {
         for (int row = begin; row <= end; ++row) {
-            QModelIndex index = mCollectionView->model()->index(row, 0, parent);
-            if (index.isValid()) {
-                mCollectionView->model()->setData(index, Qt::Checked, Qt::CheckStateRole);
+            QModelIndex index = model->index( row, 0, parent );
+            if ( index.isValid() ) {
+                model->setData( index, Qt::Checked, Qt::CheckStateRole );
+                slotCheckNewCalendar( index, 0, model->rowCount(index) - 1 );
             }
         }
         if (parent.isValid()) {
