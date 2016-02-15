@@ -1035,6 +1035,7 @@ void MainWidget::slotCheckNewCalendar(const QModelIndex &parent, int begin, int 
     }
 
     Akonadi::EntityTreeModel *etm = entityTreeModel();
+    QAbstractItemModel *model = mCollectionView->model();
     if (etm && etm->isCollectionTreeFetched()) {
         for (int row = begin; row <= end; ++row) {
             QModelIndex index = model->index( row, 0, parent );
