@@ -258,8 +258,8 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
             mContactsFilterModel, &Akonadi::ContactsFilterProxyModel::setFilterString);
     connect(mQuickSearchWidget, &QuickSearchWidget::filterStringChanged,
             this, &MainWidget::selectFirstItem);
-    connect(mQuickSearchWidget, SIGNAL(arrowDownKeyPressed()),
-            mItemView, SLOT(setFocus()));
+    connect(mQuickSearchWidget, &QuickSearchWidget::arrowDownKeyPressed,
+            this, &MainWidget::setFocusToTreeView);
 
     mItemView->setModel(mContactsFilterModel);
     mItemView->setXmlGuiClient(guiClient);
@@ -340,6 +340,11 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
     updateQuickSearchText();
     slotSelectionChanged();
+}
+
+void MainWidget::setFocusToTreeView()
+{
+    mItemView->setFocus();
 }
 
 void MainWidget::configure()
