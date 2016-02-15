@@ -43,9 +43,9 @@
 #define QTEST_KLEOMAIN(TestObject) \
     int main(int argc, char *argv[]) \
     { \
-        setenv("GNUPGHOME", KLEO_TEST_GNUPGHOME, 1 ); \
-        setenv("LC_ALL", "C", 1); \
-        setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QLatin1String("/.kde-unit-test") ), 1); \
+        qputenv("GNUPGHOME", KLEO_TEST_GNUPGHOME); \
+        qputenv("LC_ALL", "C"); \
+        qputenv("KDEHOME", QFile::encodeName(QDir::homePath() + QLatin1String("/.kde-unit-test"))); \
         KAboutData aboutData( QLatin1String("qttest"), i18n("qttest"), QLatin1String("version") );  \
         QApplication app( argc, argv); \
         app.setApplicationName( QLatin1String("qttest") ); \
