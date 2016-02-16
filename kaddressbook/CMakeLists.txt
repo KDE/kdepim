@@ -44,6 +44,10 @@ ki18n_wrap_ui(kaddressbook_printing_SRCS
   printing/compact/compactstyle.ui
 )
 
+set(kaddressbook_groupingproxymodel_SRCS
+  groupingproxymodel/qgroupingproxymodel.cpp
+  )
+
 set(kaddressbook_xxport_SRCS
   xxport/csv/csv_xxport.cpp
   xxport/csv/csvimportdialog.cpp
@@ -84,6 +88,7 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
   ${kaddressbook_plugin_SRCS}
+  ${kaddressbook_groupingproxymodel_SRCS}
 )
 
 ecm_qt_declare_logging_category(kaddressbook_LIB_SRCS HEADER kaddressbook_debug.h IDENTIFIER KADDRESSBOOK_LOG CATEGORY_NAME log_kaddressbook)
