@@ -19,6 +19,7 @@
 */
 
 #include "mainwidget.h"
+#include "groupingproxymodel/qgroupingproxymodel.h"
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
@@ -260,8 +261,15 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
             this, &MainWidget::selectFirstItem);
     connect(mQuickSearchWidget, &QuickSearchWidget::arrowDownKeyPressed,
             this, &MainWidget::setFocusToTreeView);
+#if 0
+    QGroupingProxyModel* proxy = new QGroupingProxyModel(this);
+    proxy->setSourceModel(mContactsFilterModel);
+    proxy->setModelColumn(1);
 
+    mItemView->setModel(proxy);
+#else
     mItemView->setModel(mContactsFilterModel);
+#endif
     mItemView->setXmlGuiClient(guiClient);
     mItemView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mItemView->setRootIsDecorated(false);
