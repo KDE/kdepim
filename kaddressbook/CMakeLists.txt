@@ -78,7 +78,7 @@ set(kaddressbook_LIB_SRCS
   globalcontactmodel.cpp
   mainwidget.cpp
   modelcolumnmanager.cpp
-  quicksearchwidget.cpp
+  widgets/quicksearchwidget.cpp
   kaddressbookmigrateapplication.cpp
   contactselectiondialog.cpp
   ${kaddressbook_printing_SRCS}

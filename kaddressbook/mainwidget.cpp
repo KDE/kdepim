@@ -23,7 +23,7 @@
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
-#include "quicksearchwidget.h"
+#include "widgets/quicksearchwidget.h"
 #include "settings.h"
 #include "xxport/xxportmanager.h"
 #include "kaddressbookadaptor.h"
