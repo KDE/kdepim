@@ -258,9 +258,8 @@ int main(int argc, char **argv)
 
     SplashScreen splash;
 
-    const QString installPath = Kleo::gpg4winInstallPath();
-    Kleo::ChecksumDefinition::setInstallPath(installPath);
-    Kleo::ArchiveDefinition::setInstallPath(installPath);
+    Kleo::ChecksumDefinition::setInstallPath(Kleo::gpg4winInstallPath());
+    Kleo::ArchiveDefinition::setInstallPath(Kleo::gnupgInstallPath());
 
     int rc;
 #ifdef HAVE_USABLE_ASSUAN

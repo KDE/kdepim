@@ -47,6 +47,7 @@ QString gpgPath();
 
 QString gpgConfListDir(const char *which);
 QString gpg4winInstallPath();
+QString gnupgInstallPath();
 
 QStringList gnupgFileBlacklist();
 

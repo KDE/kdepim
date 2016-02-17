@@ -46,6 +46,7 @@
 #include <QProcess>
 #include <QByteArray>
 #include <QStandardPaths>
+#include <QCoreApplication>
 #include <gpg-error.h>
 
 #ifdef Q_OS_WIN
@@ -108,6 +109,31 @@ QStringList Kleo::gnupgFileBlacklist()
 }
 
 QString Kleo::gpg4winInstallPath()
+{
+#ifdef Q_OS_WIN
+    // QApplication::applicationDirPath is only used as a fallback
+    // to support the case where Kleopatra is not installed from
+    // Gpg4win but Gpg4win is also installed.
+    char *instDir = read_w32_registry_string("HKEY_LOCAL_MACHINE",
+                                             "Software/GPG4Win",
+                                             "Install Directory");
+    if (!instDir) {
+        // Fallback to HKCU
+        instDir = read_w32_registry_string("HKEY_CURRENT_USER",
+                                           "Software/GPG4Win",
+                                           "Install Directory");
+    }
+    if (instDir) {
+        QString ret = QString::fromLocal8Bit(instDir) + QStringLiteral("/bin");
+        free(instDir);
+        return ret;
+    }
+    qCDebug(KLEOPATRA_LOG) << "Gpg4win not found. Falling back to Kleopatra instdir.";
+#endif
+    return QCoreApplication::applicationDirPath();
+}
+
+QString Kleo::gnupgInstallPath()
 {
     return gpgConfListDir("bindir");
 }
