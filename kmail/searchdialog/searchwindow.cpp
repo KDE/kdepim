@@ -40,6 +40,7 @@
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/EntityTreeView>
+#include <Akonadi/EntityHiddenAttribute>
 #include <akonadi/persistentsearchattribute.h>
 #include <Akonadi/SearchCreateJob>
 #include <Akonadi/ChangeRecorder>
@@ -62,9 +63,6 @@
 #include <QKeyEvent>
 #include <QMenu>
 #include <QVBoxLayout>
-#include <QDBusInterface>
-#include <QDBusConnection>
-#include <QDBusReply>
 #include <QScopedPointer>
 
 using namespace KPIM;
@@ -509,15 +507,7 @@ void SearchWindow::doSearch()
     QVector<qint64> unindexedCollections = checkIncompleteIndex(searchCollections, recursive);
     if (!unindexedCollections.isEmpty()) {
         QScopedPointer<IncompleteIndexDialog> dlg(new IncompleteIndexDialog(unindexedCollections));
-        if (dlg->exec() == QDialog::Accepted) {
-            const Akonadi::Collection::List collectionsToReindex = dlg->collectionsToReindex();
-            QDBusInterface indexer(PimCommon::indexerServiceName(), QLatin1String("/"),
-                                   QLatin1String("org.freedesktop.Akonadi.BalooIndexer"),
-                                   QDBusConnection::sessionBus(), this);
-            Q_FOREACH (const Akonadi::Collection &col, collectionsToReindex) {
-                indexer.asyncCall(QLatin1String("reindexCollection"), col.id());
-            }
-        }
+        dlg->exec();
     }
 
     if ( !mFolder.isValid() ) {
@@ -930,7 +920,9 @@ Akonadi::Collection::List SearchWindow::searchCollectionsRecursive(const Akonadi
             result.push_back(col);
         } else {
             const Akonadi::Collection collection = etm->data(colIdx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-            result.push_back(collection);
+            if (!collection.hasAttribute<Akonadi::EntityHiddenAttribute>()) {
+                result.push_back(collection);
+            }
         }
 
         const int childrenCount = etm->rowCount(colIdx);

@@ -22,6 +22,10 @@
 
 #include <KDialog>
 #include <Akonadi/Collection>
+#include <QVector>
+
+class KProgressDialog;
+class QDBusInterface;
 
 class Ui_IncompleteIndexDialog;
 class IncompleteIndexDialog : public KDialog
@@ -29,19 +33,27 @@ class IncompleteIndexDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit IncompleteIndexDialog(const QVector<qint64> &unindexedCollections);
+    explicit IncompleteIndexDialog(const QVector<qint64> &unindexedCollections, QWidget *parent = 0);
     ~IncompleteIndexDialog();
 
     Akonadi::Collection::List collectionsToReindex() const;
+
+    void slotButtonClicked(int button);
 
 private Q_SLOTS:
     void selectAll();
     void unselectAll();
 
+    void slotCurrentlyIndexingCollectionChanged(qlonglong colId);
+    void slotStopIndexing();
 private:
+    void waitForIndexer();
     void updateAllSelection(bool select);
 
     QScopedPointer<Ui_IncompleteIndexDialog> mUi;
+    KProgressDialog *mProgressDialog;
+    QDBusInterface *mIndexer;
+    QVector<qint64> mIndexingQueue;
 };
 
 
