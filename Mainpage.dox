@@ -44,32 +44,6 @@
         *   <i>A reminder client for KOrganizer.</i>
 	* </td>
         *
-        * <td valign="top">
-        * - <a href="calendarsupport/html/index.html"><b>calendarsupport</b></a>
-        *   (<a href="calendarsupport/html/classes.html">classes</a>)\n
-        *   <i>Calendar support tools and utilities.</i>
-        * - <a href="mailcommon/html/index.html"><b>mailcommon</b></a>
-        *   (<a href="mailcommon/html/classes.html">classes</a>)\n
-        *   <i>Mail message filtering, archiving, expiry, annotations, etc.</i>
-        * - <a href="messageviewer/html/index.html"><b>messageviewer</b></a>
-        *   (<a href="messageviewer/html/classes.html">classes</a>)\n
-        *   <i>A widget that can show a KMime::Message in a nice way.</i>
-        * - <a href="messagelist/html/index.html"><b>message list</b></a>
-        *   (<a href="messagelist/html/classes.html">classes</a>)\n
-        *   <i>A widget that can show a list of message (KMime::Message, Akonadi::Item).
-        * </td>
-        *
-	* <td valign="top">
-        * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
-        *   (<a href="libkdepim/html/classes.html">classes</a>)\n
-        *   <i>A library of widgets and other goodies for pim.</i>
-        * - <a href="libkleo/html/index.html"><b>libkleo</b></a>
-        *   (<a href="libkleo/html/classes.html">classes</a>)\n
-        *   <i>A library for encryption handling.</i>
-        * - <a href="kdgantt2/html/index.html"><b>kdgantt</b></a>
-        *   (<a href="kdgantt2/html/classes.html">classes</a>)\n
-        *   <i>Klarälvdalens Datakonsult AB's gantt charting engine.</i>
-	* </td>
 	* </tr></table>
         *
         */
