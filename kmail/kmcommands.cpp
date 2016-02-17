@@ -1463,10 +1463,6 @@ void KMCopyCommand::slotCopyResult( KJob * job )
 
 bool KMCopyCommand::decrypt( KMime::Message::Ptr &msg ) const
 {
-    if ( !KMime::isEncrypted( msg.get() ) ) {
-        return false;
-    }
-
     MessageViewer::EmptySource source;
     source.setAllowDecryption(true);
     MessageViewer::NodeHelper nodeHelper;
@@ -1474,8 +1470,14 @@ bool KMCopyCommand::decrypt( KMime::Message::Ptr &msg ) const
     MessageViewer::ObjectTreeParser otp( &source, &nodeHelper, 0 , true, false, true );
     otp.parseObjectTree( msg->topLevel() );
 
-    msg = nodeHelper.unencryptedMessage( msg );
-    return true;
+    // Returns a null Message if msg does not contain any encrypted content
+    KMime::Message::Ptr decrypted = nodeHelper.unencryptedMessage( msg );
+    if (decrypted) {
+        msg = decrypted;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 KMMoveCommand::KMMoveCommand( const Akonadi::Collection& destFolder,
