@@ -881,7 +881,11 @@ QVector<qint64> SearchWindow::checkIncompleteIndex(const Akonadi::Collection::Li
     if (recursive) {
         cols = searchCollectionsRecursive(searchCols);
     } else {
-        cols = searchCols;
+        Q_FOREACH (const Akonadi::Collection &col, searchCols) {
+            QAbstractItemModel *etm = KMKernel::self()->collectionModel();
+            const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(etm, col);
+            cols.push_back(etm->data(idx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>());
+        }
     }
 
     PimCommon::CollectionIndexStatusJob *statsJob = new PimCommon::CollectionIndexStatusJob(cols, this);
