@@ -57,6 +57,13 @@
       <whatsthis>Choose the layout for the main view</whatsthis>
     </entry>
 
+    <entry key="ShowMenuBar" type="Bool">
+      <default>true</default>
+       <!-- label and whatsthis are already provided by KStandardAction::showMenubar -->
+      <label></label>
+      <whatsthis></whatsthis>
+    </entry>
+ 
   </group>
 
 </kcfg>

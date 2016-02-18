@@ -24,6 +24,7 @@
 #include <KXmlGuiWindow>
 
 class MainWidget;
+class KToggleAction;
 class MainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
@@ -38,10 +39,12 @@ private Q_SLOTS:
     void configureToolbars() Q_DECL_OVERRIDE;
     void newToolbarConfig();
 
+    void slotToggleMenubar(bool dontShowWarning = true);
 private:
     void initActions();
 
     MainWidget *mMainWidget;
+    KToggleAction *mHideMenuBarAction;
 };
 
 #endif

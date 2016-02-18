@@ -20,6 +20,7 @@
 
 #include "mainwindow.h"
 #include "mainwidget.h"
+#include "settings.h"
 #include "xxport/xxportmanager.h"
 
 #include <KConfigGroup>
@@ -31,6 +32,9 @@
 #include <KStandardAction>
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KMessageBox>
+#include <KToggleAction>
+#include <QMenuBar>
 
 MainWindow::MainWindow()
     : KXmlGuiWindow(Q_NULLPTR)
@@ -48,6 +52,7 @@ MainWindow::MainWindow()
     setupGUI(Save | Create, QStringLiteral("kaddressbookui.rc"));
 
     setAutoSaveSettings();
+    slotToggleMenubar(true);
 }
 
 MainWindow::~MainWindow()
@@ -62,6 +67,7 @@ MainWidget *MainWindow::mainWidget() const
 void MainWindow::initActions()
 {
     KStandardAction::quit(this, SLOT(close()), actionCollection());
+    mHideMenuBarAction = KStandardAction::showMenubar(this, SLOT(slotToggleMenubar()), actionCollection());
 
     QAction *action =
         KStandardAction::keyBindings(this, SLOT(configureKeyBindings()), actionCollection());
@@ -102,3 +108,21 @@ void MainWindow::newToolbarConfig()
     applyMainWindowSettings(KSharedConfig::openConfig()->group("MainWindow"));
 }
 
+void MainWindow::slotToggleMenubar(bool dontShowWarning)
+{
+    if (menuBar()) {
+        if (mHideMenuBarAction->isChecked()) {
+            menuBar()->show();
+        } else {
+            if (!dontShowWarning) {
+                const QString accel = mHideMenuBarAction->shortcut().toString();
+                KMessageBox::information(this,
+                                         i18n("<qt>This will hide the menu bar completely."
+                                              " You can show it again by typing %1.</qt>", accel),
+                                         i18n("Hide menu bar"), QStringLiteral("HideMenuBarWarning"));
+            }
+            menuBar()->hide();
+        }
+        Settings::self()->setShowMenuBar(mHideMenuBarAction->isChecked());
+    }
+}

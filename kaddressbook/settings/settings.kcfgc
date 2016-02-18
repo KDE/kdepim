@@ -9,3 +9,5 @@ ItemAccessors=true
 SetUserTexts=true
 TranslationDomain=kaddressbook
 TranslationSystem=kde
+Visibility=KADDRESSBOOK_EXPORT
+IncludeFiles=kaddressbook_export.h
