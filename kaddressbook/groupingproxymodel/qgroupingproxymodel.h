@@ -119,25 +119,25 @@ public:
       * Creates a new group named @p text matching the specified @p value.
       * @overload
       */
-    void addGroup(const QString & text, const QVariant & value = QVariant());
+    void addGroup(const QString &text, const QVariant &value = QVariant());
     /**
       * Creates a new group named @p text, with an @p icon and matching the specified @p value.
       * @overload
       */
-    void addGroup(const QIcon & icon, const QString & text, const QVariant & value = QVariant());
+    void addGroup(const QIcon &icon, const QString &text, const QVariant &value = QVariant());
     /**
       * Returns the number of columns for the children of the given @p parent.
       * @sa rowCount()
       */
-    int columnCount(const QModelIndex & parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
     /**
       * @reimp QAbstractItemModel::data()
       */
-    QVariant data(const QModelIndex & proxyIndex, int role) const;
+    QVariant data(const QModelIndex &proxyIndex, int role) const;
     /**
       * @reimp QAbstractItemModel::data()
       */
-    Qt::ItemFlags flags(const QModelIndex & index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
     bool groupsSpanned() const;
     /**
       * @reimp QAbstractItemModel::data()
@@ -146,19 +146,19 @@ public:
     /**
       * @reimp QAbstractItemModel::data()
       */
-    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-    int findText(const QString & text) const;
+    int findText(const QString &text) const;
     /**
       * Returns the model index in the proxy model that corresponds to the @p sourceIndex from the source model.
       * @sa mapToSource()
       */
-    QModelIndex mapFromSource(const QModelIndex & sourceIndex) const;
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
     /**
      * Returns the model index in the source model that corresponds to the @p proxyIndex in the proxy model.
      * @sa mapToSource()
      */
-    QModelIndex mapToSource(const QModelIndex & proxyIndex) const;
+    QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
     /**
       * Returns the source model column used for grouping items.
       * @see setModelColumn()
@@ -167,7 +167,7 @@ public:
     /**
       * Returns the parent of the model item with the given @p index. If the item has no parent, an invalid QModelIndex is returned.
       */
-    QModelIndex parent(const QModelIndex & child) const;
+    QModelIndex parent(const QModelIndex &child) const;
     /**
       * Removes the group specified by the given @p index.
       */
@@ -182,12 +182,12 @@ public:
       *
       * A failure to restore the group definitions may result from either invalid or out-of-date data in the supplied byte array.
       */
-    bool restoreGroups(const QByteArray & data);
+    bool restoreGroups(const QByteArray &data);
     /**
       * Returns the number of rows under the given @p parent. When the parent is valid it means that rowCount is returning the number of children of @p parent.
       * @sa columnCount()
       */
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
     /**
       * Saves the proxy's group definitions.
       * Typically this is used in conjunction with QSettings to remember the groups for a future session. A version number is stored as part of the data. Here is an example:
@@ -201,9 +201,9 @@ public:
     /**
       * Sets the @p role data for the item at @p index to @p value.
       */
-    bool setData(const QModelIndex & index, const QVariant &value, int role);
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
 
-    void setGroupSectionHeader(const QString & header);
+    void setGroupSectionHeader(const QString &header);
     void setGroupsSpanned(bool on);
     /**
       * Sets the source model @p column that is used for grouping items.
@@ -213,15 +213,15 @@ public:
     /**
       * Sets the given @p sourceModel to be processed by the proxy model.
       */
-    virtual void setSourceModel( QAbstractItemModel* sourceModel );
-    void setUngroupedItemTitle(const QString & title);
-    void setUngroupedItemTitle(const QString & title, const QIcon & icon);
-    virtual QSize span(const QModelIndex & index) const;
+    virtual void setSourceModel(QAbstractItemModel *sourceModel);
+    void setUngroupedItemTitle(const QString &title);
+    void setUngroupedItemTitle(const QString &title, const QIcon &icon);
+    virtual QSize span(const QModelIndex &index) const;
 private slots:
-    void dataChangedHandler(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void dataChangedHandler(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void sourceModelResetHandler();
-    void rowsAboutToBeInsertedHandler( const QModelIndex & parent, int start, int end );
-    void rowsInsertedHandler(const QModelIndex & parent, int first, int last);
+    void rowsAboutToBeInsertedHandler(const QModelIndex &parent, int start, int end);
+    void rowsInsertedHandler(const QModelIndex &parent, int first, int last);
 private:
     void buildGroups();
 
@@ -230,8 +230,8 @@ private:
     void removeSourceModelRow(int sourceModelRow);
 
     QString m_groupSectionHeader;
-    QGroupingProxyModelGroup* m_groupUngroupedItem;
-    QGroupingProxyModelPrivate* d;
+    QGroupingProxyModelGroup *m_groupUngroupedItem;
+    QGroupingProxyModelPrivate *d;
 };
 
 #endif // QGROUPINGPROXYMODEL_H

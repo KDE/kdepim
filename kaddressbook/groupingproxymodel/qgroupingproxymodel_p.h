@@ -24,36 +24,36 @@
 class QGroupingProxyModelGroup
 {
 public:
-    QGroupingProxyModelGroup(QGroupingProxyModelGroup* parent = Q_NULLPTR);
-    QGroupingProxyModelGroup(int sourceModelRow, QGroupingProxyModelGroup* parent = Q_NULLPTR);
-    QGroupingProxyModelGroup(const QString & name, QGroupingProxyModelGroup* parent = Q_NULLPTR);
+    QGroupingProxyModelGroup(QGroupingProxyModelGroup *parent = Q_NULLPTR);
+    QGroupingProxyModelGroup(int sourceModelRow, QGroupingProxyModelGroup *parent = Q_NULLPTR);
+    QGroupingProxyModelGroup(const QString &name, QGroupingProxyModelGroup *parent = Q_NULLPTR);
     ~QGroupingProxyModelGroup();
 
     void addSourceModelRow(int row);
 
     void clear();
 
-    QGroupingProxyModelGroup* child(int index) const;
+    QGroupingProxyModelGroup *child(int index) const;
 
     int childCount() const;
 
     QVariant data(int role) const;
 
-    QGroupingProxyModelGroup* findSourceModelRow(int sourceModelRow) const;
+    QGroupingProxyModelGroup *findSourceModelRow(int sourceModelRow) const;
 
     QGroupingProxyModelGroup *group(int sourceModelRow) const;
 
-    int indexOf(QGroupingProxyModelGroup* group) const;
+    int indexOf(QGroupingProxyModelGroup *group) const;
 
     int sourceModelRowIndexAt(int sourceModelRow) const;
     /**
       * Returns the group matching the given @p value.
       */
-    QGroupingProxyModelGroup* matches(const QVariant & value) const;
+    QGroupingProxyModelGroup *matches(const QVariant &value) const;
 
     void moveSourceRow(int count);
 
-    QGroupingProxyModelGroup* parent() const;
+    QGroupingProxyModelGroup *parent() const;
 
     void removeChild(int index);
 
@@ -65,15 +65,15 @@ public:
 
     int row(int sourceModelRow) const;
 
-    void setData(const QVariant & data, int role);
+    void setData(const QVariant &data, int role);
 
     int sourceModelRow() const;
 
     QList<int> sourceModelRows() const;
 private:
-    QList<QGroupingProxyModelGroup*> cChildren;
-    QMap<int,QVariant> cData;
-    QGroupingProxyModelGroup* cParent;
+    QList<QGroupingProxyModelGroup *> cChildren;
+    QMap<int, QVariant> cData;
+    QGroupingProxyModelGroup *cParent;
 
     int cSourceModelRow;
 

@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include <QApplication>
 int main(int argc, char *argv[])
 {

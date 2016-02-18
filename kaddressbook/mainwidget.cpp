@@ -262,7 +262,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     connect(mQuickSearchWidget, &QuickSearchWidget::arrowDownKeyPressed,
             this, &MainWidget::setFocusToTreeView);
 #if 0
-    QGroupingProxyModel* proxy = new QGroupingProxyModel(this);
+    QGroupingProxyModel *proxy = new QGroupingProxyModel(this);
     proxy->setSourceModel(mContactsFilterModel);
     proxy->setModelColumn(2);
     proxy->addGroup(i18n("eric"), QStringLiteral("eric"));
@@ -1023,7 +1023,7 @@ void MainWidget::slotCheckNewCalendar(const QModelIndex &parent, int begin, int 
 {
     // HACK: Check newly created calendars
 
-    if ( begin < end ) {
+    if (begin < end) {
         return;
     }
 
@@ -1031,10 +1031,10 @@ void MainWidget::slotCheckNewCalendar(const QModelIndex &parent, int begin, int 
     QAbstractItemModel *model = mCollectionView->model();
     if (etm && etm->isCollectionTreeFetched()) {
         for (int row = begin; row <= end; ++row) {
-            QModelIndex index = model->index( row, 0, parent );
-            if ( index.isValid() ) {
-                model->setData( index, Qt::Checked, Qt::CheckStateRole );
-                slotCheckNewCalendar( index, 0, model->rowCount(index) - 1 );
+            QModelIndex index = model->index(row, 0, parent);
+            if (index.isValid()) {
+                model->setData(index, Qt::Checked, Qt::CheckStateRole);
+                slotCheckNewCalendar(index, 0, model->rowCount(index) - 1);
             }
         }
         if (parent.isValid()) {
