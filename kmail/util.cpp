@@ -41,6 +41,9 @@
 #include "messagecore/utils/stringutil.h"
 #include "messagecomposer/helper/messagehelper.h"
 
+#include "messageviewer/viewer/objecttreeemptysource.h"
+#include "messageviewer/viewer/objecttreeparser.h"
+
 #include "templateparser/templateparser.h"
 
 #include <kmime/kmime_message.h>
@@ -184,8 +187,24 @@ bool KMail::Util::mailingListHelp( const QSharedPointer<MailCommon::FolderCollec
 
 void KMail::Util::lastEncryptAndSignState(bool &lastEncrypt, bool &lastSign, const KMime::Message::Ptr& msg)
 {
-    lastSign = KMime::isSigned(msg.get());
-    lastEncrypt = KMime::isEncrypted(msg.get());
+    // lastSign = KMime::isSigned(msg.get());
+    // lastEncrypt = KMime::isEncrypted(msg.get());
+    // KMime does not find inline Encrypted or get the correct state when a pgp/mime
+    // message is signed and encrypted (because you need to decrypt first to find that out)
+    // So we need to do the Objecttree parsing here to get the correct state.
+    MessageViewer::EmptySource source;
+    source.setAllowDecryption(true);
+    MessageViewer::NodeHelper nodeHelper;
+
+    MessageViewer::ObjectTreeParser otp( &source, &nodeHelper, 0 , true, false, true );
+    otp.parseObjectTree( msg->topLevel() );
+
+    MessageViewer::KMMsgEncryptionState encState = nodeHelper.overallEncryptionState( msg.get() );
+    MessageViewer::KMMsgSignatureState sigState = nodeHelper.overallSignatureState( msg.get() );
+    lastEncrypt = (encState == MessageViewer::KMMsgFullyEncrypted ||
+                   encState == MessageViewer::KMMsgPartiallyEncrypted);
+    lastSign = (sigState == MessageViewer::KMMsgFullySigned ||
+                sigState == MessageViewer::KMMsgPartiallySigned);
 }
 
 QColor KMail::Util::misspelledColor()
