@@ -193,6 +193,16 @@ void IncompleteIndexDialog::waitForIndexer()
       return;
     }
 
+
+    mProgressDialog = new KProgressDialog(this);
+    mProgressDialog->progressBar()->setMaximum(mIndexingQueue.size());
+    mProgressDialog->progressBar()->setValue(0);
+    mProgressDialog->setLabelText(i18n("Indexing Collections..."));
+    connect(mProgressDialog, SIGNAL(rejected()),
+            this, SLOT(slotStopIndexing()));
+
+    connect(mIndexer, SIGNAL(currentCollectionChanged(qlonglong)),
+            this, SLOT(slotCurrentlyIndexingCollectionChanged(qlonglong)));
     Q_FOREACH (const Akonadi::Collection &col, collectionsToReindex()) {
         mIndexer->asyncCall(QLatin1String("reindexCollection"), col.id());
         mIndexingQueue.push_back(col.id());
@@ -203,16 +213,7 @@ void IncompleteIndexDialog::waitForIndexer()
       return;
     }
 
-    mProgressDialog = new KProgressDialog(this);
-    mProgressDialog->progressBar()->setMaximum(mIndexingQueue.size());
-    mProgressDialog->progressBar()->setValue(0);
-    mProgressDialog->setLabelText(i18n("Indexing Collections..."));
     mProgressDialog->show();
-    connect(mProgressDialog, SIGNAL(rejected()),
-            this, SLOT(slotStopIndexing()));
-
-    connect(mIndexer, SIGNAL(currentCollectionChanged(qlonglong)),
-            this, SLOT(slotCurrentlyIndexingCollectionChanged(qlonglong)));
 }
 
 void IncompleteIndexDialog::slotStopIndexing()
@@ -223,12 +224,6 @@ void IncompleteIndexDialog::slotStopIndexing()
 
 void IncompleteIndexDialog::slotCurrentlyIndexingCollectionChanged(qlonglong colId)
 {
-    if (colId == -1) {
-      // Give indexer time to commit
-      QTimer::singleShot(1000, this, SLOT(accept()));
-      return;
-    }
-
     const int idx = mIndexingQueue.indexOf(colId);
     if (idx > -1) {
       mIndexingQueue.remove(idx);
