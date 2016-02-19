@@ -52,8 +52,6 @@
 #include <KLocalizedString>
 #include "kleopatra_debug.h"
 
-#include <boost/bind.hpp>
-
 #include <cassert>
 
 using namespace Kleo;
@@ -195,10 +193,14 @@ void CertifyCertificateCommand::doStart()
         return;
     }
 
-    std::vector<Key> secKeys = KeyCache::instance()->secretKeys();
-    std::vector<Key>::iterator it = std::remove_if(secKeys.begin(), secKeys.end(), !boost::bind(&Key::canCertify, _1));
-    it = std::remove_if(it, secKeys.end(), boost::bind(&Key::protocol, _1) != OpenPGP);
-    secKeys.erase(it, secKeys.end());
+    std::vector<Key> secKeys;
+    Q_FOREACH (const Key &secKey, KeyCache::instance()->secretKeys()) {
+        // Only include usable keys.
+        if (secKey.canCertify() && secKey.protocol() == OpenPGP && !secKey.isRevoked() &&
+            !secKey.isExpired() && !secKey.isInvalid()) {
+            secKeys.push_back(secKey);
+        }
+    }
 
     if (secKeys.empty()) {
         d->error(xi18nc("@info", "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one."),
