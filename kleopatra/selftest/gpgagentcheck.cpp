@@ -81,6 +81,12 @@ public:
             m_proposedFix = xi18nc("@info",
                                    "Upgrade to <application>gpgme</application> 1.2.0 or higher, "
                                    "and ensure that gpgme++ was compiled against it.");
+        } else if (ensureEngineVersion(GpgME::GpgConfEngine, 2, 1, 0)) {
+            // 2.1 starts the agent on demand and requires it. So for 2.1.0 we can assume
+            // autostart works and we don't need to care about the agent.
+            m_skipped = false;
+            m_passed = true;
+            return;
         } else {
 
             Error error;
