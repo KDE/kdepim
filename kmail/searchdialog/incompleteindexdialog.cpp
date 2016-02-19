@@ -205,7 +205,7 @@ void IncompleteIndexDialog::waitForIndexer()
 
     mProgressDialog = new KProgressDialog(this);
     mProgressDialog->progressBar()->setMaximum(mIndexingQueue.size());
-    mProgressDialog->progressBar()->setValue(1);
+    mProgressDialog->progressBar()->setValue(0);
     mProgressDialog->setLabelText(i18n("Indexing Collections..."));
     mProgressDialog->show();
     connect(mProgressDialog, SIGNAL(rejected()),
