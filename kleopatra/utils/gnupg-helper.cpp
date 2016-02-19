@@ -93,18 +93,24 @@ QString Kleo::gpgPath()
     return findGpgExe(GpgME::GpgEngine, QStringLiteral("gpg"));
 }
 
-QStringList Kleo::gnupgFileBlacklist()
+QStringList Kleo::gnupgFileWhitelist()
 {
     return QStringList()
-           << QStringLiteral("dirmngr-cache.d")
-           << QStringLiteral("S.uiserver")
-           << QStringLiteral("S.gpg-agent")
-           << QStringLiteral("random_seed")
-           << QStringLiteral("*~")
-           << QStringLiteral("*.bak")
-           << QStringLiteral("*.lock")
-           << QStringLiteral("*.tmp")
-           << QStringLiteral("reader_*.status")
+           // The obvious pubring
+           << QStringLiteral("pubring.gpg")
+           // GnuPG 2.1 pubring
+           << QStringLiteral("pubring.kbx")
+           // Trust in X509 Certificates
+           << QStringLiteral("trustlist.txt")
+           // Trustdb controls ownertrust and thus WOT validity
+           << QStringLiteral("trustdb.gpg")
+           // We want to update when smartcard status changes
+           << QStringLiteral("reader*.status")
+           // No longer used in 2.1 but for 2.0 we want this
+           << QStringLiteral("secring.gpg")
+           // Changes to the trustmodel * because you can have different
+           // configs for different versions.
+           << QStringLiteral("gpg.conf*")
            ;
 }
 
