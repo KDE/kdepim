@@ -265,7 +265,6 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     QGroupingProxyModel *proxy = new QGroupingProxyModel(this);
     proxy->setSourceModel(mContactsFilterModel);
     proxy->setModelColumn(2);
-    proxy->addGroup(i18n("eric"), QStringLiteral("eric"));
 
     mItemView->setModel(proxy);
 #else
