@@ -57,6 +57,7 @@ private:
     QString mTo;
     QString mResult;
     QString mJsonData;
+    QString mJsonDebug;
     QNetworkAccessManager *mNetworkAccessManager;
 };
 }
