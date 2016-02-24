@@ -22,6 +22,7 @@
 #include "aclentrydialog_p.h"
 #include "aclutils_p.h"
 #include "imapaclattribute.h"
+#include "aclmodifyjob.h"
 #include "imapresourcesettings.h"
 #include "pimutil.h"
 
@@ -282,34 +283,6 @@ public:
         mChanged = true;
     }
 
-    /**
-     * We call this method if our first try to get the ACLs for the user fails.
-     * That's the case if the ACLs use a different user id than the login name.
-     *
-     * Examples:
-     *   login: testuser                acls: testuser@mydomain.org
-     *   login: testuser@mydomain.org   acls: testuser
-     */
-    static QString guessUserName( const QString &loginName, const QString &serverName )
-    {
-        if ( loginName.contains( QLatin1Char( '@' ) ) ) {
-            // strip of the domain part and use user name only
-            return loginName.left( loginName.indexOf( QLatin1Char( '@' ) ) );
-        } else {
-            int pos = serverName.lastIndexOf( QLatin1Char( '.' ) );
-            if ( pos == -1 ) { // no qualified domain name, only hostname
-                return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName );
-            }
-
-            pos = serverName.lastIndexOf( QLatin1Char( '.' ), pos - 1 );
-            if ( pos == -1 ) { // a simple domain name e.g. mydomain.org
-                return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName );
-            } else {
-                return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName.mid( pos + 1 ) );
-            }
-        }
-    }
-
     void setCollection( const Akonadi::Collection &collection )
     {
         mCollection = collection;
@@ -351,7 +324,7 @@ public:
 
         mImapUserName = loginName;
         if ( !rights.contains( loginName.toUtf8() ) ) {
-            const QString guessedUserName = guessUserName( loginName, serverName );
+            const QString guessedUserName = AclUtils::guessUserName( loginName, serverName );
             if ( rights.contains( guessedUserName.toUtf8() ) ) {
                 mImapUserName = guessedUserName;
             }
@@ -390,6 +363,7 @@ void AclManager::setCollection( const Akonadi::Collection &collection )
 {
     d->setCollection( collection );
     emit collectionChanged( d->mCollection );
+    emit collectionCanBeAdministrated(d->mUserRights & KIMAP::Acl::Admin);
 }
 
 Akonadi::Collection AclManager::collection() const
@@ -422,7 +396,12 @@ QAction *AclManager::deleteAction() const
     return d->mDeleteAction;
 }
 
-void AclManager::save()
+void AclManager::setChanged(bool b)
+{
+    d->mChanged = b;
+}
+
+void AclManager::save(bool recursive)
 {
     if ( !d->mCollection.isValid() || !d->mChanged ) {
         return;
@@ -444,10 +423,7 @@ void AclManager::save()
     d->mCollection = job->collections().first();
 
     d->mChanged = false;
-
-    PimCommon::ImapAclAttribute *attribute =
-            d->mCollection.attribute<PimCommon::ImapAclAttribute>();
-
+    PimCommon::AclModifyJob *modifyAclJob = new PimCommon::AclModifyJob;
     QMap<QByteArray, KIMAP::Acl::Rights> newRights;
 
     const QMap<QByteArray, KIMAP::Acl::Rights> rights = d->mModel->rights();
@@ -483,9 +459,19 @@ void AclManager::save()
         }
     }
 
+    modifyAclJob->setNewRights(newRights);
+    modifyAclJob->setTopLevelCollection(d->mCollection);
+    modifyAclJob->setRecursive(recursive);
+    modifyAclJob->start();
+#if 0
+    PimCommon::ImapAclAttribute *attribute =
+            d->mCollection.attribute<PimCommon::ImapAclAttribute>();
+
+
     attribute->setRights( newRights );
 
     new Akonadi::CollectionModifyJob( d->mCollection );
+#endif
 }
 
 #include "moc_aclmanager.cpp"

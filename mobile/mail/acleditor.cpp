@@ -70,7 +70,7 @@ void AclEditor::load()
 
 void AclEditor::save()
 {
-  mAclManager->save();
+  mAclManager->save(false);
 }
 
 QAbstractItemModel* AclEditor::model() const

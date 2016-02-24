@@ -31,6 +31,9 @@ if( LibKGAPI2_FOUND )
   )
 endif()
 
+set(libpimcommon_job_SRCS
+   job/fetchrecursivecollectionsjob.cpp
+   )
 
 set(libpimcommon_storageservice_SRCS
   ${libpimcommon_storageservice_gdrive}
@@ -149,6 +152,7 @@ set(libpimcommon_acl_SRCS
   acl/collectionaclpage.cpp
   acl/imapaclattribute.cpp
   acl/collectionaclwidget.cpp
+  acl/aclmodifyjob.cpp
 )
 
 set(libpimcommon_sieve_SRCS
@@ -205,6 +209,7 @@ set(libpimcommon_gravatar_SRCS
 
 set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
+  ${libpimcommon_job_SRCS}
   ${libpimcommon_util_SRCS}
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}

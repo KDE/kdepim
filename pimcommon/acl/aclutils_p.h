@@ -48,6 +48,17 @@ int indexForPermissions( KIMAP::Acl::Rights permissions );
  */
 QString permissionsToUserString( KIMAP::Acl::Rights permissions );
 
+/**
+ * We call this method if our first try to get the ACLs for the user fails.
+ * That's the case if the ACLs use a different user id than the login name.
+ *
+ * Examples:
+ *   login: testuser                acls: testuser@mydomain.org
+ *   login: testuser@mydomain.org   acls: testuser
+ */
+QString guessUserName( const QString &loginName, const QString &serverName );
+
+
 }
 
 }

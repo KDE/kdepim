@@ -27,6 +27,7 @@
 #include <QHBoxLayout>
 #include <QListView>
 #include <QPushButton>
+#include <QCheckBox>
 
 using namespace PimCommon;
 /**
@@ -82,9 +83,17 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
 {
     QHBoxLayout *layout = new QHBoxLayout( this );
 
+
+    QVBoxLayout *listViewLayout = new QVBoxLayout;
+    layout->addLayout(listViewLayout);
+
     QListView *view = new QListView;
     view->setObjectName(QLatin1String("list_view"));
-    layout->addWidget( view );
+    listViewLayout->addWidget( view );
+
+    mRecursiveChk = new QCheckBox( i18n ( "Apply permissions on all &subfolders." ), this);
+    listViewLayout->addWidget( mRecursiveChk );
+    connect(mRecursiveChk, SIGNAL(clicked(bool)), this, SLOT(slotRecursivePermissionChanged()));
 
     view->setAlternatingRowColors( true );
     view->setModel( mAclManager->model() );
@@ -109,6 +118,7 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
     QWidget *spacer = new QWidget( buttonBox );
     spacer->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
     connect(view,SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
+    connect(mAclManager, SIGNAL(collectionCanBeAdministrated(bool)), this, SLOT(slotCollectionCanBeAdministrated(bool)));
 }
 
 CollectionAclWidget::~CollectionAclWidget()
@@ -119,4 +129,30 @@ CollectionAclWidget::~CollectionAclWidget()
 AclManager *CollectionAclWidget::aclManager() const
 {
     return mAclManager;
+}
+
+bool CollectionAclWidget::recursive() const
+{
+    return mRecursiveChk->isChecked();
+}
+
+void CollectionAclWidget::setEnableRecursiveCheckBox(bool enable)
+{
+    if (!enable) {
+        mRecursiveChk->setChecked(false);
+    }
+    mRecursiveChk->setEnabled(enable);
+}
+
+void CollectionAclWidget::slotCollectionCanBeAdministrated(bool b)
+{
+    if (!b) {
+        mRecursiveChk->setChecked(false);
+    }
+    mRecursiveChk->setEnabled(b);
+}
+
+void CollectionAclWidget::slotRecursivePermissionChanged()
+{
+    mAclManager->setChanged(true);
 }

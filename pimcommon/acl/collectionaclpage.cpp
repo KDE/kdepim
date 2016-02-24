@@ -69,7 +69,7 @@ void CollectionAclPage::load( const Akonadi::Collection &collection )
 
 void CollectionAclPage::save( Akonadi::Collection &collection )
 {
-    mCollectionAclWidget->aclManager()->save();
+    mCollectionAclWidget->aclManager()->save(mCollectionAclWidget->recursive());
 
     // The collection dialog expects the changed collection to run
     // its own ItemModifyJob, so make him happy...

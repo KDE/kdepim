@@ -92,11 +92,13 @@ public:
      */
     QAction *deleteAction() const;
 
+    void setChanged(bool b);
+
 public Q_SLOTS:
     /**
      * Saves the changes of the ACL back to the collection.
      */
-    void save();
+    void save(bool recursive);
 
 Q_SIGNALS:
     /**
@@ -104,6 +106,7 @@ Q_SIGNALS:
      * be managed has changed.
      */
     void collectionChanged( const Akonadi::Collection &collection );
+    void collectionCanBeAdministrated(bool b);
 
 private:
     //@cond PRIVATE

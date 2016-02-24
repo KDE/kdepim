@@ -86,3 +86,24 @@ QString AclUtils::permissionsToUserString( KIMAP::Acl::Rights permissions )
     return i18n( "Custom Permissions (%1)",
                  QString::fromLatin1( KIMAP::Acl::rightsToString( permissions ) ) );
 }
+
+
+QString AclUtils::guessUserName( const QString &loginName, const QString &serverName )
+{
+    if ( loginName.contains( QLatin1Char( '@' ) ) ) {
+        // strip of the domain part and use user name only
+        return loginName.left( loginName.indexOf( QLatin1Char( '@' ) ) );
+    } else {
+        int pos = serverName.lastIndexOf( QLatin1Char( '.' ) );
+        if ( pos == -1 ) { // no qualified domain name, only hostname
+            return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName );
+        }
+
+        pos = serverName.lastIndexOf( QLatin1Char( '.' ), pos - 1 );
+        if ( pos == -1 ) { // a simple domain name e.g. mydomain.org
+            return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName );
+        } else {
+            return QString::fromLatin1( "%1@%2" ).arg( loginName ).arg( serverName.mid( pos + 1 ) );
+        }
+    }
+}
