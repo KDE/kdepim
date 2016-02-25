@@ -89,14 +89,14 @@ void AdBlockShowListDialog::readConfig()
 void AdBlockShowListDialog::setAdBlockListPath(const QString &localPath, const QString &url)
 {
     if (localPath.isEmpty()) {
+        downLoadList(url);
+    } else {
         QFile file(localPath);
-        if (file.exists()) {
+        if (file.open(QFile::ReadOnly|QFile::Text)) {
             mTextEdit->editor()->setPlainText(QString::fromUtf8(file.readAll()));
         } else {
             downLoadList(url);
         }
-    } else {
-        downLoadList(url);
     }
 }
 
