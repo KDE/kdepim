@@ -1924,6 +1924,9 @@ void KMComposeWin::forceAutoSaveMessage()
 
 void KMComposeWin::autoSaveMessage(bool force)
 {
+    if (!mComposerBase->editor()) //can happen when autosave is confused
+        return;
+
     if ( isComposerModified() || force ) {
         applyComposerSetting( mComposerBase );
         mComposerBase->saveMailSettings();
