@@ -43,6 +43,7 @@ AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(const QStringList &ex
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AdBlockAddSubscriptionDialog::reject);
     QWidget *w = new QWidget;
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     QLabel *lab = new QLabel(i18n("Select List:"));
     lay->addWidget(lab);
 
