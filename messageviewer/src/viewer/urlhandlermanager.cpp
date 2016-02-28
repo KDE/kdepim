@@ -910,7 +910,7 @@ bool AttachmentURLHandler::handleDrag(const QUrl &url, ViewerPrivate *window) co
         mimeData->setUrls(QList<QUrl>() << tUrl);
         drag->setMimeData(mimeData);
         if (!icon.isEmpty()) {
-            drag->setPixmap(QPixmap(icon));
+            drag->setPixmap(QIcon::fromTheme(icon).pixmap(16, 16));
         }
         drag->start();
         return true;
