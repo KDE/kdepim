@@ -36,6 +36,7 @@ Exec=accountwizard --package %u
 Type=Application
 NoDisplay=true
 Comment=Launch the account wizard to configure PIM accounts.
+Comment[ast]=Llancia l'encontu pa cuentes pa configurar les cuentes PIM.
 Comment[ca]=Llança l'assistent de comptes per a configurar els comptes de la PIM.
 Comment[ca@valencia]=Llança l'assistent de comptes per a configurar els comptes de la PIM.
 Comment[cs]=Spustit průvodce nastavením PIM účtů.
