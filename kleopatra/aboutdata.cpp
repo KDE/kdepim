@@ -41,8 +41,8 @@
 #include <kiconloader.h>
 
 #include <QPixmap>
-#include <QProcess>
-#include <QTextStream>
+#include <QFile>
+#include <QVariant>
 
 #include <cassert>
 
@@ -137,24 +137,21 @@ static const char gpg4win_credits_persons[] = I18N_NOOP("Till Adam<br>"
         "Emanuel Schütze<br>"
         "Dr. Jan-Oliver Wagner");
 
-static const char gpg4win_version_guessed[] = "2.0.1";
-
 static QString gpg4win_version()
 {
-
-    QProcess p;
-    p.setReadChannelMode(QProcess::MergedChannels);
-    p.start(gpgConfPath(), QStringList(QStringLiteral("--version")));
-    if (!p.waitForFinished())
-        return QStringLiteral("%1 (%2)").arg(QLatin1String(gpg4win_version_guessed),
-                                             i18nc("Version string is a guess", "guessed"));
-    const QString output = QTextStream(&p).readAll();
-    QRegExp rx(QStringLiteral("\\(Gpg4win\\s+([^\\s)]+)\\)"));
-    if (rx.indexIn(output) != -1) {
-        return rx.cap(1);
-    } else
-        return QStringLiteral("%1 (%2)").arg(QLatin1String(gpg4win_version_guessed),
-                                             i18nc("Version string is a guess", "guessed"));
+    QFile versionFile(gpg4winInstallPath() + QStringLiteral("/../VERSION"));
+    if (!versionFile.open(QIODevice::ReadOnly)) {
+        // No need to translate this should only be the case in development
+        // builds.
+        return QStringLiteral("Unknown (no VERSION file found)");
+    }
+    const QString g4wTag = QString::fromUtf8(versionFile.readLine());
+    if (!g4wTag.startsWith(QStringLiteral("gpg4win"))) {
+        // Hu? Something unknown
+        return QStringLiteral("Unknown (invalid VERSION file found)");
+    }
+    // Next line is version.
+    return QString::fromUtf8(versionFile.readLine());
 }
 
 static QPixmap UserIcon_nocached2(const char *name)
