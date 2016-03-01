@@ -233,7 +233,8 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     Kdelibs4ConfigMigrator migrate(QStringLiteral("kleopatra"));
-    migrate.setConfigFiles(QStringList() << QStringLiteral("kleopatrarc"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("kleopatrarc")
+                                         << QStringLiteral("libkleopatrarc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("kleopatra.rc"));
     migrate.migrate();
 
