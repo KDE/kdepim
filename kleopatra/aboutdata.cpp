@@ -59,7 +59,8 @@ struct about_data {
 };
 
 static const about_data authors[] = {
-    { "Marc Mutz", I18N_NOOP("Current Maintainer"), "mutz@kde.org", 0 },
+    { "Andre Heinecke", I18N_NOOP("Current Maintainer"), "aheinecke@gnupg.org", 0 },
+    { "Marc Mutz", I18N_NOOP("Former Maintainer"), "mutz@kde.org", 0 },
     { "Steffen Hansen", I18N_NOOP("Former Maintainer"), "hansen@kde.org", 0 },
     { "Matthias Kalle Dalheimer", I18N_NOOP("Original Author"), "kalle@kde.org", 0 },
 };
@@ -90,13 +91,19 @@ static const about_data credits[] = {
         I18N_NOOP("DN display ordering support, infrastructure"),
         "khz@kde.org", 0
     },
+    {
+        I18N_NOOP("Laurent Montel"),
+        I18N_NOOP("Qt5 port, general code maintenance"),
+        "montel@kde.org", 0
+    },
 };
 
 AboutData::AboutData()
     : KAboutData(QStringLiteral("kleopatra"), i18n("Kleopatra"),
                  QLatin1String(kleopatra_version), i18n(description), KAboutLicense::GPL,
                  i18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
-                      "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB"))
+                      "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB") +
+                 "\n" + i18n("(c) 2010-2016 The Kleopatra developers"))
 {
     using ::authors;
     using ::credits;
@@ -121,11 +128,12 @@ static const char gpg4win_credits_description[] = I18N_NOOP("This Free Software 
         "<li><a href='http://www.g10code.com'>g10 Code GmbH</a> "
         "(Crypto Funktionality, GpgOL, GpgEX, GPA)</li> "
         "<li><a href='http://www.kdab.com'>KDAB</a> (Kleopatra)</li></ul>"
-        "The following persons have contributed (as of 20100706):");
+        "Contributors:<br><br>");
 
 static const char gpg4win_credits_persons[] = I18N_NOOP("Till Adam<br>"
         "Marcus Brinkmann<br>"
         "Brigitte Hamilton<br>"
+        "Andre Heinecke<br>"
         "Bernhard Herzog<br>"
         "Werner Koch<br>"
         "Colin Leroy<br>"
@@ -170,7 +178,10 @@ AboutGpg4WinData::AboutGpg4WinData()
                  gpg4win_version(), i18n(gpg4win_description),
                  KAboutLicense::GPL, QString(), QString(), QStringLiteral("http://www.gpg4win.de"))
 {
-    setCustomAuthorText(i18n(gpg4win_credits_description), i18n(gpg4win_credits_description));
-    addAuthor(i18n(gpg4win_credits_persons), QString(), QString(), QString());
+    setCustomAuthorText(i18n(gpg4win_credits_description),
+                        i18n(gpg4win_credits_description) + i18n(gpg4win_credits_persons));
+    // We need at least one Author even if it is empty to get the Author tab
+    // in the about dialog.
+    addAuthor(QString(), QString(), QString(), QString());
     setProgramLogo(UserIcon_nocached2("gpg4win"));
 }
