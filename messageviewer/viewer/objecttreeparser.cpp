@@ -1456,6 +1456,14 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
         if ( !isFirstTextPart ) {
             mPlainTextContent = oldPlainText;
         }
+
+        if ( result.inlineEncryptionState() != KMMsgNotEncrypted ) {
+          KMime::Content *decodedNode = new KMime::Content;
+          decodedNode->setContent(curNode->decodedContent());
+          decodedNode->parse();
+          decodedNode->setBody(mPlainTextContent.toLatin1());
+          mNodeHelper->attachExtraContent(curNode, decodedNode);
+        }
         mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
     }
     if( bDrawFrame && htmlWriter() ) {

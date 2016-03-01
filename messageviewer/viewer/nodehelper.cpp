@@ -49,7 +49,6 @@
 #include <sstream>
 #include <algorithm>
 
-
 namespace MessageViewer {
 
 QStringList replySubjPrefixes(QStringList() << QLatin1String("Re\\s*:") << QLatin1String("Re\\[\\d+\\]:") << QLatin1String("Re\\d+:"));
@@ -937,6 +936,35 @@ KMime::Content * NodeHelper::decryptedNodeForContent( KMime::Content * content )
   return 0;
 }
 
+void NodeHelper::processDecryptedNodeHeaders(KMime::Content *orig,
+                                             KMime::Content *dec,
+                                             KMime::Content *headers)
+{
+  headers->setHead( orig->head() );
+  headers->parse();
+  if ( dec->contentType( false ) ) {
+    headers->contentType()->from7BitString( dec->contentType()->as7BitString( false ) );
+  } else {
+    headers->removeHeader( headers->contentType()->type() );
+  }
+  if ( dec->contentTransferEncoding( false ) ) {
+    headers->contentTransferEncoding()->from7BitString( dec->contentTransferEncoding()->as7BitString( false ) );
+  } else {
+    headers->removeHeader( headers->contentTransferEncoding()->type() );
+  }
+  if ( dec->contentDisposition( false ) ) {
+    headers->contentDisposition()->from7BitString( dec->contentDisposition()->as7BitString( false ) );
+  } else {
+    headers->removeHeader( headers->contentDisposition()->type() );
+  }
+  if ( dec->contentDescription( false ) ) {
+    headers->contentDescription()->from7BitString( dec->contentDescription()->as7BitString( false ) );
+  } else {
+    headers->removeHeader( headers->contentDescription()->type() );
+  }
+  headers->assemble();
+}
+
 bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders,
                                             int recursionLevel )
 {
@@ -977,30 +1005,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
 
       Q_ASSERT( addHeaders );
       KMime::Content headers;
-      headers.setHead( curNode->head() );
-      headers.parse();
-      if ( decryptedNode->contentType( false ) ) {
-        headers.contentType()->from7BitString( decryptedNode->contentType()->as7BitString( false ) );
-      } else {
-        headers.removeHeader( headers.contentType()->type() );
-      }
-      if ( decryptedNode->contentTransferEncoding( false ) ) {
-        headers.contentTransferEncoding()->from7BitString( decryptedNode->contentTransferEncoding()->as7BitString( false ) );
-      } else {
-        headers.removeHeader( headers.contentTransferEncoding()->type() );
-      }
-      if ( decryptedNode->contentDisposition( false ) ) {
-        headers.contentDisposition()->from7BitString( decryptedNode->contentDisposition()->as7BitString( false ) );
-      } else {
-        headers.removeHeader( headers.contentDisposition()->type() );
-      }
-      if ( decryptedNode->contentDescription( false ) ) {
-        headers.contentDescription()->from7BitString( decryptedNode->contentDescription()->as7BitString( false ) );
-      } else {
-        headers.removeHeader( headers.contentDescription()->type() );
-      }
-      headers.assemble();
-
+      processDecryptedNodeHeaders(curNode, decryptedNode, &headers);
       resultingData += headers.head() + '\n';
       unencryptedMessage_helper( decryptedNode, resultingData, false, recursionLevel + 1 );
 
@@ -1047,12 +1052,27 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else {
-      //kDebug() << "Current node is an ordinary leaf node, adding it as-is.";
-      if ( addHeaders ) {
-        resultingData += curNode->head() + '\n';
+      const MessageViewer::KMMsgEncryptionState encState = mEncryptionState.value(node, MessageViewer::KMMsgNotEncrypted);
+      if ( encState != MessageViewer::KMMsgNotEncrypted ) {
+         // try to detect inline encryption
+         decryptedNode = decryptedNodeForContent(node);
+         if ( decryptedNode ) {
+           KMime::Content headers;
+           processDecryptedNodeHeaders(curNode, decryptedNode, &headers);
+           resultingData += headers.head() + '\n';
+           unencryptedMessage_helper( decryptedNode, resultingData, false, recursionLevel + 1 );
+           returnValue = true;
+         }
       }
-      resultingData += curNode->body();
-      returnValue = false;
+
+      if ( encState == KMMsgNotEncrypted || !decryptedNode ) {
+        //kDebug() << "Current node is an ordinary leaf node, adding it as-is.";
+        if ( addHeaders ) {
+          resultingData += curNode->head() + '\n';
+        }
+        resultingData += curNode->body();
+        returnValue = false;
+      }
     }
   }
 

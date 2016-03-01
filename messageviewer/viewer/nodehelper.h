@@ -276,7 +276,7 @@ public:
     KMime::Message::Ptr unencryptedMessage( const KMime::Message::Ptr &originalMessage );
 
 private:
-
+    void processDecryptedNodeHeaders( KMime::Content *orig, KMime::Content *dec, KMime::Content *headers);
     bool unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders,
                                     int recursionLevel = 1 );
 
