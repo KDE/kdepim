@@ -210,6 +210,8 @@ void TranslatorWidget::readConfig()
     QList<int> size;
     size << 100 << 400;
     d->splitter->setSizes(myGroup.readEntry("mainSplitter", size));
+    d->invert->setEnabled(from != QLatin1String("auto"));
+
 }
 
 void TranslatorWidget::init()
