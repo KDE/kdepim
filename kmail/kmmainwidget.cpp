@@ -989,6 +989,7 @@ void KMMainWidget::createWidgets()
                                       this);
     connect(KMKernel::self()->entityTreeModel(), &Akonadi::EntityTreeModel::collectionFetched, this, &KMMainWidget::slotCollectionFetched);
 
+    mMessagePane->hide();// hide the search bar
     mMessagePane->setXmlGuiClient(mGUIClient);
     connect(mMessagePane, &MessageList::Pane::messageSelected,
             this, &KMMainWidget::slotMessageSelected);
@@ -2533,6 +2534,19 @@ void KMMainWidget::slotExtendSelectionToPreviousMessage()
     );
 }
 
+
+void KMMainWidget::slotSearchButton()
+{
+    //show the search bar
+    mMessagePane->show();
+}
+
+
+
+
+
+
+
 void KMMainWidget::slotSelectPreviousUnreadMessage()
 {
     if (!mMessagePane->selectPreviousMessageItem(
@@ -3185,7 +3199,6 @@ void KMMainWidget::setupActions()
     connect(mMarkThreadAsUnreadAction, &QAction::triggered, this, &KMMainWidget::slotSetThreadStatusUnread);
     KMail::Util::addQActionHelpText(mMarkThreadAsUnreadAction, i18n("Mark all messages in the selected thread as unread"));
     mThreadStatusMenu->addAction(mMarkThreadAsUnreadAction);
-
     mThreadStatusMenu->addSeparator();
 
     //----- "Mark Thread" toggle actions
@@ -3289,6 +3302,7 @@ void KMMainWidget::setupActions()
         KMail::Util::addQActionHelpText(action, i18n("Go to the next unread message"));
         connect(action, &QAction::triggered, this, &KMMainWidget::slotSelectNextUnreadMessage);
     }
+
     {
         QAction *action = new QAction(i18n("&Previous Message"), this);
         actionCollection()->addAction(QStringLiteral("go_prev_message"), action);
@@ -3296,6 +3310,15 @@ void KMMainWidget::setupActions()
         actionCollection()->setDefaultShortcut(action, QKeySequence(QStringLiteral("P; Left")));
         connect(action, &QAction::triggered, this, &KMMainWidget::slotSelectPreviousMessage);
     }
+    qDebug()<<"TEEEEEST";
+    {
+        QAction *action = new QAction(i18n("Search button"), this);
+        actionCollection()->addAction(QStringLiteral("search_button"), action);
+        action->setIcon(QIcon::fromTheme(QStringLiteral("go-search")));
+        connect(action, &QAction::triggered, this, &KMMainWidget::slotSearchButton);
+
+    }
+
     {
         QAction *action = new QAction(i18n("Previous Unread &Message"), this);
         actionCollection()->addAction(QStringLiteral("go_prev_unread_message"), action);
@@ -3309,6 +3332,9 @@ void KMMainWidget::setupActions()
         KMail::Util::addQActionHelpText(action, i18n("Go to the previous unread message"));
         connect(action, &QAction::triggered, this, &KMMainWidget::slotSelectPreviousUnreadMessage);
     }
+
+
+
     {
         QAction *action = new QAction(i18n("Next Unread &Folder"), this);
         actionCollection()->addAction(QStringLiteral("go_next_unread_folder"), action);
