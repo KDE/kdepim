@@ -16,7 +16,7 @@
 */
 
 #include "kaddressbookplugininterface.h"
-#include "pimcommon/genericpluginmanager.h"
+
 #include "kaddressbook_debug.h"
 #include "mainwidget.h"
 
