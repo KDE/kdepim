@@ -56,9 +56,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     w->setLayout(hbox);
     vbox->addWidget(w);
 
-    // le bouton lock, la barre de recherche et le bouton plus
-    //w->hide();
-
     mLockSearch = new QToolButton(this);
     mLockSearch->setCheckable(true);
     mLockSearch->setText(i18nc("@action:button", "Lock search"));
@@ -82,7 +79,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     initializeStatusSearchButton(quickSearchButtonLayout);
     vbox->addWidget(mQuickSearchFilterWidget);
 
-    //les options du bouton plus
     mQuickSearchFilterWidget->hide();
 
     mSearchEdit = new PimCommon::LineEditWithCompleter(this);

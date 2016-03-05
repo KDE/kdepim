@@ -299,7 +299,7 @@ public Q_SLOTS:
 
     void restoreCollectionFolderViewConfig();
 
-    void slotSearchButton();// bouton search
+    void slotSearchButton();
 
 
 Q_SIGNALS:

@@ -2534,18 +2534,11 @@ void KMMainWidget::slotExtendSelectionToPreviousMessage()
     );
 }
 
-
 void KMMainWidget::slotSearchButton()
 {
     //show the search bar
     mMessagePane->show();
 }
-
-
-
-
-
-
 
 void KMMainWidget::slotSelectPreviousUnreadMessage()
 {
@@ -3310,7 +3303,7 @@ void KMMainWidget::setupActions()
         actionCollection()->setDefaultShortcut(action, QKeySequence(QStringLiteral("P; Left")));
         connect(action, &QAction::triggered, this, &KMMainWidget::slotSelectPreviousMessage);
     }
-    qDebug()<<"TEEEEEST";
+
     {
         QAction *action = new QAction(i18n("Search button"), this);
         actionCollection()->addAction(QStringLiteral("search_button"), action);
