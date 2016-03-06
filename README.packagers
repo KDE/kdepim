@@ -12,10 +12,6 @@ Also, this document discusses other topics which are of importance for
 packagers, such as the GPG support.
 
 
-Baloo
-------------------
-Akonadi uses Baloo for all kind of searches. 
-
 MySQL
 -----
 Akonadi needs a relational database to keep metadata about the PIM data it
