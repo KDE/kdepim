@@ -1,5 +1,0 @@
-# OPTION mode=email
-/sendfd test.data.signed-opaque.p7s r
-INPUT FD
-VERIFY --protocol=CMS
-BYE

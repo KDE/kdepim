@@ -1,8 +1,0 @@
-# MODE filemanager
-# /expect 218104084
-ECHO =foo
-# /expect 218104084
-ECHO --foo =foo
-# /expect 218104084
-ECHO --foo=foo =foo
-BYE

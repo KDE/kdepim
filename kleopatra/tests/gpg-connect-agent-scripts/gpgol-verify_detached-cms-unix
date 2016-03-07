@@ -1,7 +1,0 @@
-# OPTION mode=email
-/sendfd test.data r
-MESSAGE FD
-/sendfd test.data-detached-signature.pem r
-INPUT FD
-VERIFY --protocol=CMS
-BYE

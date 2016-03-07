@@ -1,5 +1,0 @@
-# OPTION mode=email
-/sendfd test.data.signed-opaque.asc r
-INPUT FD
-VERIFY --protocol=OpenPGP
-BYE

@@ -1,6 +1,0 @@
-# OPTION mode=filemanager
-/subst
-FILE ${get cwd}/test.data-detached-signature.pem
-FILE ${get cwd}/test.data.sig
-VERIFY --nohup
-BYE

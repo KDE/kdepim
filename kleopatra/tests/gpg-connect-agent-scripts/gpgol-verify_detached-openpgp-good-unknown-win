@@ -1,9 +1,0 @@
-# OPTION mode=email
-/subst
-/serverpid
-/open msg test.data r
-MESSAGE FD=$msg
-/open in test.data.sig-good-unknown r
-INPUT FD=$in
-VERIFY --protocol=OpenPGP
-BYE
