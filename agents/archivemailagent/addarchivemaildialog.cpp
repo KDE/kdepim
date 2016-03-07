@@ -57,6 +57,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     QWidget *mainWidget = new QWidget(this);
     QGridLayout *mainLayout = new QGridLayout(mainWidget);
+    mainLayout->setMargin(0);
     topLayout->addWidget(mainWidget);
     topLayout->addWidget(buttonBox);
 
