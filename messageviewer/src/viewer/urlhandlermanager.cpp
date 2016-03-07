@@ -614,7 +614,7 @@ bool ExpandCollapseQuoteURLManager::handleClick(const QUrl &url, ViewerPrivate *
     //  kmail:levelquote/?num      -> the level quote to collapse.
     //  kmail:levelquote/?-num      -> expand all levels quote.
     if (url.scheme() == QLatin1String("kmail") && url.path() == QLatin1String("levelquote")) {
-        const QString levelStr = url.query().mid(1, url.query().length());
+        const QString levelStr = url.query();
         bool isNumber = false;
         const int levelQuote = levelStr.toInt(&isNumber);
         if (isNumber) {
@@ -628,8 +628,8 @@ QString ExpandCollapseQuoteURLManager::statusBarMessage(const QUrl &url, ViewerP
 {
     if (url.scheme() == QLatin1String("kmail") && url.path() == QLatin1String("levelquote")) {
         const QString query = url.query();
-        if (query.length() >= 2) {
-            if (query[ 1 ] == QLatin1Char('-')) {
+        if (query.length() >= 1) {
+            if (query[ 0 ] == QLatin1Char('-')) {
                 return i18n("Expand all quoted text.");
             } else {
                 return i18n("Collapse quoted text.");
