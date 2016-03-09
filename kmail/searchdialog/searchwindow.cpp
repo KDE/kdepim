@@ -112,51 +112,11 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
     mUi.mCbxFolders->setMustBeReadWrite( false );
     mUi.mCbxFolders->setNotAllowToCreateNewFolder( true );
 
-    bool currentFolderIsSearchFolder = false;
-
-    if ( !collection.hasAttribute<Akonadi::PersistentSearchAttribute>() ) {
-        // it's not a search folder, make a new search
-        mSearchPattern.append( SearchRule::createInstance( "Subject" ) );
-        mUi.mCbxFolders->setCollection( collection );
-    } else {
-        // it's a search folder
-        if ( collection.hasAttribute<Akonadi::SearchDescriptionAttribute>() ) {
-            currentFolderIsSearchFolder = true; // FIXME is there a better way to tell?
-
-            const Akonadi::SearchDescriptionAttribute* searchDescription = collection.attribute<Akonadi::SearchDescriptionAttribute>();
-            mSearchPattern.deserialize( searchDescription->description() );
-
-            const QList<Akonadi::Collection::Id> lst = searchDescription->listCollection();
-            if (!lst.isEmpty()) {
-                mUi.mChkMultiFolders->setChecked(true);
-                mCollectionId.clear();
-                Q_FOREACH (Akonadi::Collection::Id col, lst) {
-                    mCollectionId.append(Akonadi::Collection(col));
-                }
-            } else {
-                const Akonadi::Collection col = searchDescription->baseCollection();
-                if ( col.isValid() ) {
-                    mUi.mChkbxSpecificFolders->setChecked( true );
-                    mUi.mCbxFolders->setCollection( col );
-                    mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
-                } else {
-                    mUi.mChkbxAllFolders->setChecked( true );
-                    mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
-                }
-            }
-        } else {
-            // it's a search folder, but not one of ours, warn the user that we can't edit it
-            // FIXME show results, but disable edit GUI
-            kWarning() << "This search was not created with KMail. It cannot be edited within it.";
-            mSearchPattern.clear();
-        }
-    }
-
-    mUi.mPatternEdit->setSearchPattern( &mSearchPattern );
-    connect( mUi.mPatternEdit, SIGNAL(returnPressed()),
-             this, SLOT(slotSearch()) );
+    activateFolder( collection );
 
     // enable/disable widgets depending on radio buttons:
+    connect( mUi.mPatternEdit, SIGNAL(returnPressed()),
+             this, SLOT(slotSearch()) );
     connect( mUi.mChkbxAllFolders, SIGNAL(toggled(bool)),
              this, SLOT(setEnabledSearchButton(bool)) );
 
@@ -188,20 +148,6 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
 
     connect( KMKernel::self()->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), this, SLOT(updateCollectionStatistic(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
 
-    if ( currentFolderIsSearchFolder ) {
-        mFolder = collection;
-        mUi.mSearchFolderEdt->setText( collection.name() );
-        Q_ASSERT ( !mResultModel );
-        createSearchModel();
-    } else {
-        mUi.mSearchFolderEdt->setText( i18n( "Last Search" ) );
-        // find last search and reuse it if possible
-        mFolder = CommonKernel->collectionFromId( GlobalSettings::lastSearchCollectionId() );
-        // when the last folder got renamed, create a new one
-        if ( mFolder.isValid() && mFolder.name() != mUi.mSearchFolderEdt->text() ) {
-            mFolder = Akonadi::Collection();
-        }
-    }
 
     connect( mUi.mSearchFolderEdt, SIGNAL(textChanged(QString)),
              this, SLOT(scheduleRename(QString)) );
@@ -386,7 +332,65 @@ void SearchWindow::slotFolderActivated()
 void SearchWindow::activateFolder( const Akonadi::Collection &collection )
 {
     mUi.mChkbxSpecificFolders->setChecked( true );
-    mUi.mCbxFolders->setCollection( collection );
+
+    bool currentFolderIsSearchFolder = false;
+
+    if ( !collection.hasAttribute<Akonadi::PersistentSearchAttribute>() ) {
+        // it's not a search folder, make a new search
+        if ( mSearchPattern.isEmpty() ) {
+            mSearchPattern.append( SearchRule::createInstance( "Subject" ) );
+        }
+        mUi.mCbxFolders->setCollection( collection );
+    } else {
+        // it's a search folder
+         mSearchPattern.clear();
+        if ( collection.hasAttribute<Akonadi::SearchDescriptionAttribute>() ) {
+            currentFolderIsSearchFolder = true; // FIXME is there a better way to tell?
+
+            const Akonadi::SearchDescriptionAttribute* searchDescription = collection.attribute<Akonadi::SearchDescriptionAttribute>();
+            mSearchPattern.deserialize( searchDescription->description() );
+
+            const QList<Akonadi::Collection::Id> lst = searchDescription->listCollection();
+            if (!lst.isEmpty()) {
+                mUi.mChkMultiFolders->setChecked(true);
+                mCollectionId.clear();
+                Q_FOREACH (Akonadi::Collection::Id col, lst) {
+                    mCollectionId.append(Akonadi::Collection(col));
+                }
+            } else {
+                const Akonadi::Collection col = searchDescription->baseCollection();
+                if ( col.isValid() ) {
+                    mUi.mChkbxSpecificFolders->setChecked( true );
+                    mUi.mCbxFolders->setCollection( col );
+                    mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
+                } else {
+                    mUi.mChkbxAllFolders->setChecked( true );
+                    mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
+                }
+            }
+        } else {
+            // it's a search folder, but not one of ours, warn the user that we can't edit it
+            // FIXME show results, but disable edit GUI
+            kWarning() << "This search was not created with KMail. It cannot be edited within it.";
+            mSearchPattern.clear();
+        }
+    }
+
+    mUi.mPatternEdit->setSearchPattern( &mSearchPattern );
+
+    if ( currentFolderIsSearchFolder ) {
+        mFolder = collection;
+        mUi.mSearchFolderEdt->setText( collection.name() );
+        createSearchModel();
+    } else if ( mUi.mSearchFolderEdt->text().isEmpty() ) {
+        mUi.mSearchFolderEdt->setText( i18n( "Last Search" ) );
+        // find last search and reuse it if possible
+        mFolder = CommonKernel->collectionFromId( GlobalSettings::lastSearchCollectionId() );
+        // when the last folder got renamed, create a new one
+        if ( mFolder.isValid() && mFolder.name() != mUi.mSearchFolderEdt->text() ) {
+            mFolder = Akonadi::Collection();
+        }
+    }
 }
 
 void SearchWindow::slotSearch()
