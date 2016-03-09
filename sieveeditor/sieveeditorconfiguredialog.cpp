@@ -51,7 +51,7 @@ SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     mTabWidget->setObjectName(QStringLiteral("tabwidget"));
 
     //Server page
-    QGroupBox *w = new QGroupBox(i18n("Sieve Server"));
+    QWidget *w = new QWidget;
     mTabWidget->addTab(w, i18n("Sieve Server"));
 
     QVBoxLayout *layout = new QVBoxLayout;
