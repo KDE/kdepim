@@ -75,6 +75,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
       mCloseRequested( false ),
       mSortColumn( 0 ),
       mSortOrder( Qt::AscendingOrder ),
+      mInitialSearchCollection( collection ),
       mSearchJob( 0 ),
       mResultModel( 0 ),
       mKMMainWidget( widget ),
@@ -652,6 +653,10 @@ void SearchWindow::renameSearchFolder()
     const QString name = mUi.mSearchFolderEdt->text();
     if ( mFolder.isValid() ) {
         const QString oldFolderName = mFolder.name();
+        if ( oldFolderName == i18n("Last Search") && mInitialSearchCollection != mFolder ) {
+           mFolder = Akonadi::Collection();
+           return;
+        }
         if ( oldFolderName != name ) {
             mFolder.setName( name );
             Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( mFolder, this );

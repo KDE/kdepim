@@ -163,6 +163,7 @@ private:
     bool mCloseRequested;
     int mSortColumn;
     Qt::SortOrder mSortOrder;
+    Akonadi::Collection mInitialSearchCollection;
     Akonadi::Collection mFolder;
     KJob *mSearchJob;
 
