@@ -2536,8 +2536,10 @@ void KMMainWidget::slotExtendSelectionToPreviousMessage()
 
 void KMMainWidget::slotSearchButton()
 {
-    //show the search bar
-    mMessagePane->show();
+    if(mHideShowSearchBarAction->isChecked())
+        mMessagePane->show();
+    else
+        mMessagePane->hide();
 }
 
 void KMMainWidget::slotSelectPreviousUnreadMessage()
@@ -3305,10 +3307,12 @@ void KMMainWidget::setupActions()
     }
 
     {
-        QAction *action = new QAction(i18n("Search button"), this);
-        actionCollection()->addAction(QStringLiteral("search_button"), action);
-        action->setIcon(QIcon::fromTheme(QStringLiteral("go-search")));
-        connect(action, &QAction::triggered, this, &KMMainWidget::slotSearchButton);
+        mHideShowSearchBarAction = new QAction(i18n("Search button"), this);
+        actionCollection()->addAction(QStringLiteral("search_button"), mHideShowSearchBarAction);
+        mHideShowSearchBarAction->setIcon(QIcon::fromTheme(QStringLiteral("go-search")));
+        mHideShowSearchBarAction->setCheckable(true);
+        mHideShowSearchBarAction->setChecked(false);
+        connect(mHideShowSearchBarAction, &QAction::triggered, this, &KMMainWidget::slotSearchButton);
 
     }
 

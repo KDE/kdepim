@@ -578,6 +578,8 @@ private:
     // Custom template actions menu
     KActionMenu *mTemplateMenu;
 
+    QAction *mHideShowSearchBarAction;
+
     KActionMenu *mThreadStatusMenu, *mApplyFilterActionsMenu;
     QAction *mCopyActionMenu;
     QAction *mMoveActionMenu;
