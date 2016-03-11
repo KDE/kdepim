@@ -358,6 +358,67 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
         quoteCSS += QLatin1String("}\n\n");
     }
 
+    // CSS definititons for invitations
+    QString invitationCSS = QString::fromLatin1(
+        "#invitation {"
+        "  font-size: %1px !important;"
+        "}").arg(bodyFontSize);
+    invitationCSS += QLatin1String(
+        "#invitation h2 {\n"
+        "    margin: 5px 0 0 0 !important;\n"
+        "}\n"
+        "#invitation table {\n"
+        "    line-height: 140% !important;\n"
+        //"    font-size: 120% !important;\n"
+        "    border-spacing: 0 !important;\n"
+        "}\n"
+        "#invitation td {\n"
+        "    vertical-align: top !important;\n"
+        "    padding: 10px 5px 0 0 !important;\n"
+        "}\n"
+        "#invitation small {\n"
+        "    color: #555 !important;\n"
+        "}\n"
+        "#invitation hr {\n"
+        "    border: 1px solid #678db2 !important;\n"
+        "}\n"
+        "#invitation .button{\n"
+        "    display: inline-block !important;\n"
+        "    font-weight: bold !important;\n"
+        "    padding: 4px 8px !important;\n"
+        "    margin-bottom: 4px !important;\n"
+        "    border: 1px solid #dedede !important;\n"
+        "    border-radius: 3px !important;\n"
+        "    background: #f5f5f5 !important;\n"
+        "    vertical-align: middle !important;\n"
+        "}\n"
+        "#invitation .button:hover{\n"
+        "    border-color: #bebebe !important;\n"
+        "}\n"
+        "#invitation a.button {\n"
+        "    color: #555 !important;\n"
+        "}\n"
+        "#invitation .button img{\n"
+        "    vertical-align: middle !important;\n"
+        "    padding-right: 3px !important;\n"
+        "}\n"
+        "#invitation .leftColumn {\n"
+        "    color: #555 !important;\n"
+        "    font-weight: bold !important;\n"
+        "}\n"
+        "#invitation .summary img {\n"
+        "    padding-right: 10px !important;\n"
+        "    width: 48px !important;\n"
+        "    vertical-align: middle !important;\n"
+        "}\n"
+        "#invitation .firstrow td {\n"
+        "    line-height: 175% !important;\n"
+        "}\n"
+        ".floatleft {\n"
+        "    float: left !important;\n"
+        "}\n"
+    );
+
     return
             QString::fromLatin1( "body {\n"
                                  "  font-family: \"%1\" ! important;\n"
@@ -548,7 +609,8 @@ QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool 
                   pal.color( QPalette::Foreground ).name(),
                   pal.color( QPalette::Background ).name() )
             .arg( pal.color( QPalette::Mid ).name() )
-            + quoteCSS;
+            + quoteCSS
+            + invitationCSS;
 }
 
 QString CSSHelperBase::commonCssDefinitions() const {
