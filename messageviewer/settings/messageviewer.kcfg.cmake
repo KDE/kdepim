@@ -251,18 +251,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <default>${EXCHANGE_COMPATIBLE_INVITATIONS}</default>
       </entry>
 
-      <entry name="OutlookCompatibleInvitationReplyComments" type="Bool">
-        <label>Outlook compatible invitation reply comments</label>
-        <whatsthis>When replying to invitations, send the reply comment in way that Microsoft Outlook understands.</whatsthis>
-        <default>${OUTLOOK_COMPATIBLE_INVITATION_REPLY_COMMENTS}</default>
-      </entry>
-
-      <entry name="OutlookCompatibleInvitationComparisons" type="Bool">
-        <label>Show invitation update differences in the Outlook style</label>
-        <whatsthis>When viewing invitation updates, show the differences in the Microsoft Outlook style.</whatsthis>
-        <default>true</default>
-      </entry>
-
       <entry name="AutomaticSending" type="Bool">
         <label>Automatic invitation sending</label>
         <whatsthis>When this is checked, you will not see the mail composer window. Instead, all invitation mails are sent automatically. If you want to see the mail before sending it, you can uncheck this option. However, be aware that the text in the composer window is in iCalendar syntax, and you should not try modifying it by hand.</whatsthis>

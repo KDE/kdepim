@@ -270,8 +270,7 @@ class Formatter : public Interface::BodyPartFormatter
           MemoryCalendar::Ptr cl( new MemoryCalendar( KSystemTimeZones::local() ) );
           const QString html =
             KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
-              source, cl, &helper, message->sender()->asUnicodeString(),
-              GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
+              source, cl, &helper, message->sender()->asUnicodeString() );
 
           if ( html.isEmpty() ) {
             return AsIcon;
@@ -933,11 +932,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
             i18n( "You forgot to add proposal. Please add it. Thanks" ) );
           return true;
         } else {
-          if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
-            incidence->setDescription( comment );
-          } else {
-            incidence->addComment( comment );
-          }
+          incidence->addComment( comment );
         }
       }
 
@@ -1190,11 +1185,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
         }
         else {
-          if ( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
-            incidence->setDescription( comment );
-          } else {
-            incidence->addComment( comment );
-          }
+          incidence->addComment( comment );
         }
       }
       return mail( viewerInstance, incidence, QLatin1String("declinecounter"), KCalCore::iTIPDeclineCounter,

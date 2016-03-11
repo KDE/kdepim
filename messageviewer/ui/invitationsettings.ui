@@ -50,32 +50,6 @@ Turn this option on to send groupware invitations in a way that Microsoft Exchan
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="mOutlookCompatibleInvitationComments">
-        <property name="toolTip">
-         <string>Send invitation reply comments in a way that Microsoft Outlook(tm) understands.</string>
-        </property>
-        <property name="text">
-         <string>Outlook compatible invitation reply comments</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="mOutlookCompatibleInvitationComparisons">
-        <property name="toolTip">
-         <string>Display invitation update differences in the Microsoft Outlook(tm) style.</string>
-        </property>
-        <property name="whatsThis">
-         <string>When viewing invitation updates, show the differences in the Microsoft Outlook style.</string>
-        </property>
-        <property name="text">
-         <string>Show invitation update differences in the Outlook style</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QCheckBox" name="mAutomaticSending">
         <property name="toolTip">
          <string>When this is on, the user will not see the mail composer window. Invitation mails are sent automatically.</string>

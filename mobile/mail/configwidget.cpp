@@ -126,9 +126,7 @@ void ConfigWidget::loadFromExternalSettings()
   // Invitations
   Settings::self()->setInvitationsOutlookCompatible( MessageViewer::GlobalSettings::self()->legacyMangleFromToHeaders() &&
                                                      MessageViewer::GlobalSettings::self()->legacyBodyInvites() &&
-                                                     MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() &&
-                                                     MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationReplyComments() &&
-                                                     MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
+                                                     MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() );
   Settings::self()->setInvitationsAutomaticSending( MessageViewer::GlobalSettings::self()->automaticSending() );
   Settings::self()->setInvitationsDeleteAfterReply( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
 
@@ -164,8 +162,6 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setLegacyMangleFromToHeaders( Settings::self()->invitationsOutlookCompatible() );
   MessageViewer::GlobalSettings::self()->setLegacyBodyInvites( Settings::self()->invitationsOutlookCompatible() );
   MessageViewer::GlobalSettings::self()->setExchangeCompatibleInvitations( Settings::self()->invitationsOutlookCompatible() );
-  MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments( Settings::self()->invitationsOutlookCompatible() );
-  MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( Settings::self()->invitationsOutlookCompatible() );
   MessageViewer::GlobalSettings::self()->setAutomaticSending( Settings::self()->invitationsAutomaticSending() );
   MessageViewer::GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( Settings::self()->invitationsDeleteAfterReply() );
 
