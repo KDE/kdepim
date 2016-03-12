@@ -59,6 +59,9 @@ int main(int argc, char **argv)
 {
     KAddressBookApplication app(argc, &argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+#if QT_VERSION >= 0x050600
+    app.setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     KLocalizedString::setApplicationDomain("kaddressbook");
 
     AboutData about;

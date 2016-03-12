@@ -32,6 +32,9 @@ int main(int argc, char *argv[])
     KLocalizedString::setApplicationDomain("pimsettingexporter");
 
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+#if QT_VERSION >= 0x050600
+    app.setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     Kdelibs4ConfigMigrator migrate(QStringLiteral("pimsettingexporter"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("pimsettingexporterrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("pimsettingexporter.rc"));
