@@ -357,7 +357,7 @@ bool AkonadiBrowserSortModel::lessThan(const QModelIndex &left, const QModelInde
             const KMime::Message::Ptr rightMail = rightItem.payload<KMime::Message::Ptr>();
             const KMime::Headers::Date *ldate = leftMail->date(false);
             const KMime::Headers::Date *rdate = rightMail->date(false);
-            if ( ldate && rdate) {
+            if (ldate && rdate) {
                 return ldate->dateTime() < rdate->dateTime();
             } else {
                 return false;

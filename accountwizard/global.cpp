@@ -124,7 +124,6 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
     }
 }
 
-
 void Global::setPoFileName(const QString &poFileName)
 {
     sInstance->poFileName = poFileName;

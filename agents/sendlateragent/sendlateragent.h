@@ -37,7 +37,6 @@ public:
     void setEnableAgent(bool b);
     bool enabledAgent() const;
 
-
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 

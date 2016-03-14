@@ -69,8 +69,7 @@ void LoadPage::enterPageNext()
     KConfigGroup grpTranslate(&f, "Translate");
     const QString poFileName = grpTranslate.readEntry("Filename");
 
-    if (!poFileName.isEmpty())
-    {
+    if (!poFileName.isEmpty()) {
         Global::setPoFileName(poFileName);
         m_action->trigger();
     }
