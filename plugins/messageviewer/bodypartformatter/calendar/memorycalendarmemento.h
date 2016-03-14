@@ -20,8 +20,8 @@
 #ifndef MEMORYCALENDARMEMENTO_H
 #define MEMORYCALENDARMEMENTO_H
 
-#include <MessageViewer/BodyPart>
-#include <MessageViewer/Enums>
+#include <MimeTreeParser/BodyPart>
+#include <MimeTreeParser/Enums>
 
 #include <KCalCore/MemoryCalendar>
 #include <QObject>
