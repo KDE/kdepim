@@ -3307,7 +3307,7 @@ void KMMainWidget::setupActions()
     }
 
     {
-        mHideShowSearchBarAction = new QAction(i18n("Search button"), this);
+        mHideShowSearchBarAction = new QAction(i18n("Search"), this);
         actionCollection()->addAction(QStringLiteral("search_button"), mHideShowSearchBarAction);
         mHideShowSearchBarAction->setIcon(QIcon::fromTheme(QStringLiteral("go-search")));
         mHideShowSearchBarAction->setCheckable(true);
