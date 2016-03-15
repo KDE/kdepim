@@ -332,7 +332,7 @@
       <li xml:lang="ar">دعم جلب أحدث مدخلات المدوّنة.</li>
       <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog.</li>
       <li xml:lang="ca-valencia">Implementa l'obtenció de les vostres entrades recents al blog.</li>
-      <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen</li>
+      <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen.</li>
       <li xml:lang="en-GB">Support for Fetching your recent blog entries.</li>
       <li xml:lang="es">Implementa la recuperación de sus entradas recientes de blog.</li>
       <li xml:lang="fi">Tuki viimeisimpien blogimerkintöjesi noutoon.</li>
@@ -393,7 +393,7 @@
       <li xml:lang="ar">دعم حفظ مدخلات محليّة قبل النّشر.</li>
       <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les.</li>
       <li xml:lang="ca-valencia">Implementa el guardat de les entrades locals abans de publicar-les.</li>
-      <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung</li>
+      <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung.</li>
       <li xml:lang="en-GB">Support for saving local entries before publishing.</li>
       <li xml:lang="es">Implementa el guardado de entradas locales antes de publicarlas.</li>
       <li xml:lang="fi">Tuki paikallisten merkintöjen tallentamiseen ennen julkaisua.</li>
@@ -424,7 +424,7 @@
       <li xml:lang="ar">حفظ نسخة عمل لتجنّب فقدان البيانات، عند فترات يمكن ضبطها.</li>
       <li xml:lang="ca">Desa una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables.</li>
       <li xml:lang="ca-valencia">Guarda una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables.</li>
-      <li xml:lang="de">Speicherung einer Kopie Ihrer Texte in einstellbaren Intervallen, um Datenverlust zu verhindern</li>
+      <li xml:lang="de">Speicherung einer Kopie Ihrer Texte in einstellbaren Intervallen, um Datenverlust zu verhindern.</li>
       <li xml:lang="en-GB">Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="es">Guardado de su copia escrita para evitar pérdidas de datos, a intervalos configurables.</li>
       <li xml:lang="fi">Tekstisi kopion tallennus säädettävin aikavälein tiedon katoamisen estämiseksi.</li>
@@ -455,7 +455,7 @@
       <li xml:lang="ar">مدقّق إملاء آليّ داخليّ. (مدقّق كدي الإملائيّ مستخدم لذا أغلب اللغات مدعومة)</li>
       <li xml:lang="ca">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
       <li xml:lang="ca-valencia">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
-      <li xml:lang="de">Interne automatische Rechtschreibprüfung, dabei wird die KDE-Rechtschreibprüfung verwendet und damit viele Sprachen unterstützt</li>
+      <li xml:lang="de">Interne automatische Rechtschreibprüfung. Dabei wird die KDE-Rechtschreibprüfung verwendet und damit viele Sprachen unterstützt</li>
       <li xml:lang="en-GB">Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="es">Auto corrector ortográfico interno. (El corrector ortográfico de KDE usado para la mayoría de idiomas está reconocido)</li>
       <li xml:lang="fi">Sisäinen automaattinen oikoluku. (Käyttää KDE:n oikolukua, joka tukee useimpia kieliä)</li>
