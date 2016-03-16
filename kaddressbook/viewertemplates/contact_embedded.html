@@ -61,14 +61,14 @@
           {% endwith %}
           {% endwith %}
       {% endfor %}
-
-      {% if contact.website %}
+      
+      {% for website in contact.websites %}
         {% with contact.websitei18n as title %}
-        {% with contact.website|safe as value %}
+        {% with website|safe as value %}
         {% include "contact_row.html" %}
         {% endwith %}
         {% endwith %}
-      {% endif %}
+      {% endfor %}
 
       {% if contact.blogUrl %}
         {% with "Blog Feed" as title %}
