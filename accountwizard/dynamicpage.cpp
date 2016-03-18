@@ -29,7 +29,8 @@
 #include <KLocalizedTranslator>
 #include <QCoreApplication>
 
-DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page(parent)
+DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page(parent),
+    m_dynamicWidget(Q_NULLPTR)
 {
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setMargin(0);
@@ -57,7 +58,9 @@ DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page
         qCDebug(ACCOUNTWIZARD_LOG) << "Unable to open: " << uiFile;
     }
 
-    layout->addWidget(m_dynamicWidget);
+    if (m_dynamicWidget) {
+        layout->addWidget(m_dynamicWidget);
+    }
 
     setValid(true);
 }
