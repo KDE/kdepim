@@ -303,6 +303,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
         bodyMessage->contentType()->setCharset("utf-8");
         bodyMessage->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
         bodyMessage->setBody(KMime::CRLFtoLF(body.toUtf8()));
+        bodyMessage->setHeader(bodyDisposition);
         message->addContent(bodyMessage);
 
         // Set the sedcond multipart, the attachment.
