@@ -69,6 +69,8 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
                 } else {
                     delete info;
                 }
+            } else {
+                delete info;
             }
         } else {
             delete info;
