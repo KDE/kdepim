@@ -48,7 +48,10 @@ static const char POST_TITLE[] = "Temporary-Post-Used-For-Style-Detection-Title-
 static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Content-";
 
 StyleGetter::StyleGetter(const int blogid, QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mTempPost(Q_NULLPTR),
+      mParent(Q_NULLPTR),
+      b(Q_NULLPTR)
 {
     qCDebug(BLOGILO_LOG);
     BilboBlog *tempBlog = DBMan::self()->blog(blogid);
