@@ -109,6 +109,7 @@ using KMail::SecondaryWindow;
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/tag.h>
 #include <akonadi/tagcreatejob.h>
+#include <akonadi/kmime/messageflags.h>
 #include <mailtransport/transportattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
 
@@ -1433,6 +1434,7 @@ void KMCopyCommand::slotFetchResult( KJob * job )
         Akonadi::Job *job = 0;
         if ( decrypt( msg ) ) {
             item.setPayload( msg );
+            item.clearFlag( Akonadi::MessageFlags::Encrypted );
             job = new Akonadi::ItemCreateJob( item, Akonadi::Collection(mDestFolder.id()), this );
         } else {
             job = new Akonadi::ItemCopyJob( item, Akonadi::Collection(mDestFolder.id()), this );
