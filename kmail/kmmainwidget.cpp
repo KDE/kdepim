@@ -3554,6 +3554,7 @@ void KMMainWidget::slotUpdateCopyDecryptedActionMenu()
     KMenu *menu = mCopyDecryptActionMenu->menu();
     delete menu;
     menu = new KMenu();
+    menu->setProperty("actionType", StandardActionManager::CopyItemToMenu);
     // Will populate our menu with folders
     connect(menu, SIGNAL(aboutToShow()),
             mAkonadiStandardActionManager->standardActionManager(), SLOT(aboutToShowMenu()));
