@@ -56,19 +56,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     w->setLayout(hbox);
     vbox->addWidget(w);
 
-    mLockSearch = new QToolButton(this);
-    mLockSearch->setCheckable(true);
-    mLockSearch->setText(i18nc("@action:button", "Lock search"));
-    mLockSearch->setFocusPolicy(Qt::StrongFocus);
-    mLockSearch->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Toggle this button if you want to keep your quick search "
-              "locked when moving to other folders or when narrowing the search "
-              "by message status."));
-    slotLockSearchClicked(false);
-    connect(mLockSearch, &QToolButton::toggled, this, &QuickSearchLine::slotLockSearchClicked);
-    hbox->addWidget(mLockSearch);
-
     mQuickSearchFilterWidget = new QWidget;
     mQuickSearchFilterWidget->setObjectName(QStringLiteral("quicksearchfilterwidget"));
     QHBoxLayout *quickSearchButtonLayout = new QHBoxLayout;
@@ -161,7 +148,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     installEventFilter(this);
     mMoreOptions->installEventFilter(this);
     mTagFilterCombo->installEventFilter(this);
-    mLockSearch->installEventFilter(this);
     mSearchEveryWhere->installEventFilter(this);
     mSearchAgainstBody->installEventFilter(this);
     mSearchAgainstSubject->installEventFilter(this);
@@ -286,22 +272,6 @@ KLineEdit *QuickSearchLine::searchEdit() const
     return mSearchEdit;
 }
 
-QToolButton *QuickSearchLine::lockSearch() const
-{
-    return mLockSearch;
-}
-
-void QuickSearchLine::slotLockSearchClicked(bool locked)
-{
-    if (locked) {
-        mLockSearch->setIcon(QIcon::fromTheme(QStringLiteral("object-locked")));
-        mLockSearch->setToolTip(i18nc("@info:tooltip",
-                                      "Prevent the quick search field from being cleared when changing folders"));
-    } else {
-        mLockSearch->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
-        mLockSearch->setToolTip(i18nc("@info:tooltip", "Clear the quick search field when changing folders"));
-    }
-}
 
 void QuickSearchLine::resetFilter()
 {
@@ -311,7 +281,6 @@ void QuickSearchLine::resetFilter()
     if (mTagFilterCombo->isVisible()) {
         mTagFilterCombo->setCurrentIndex(0);
     }
-    mLockSearch->setChecked(false);
     mSearchEveryWhere->setChecked(true);
     mSearchAgainstBody->setChecked(false);
     mSearchAgainstSubject->setChecked(false);
@@ -443,6 +412,5 @@ void QuickSearchLine::changeQuicksearchVisibility(bool show)
 {
     mSearchEdit->setVisible(show);
     mTagFilterCombo->setVisible(show && mTagFilterCombo->count());
-    mLockSearch->setVisible(show);
-    mMoreOptions->setVisible(show);
+    mMoreOptions->setVisible(show);*************************************
 }

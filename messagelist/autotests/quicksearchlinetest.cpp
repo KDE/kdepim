@@ -38,7 +38,6 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
 {
     QuickSearchLine searchLine;
     QVERIFY(searchLine.searchEdit()->text().isEmpty());
-    QVERIFY(!searchLine.lockSearch()->isChecked());
     QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
     QVERIFY(widget);
     QVERIFY(widget->isHidden());
@@ -166,7 +165,6 @@ void QuickSearchLineTest::shouldResetAllWhenResetFilter()
     searchLine.show();
     searchLine.resetFilter();
     QCOMPARE(searchLine.status().count(), 0);
-    QCOMPARE(searchLine.lockSearch()->isChecked(), false);
     QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), -1);
     QuickSearchLine::SearchOptions options;
     options = QuickSearchLine::SearchEveryWhere;

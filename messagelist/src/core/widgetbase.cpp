@@ -336,19 +336,6 @@ void Widget::setStorageModel(StorageModel *storageModel, PreSelectionMode preSel
     d->setDefaultThemeForStorageModel(storageModel);
     d->setDefaultSortOrderForStorageModel(storageModel);
 
-    if (!d->quickSearchLine->lockSearch()->isChecked()) {
-        if (d->mSearchTimer) {
-            d->mSearchTimer->stop();
-            delete d->mSearchTimer;
-            d->mSearchTimer = Q_NULLPTR;
-        }
-
-        d->quickSearchLine->searchEdit()->clear();
-
-        if (d->mFilter) {
-            resetFilter();
-        }
-    }
     StorageModel *oldModel = d->mStorageModel;
 
     d->mStorageModel = storageModel;

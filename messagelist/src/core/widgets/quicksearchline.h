@@ -61,7 +61,7 @@ public:
     KComboBox *tagFilterComboBox() const;
     KLineEdit *searchEdit() const;
     QToolButton *openFullSearchButton() const;
-    QToolButton *lockSearch() const;
+
     void resetFilter();
     QList<Akonadi::MessageStatus> status() const;
 
@@ -81,7 +81,6 @@ Q_SIGNALS:
 protected:
     bool eventFilter(QObject *object, QEvent *e) Q_DECL_OVERRIDE;
 private Q_SLOTS:
-    void slotLockSearchClicked(bool locked);
     void slotSearchOptionChanged();
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
@@ -95,7 +94,6 @@ private:
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
     KComboBox *mTagFilterCombo;
-    QToolButton *mLockSearch;
     QPushButton *mMoreOptions;
     QPushButton *mSearchEveryWhere;
     QPushButton *mSearchAgainstBody;
