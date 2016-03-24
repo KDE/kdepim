@@ -346,6 +346,12 @@ protected slots:
     bool slotSearch();
     void slotIntro();
     void slotShowStartupFolder();
+    void slotFolderTreeViewCustomDropAction(const QString &actionId,
+                                            const Akonadi::Item::List &items,
+                                            const Akonadi::Collection::List &collections,
+                                            const Akonadi::Collection &destination,
+                                            Qt::DropAction dropAction);
+    void slotFolderTreeViewCustomDropActionFinished(KMCommand *command);
 
     /** Message navigation */
     void slotSelectNextMessage();

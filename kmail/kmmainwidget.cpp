@@ -981,6 +981,14 @@ void KMMainWidget::createWidgets()
                                        this );
     connect( KMKernel::self()->entityTreeModel(), SIGNAL(collectionFetched(int)), this, SLOT(slotCollectionFetched(int)));
 
+    mFolderTreeWidget->folderTreeView()->addCustomDropAction(QLatin1String("copy-decrypted"),
+                                                             KIcon(), i18n("Copy Decrypted Here..."),
+                                                             Qt::CopyAction);
+    connect(KMKernel::self()->entityTreeModel(),
+            SIGNAL(customDropAction(QString,Akonadi::Item::List,Akonadi::Collection::List,Akonadi::Collection,Qt::DropAction)),
+            this,
+            SLOT(slotFolderTreeViewCustomDropAction(QString,Akonadi::Item::List,Akonadi::Collection::List,Akonadi::Collection,Qt::DropAction)));
+
     mMessagePane->setXmlGuiClient( mGUIClient );
     connect( mMessagePane, SIGNAL(messageSelected(Akonadi::Item)),
              this, SLOT(slotMessageSelected(Akonadi::Item)) );
@@ -4073,6 +4081,36 @@ void KMMainWidget::slotShowStartupFolder()
         slotIntro();
         return;
     }
+}
+
+
+void KMMainWidget::slotFolderTreeViewCustomDropAction(const QString &actionId,
+                                                      const Item::List &items,
+                                                      const Collection::List &cols,
+                                                      const Collection &destCollection,
+                                                      Qt::DropAction dropAction)
+{
+    if (actionId != QLatin1String("copy-decrypted") || items.isEmpty()) {
+        mFolderTreeWidget->folderTreeView()->customDropActionProcessed(actionId, items, cols, dropAction);
+        return;
+    }
+
+    KMCopyCommand *copy = new KMCopyCommand(destCollection, items, KMCopyCommand::Decrypt);
+    copy->setProperty("actionId", actionId);
+    copy->setProperty("collections", QVariant::fromValue(cols));
+    copy->setProperty("dropAction", int(dropAction));
+    connect(copy, SIGNAL(completed(KMCommand*)),
+            this, SLOT(slotFolderTreeViewCustomDropActionFinished(KMCommand*)));
+    copy->start();
+}
+
+void KMMainWidget::slotFolderTreeViewCustomDropActionFinished(KMCommand *copy)
+{
+    const QString actionId = copy->property("actionId").toString();
+    const Collection::List cols = copy->property("collections").value<Collection::List>();
+    Qt::DropAction dropAction = static_cast<Qt::DropAction>(copy->property("dropAction").toInt());
+
+    KMKernel::self()->entityTreeModel()->customDropActionProcessed(actionId, Item::List(), cols, dropAction);
 }
 
 void KMMainWidget::checkAkonadiServerManagerState()
