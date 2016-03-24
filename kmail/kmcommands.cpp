@@ -1459,6 +1459,7 @@ void KMCopyCommand::slotCopyResult( KJob * job )
 
     --mJobCount;
     if ( mJobCount <= 0 ) {
+        emit completed( this );
         deleteLater();
     }
 }
