@@ -374,7 +374,6 @@ public:
 
     void setQuickSearchClickMessage(const QString &msg);
 
-    MessageList::Core::QuickSearchLine::SearchOptions currentOptions() const;
 protected:
     /**
     * Reimplemented in order to catch QHelpEvent

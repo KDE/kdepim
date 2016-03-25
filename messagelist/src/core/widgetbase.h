@@ -137,7 +137,6 @@ public:
     void themeMenuAboutToShow(QMenu *menu);
     void aggregationMenuAboutToShow(QMenu *menu);
 
-    MessageList::Core::QuickSearchLine::SearchOptions currentOptions() const;
 public Q_SLOTS:
 
     /**

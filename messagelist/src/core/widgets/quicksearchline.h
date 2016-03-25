@@ -42,25 +42,10 @@ public:
     explicit QuickSearchLine(QWidget *parent = Q_NULLPTR);
     ~QuickSearchLine();
 
-    enum SearchOption {
-        SearchEveryWhere = 1,
-        SearchAgainstBody = 2,
-        SearchAgainstSubject = 4,
-        SearchAgainstFrom = 8,
-        SearchAgainstBcc = 16,
-        SearchAgainstTo = 32
-    };
-
-    Q_ENUMS(SearchOption)
-    Q_DECLARE_FLAGS(SearchOptions, SearchOption)
-
-    SearchOptions searchOptions() const;
-
     void focusQuickSearch(const QString &selectedText);
 
     KComboBox *tagFilterComboBox() const;
     KLineEdit *searchEdit() const;
-    QToolButton *openFullSearchButton() const;
 
     void resetFilter();
     QList<Akonadi::MessageStatus> status() const;
@@ -75,33 +60,20 @@ public:
 Q_SIGNALS:
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
-    void searchOptionChanged();
     void statusButtonsClicked();
 
 protected:
     bool eventFilter(QObject *object, QEvent *e) Q_DECL_OVERRIDE;
 private Q_SLOTS:
-    void slotSearchOptionChanged();
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
-    void slotMoreOptionClicked(bool b);
-    void slotSearchBy();
 
 private:
     void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
     void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
-    void changeSearchAgainstFromOrToText();
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
     KComboBox *mTagFilterCombo;
-    QPushButton *mMoreOptions;
-    QPushButton *mSearchEveryWhere;
-    QPushButton *mSearchAgainstBody;
-    QPushButton *mSearchAgainstSubject;
-    QPushButton *mSearchAgainstFromOrTo;
-    QPushButton *mSearchAgainstBcc;
-    QWidget *mExtraOption;
-    QWidget *mQuickSearchFilterWidget;
     bool mContainsOutboundMessages;
     QSignalMapper *mFilterStatusMapper;
 };

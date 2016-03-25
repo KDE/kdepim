@@ -139,7 +139,6 @@ Widget::Widget(QWidget *pParent)
     connect(d->quickSearchLine, &QuickSearchLine::clearButtonClicked, this, &Widget::searchEditClearButtonClicked);
 
     connect(d->quickSearchLine, &QuickSearchLine::searchEditTextEdited, this, &Widget::searchEditTextEdited);
-    connect(d->quickSearchLine, &QuickSearchLine::searchOptionChanged, this, &Widget::searchEditTextEdited);
     connect(d->quickSearchLine, &QuickSearchLine::statusButtonsClicked, this, &Widget::slotStatusButtonsClicked);
     g->addWidget(d->quickSearchLine, 0);
     d->quickSearchWarning = new QuickSearchWarning(this);
@@ -225,11 +224,6 @@ void Widget::setCurrentStatusFilterItem()
 MessageItem *Widget::currentMessageItem() const
 {
     return view()->currentMessageItem();
-}
-
-MessageList::Core::QuickSearchLine::SearchOptions Widget::currentOptions() const
-{
-    return d->quickSearchLine->searchOptions();
 }
 
 QList<Akonadi::MessageStatus> Widget::currentFilterStatus() const
@@ -1007,7 +1001,7 @@ void Widget::searchTimerFired()
     }
 
     d->mFilter->setCurrentFolder(d->mCurrentFolder);
-    d->mFilter->setSearchString(text, d->quickSearchLine->searchOptions());
+    d->mFilter->setSearchString(text);
     d->quickSearchWarning->setSearchText(text);
     if (d->mFilter->isEmpty()) {
         resetFilter();

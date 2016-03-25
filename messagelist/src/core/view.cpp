@@ -2706,11 +2706,6 @@ QList<Akonadi::MessageStatus> View::currentFilterStatus() const
     return d->mWidget->currentFilterStatus();
 }
 
-MessageList::Core::QuickSearchLine::SearchOptions View::currentOptions() const
-{
-    return d->mWidget->currentOptions();
-}
-
 QString View::currentFilterSearchString() const
 {
     return d->mWidget->currentFilterSearchString();

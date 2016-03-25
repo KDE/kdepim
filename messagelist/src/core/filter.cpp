@@ -114,18 +114,12 @@ void Filter::setCurrentFolder(const Akonadi::Collection &folder)
     mCurrentFolder = folder;
 }
 
-QuickSearchLine::SearchOptions Filter::currentOptions() const
-{
-    return mOptions;
-}
-
-void Filter::setSearchString(const QString &search, QuickSearchLine::SearchOptions options)
+void Filter::setSearchString(const QString &search)
 {
     const QString trimStr = search.trimmed();
-    if ((mSearchString == trimStr) && (mOptions == options)) {
+    if (mSearchString == trimStr) {
         return;
     }
-    mOptions = options;
     mSearchString = trimStr;
     mMatchingItemIds.clear();
 
@@ -155,20 +149,6 @@ void Filter::setSearchString(const QString &search, QuickSearchLine::SearchOptio
     }
     if (!newStr.trimmed().isEmpty()) {
         Akonadi::Search::PIM::EmailQuery query;
-        if (options & QuickSearchLine::SearchEveryWhere) {
-            query.matches(newStr);
-            query.setSplitSearchMatchString(needToSplitString);
-        } else if (options & QuickSearchLine::SearchAgainstSubject) {
-            query.subjectMatches(newStr);
-        } else if (options & QuickSearchLine::SearchAgainstBody) {
-            query.bodyMatches(newStr);
-        } else if (options & QuickSearchLine::SearchAgainstFrom) {
-            query.setFrom(newStr);
-        } else if (options & QuickSearchLine::SearchAgainstBcc) {
-            query.setBcc(QStringList() << newStr);
-        } else if (options & QuickSearchLine::SearchAgainstTo) {
-            query.setTo(QStringList() << newStr);
-        }
 
         //If the collection is virtual we're probably trying to filter the search collection, so we just search globally
         if (mCurrentFolder.isValid() && !mCurrentFolder.isVirtual()) {

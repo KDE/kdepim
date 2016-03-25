@@ -953,15 +953,6 @@ QList<Akonadi::MessageStatus> Pane::currentFilterStatus() const
     return w->currentFilterStatus();
 }
 
-Core::QuickSearchLine::SearchOptions Pane::currentOptions() const
-{
-    Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
-        return Core::QuickSearchLine::SearchEveryWhere;
-    }
-    return w->currentOptions();
-}
-
 QString Pane::currentFilterSearchString() const
 {
     Widget *w = static_cast<Widget *>(currentWidget());

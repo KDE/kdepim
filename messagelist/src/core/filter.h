@@ -87,7 +87,7 @@ public:
     /**
     * Sets the search string for this filter.
     */
-    void setSearchString(const QString &search, QuickSearchLine::SearchOptions options);
+    void setSearchString(const QString &search);
 
     /**
     * Returns the currently set MessageItem::Tag id
@@ -116,7 +116,6 @@ public:
     */
     bool isEmpty() const;
 
-    QuickSearchLine::SearchOptions currentOptions() const;
 Q_SIGNALS:
     void finished();
 
@@ -127,7 +126,6 @@ private:
     QString mTagId;                    ///< Messages must have this tag, if not empty. Contains a tag url.
     Akonadi::Collection mCurrentFolder;
     QSet<qint64> mMatchingItemIds;
-    QuickSearchLine::SearchOptions mOptions;
     QStringList mSearchList;
 };
 

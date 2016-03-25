@@ -166,9 +166,6 @@ void QuickSearchLineTest::shouldResetAllWhenResetFilter()
     searchLine.resetFilter();
     QCOMPARE(searchLine.status().count(), 0);
     QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), -1);
-    QuickSearchLine::SearchOptions options;
-    options = QuickSearchLine::SearchEveryWhere;
-    QCOMPARE(searchLine.searchOptions(), options);
 }
 
 void QuickSearchLineTest::shouldShowTagComboBox()
@@ -267,13 +264,7 @@ void QuickSearchLineTest::shouldSearchToOrFrom()
     QPushButton *button = searchLine.findChild<QPushButton *>(QStringLiteral("fromorto"));
     QTest::mouseClick(button, Qt::LeftButton);
     searchLine.setContainsOutboundMessages(true);
-    QuickSearchLine::SearchOptions options;
-    options = QuickSearchLine::SearchAgainstTo;
-    QCOMPARE(searchLine.searchOptions(), options);
-
     searchLine.setContainsOutboundMessages(false);
-    options = QuickSearchLine::SearchAgainstFrom;
-    QCOMPARE(searchLine.searchOptions(), options);
 }
 
 void QuickSearchLineTest::shouldHideShowWidgetWhenWeChangeVisibility()
