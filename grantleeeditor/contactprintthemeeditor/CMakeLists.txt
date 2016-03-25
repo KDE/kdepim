@@ -14,7 +14,7 @@ set(contactprintthemeeditor_SRCS
   themetemplatewidget.cpp
   contactprintthemepreview.cpp
 )
-if (QTWEBENGINE_EXPERIMENTAL_OPTION)
+if (QTWEBENGINE_SUPPORT_OPTION)
     set(contactprintthemeeditor_web_LIB Qt5::WebEngineWidgets)
 else()
     set(contactprintthemeeditor_web_LIB Qt5::WebKitWidgets Qt5::WebKit)

@@ -27,7 +27,7 @@ namespace KAddressBookGrantlee
 {
 class GrantleePrint;
 }
-#ifdef QTWEBENGINE_EXPERIMENTAL_OPTION
+#ifdef QTWEBENGINE_SUPPORT_OPTION
 class QWebEngineView;
 #else
 class QWebView;
@@ -51,7 +51,7 @@ Q_SIGNALS:
 private:
     KContacts::Addressee mContact;
     KAddressBookGrantlee::GrantleePrint *mGrantleePrint;
-#ifdef QTWEBENGINE_EXPERIMENTAL_OPTION
+#ifdef QTWEBENGINE_SUPPORT_OPTION
     QWebEngineView *mViewer;
 #else
     QWebView *mViewer;

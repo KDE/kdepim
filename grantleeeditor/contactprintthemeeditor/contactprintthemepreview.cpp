@@ -20,7 +20,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QHBoxLayout>
-#ifdef QTWEBENGINE_EXPERIMENTAL_OPTION
+#ifdef QTWEBENGINE_SUPPORT_OPTION
 #include <QWebEngineView>
 #else
 #include <QWebView>
@@ -33,7 +33,7 @@ ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirecto
     : GrantleeThemeEditor::PreviewWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
-#ifdef QTWEBENGINE_EXPERIMENTAL_OPTION
+#ifdef QTWEBENGINE_SUPPORT_OPTION
     mViewer = new QWebEngineView;
 #else
     mViewer = new QWebView;
