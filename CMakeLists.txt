@@ -84,13 +84,15 @@ set(QT_REQUIRED_VERSION "5.5.0")
 set(KF5_VERSION "5.19.0")
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(QTWEBENGINE_SUPPORT_OPTION "Enable support for QtWebEngine. False by default." FALSE)
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools OpenGL)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql Concurrent UiTools OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
 if (QTWEBENGINE_SUPPORT_OPTION)
     set(QT_REQUIRED_MINIMUM_WEBENGINE_VERSION "5.6")
     find_package(Qt5 ${QT_REQUIRED_MINIMUM_WEBENGINE_VERSION} CONFIG REQUIRED WebEngine WebEngineWidgets)
+else()
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED WebKitWidgets)
 endif()
 
 # Find KF5 package
