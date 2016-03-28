@@ -1,7 +1,5 @@
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/../.. )
 
-remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
-
 # Convenience macro to add unit tests.
 macro( archivemail_agent _source)
   set( _test ${_source} ../archivemailinfo.cpp ../archivemaildialog.cpp ../archivemailagentutil.cpp ../addarchivemaildialog.cpp  ../widgets/formatcombobox.cpp ../widgets/unitcombobox.cpp ../archivemailwidget.cpp)

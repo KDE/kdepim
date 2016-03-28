@@ -1,5 +1,3 @@
-remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
-
 # Convenience macro to add unit tests.
 macro(add_sendlater_agent_test _source )
     set(_test ${_source} ../sendlaterconfiguredialog.cpp ../sendlaterconfigurewidget.cpp)

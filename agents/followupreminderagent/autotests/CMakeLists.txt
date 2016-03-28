@@ -1,4 +1,3 @@
-remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 # Convenience macro to add unit tests.
 macro( followupreminder_agent _source )
