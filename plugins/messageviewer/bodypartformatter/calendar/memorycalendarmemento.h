@@ -31,7 +31,7 @@ class KJob;
 namespace MessageViewer
 {
 
-class MemoryCalendarMemento : public QObject, public Interface::BodyPartMemento
+class MemoryCalendarMemento : public QObject, public MimeTreeParser::Interface::BodyPartMemento
 {
     Q_OBJECT
 public:
@@ -44,7 +44,7 @@ public:
 
 Q_SIGNALS:
     // TODO: Factor our update and detach into base class
-    void update(MessageViewer::UpdateMode);
+    void update(MimeTreeParser::UpdateMode);
 
 private Q_SLOTS:
     void slotCalendarLoaded(bool success, const QString &errorMessage);

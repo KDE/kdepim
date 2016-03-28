@@ -156,7 +156,7 @@ static bool occurredAlready(const Incidence::Ptr &incidence)
 class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 {
 public:
-    KMInvitationFormatterHelper(Interface::BodyPart *bodyPart,
+    KMInvitationFormatterHelper(MimeTreeParser::Interface::BodyPart *bodyPart,
                                 const KCalCore::MemoryCalendar::Ptr &calendar)
         : mBodyPart(bodyPart), mCalendar(calendar) {}
     QString generateLinkURL(const QString &id) Q_DECL_OVERRIDE {
@@ -168,19 +168,19 @@ public:
         return mCalendar;
     }
 private:
-    Interface::BodyPart *mBodyPart;
+    MimeTreeParser::Interface::BodyPart *mBodyPart;
     KCalCore::MemoryCalendar::Ptr mCalendar;
 };
 
-class Formatter : public Interface::BodyPartFormatter
+class Formatter : public MimeTreeParser::Interface::BodyPartFormatter
 {
 public:
-    Result format(Interface::BodyPart *part, HtmlWriter *writer) const Q_DECL_OVERRIDE
+    Result format(MimeTreeParser::Interface::BodyPart *part, MimeTreeParser::HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
         return format(part, writer, 0);
     }
 
-    Result format(Interface::BodyPart *bodyPart, HtmlWriter *writer, QObject *asyncResultObserver) const Q_DECL_OVERRIDE
+    Result format(MimeTreeParser::Interface::BodyPart *bodyPart, MimeTreeParser::HtmlWriter *writer, QObject *asyncResultObserver) const Q_DECL_OVERRIDE
     {
         if (!writer) {
             // Guard against crashes in createReply()
@@ -232,8 +232,8 @@ public:
             bodyPart->setBodyPartMemento(memento);
 
             if (asyncResultObserver) {
-                QObject::connect(memento, SIGNAL(update(MessageViewer::UpdateMode)),
-                                 asyncResultObserver, SLOT(update(MessageViewer::UpdateMode)));
+                QObject::connect(memento, SIGNAL(update(MimeTreeParser::UpdateMode)),
+                                 asyncResultObserver, SLOT(update(MimeTreeParser::UpdateMode)));
             }
         }
 
@@ -280,7 +280,7 @@ static Incidence::Ptr stringToIncidence(const QString &iCal)
     return message->event().dynamicCast<Incidence>();
 }
 
-class UrlHandler : public Interface::BodyPartURLHandler
+class UrlHandler : public MimeTreeParser::Interface::BodyPartURLHandler
 {
 public:
     UrlHandler()
@@ -862,7 +862,7 @@ public:
     }
 
     bool handleInvitation(const QString &iCal, Attendee::PartStat status,
-                          Interface::BodyPart *part,
+                          MimeTreeParser::Interface::BodyPart *part,
                           Viewer *viewerInstance) const
     {
         bool ok = true;
@@ -1200,7 +1200,7 @@ public:
         return true;
     }
 
-    bool handleDeclineCounter(const QString &iCal, Interface::BodyPart *part,
+    bool handleDeclineCounter(const QString &iCal, MimeTreeParser::Interface::BodyPart *part,
                               Viewer *viewerInstance) const
     {
         const QString receiver(findReceiver(part->content()));
@@ -1234,7 +1234,7 @@ public:
                     receiver, QString(), DeclineCounter);
     }
 
-    bool counterProposal(const QString &iCal, Interface::BodyPart *part) const
+    bool counterProposal(const QString &iCal, MimeTreeParser::Interface::BodyPart *part) const
     {
         const QString receiver = findReceiver(part->content());
         if (receiver.isEmpty()) {
@@ -1247,7 +1247,7 @@ public:
     }
 
     bool handleClick(Viewer *viewerInstance,
-                     Interface::BodyPart *part,
+                     MimeTreeParser::Interface::BodyPart *part,
                      const QString &path) const Q_DECL_OVERRIDE
     {
         // filter out known paths that don't belong to this type of urlmanager.
@@ -1397,7 +1397,7 @@ public:
         return result;
     }
 
-    bool handleContextMenuRequest(Interface::BodyPart *part,
+    bool handleContextMenuRequest(MimeTreeParser::Interface::BodyPart *part,
                                   const QString &path,
                                   const QPoint &point) const Q_DECL_OVERRIDE
     {
@@ -1432,7 +1432,7 @@ public:
         return true;
     }
 
-    QString statusBarMessage(Interface::BodyPart *,
+    QString statusBarMessage(MimeTreeParser::Interface::BodyPart *,
                              const QString &path) const Q_DECL_OVERRIDE
     {
         if (!path.isEmpty()) {
@@ -1489,10 +1489,10 @@ public:
 
 };
 
-class Plugin : public Interface::BodyPartFormatterPlugin
+class Plugin : public MimeTreeParser::Interface::BodyPartFormatterPlugin
 {
 public:
-    const Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
+    const MimeTreeParser::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0 || idx == 1) {
             return new Formatter();
@@ -1521,7 +1521,7 @@ public:
         }
     }
 
-    const Interface::BodyPartURLHandler *urlHandler(int idx) const Q_DECL_OVERRIDE
+    const MimeTreeParser::Interface::BodyPartURLHandler *urlHandler(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0) {
             return new UrlHandler();
@@ -1534,7 +1534,7 @@ public:
 }
 
 extern "C"
-Q_DECL_EXPORT Interface::BodyPartFormatterPlugin *
+Q_DECL_EXPORT MimeTreeParser::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
     return new Plugin();
