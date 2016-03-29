@@ -91,8 +91,10 @@ find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 if (QTWEBENGINE_SUPPORT_OPTION)
     set(QT_REQUIRED_MINIMUM_WEBENGINE_VERSION "5.6")
     find_package(Qt5 ${QT_REQUIRED_MINIMUM_WEBENGINE_VERSION} CONFIG REQUIRED WebEngine WebEngineWidgets)
+    set(WEBENGINE_TYPE "QtWebEngine")
 else()
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED WebKitWidgets)
+    set(WEBENGINE_TYPE "QtWebKit")
 endif()
 
 # Find KF5 package
