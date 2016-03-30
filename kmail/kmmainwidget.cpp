@@ -1113,6 +1113,7 @@ void KMMainWidget::createWidgets()
 
     QList<StandardMailActionManager::Type> mailActions;
     mailActions << StandardMailActionManager::MarkAllMailAsRead
+                << StandardMailActionManager::MarkAllMailAsReadRecursive
                 << StandardMailActionManager::MoveToTrash
                 << StandardMailActionManager::MoveAllToTrash
                 << StandardMailActionManager::RemoveDuplicates
