@@ -149,15 +149,6 @@ void BlogiloComposerEditor::slotToggleCode(bool)
     execCommand(QStringLiteral("insertHtml"), html);
 }
 
-#if 0
-QString TextEditor::getHtml() const
-{
-    QString html = const_cast<TextEditor *>(this)->evaluateJavaScript("getHtml()", false).toString();
-    html.remove(" xmlns=\"http://www.w3.org/1999/xhtml\"", Qt::CaseInsensitive);
-    return html;
-}
-#endif
-
 void BlogiloComposerEditor::startEditing()
 {
     static_cast<BlogiloComposerView *>(view())->startEditing();
