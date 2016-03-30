@@ -28,14 +28,26 @@ set(blogilo_SRCS
     composer/htmleditor.cpp
     composer/stylegetter.cpp
 
-    composer/blogilocomposerview.cpp
-    composer/blogilocomposereditor.cpp
     composer/bilbobrowser.cpp
     composer/blogilocomposerwidget.cpp
     storageservice/storageservicemanagersettingsjob.cpp
     configurestorageservicewidget.cpp
 
     )
+
+#if (QTWEBENGINE_SUPPORT_OPTION)
+#   set(blogilo_web_editor
+       #composer/webengine/blogilocomposerwebengineeditor.cpp
+       #composer/webengine/blogilocomposerwebengineview.cpp
+#   )
+
+#else()
+   set(blogilo_web_editor
+      composer/webkit/blogilocomposerview.cpp
+      composer/webkit/blogilocomposereditor.cpp
+   )
+
+#endif()
 
 if (KF5GAPI_FOUND)
     # Blogger API implementation imported from KBlog due to circular deps between
@@ -63,20 +75,26 @@ qt5_add_resources(blogilo_SRCS blogilo.qrc)
 kconfig_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/*-apps-blogilo.png")
 ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
-add_executable( blogilo ${blogilo_SRCS})
+add_executable( blogilo ${blogilo_SRCS} ${blogilo_web_editor})
+
+
+#if (QTWEBENGINE_SUPPORT_OPTION)
+#    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets KF5::ComposerEditorWebEngine)
+#else()
+    set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG)
+#endif()
 
 target_link_libraries(blogilo
     KF5::Blog
     KF5::PimCommon
     Qt5::Sql
-    KF5::ComposerEditorNG
     KF5::Libkdepim
     KF5::TextEditor
-    KF5::WebKit
     KF5::Wallet
     KF5::DBusAddons
     KF5::XmlGui
     KF5::PimTextEdit
+    ${blogilo_webengine_libs}
     )
 
 if (KF5GAPI_FOUND)

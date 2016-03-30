@@ -19,8 +19,8 @@
 */
 
 #include "blogilocomposerwidget.h"
-#include "blogilocomposereditor.h"
-#include "blogilocomposerview.h"
+#include "webkit/blogilocomposereditor.h"
+#include "webkit/blogilocomposerview.h"
 #include "PimCommon/CustomToolsWidgetng"
 #include <QVBoxLayout>
 

@@ -32,8 +32,8 @@
 #include "bilboblog.h"
 #include "syncuploader.h"
 
-#include "composer/blogilocomposereditor.h"
-#include "composer/blogilocomposerview.h"
+#include "composer/webkit/blogilocomposereditor.h"
+#include "composer/webkit/blogilocomposerview.h"
 #include "composer/bilbobrowser.h"
 #include "composer/htmleditor.h"
 #include "composer/blogilocomposerwidget.h"
