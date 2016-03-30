@@ -1,62 +1,62 @@
 
 if (KF5GAPI_FOUND)
-  add_definitions(-DHAVE_GAPIBLOGGER_SUPPORT)
+    add_definitions(-DHAVE_GAPIBLOGGER_SUPPORT)
 endif()
 
 set(blogilo_SRCS
- blogilomigrateapplication.cpp
- main.cpp
- mainwindow.cpp
- toolbox.cpp
- addeditblog.cpp
- postentry.cpp
- dbman.cpp
- global.cpp
- bilbopost.cpp
- bilboblog.cpp
- backend.cpp
- entriescountdialog.cpp
- bilbomedia.cpp
- catcheckbox.cpp
- sendtoblogdialog.cpp
- waitwidget.cpp
- blogsettings.cpp
- uploadmediadialog.cpp
- syncuploader.cpp
- poststabwidget.cpp
- configuredialog.cpp
- composer/htmleditor.cpp
- composer/stylegetter.cpp
+    blogilomigrateapplication.cpp
+    main.cpp
+    mainwindow.cpp
+    toolbox.cpp
+    addeditblog.cpp
+    postentry.cpp
+    dbman.cpp
+    global.cpp
+    bilbopost.cpp
+    bilboblog.cpp
+    backend.cpp
+    entriescountdialog.cpp
+    bilbomedia.cpp
+    catcheckbox.cpp
+    sendtoblogdialog.cpp
+    waitwidget.cpp
+    blogsettings.cpp
+    uploadmediadialog.cpp
+    syncuploader.cpp
+    poststabwidget.cpp
+    configuredialog.cpp
+    composer/htmleditor.cpp
+    composer/stylegetter.cpp
 
- composer/blogilocomposerview.cpp
- composer/blogilocomposereditor.cpp
- composer/bilbobrowser.cpp
- composer/blogilocomposerwidget.cpp
- storageservice/storageservicemanagersettingsjob.cpp
- configurestorageservicewidget.cpp
+    composer/blogilocomposerview.cpp
+    composer/blogilocomposereditor.cpp
+    composer/bilbobrowser.cpp
+    composer/blogilocomposerwidget.cpp
+    storageservice/storageservicemanagersettingsjob.cpp
+    configurestorageservicewidget.cpp
 
-)
+    )
 
 if (KF5GAPI_FOUND)
- # Blogger API implementation imported from KBlog due to circular deps between
- # kdepimlibs and libkgapi
- # TODO: Move back to KBlog in KF5
-   set(blogilo_SRCS ${blogilo_SRCS} blogger.cpp)
+    # Blogger API implementation imported from KBlog due to circular deps between
+    # kdepimlibs and libkgapi
+    # TODO: Move back to KBlog in KF5
+    set(blogilo_SRCS ${blogilo_SRCS} blogger.cpp)
 endif()
 
 ki18n_wrap_ui(
-   blogilo_SRCS
-  ui/toolboxbase.ui
-  ui/addeditblogbase.ui
-  ui/entriescountdialogbase.ui
-  ui/settingsbase.ui
-  ui/editorsettingsbase.ui
-  ui/advancedsettingsbase.ui
-  ui/sendtoblogbase.ui
-  ui/waitwidgetbase.ui
-  ui/blogsettingsbase.ui
-  ui/uploadmediabase.ui
-)
+    blogilo_SRCS
+    ui/toolboxbase.ui
+    ui/addeditblogbase.ui
+    ui/entriescountdialogbase.ui
+    ui/settingsbase.ui
+    ui/editorsettingsbase.ui
+    ui/advancedsettingsbase.ui
+    ui/sendtoblogbase.ui
+    ui/waitwidgetbase.ui
+    ui/blogsettingsbase.ui
+    ui/uploadmediabase.ui
+    )
 ecm_qt_declare_logging_category(blogilo_SRCS HEADER blogilo_debug.h IDENTIFIER BLOGILO_LOG CATEGORY_NAME log_blogilo)
 qt5_add_resources(blogilo_SRCS blogilo.qrc)
 
@@ -77,10 +77,10 @@ target_link_libraries(blogilo
     KF5::DBusAddons
     KF5::XmlGui
     KF5::PimTextEdit
-)
+    )
 
 if (KF5GAPI_FOUND)
-   target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore)
+    target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore)
 endif()
 
 
