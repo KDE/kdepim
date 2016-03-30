@@ -34,7 +34,6 @@ private Q_SLOTS:
     void shouldShowExtraOptionWidget();
     void shouldHideExtraOptionWidgetWhenClearLineEdit();
     void shouldHideExtraOptionWidgetWhenResetFilter();
-    void shouldEmitSearchOptionChanged();
     void shouldResetAllWhenResetFilter();
     void shouldShowTagComboBox();
     void shouldResetComboboxWhenResetFilter();
