@@ -4091,7 +4091,7 @@ void KMMainWidget::slotFolderTreeViewCustomDropAction(const QString &actionId,
                                                       Qt::DropAction dropAction)
 {
     if (actionId != QLatin1String("copy-decrypted") || items.isEmpty()) {
-        mFolderTreeWidget->folderTreeView()->customDropActionProcessed(actionId, items, cols, dropAction);
+        KMKernel::self()->entityTreeModel()->customDropActionProcessed(actionId, items, cols, dropAction);
         return;
     }
 
