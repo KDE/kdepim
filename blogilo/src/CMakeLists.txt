@@ -40,16 +40,13 @@ if (QTWEBENGINE_SUPPORT_OPTION)
        composer/webengine/blogilocomposerwebengineview.cpp
        composer/webengine/blogilocomposerwebenginewidget.cpp
    )
-endif()
-#else()
+else()
    set(blogilo_web_editor
-       ${blogilo_web_editor}
       composer/webkit/blogilocomposerview.cpp
       composer/webkit/blogilocomposereditor.cpp
       composer/webkit/blogilocomposerwidget.cpp
    )
-
-#endif()
+endif()
 
 if (KF5GAPI_FOUND)
     # Blogger API implementation imported from KBlog due to circular deps between
@@ -82,10 +79,9 @@ add_executable( blogilo ${blogilo_SRCS} ${blogilo_web_editor})
 
 if (QTWEBENGINE_SUPPORT_OPTION)
     set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets KF5::ComposerEditorWebEngine)
+else()
+    set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG)
 endif()
-#else()
-    set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG ${blogilo_webengine_libs})
-#endif()
 
 target_link_libraries(blogilo
     KF5::Blog
