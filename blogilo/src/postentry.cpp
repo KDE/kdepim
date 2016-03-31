@@ -38,10 +38,10 @@
 #else
 #include "composer/webkit/blogilocomposereditor.h"
 #include "composer/webkit/blogilocomposerview.h"
+#include "composer/webkit/blogilocomposerwidget.h"
 #endif
 #include "composer/bilbobrowser.h"
 #include "composer/htmleditor.h"
-#include "composer/blogilocomposerwidget.h"
 
 #include <PimCommon/SpellCheckLineEdit>
 
