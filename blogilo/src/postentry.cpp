@@ -120,6 +120,9 @@ PostEntry::PostEntry(QWidget *parent)
 
 PostEntry::~PostEntry()
 {
+    disconnect(d->txtTitle, &PimCommon::SpellCheckLineEdit::textChanged, this, &PostEntry::slotTitleChanged);
+    disconnect(d->txtTitle, &PimCommon::SpellCheckLineEdit::focusDown, this, &PostEntry::slotFocusEditor);
+
     delete d;
 }
 
