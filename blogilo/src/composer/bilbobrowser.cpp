@@ -56,6 +56,12 @@ BilboBrowser::BilboBrowser(QWidget *parent)
 
     createUi(parent);
 #ifdef QTWEBENGINE_SUPPORT_OPTION
+    connect(mWebView, &QWebEngineView::loadProgress,
+            browserProgress, &QProgressBar::setValue);
+    connect(mWebView, &QWebEngineView::loadFinished, this, &BilboBrowser::slotCompleted);
+    //connect(mWebView, &QWebView::statusBarMessage, this,
+    //        &BilboBrowser::slotSetStatusBarText);
+
     //TODO
 #else
     connect(mWebView, &QWebView::loadProgress,

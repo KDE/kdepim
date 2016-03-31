@@ -157,20 +157,14 @@ void BlogiloComposerWebEngineEditor::startEditing()
 
 void BlogiloComposerWebEngineEditor::execCommand(const QString &cmd)
 {
-#if 0
-    QWebFrame *frame = view()->page()->mainFrame();
     const QString js = QStringLiteral("document.execCommand(\"%1\", false, null)").arg(cmd);
-    frame->evaluateJavaScript(js);
-#endif
+    view()->page()->runJavaScript(js);
 }
 
 void BlogiloComposerWebEngineEditor::execCommand(const QString &cmd, const QString &arg)
 {
-#if 0
-    QWebFrame *frame = view()->page()->mainFrame();
     const QString js = QStringLiteral("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
-    frame->evaluateJavaScript(js);
-#endif
+    view()->page()->runJavaScript(js);
 }
 
 void BlogiloComposerWebEngineEditor::insertShortUrl(const QString &url)
