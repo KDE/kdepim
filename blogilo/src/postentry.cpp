@@ -194,11 +194,7 @@ void PostEntry::slotFocusEditor()
 {
     switch (d->tabWidget->currentIndex()) {
     case 0:
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO d->wysiwygEditor->editor()->startEditing();
-#else
         d->wysiwygEditor->editor()->startEditing();
-#endif
         break;
     case 1:
         d->htmlEditor->setFocus();
@@ -214,38 +210,22 @@ void PostEntry::slotSyncEditors(int index)
             d->prev_index = index;
             return;
         }//An else clause can do the job of goto, No? -Mehrdad :D
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-#else
         d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
         d->wysiwygEditor->editor()->setFocus();
         d->wysiwygEditor->editor()->startEditing();
-#endif
     } else if (index == 1) {
         if (d->prev_index == 2) {
             d->previewer->stop();
             d->prev_index = index;
             return;
         }
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-#else
         d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
-#endif
         d->htmlEditor->setFocus();
     } else {
         if (d->prev_index == 1) {
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-#else
             d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
-#endif
         } else {
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-#else
             d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
-#endif
         }
         d->previewer->setHtml(d->txtTitle->toPlainText(), d->htmlEditor->document()->text());
     }
@@ -286,11 +266,7 @@ QString PostEntry::plainTextContent() const
 
 void PostEntry::setHtmlContent(const QString &content)
 {
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-#else
     d->wysiwygEditor->editor()->setHtmlContent(content);
-#endif
     d->htmlEditor->document()->setText(content);
 }
 
@@ -383,21 +359,12 @@ void PostEntry::setDefaultLayoutDirection(Qt::LayoutDirection direction)
 
 QList< BilboMedia * > PostEntry::localImages() const
 {
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-    return {};
-#else
     return d->wysiwygEditor->editor()->getLocalImages();
-#endif
 }
 
 void PostEntry::replaceImageSrc(const QString &src, const QString &dest)
 {
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-#else
     d->wysiwygEditor->editor()->replaceImageSrc(src, dest);
-#endif
 }
 
 bool PostEntry::uploadMediaFiles(Backend *backend)
