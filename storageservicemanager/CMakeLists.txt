@@ -45,6 +45,8 @@ install(PROGRAMS org.kde.storageservicemanager.desktop DESTINATION ${KDE_INSTALL
 
 install(FILES data/storageservicemanager.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR})
 
+install(FILES settings/storageservicemanagerglobalconfig.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+
 add_subdirectory(kconf_update)
 
 if (BUILD_TESTING)

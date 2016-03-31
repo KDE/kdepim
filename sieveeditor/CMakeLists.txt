@@ -59,6 +59,8 @@ install(PROGRAMS org.kde.sieveeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
 add_subdirectory(kconf_update)
 
+install(FILES settings/sieveeditorglobalconfig.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+
 if (BUILD_TESTING)
     add_subdirectory(autotests)
 endif()

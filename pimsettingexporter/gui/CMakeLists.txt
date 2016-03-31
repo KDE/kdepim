@@ -69,6 +69,8 @@ install(TARGETS pimsettingexporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
+install(FILES settings/pimsettingexporterglobalconfig.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+
 if(BUILD_TESTING)
     add_subdirectory(tests)
     add_subdirectory(autotests)
