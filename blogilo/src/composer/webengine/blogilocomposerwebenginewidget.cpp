@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013-2016 Montel Laurent <montel@kde.org>
+  Copyright (c) 2016 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,39 +18,38 @@
 
 */
 
-#include "blogilocomposerwidget.h"
-#include "blogilocomposereditor.h"
-#include "blogilocomposerview.h"
+#include "blogilocomposerwebengineeditor.h"
+#include "blogilocomposerwebenginewidget.h"
 #include "PimCommon/CustomToolsWidgetng"
 #include <QVBoxLayout>
 
-BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget *parent)
+BlogiloComposerWebEngineWidget::BlogiloComposerWebEngineWidget(BlogiloComposerWebEngineView *view, QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
-    mEditor = new BlogiloComposerEditor(view, this);
+    mEditor = new BlogiloComposerWebEngineEditor(view, this);
 
     lay->addWidget(mEditor);
     mCustomToolsWidget = new PimCommon::CustomToolsWidgetNg(Q_NULLPTR);
-    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidgetNg::insertText, this, &BlogiloComposerWidget::slotInsertShortUrl);
-    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidgetNg::toolActivated, this, &BlogiloComposerWidget::slotInsertText);
+    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidgetNg::insertText, this, &BlogiloComposerWebEngineWidget::slotInsertShortUrl);
+    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidgetNg::toolActivated, this, &BlogiloComposerWebEngineWidget::slotInsertText);
     lay->addWidget(mCustomToolsWidget);
     setLayout(lay);
     view->setCustomTools(mCustomToolsWidget);
 }
 
-BlogiloComposerWidget::~BlogiloComposerWidget()
+BlogiloComposerWebEngineWidget::~BlogiloComposerWebEngineWidget()
 {
 
 }
 
-BlogiloComposerEditor *BlogiloComposerWidget::editor() const
+BlogiloComposerWebEngineEditor *BlogiloComposerWebEngineWidget::editor() const
 {
     return mEditor;
 }
 
-void BlogiloComposerWidget::slotInsertText()
+void BlogiloComposerWebEngineWidget::slotInsertText()
 {
     const QString text = mEditor->view()->selectedText();
     if (!text.isEmpty()) {
@@ -58,7 +57,7 @@ void BlogiloComposerWidget::slotInsertText()
     }
 }
 
-void BlogiloComposerWidget::slotInsertShortUrl(const QString &shortUrl)
+void BlogiloComposerWebEngineWidget::slotInsertShortUrl(const QString &shortUrl)
 {
     mEditor->insertShortUrl(shortUrl);
 }

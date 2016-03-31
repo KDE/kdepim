@@ -29,7 +29,6 @@ set(blogilo_SRCS
     composer/stylegetter.cpp
 
     composer/bilbobrowser.cpp
-    composer/webkit/blogilocomposerwidget.cpp
     storageservice/storageservicemanagersettingsjob.cpp
     configurestorageservicewidget.cpp
 
@@ -39,6 +38,7 @@ if (QTWEBENGINE_SUPPORT_OPTION)
    set(blogilo_web_editor
        composer/webengine/blogilocomposerwebengineeditor.cpp
        composer/webengine/blogilocomposerwebengineview.cpp
+       composer/webengine/blogilocomposerwebenginewidget.cpp
    )
 endif()
 #else()
@@ -46,6 +46,7 @@ endif()
        ${blogilo_web_editor}
       composer/webkit/blogilocomposerview.cpp
       composer/webkit/blogilocomposereditor.cpp
+      composer/webkit/blogilocomposerwidget.cpp
    )
 
 #endif()

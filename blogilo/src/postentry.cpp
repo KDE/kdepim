@@ -35,6 +35,7 @@
 #ifdef QTWEBENGINE_SUPPORT_OPTION
 #include "composer/webengine/blogilocomposerwebengineeditor.h"
 #include "composer/webengine/blogilocomposerwebengineview.h"
+#include "composer/webengine/blogilocomposerwebenginewidget.h"
 #else
 #include "composer/webkit/blogilocomposereditor.h"
 #include "composer/webkit/blogilocomposerview.h"
@@ -85,7 +86,7 @@ public:
     QWidget *tabHtml;
     QWidget *tabPreview;
 #ifdef QTWEBENGINE_SUPPORT_OPTION
-    BlogiloComposerWebEngineEditor *wysiwygEditor;
+    BlogiloComposerWebEngineWidget *wysiwygEditor;
 #else
     BlogiloComposerWidget *wysiwygEditor;
 #endif
@@ -149,7 +150,7 @@ void PostEntry::createUi()
 
 #ifdef QTWEBENGINE_SUPPORT_OPTION
     BlogiloComposerWebEngineView *view = new BlogiloComposerWebEngineView(this);
-    d->wysiwygEditor = new BlogiloComposerWebEngineEditor(view, Q_NULLPTR/*,d->tabVisual*/);
+    d->wysiwygEditor = new BlogiloComposerWebEngineWidget(view/*,d->tabVisual*/);
 #else
     BlogiloComposerView *view = new BlogiloComposerView(this);
     d->wysiwygEditor = new BlogiloComposerWidget(view/*,d->tabVisual*/);
