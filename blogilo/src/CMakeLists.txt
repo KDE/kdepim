@@ -106,7 +106,7 @@ install( TARGETS blogilo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
-install( PROGRAMS ../org.kde.blogilo.desktop  DESTINATION  ${KDE_INSTALL_APPDIR} )
-install( FILES ../org.kde.blogilo.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install( PROGRAMS data/org.kde.blogilo.desktop  DESTINATION  ${KDE_INSTALL_APPDIR} )
+install( FILES data/org.kde.blogilo.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 
 install( FILES blogilo.kcfg  DESTINATION  ${KDE_INSTALL_KCFGDIR} )
