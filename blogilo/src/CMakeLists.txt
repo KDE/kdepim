@@ -29,7 +29,7 @@ set(blogilo_SRCS
     composer/stylegetter.cpp
 
     composer/bilbobrowser.cpp
-    composer/blogilocomposerwidget.cpp
+    composer/webkit/blogilocomposerwidget.cpp
     storageservice/storageservicemanagersettingsjob.cpp
     configurestorageservicewidget.cpp
 
