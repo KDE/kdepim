@@ -35,14 +35,15 @@ set(blogilo_SRCS
 
     )
 
-#if (QTWEBENGINE_SUPPORT_OPTION)
-#   set(blogilo_web_editor
-       #composer/webengine/blogilocomposerwebengineeditor.cpp
-       #composer/webengine/blogilocomposerwebengineview.cpp
-#   )
-
+if (QTWEBENGINE_SUPPORT_OPTION)
+   set(blogilo_web_editor
+       composer/webengine/blogilocomposerwebengineeditor.cpp
+       composer/webengine/blogilocomposerwebengineview.cpp
+   )
+endif()
 #else()
    set(blogilo_web_editor
+       ${blogilo_web_editor}
       composer/webkit/blogilocomposerview.cpp
       composer/webkit/blogilocomposereditor.cpp
    )
@@ -78,10 +79,11 @@ ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS} ${blogilo_web_editor})
 
 
-#if (QTWEBENGINE_SUPPORT_OPTION)
-#    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets KF5::ComposerEditorWebEngine)
+if (QTWEBENGINE_SUPPORT_OPTION)
+    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets KF5::ComposerEditorWebEngine)
+endif()
 #else()
-    set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG)
+    set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG ${blogilo_webengine_libs})
 #endif()
 
 target_link_libraries(blogilo

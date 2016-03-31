@@ -22,11 +22,11 @@
 
 #include "blogilocomposerwebengineview.h"
 
-#include <ComposerEditorNG/ComposerEditor>
+#include <ComposerEditorWebEngine/ComposerWebEngineWidget>
 
 class BilboMedia;
 class QAction;
-class BlogiloComposerWebEngineEditor : public ComposerEditorNG::ComposerEditor
+class BlogiloComposerWebEngineEditor : public ComposerEditorWebEngine::ComposerWebEngineWidget
 {
     Q_OBJECT
 public:

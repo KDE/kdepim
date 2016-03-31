@@ -20,13 +20,13 @@
 #ifndef BLOGILOCOMPOSERWebEngineVIEW_H
 #define BLOGILOCOMPOSERWebEngineVIEW_H
 
-#include <ComposerEditorNG/ComposerView>
+#include <ComposerEditorWebEngine/ComposerWebEngine>
 namespace PimCommon
 {
 class CustomToolsWidgetNg;
 }
 
-class BlogiloComposerWebEngineView : public ComposerEditorNG::ComposerView
+class BlogiloComposerWebEngineView : public ComposerEditorWebEngine::ComposerWebEngine
 {
     Q_OBJECT
 public:
@@ -34,7 +34,7 @@ public:
     ~BlogiloComposerWebEngineView();
 
     void startEditing();
-    void addExtraAction(QMenu *menu) Q_DECL_OVERRIDE;
+    //void addExtraAction(QMenu *menu) Q_DECL_OVERRIDE;
 
     void setCustomTools(PimCommon::CustomToolsWidgetNg *customTool);
 

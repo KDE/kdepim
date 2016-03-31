@@ -26,12 +26,13 @@
 #include <QTimer>
 #include <QMouseEvent>
 #include <QMenu>
+#include <QWebEngineSettings>
 
 BlogiloComposerWebEngineView::BlogiloComposerWebEngineView(QWidget *parent)
-    : ComposerEditorNG::ComposerView(parent),
+    : ComposerEditorWebEngine::ComposerWebEngine(parent),
       mCustomTools(Q_NULLPTR)
 {
-    settings()->setFontSize(QWebSettings::DefaultFontSize, 14);
+    settings()->setFontSize(QWebEngineSettings::DefaultFontSize, 14);
 }
 
 BlogiloComposerWebEngineView::~BlogiloComposerWebEngineView()
@@ -56,11 +57,14 @@ void BlogiloComposerWebEngineView::startEditing()
 
 void BlogiloComposerWebEngineView::slotSendMouseReleaseEvent()
 {
+#if 0
     QMouseEvent mouseEventRelease(QEvent::MouseButtonRelease, QPoint(10, 10), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
     QApplication::sendEvent(this, &mouseEventRelease);
     pageAction(QWebPage::MoveToEndOfDocument)->trigger();
+#endif
 }
 
+#if 0
 void BlogiloComposerWebEngineView::addExtraAction(QMenu *menu)
 {
     if (mCustomTools) {
@@ -71,3 +75,4 @@ void BlogiloComposerWebEngineView::addExtraAction(QMenu *menu)
     }
 }
 
+#endif

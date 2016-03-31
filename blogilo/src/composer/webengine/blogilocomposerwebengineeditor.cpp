@@ -29,56 +29,54 @@
 #include <KLocalizedString>
 #include <QIcon>
 
-#include <QWebElementCollection>
-#include <QWebFrame>
 #include <QMimeDatabase>
 #include <QMimeType>
 
-BlogiloComposerWebEngineEditor::BlogiloComposerWebEngineEditor(BlogiloComposerView *view, QWidget *parent)
-    : ComposerEditorNG::ComposerEditor(view, parent),
+BlogiloComposerWebEngineEditor::BlogiloComposerWebEngineEditor(BlogiloComposerWebEngineView *view, QWidget *parent)
+    : ComposerEditorWebEngine::ComposerWebEngineWidget(view, parent),
       readOnly(false)
 {
-    QList<ComposerEditorNG::ComposerView::ComposerViewAction> lstActions;
-    lstActions << ComposerEditorNG::ComposerView::Separator;
-    lstActions << ComposerEditorNG::ComposerView::Bold;
-    lstActions << ComposerEditorNG::ComposerView::Italic;
-    lstActions << ComposerEditorNG::ComposerView::Underline;
-    lstActions << ComposerEditorNG::ComposerView::StrikeOut;
-    lstActions << ComposerEditorNG::ComposerView::Separator;
-    lstActions << ComposerEditorNG::ComposerView::FormatType;
-    lstActions << ComposerEditorNG::ComposerView::FontSize;
-    lstActions << ComposerEditorNG::ComposerView::TextForegroundColor;
-    lstActions << ComposerEditorNG::ComposerView::FormatReset;
-    lstActions << ComposerEditorNG::ComposerView::BlockQuote;
-    lstActions << ComposerEditorNG::ComposerView::Separator;
-    lstActions << ComposerEditorNG::ComposerView::InsertLink;
-    lstActions << ComposerEditorNG::ComposerView::InsertImage;
-    lstActions << ComposerEditorNG::ComposerView::Separator;
-    lstActions << ComposerEditorNG::ComposerView::AlignLeft;
-    lstActions << ComposerEditorNG::ComposerView::AlignCenter;
-    lstActions << ComposerEditorNG::ComposerView::AlignRight;
-    lstActions << ComposerEditorNG::ComposerView::AlignJustify;
-    lstActions << ComposerEditorNG::ComposerView::Separator;
-    lstActions << ComposerEditorNG::ComposerView::DirectionRtl;
-    lstActions << ComposerEditorNG::ComposerView::OrderedList;
-    lstActions << ComposerEditorNG::ComposerView::UnorderedList;
-    lstActions << ComposerEditorNG::ComposerView::Separator;
-    lstActions << ComposerEditorNG::ComposerView::InsertTable;
+    QList<ComposerEditorWebEngine::ComposerWebEngine::ComposerWebEngineAction> lstActions;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Bold;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Italic;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Underline;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::StrikeOut;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::FormatType;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::FontSize;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::TextForegroundColor;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::FormatReset;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::BlockQuote;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::InsertLink;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::InsertImage;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::AlignLeft;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::AlignCenter;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::AlignRight;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::AlignJustify;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::DirectionRtl;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::OrderedList;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::UnorderedList;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActions << ComposerEditorWebEngine::ComposerWebEngine::InsertTable;
 
-    QList<ComposerEditorNG::ComposerView::ComposerViewAction> toolBarActions;
+    QList<ComposerEditorWebEngine::ComposerWebEngine::ComposerWebEngineAction> toolBarActions;
     toolBarActions << lstActions;
 
-    QList<ComposerEditorNG::ComposerView::ComposerViewAction> lstActionsFormat;
-    lstActionsFormat << ComposerEditorNG::ComposerView::SubScript;
-    lstActionsFormat << ComposerEditorNG::ComposerView::SuperScript;
-    lstActionsFormat << ComposerEditorNG::ComposerView::Separator;
-    lstActionsFormat << ComposerEditorNG::ComposerView::ListIndent;
-    lstActionsFormat << ComposerEditorNG::ComposerView::ListDedent;
-    lstActionsFormat << ComposerEditorNG::ComposerView::Separator;
-    lstActionsFormat << ComposerEditorNG::ComposerView::TextBackgroundColor;
+    QList<ComposerEditorWebEngine::ComposerWebEngine::ComposerWebEngineAction> lstActionsFormat;
+    lstActionsFormat << ComposerEditorWebEngine::ComposerWebEngine::SubScript;
+    lstActionsFormat << ComposerEditorWebEngine::ComposerWebEngine::SuperScript;
+    lstActionsFormat << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActionsFormat << ComposerEditorWebEngine::ComposerWebEngine::ListIndent;
+    lstActionsFormat << ComposerEditorWebEngine::ComposerWebEngine::ListDedent;
+    lstActionsFormat << ComposerEditorWebEngine::ComposerWebEngine::Separator;
+    lstActionsFormat << ComposerEditorWebEngine::ComposerWebEngine::TextBackgroundColor;
 
     //Create all actions first (before to add to toolbar)
-    createActions(lstActions << ComposerEditorNG::ComposerView::PasteWithoutFormatting << lstActionsFormat);
+    createActions(lstActions << ComposerEditorWebEngine::ComposerWebEngine::PasteWithoutFormatting << lstActionsFormat);
 
     KToolBar *mainToolBar = createToolBar(toolBarActions);
 
@@ -109,8 +107,10 @@ void BlogiloComposerWebEngineEditor::setReadOnly(bool _readOnly)
 
 QList< BilboMedia * > BlogiloComposerWebEngineEditor::getLocalImages()
 {
+
     qCDebug(BLOGILO_LOG);
     QList< BilboMedia * > list;
+#if 0
     QWebElementCollection images = view()->page()->mainFrame()->findAllElements(QStringLiteral("img"));
     Q_FOREACH (const QWebElement &elm, images) {
         if (elm.attribute(QStringLiteral("src")).startsWith(QStringLiteral("file://"))) {
@@ -125,6 +125,7 @@ QList< BilboMedia * > BlogiloComposerWebEngineEditor::getLocalImages()
             list.append(media);
         }
     }
+#endif
     return list;
 }
 
@@ -151,21 +152,25 @@ void BlogiloComposerWebEngineEditor::slotToggleCode(bool)
 
 void BlogiloComposerWebEngineEditor::startEditing()
 {
-    static_cast<BlogiloComposerView *>(view())->startEditing();
+    static_cast<BlogiloComposerWebEngineView *>(view())->startEditing();
 }
 
 void BlogiloComposerWebEngineEditor::execCommand(const QString &cmd)
 {
+#if 0
     QWebFrame *frame = view()->page()->mainFrame();
     const QString js = QStringLiteral("document.execCommand(\"%1\", false, null)").arg(cmd);
     frame->evaluateJavaScript(js);
+#endif
 }
 
 void BlogiloComposerWebEngineEditor::execCommand(const QString &cmd, const QString &arg)
 {
+#if 0
     QWebFrame *frame = view()->page()->mainFrame();
     const QString js = QStringLiteral("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
     frame->evaluateJavaScript(js);
+#endif
 }
 
 void BlogiloComposerWebEngineEditor::insertShortUrl(const QString &url)
