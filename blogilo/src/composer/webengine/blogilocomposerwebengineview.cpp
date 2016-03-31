@@ -64,7 +64,6 @@ void BlogiloComposerWebEngineView::slotSendMouseReleaseEvent()
 #endif
 }
 
-#if 0
 void BlogiloComposerWebEngineView::addExtraAction(QMenu *menu)
 {
     if (mCustomTools) {
@@ -74,5 +73,3 @@ void BlogiloComposerWebEngineView::addExtraAction(QMenu *menu)
         }
     }
 }
-
-#endif
