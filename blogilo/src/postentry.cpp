@@ -32,8 +32,13 @@
 #include "bilboblog.h"
 #include "syncuploader.h"
 
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+#include "composer/webengine/blogilocomposerwebengineeditor.h"
+#include "composer/webengine/blogilocomposerwebengineview.h"
+#else
 #include "composer/webkit/blogilocomposereditor.h"
 #include "composer/webkit/blogilocomposerview.h"
+#endif
 #include "composer/bilbobrowser.h"
 #include "composer/htmleditor.h"
 #include "composer/blogilocomposerwidget.h"
@@ -79,8 +84,11 @@ public:
     QWidget *tabVisual;
     QWidget *tabHtml;
     QWidget *tabPreview;
-
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+    BlogiloComposerWebEngineEditor *wysiwygEditor;
+#else
     BlogiloComposerWidget *wysiwygEditor;
+#endif
     KTextEditor::View *htmlEditor;
     BilboBrowser *previewer;
 
@@ -91,7 +99,11 @@ PostEntry::PostEntry(QWidget *parent)
     : QFrame(parent), d(new Private)
 {
     createUi();
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+    //FIXME connect(d->wysiwygEditor->editor(), &ComposerEditorNG::ComposerEditor::textChanged, this, &PostEntry::textChanged);
+#else
     connect(d->wysiwygEditor->editor(), &ComposerEditorNG::ComposerEditor::textChanged, this, &PostEntry::textChanged);
+#endif
     connect(d->htmlEditor->document(), &KTextEditor::Document::textChanged,
             this, &PostEntry::textChanged);
     layout()->addWidget(d->tabWidget);
@@ -134,8 +146,14 @@ void PostEntry::createUi()
     d->prev_index = 0;
 
     /// WYSIWYG Editor:
+
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+    BlogiloComposerWebEngineView *view = new BlogiloComposerWebEngineView(this);
+    d->wysiwygEditor = new BlogiloComposerWebEngineEditor(view, Q_NULLPTR/*,d->tabVisual*/);
+#else
     BlogiloComposerView *view = new BlogiloComposerView(this);
     d->wysiwygEditor = new BlogiloComposerWidget(view/*,d->tabVisual*/);
+#endif
     QVBoxLayout *vLayout = new QVBoxLayout(d->tabVisual);
     vLayout->addWidget(d->wysiwygEditor);
 
@@ -175,7 +193,11 @@ void PostEntry::slotFocusEditor()
 {
     switch (d->tabWidget->currentIndex()) {
     case 0:
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO d->wysiwygEditor->editor()->startEditing();
+#else
         d->wysiwygEditor->editor()->startEditing();
+#endif
         break;
     case 1:
         d->htmlEditor->setFocus();
@@ -191,22 +213,38 @@ void PostEntry::slotSyncEditors(int index)
             d->prev_index = index;
             return;
         }//An else clause can do the job of goto, No? -Mehrdad :D
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+#else
         d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
         d->wysiwygEditor->editor()->setFocus();
         d->wysiwygEditor->editor()->startEditing();
+#endif
     } else if (index == 1) {
         if (d->prev_index == 2) {
             d->previewer->stop();
             d->prev_index = index;
             return;
         }
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+#else
         d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
+#endif
         d->htmlEditor->setFocus();
     } else {
         if (d->prev_index == 1) {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+#else
             d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
+#endif
         } else {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+#else
             d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
+#endif
         }
         d->previewer->setHtml(d->txtTitle->toPlainText(), d->htmlEditor->document()->text());
     }
@@ -222,22 +260,36 @@ void PostEntry::slotSetPostPreview()
 
 QString PostEntry::htmlContent() const
 {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+    return {};
+#else
     if (d->tabWidget->currentIndex() == 1) {
         d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
     } else {
         d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
     }
     return d->htmlEditor->document()->text();
+#endif
 }
 
 QString PostEntry::plainTextContent() const
 {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+    return {};
+#else
     return d->wysiwygEditor->editor()->plainTextContent();
+#endif
 }
 
 void PostEntry::setHtmlContent(const QString &content)
 {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+#else
     d->wysiwygEditor->editor()->setHtmlContent(content);
+#endif
     d->htmlEditor->document()->setText(content);
 }
 
@@ -330,12 +382,21 @@ void PostEntry::setDefaultLayoutDirection(Qt::LayoutDirection direction)
 
 QList< BilboMedia * > PostEntry::localImages() const
 {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+    return {};
+#else
     return d->wysiwygEditor->editor()->getLocalImages();
+#endif
 }
 
 void PostEntry::replaceImageSrc(const QString &src, const QString &dest)
 {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+        //TODO
+#else
     d->wysiwygEditor->editor()->replaceImageSrc(src, dest);
+#endif
 }
 
 bool PostEntry::uploadMediaFiles(Backend *backend)

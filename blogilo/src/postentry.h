@@ -25,6 +25,7 @@
 #define POSTENTRY_H
 
 #include <QFrame>
+#include "config-kdepim.h"
 #include "bilbopost.h"
 
 class BilboMedia;
