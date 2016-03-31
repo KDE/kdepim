@@ -26,10 +26,14 @@
 #define BILBOBROWSER_H
 
 #include <QWidget>
-
+#include "config-kdepim.h"
 class QCheckBox;
 class QProgressBar;
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+class QWebEngineView;
+#else
 class KWebView;
+#endif
 class QPushButton;
 class QStatusBar;
 
@@ -86,8 +90,11 @@ protected Q_SLOTS:
 
 private:
     void createUi(QWidget *parent);
-
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+    QWebEngineView *mWebView;
+#else
     KWebView *mWebView;
+#endif
     QCheckBox *viewInBlogStyle;
     QPushButton *btnGetStyle;
     QProgressBar *browserProgress;

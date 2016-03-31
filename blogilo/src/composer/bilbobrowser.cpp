@@ -23,7 +23,11 @@
 
 #include "bilbobrowser.h"
 
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+#include <QWebEngineView>
+#else
 #include <KWebView>
+#endif
 #include <QProgressBar>
 #include <qstatusbar.h>
 #include <kmessagebox.h>
@@ -44,15 +48,22 @@
 BilboBrowser::BilboBrowser(QWidget *parent)
     : QWidget(parent)
 {
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+    mWebView = new QWebEngineView(this);
+#else
     mWebView = new KWebView(this);
+#endif
 
     createUi(parent);
-
+#ifdef QTWEBENGINE_SUPPORT_OPTION
+    //TODO
+#else
     connect(mWebView, &QWebView::loadProgress,
             browserProgress, &QProgressBar::setValue);
     connect(mWebView, &KWebView::loadFinished, this, &BilboBrowser::slotCompleted);
     connect(mWebView, &QWebView::statusBarMessage, this,
             &BilboBrowser::slotSetStatusBarText);
+#endif
 }
 
 BilboBrowser::~BilboBrowser()
