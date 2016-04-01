@@ -78,7 +78,7 @@ add_executable( blogilo ${blogilo_SRCS} ${blogilo_web_editor})
 
 
 if (QTWEBENGINE_SUPPORT_OPTION)
-    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets KF5::ComposerEditorWebEngine)
+    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets KF5::ComposerEditorWebEngine )
 else()
     set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG)
 endif()
@@ -97,9 +97,8 @@ target_link_libraries(blogilo
     )
 
 if (KF5GAPI_FOUND)
-    target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore)
+    target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore KF5::MessageViewer)
 endif()
-
 
 install( TARGETS blogilo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
