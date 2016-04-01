@@ -263,15 +263,6 @@ QString PostEntry::htmlContent() const
 #endif
 }
 
-QString PostEntry::plainTextContent() const
-{
-#ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-    return {};
-#else
-    return d->wysiwygEditor->editor()->plainTextContent();
-#endif
-}
 
 void PostEntry::setHtmlContent(const QString &content)
 {

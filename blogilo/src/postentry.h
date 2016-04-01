@@ -138,9 +138,6 @@ protected:
      * @return an String which contains html text
      */
     QString htmlContent() const;
-
-    QString plainTextContent() const;
-
     /**
      * Sets the given string as the HtmlEditor and VisualEditor content.
      * @param content
