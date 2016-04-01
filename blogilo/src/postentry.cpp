@@ -245,14 +245,20 @@ void PostEntry::slotSetPostPreview()
 QString PostEntry::htmlContent() const
 {
 #ifdef QTWEBENGINE_SUPPORT_OPTION
-        //TODO
-    return {};
+    if (d->tabWidget->currentIndex() == 1) {
+        d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
+    } else {
+#if 0
+        d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
+#endif
+    }
+    return d->htmlEditor->document()->text();
 #else
     if (d->tabWidget->currentIndex() == 1) {
         d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
     } else {
         d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
-    }
+    }    
     return d->htmlEditor->document()->text();
 #endif
 }
