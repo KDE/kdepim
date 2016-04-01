@@ -78,7 +78,6 @@
 #include <QTextBrowser>
 #include <KToggleAction>
 #include <KCMultiDialog>
-#include <KPrintPreview>
 #include <KXMLGUIClient>
 #include <KMessageBox>
 
@@ -87,6 +86,7 @@
 #include <QHeaderView>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QPrintPreviewDialog>
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QDBusConnection>
@@ -607,9 +607,7 @@ void MainWidget::setupActions(KActionCollection *collection)
         i18nc("@info:whatsthis",
               "Print the complete address book or a selected number of contacts."));
 
-    if (KPrintPreview::isAvailable()) {
-        KStandardAction::printPreview(this, SLOT(printPreview()), collection);
-    }
+    KStandardAction::printPreview(this, SLOT(printPreview()), collection);
 
     QWidgetAction *quicksearch = new QWidgetAction(this);
     quicksearch->setText(i18n("Quick search"));
@@ -746,9 +744,10 @@ void MainWidget::printPreview()
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setCollateCopies(true);
 
-    KPrintPreview previewdlg(&printer, this);
+    QPrintPreviewDialog previewdlg(&printer, this);
     KABPrinting::PrintingWizard wizard(&printer, mItemView->selectionModel(), this);
     wizard.setDefaultAddressBook(currentAddressBook());
+    connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, [&wizard]() { wizard.print(); });
 
     const int result = wizard.exec();
     if (result) {
