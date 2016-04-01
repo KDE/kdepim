@@ -99,7 +99,6 @@ BlogiloComposerWebEngineEditor::~BlogiloComposerWebEngineEditor()
 
 void BlogiloComposerWebEngineEditor::setReadOnly(bool _readOnly)
 {
-    qDebug()<<" void BlogiloComposerWebEngineEditor::setReadOnly(bool _readOnly)"<<_readOnly;
     if (readOnly != _readOnly) {
         readOnly = _readOnly;
         view()->evaluateJavascript(QStringLiteral("setReadOnly(%1)").arg(readOnly ? QStringLiteral("true") : QStringLiteral("false")));
