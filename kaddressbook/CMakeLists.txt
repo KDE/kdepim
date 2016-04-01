@@ -110,8 +110,11 @@ PRIVATE
   KF5::KCMUtils
   KF5::Codecs
   KF5::GrantleeTheme
-  KF5::KDELibs4Support
   KF5::IconThemes
+  KF5::Completion
+  KF5::XmlGui
+  KF5::JobWidgets
+  KF5::KIOWidgets
   Qt5::PrintSupport
   KF5::AkonadiSearchDebug
 )
