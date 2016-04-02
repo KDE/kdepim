@@ -129,6 +129,7 @@ public:
 
     int spellTextSelectionStart;
     int spellTextSelectionEnd;
+    void saveHtml(QWebEnginePage *page, const QString &fileName);
 
     QList<QAction *> htmlEditorActionList;
     KToggleAction *action_text_bold;

@@ -895,6 +895,32 @@ void ComposerEditorWebEnginePrivate::_k_slotReplace()
     //TODO
 }
 
+struct SetPlainTextFunctor {
+    QString fn;
+    explicit SetPlainTextFunctor(const QString &filename)
+        : fn(filename)
+    {
+    }
+    void operator()(const QString &result)
+    {
+        QFile file(fn);
+        bool success = file.open(QIODevice::WriteOnly);
+        if (success) {
+            // FIXME: here we always use UTF-8 encoding
+            QByteArray data = result.toUtf8();
+            const qint64 c = file.write(data);
+        }
+    }
+};
+
+void ComposerEditorWebEnginePrivate::saveHtml(QWebEnginePage *page, const QString &fileName)
+{
+    if (page) {
+        page->toHtml(SetPlainTextFunctor(fileName));
+    }
+}
+
+
 void ComposerEditorWebEnginePrivate::_k_slotSaveAs()
 {
     QString fn = QFileDialog::getSaveFileName(q, i18nc("@title:window", "Save as"), QString(), i18n("HTML Files (*.htm *.html);;All Files (*)"));
@@ -906,42 +932,22 @@ void ComposerEditorWebEnginePrivate::_k_slotSaveAs()
             fn.endsWith(QStringLiteral(".html"), Qt::CaseInsensitive))) {
         fn += QStringLiteral(".htm");
     }
-    QFile file(fn);
-    bool success = file.open(QIODevice::WriteOnly);
-    if (success) {
-        // FIXME: here we always use UTF-8 encoding
-#if 0
-        const QString content = q->page()->mainFrame()->toHtml();
-        QByteArray data = content.toUtf8();
-        const qint64 c = file.write(data);
-        success = (c >= data.length());
-#endif
-    }
+    saveHtml(q->page(), fn);
 }
 
 void ComposerEditorWebEnginePrivate::_k_slotPrint()
 {
-    QPrinter printer;
-    QPointer<QPrintDialog> dlg(new QPrintDialog(&printer));
-
-    if (dlg->exec() == QDialog::Accepted) {
-        //q->print(&printer);
-    }
-    delete dlg;
+    qDebug()<<" void ComposerEditorWebEnginePrivate::_k_slotPrint() not implemented";
 }
 
 void ComposerEditorWebEnginePrivate::_k_slotPrintPreview()
 {
-    PimCommon::KPimPrintPreviewDialog previewdlg(q);
-    q->connect(&previewdlg, &QPrintPreviewDialog::paintRequested, q, [this](QPrinter * printer) {
-        //q->print(printer);
-    });
-    previewdlg.exec();
+    qDebug() << "void ComposerEditorWebEnginePrivate::_k_slotPrintPreview() not implemented";
 }
 
 void ComposerEditorWebEnginePrivate::_k_slotChangePageColorAndBackground()
 {
-    #if 0
+#if 0
     const QWebElement element = q->page()->mainFrame()->findFirstElement(QStringLiteral("body"));
     if (!element.isNull()) {
         QPointer<PageColorBackgroundDialog> dlg = new PageColorBackgroundDialog(element, q);
