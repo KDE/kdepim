@@ -22,7 +22,7 @@
 
 #include <QWidget>
 #include "composereditorwebengine_export.h"
-#include "composereditorwebengine/composerwebengine.h"
+#include "composerwebengine.h"
 
 class KActionCollection;
 class QAction;

@@ -21,8 +21,7 @@
 #define BLOGILOCOMPOSERWebEngineEDITOR_H
 
 #include "blogilocomposerwebengineview.h"
-
-#include <ComposerEditorWebEngine/ComposerWebEngineWidget>
+#include "composerwebenginewidget.h"
 
 class BilboMedia;
 class QAction;

@@ -20,7 +20,7 @@
 #ifndef BLOGILOCOMPOSERWebEngineVIEW_H
 #define BLOGILOCOMPOSERWebEngineVIEW_H
 
-#include <ComposerEditorWebEngine/ComposerWebEngine>
+#include "composerwebengine.h"
 namespace PimCommon
 {
 class CustomToolsWidgetNg;
