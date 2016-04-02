@@ -48,7 +48,6 @@ class Q_DECL_HIDDEN ComposerEditorWebEnginePrivate
 public:
     ComposerEditorWebEnginePrivate(ComposerWebEngine *qq);
 
-    //QWebHitTestResult contextMenuResult;
     enum FormatType {
         Paragraph,
         Header1,
