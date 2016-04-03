@@ -66,7 +66,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::undoAvailable, this, &SieveEditorMainWindow::slotUndoAvailable);
     connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::redoAvailable, this, &SieveEditorMainWindow::slotRedoAvailable);
     connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::copyAvailable, this, &SieveEditorMainWindow::slotCopyAvailable);
-    slotRefreshList();
+    mMainWidget->sieveEditorMainWidget()->refreshList();
 }
 
 SieveEditorMainWindow::~SieveEditorMainWindow()
