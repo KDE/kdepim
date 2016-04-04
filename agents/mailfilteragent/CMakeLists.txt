@@ -40,6 +40,7 @@ target_link_libraries(akonadi_mailfilter_agent
   KF5::WindowSystem
   KF5::IconThemes
   KF5::Libkdepim
+  KF5::I18n
 )
 
 install(TARGETS akonadi_mailfilter_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

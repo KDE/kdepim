@@ -105,6 +105,7 @@ target_link_libraries(importwizard
   KF5::MessageComposer
   KF5::MessageViewer
   KF5::Completion
+  KF5::I18n
 )
 
 install(TARGETS importwizard  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

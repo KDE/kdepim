@@ -61,6 +61,7 @@ target_link_libraries(pimsettingexporter
   KF5::ItemViews
   KF5::KIOFileWidgets
   KF5::Notifications
+  KF5::I18n
 )
 
 add_subdirectory(kconf_update)

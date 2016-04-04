@@ -37,6 +37,7 @@ target_link_libraries(storageservicemanager
                        KF5::XmlGui
                        KF5::Notifications
                        KF5::PimTextEdit
+                       KF5::I18n
 )
 
 install(TARGETS storageservicemanager ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

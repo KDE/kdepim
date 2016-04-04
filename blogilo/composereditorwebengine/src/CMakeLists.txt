@@ -37,6 +37,8 @@ target_link_libraries(composereditorwebengineprivate
     Qt5::WebEngineWidgets
     Qt5::PrintSupport
     KF5::MessageViewer
+    KF5::I18n
+    KF5::SonnetUi
     )
 
 target_include_directories(composereditorwebengineprivate PUBLIC "$<BUILD_INTERFACE:${composereditorwebengine_SOURCE_DIR}/src;${composereditorwebengine_BINARY_DIR}/src>")

@@ -43,6 +43,7 @@ target_link_libraries(akonadi_archivemail_agent
   KF5::MailCommon
   KF5::Libkdepim
   KF5::IconThemes
+  KF5::I18n
 )
 
 if( APPLE )

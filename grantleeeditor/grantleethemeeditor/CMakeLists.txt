@@ -39,6 +39,7 @@ PRIVATE
   KF5::PimTextEdit 
   KF5::PimCommon 
   KF5::ConfigWidgets
+  KF5::I18n
 )
 
 install(FILES settings/grantleethemeeditor.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})

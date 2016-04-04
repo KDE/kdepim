@@ -13,6 +13,7 @@ target_link_libraries(selectiontreewidget_gui
   KF5::Archive
   pimsettingexporterprivate
   KF5::ItemViews
+  KF5::I18n
 )
 
 set(showarchivestructuredialog_gui_SRCS showarchivestructuredialog_gui.cpp ../dialog/showarchivestructuredialog.cpp ../pimsettingexportgui_debug.cpp)
@@ -25,4 +26,5 @@ target_link_libraries(showarchivestructuredialog_gui
   KF5::Archive
   pimsettingexporterprivate
   KF5::ItemViews
+  KF5::I18n
 )
