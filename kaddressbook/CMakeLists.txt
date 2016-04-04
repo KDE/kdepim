@@ -117,6 +117,7 @@ PRIVATE
   KF5::KIOWidgets
   Qt5::PrintSupport
   KF5::AkonadiSearchDebug
+  KF5::I18n
 )
 if (WIN32)
    target_link_libraries(kaddressbookprivate KF5::Gpgmepp)
