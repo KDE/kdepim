@@ -157,7 +157,6 @@ add_executable(kaddressbook ${kaddressbook_SRCS})
 target_link_libraries(kaddressbook
   KF5::KontactInterface
   kaddressbookprivate
-  KF5::Parts
 )
 
 if(KF5Gpgmepp_FOUND)
