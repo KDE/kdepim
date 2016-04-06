@@ -34,9 +34,9 @@ namespace KPIMTextEdit
 {
 class EmoticonTextEditAction;
 }
-namespace MessageViewer
+namespace WebEngineViewer
 {
-class MailWebEnginePage;
+class WebEnginePage;
 }
 
 namespace ComposerEditorWebEngine
@@ -173,7 +173,7 @@ public:
 
     ComposerWebEngine *q;
     ComposerImageResizeWidget *imageResizeWidget;
-    MessageViewer::MailWebEnginePage *mPageEngine;
+    WebEngineViewer::WebEnginePage *mPageEngine;
 };
 }
 

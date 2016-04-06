@@ -41,7 +41,7 @@
 #include <QMenu>
 #include <QIcon>
 #include <WebEngineViewer/WebHitTest>
-#include <MessageViewer/MailWebEnginePage>
+#include <WebEngineViewer/WebEnginePage>
 #include <QWebEngineSettings>
 #include <WebEngineViewer/WebHitTestResult>
 using namespace ComposerEditorWebEngine;
@@ -51,7 +51,7 @@ ComposerWebEngine::ComposerWebEngine(QWidget *parent)
       d(new ComposerEditorWebEngine::ComposerEditorWebEnginePrivate(this))
 {
     settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
-    d->mPageEngine = new MessageViewer::MailWebEnginePage(this);
+    d->mPageEngine = new WebEngineViewer::WebEnginePage(this);
     setPage(d->mPageEngine);
 
     QFile file(initialHtml());
