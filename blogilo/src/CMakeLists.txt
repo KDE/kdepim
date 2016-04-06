@@ -97,7 +97,7 @@ target_link_libraries(blogilo
     )
 
 if (KF5GAPI_FOUND)
-    target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore KF5::MessageViewer)
+    target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore)
 endif()
 
 install( TARGETS blogilo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
