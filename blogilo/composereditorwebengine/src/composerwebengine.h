@@ -21,7 +21,7 @@
 #define COMPOSERWEBENGINE_H
 
 #include <QWebEngineView>
-#include <MessageViewer/WebEngineView>
+#include <WebEngineViewer/WebEngineView>
 
 #include "composereditorwebengine_export.h"
 class KActionCollection;
@@ -33,7 +33,7 @@ class WebHitTestResult;
 namespace ComposerEditorWebEngine
 {
 class ComposerEditorWebEnginePrivate;
-class COMPOSEREDITORWEBENGINE_EXPORT ComposerWebEngine : public MessageViewer::WebEngineView
+class COMPOSEREDITORWEBENGINE_EXPORT ComposerWebEngine : public WebEngineViewer::WebEngineView
 {
     Q_OBJECT
 public:

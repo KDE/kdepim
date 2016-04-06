@@ -40,14 +40,14 @@
 #include <KSelectAction>
 #include <QMenu>
 #include <QIcon>
-#include <MessageViewer/WebHitTest>
+#include <WebEngineViewer/WebHitTest>
 #include <MessageViewer/MailWebEnginePage>
 #include <QWebEngineSettings>
-#include <WebHitTestResult>
+#include <WebEngineViewer/WebHitTestResult>
 using namespace ComposerEditorWebEngine;
 
 ComposerWebEngine::ComposerWebEngine(QWidget *parent)
-    : MessageViewer::WebEngineView(parent),
+    : WebEngineViewer::WebEngineView(parent),
       d(new ComposerEditorWebEngine::ComposerEditorWebEnginePrivate(this))
 {
     settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
