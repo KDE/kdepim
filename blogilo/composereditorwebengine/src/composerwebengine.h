@@ -26,7 +26,7 @@
 #include "composereditorwebengine_export.h"
 class KActionCollection;
 class KToolBar;
-namespace MessageViewer
+namespace WebEngineViewer
 {
 class WebHitTestResult;
 }
@@ -128,7 +128,7 @@ Q_SIGNALS:
     void openLink(const QUrl &);
 
 private Q_SLOTS:
-    void slotWebHitFinished(const MessageViewer::WebHitTestResult &result);
+    void slotWebHitFinished(const WebEngineViewer::WebHitTestResult &result);
 private:
     friend class ComposerEditorWebEnginePrivate;
     ComposerEditorWebEnginePrivate *const d;

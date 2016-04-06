@@ -219,11 +219,11 @@ void ComposerWebEngine::addCreatedActionsToActionCollection(KActionCollection *a
 
 void ComposerWebEngine::contextMenuEvent(QContextMenuEvent *e)
 {
-    MessageViewer::WebHitTest *webHit = d->mPageEngine->hitTestContent(e->pos());
-    connect(webHit, &MessageViewer::WebHitTest::finished, this, &ComposerWebEngine::slotWebHitFinished);
+    WebEngineViewer::WebHitTest *webHit = d->mPageEngine->hitTestContent(e->pos());
+    connect(webHit, &WebEngineViewer::WebHitTest::finished, this, &ComposerWebEngine::slotWebHitFinished);
 }
 
-void ComposerWebEngine::slotWebHitFinished(const MessageViewer::WebHitTestResult &result)
+void ComposerWebEngine::slotWebHitFinished(const WebEngineViewer::WebHitTestResult &result)
 {
     QMenu *menu = new QMenu;
 

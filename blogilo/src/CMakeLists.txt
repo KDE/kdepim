@@ -78,7 +78,7 @@ add_executable( blogilo ${blogilo_SRCS} ${blogilo_web_editor})
 
 
 if (QTWEBENGINE_SUPPORT_OPTION)
-    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets composereditorwebengineprivate )
+    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets composereditorwebengineprivate KF5::WebEngineViewer)
 else()
     set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG)
 endif()
