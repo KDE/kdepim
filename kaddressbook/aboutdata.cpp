@@ -30,7 +30,7 @@ AboutData::AboutData()
                  QStringLiteral(KDEPIM_VERSION),
                  i18n("The KDE Address Book Application"),
                  KAboutLicense::GPL_V2,
-                 i18n("Copyright © 2007–2015 KAddressBook authors"))
+                 i18n("Copyright © 2007–2016 KAddressBook authors"))
 {
     addAuthor(i18n("Laurent Montel"), i18n("Current maintainer"),  QStringLiteral("montel@kde.org"));
     addAuthor(i18n("Tobias Koenig"),  i18n("Previous maintainer"), QStringLiteral("tokoe@kde.org"));
