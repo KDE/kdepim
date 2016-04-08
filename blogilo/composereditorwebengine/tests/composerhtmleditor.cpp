@@ -24,6 +24,7 @@
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 //#include "composereditorng_debug.h"
+#include <KToolBar>
 #include <QApplication>
 #include <QSplitter>
 
@@ -37,9 +38,11 @@ ComposerHtmlEditor::ComposerHtmlEditor()
     setCentralWidget(w);
     mEditor->createAllActions();
     mEditor->addCreatedActionsToActionCollection(actionCollection());
-    //QList<ComposerEditorNG::ComposerView::ComposerViewAction> lst;
-    //lst << ComposerEditorNG::ComposerView::Bold;
-    //mEditor->createToolBar(lst);
+    KToolBar *bar = new KToolBar(this);
+    addToolBar(bar);
+    QList<ComposerEditorWebEngine::ComposerWebEngine::ComposerWebEngineAction> lst;
+    lst << ComposerEditorWebEngine::ComposerWebEngine::Bold;
+    mEditor->createToolBar(lst, bar);
 
     setupActions();
     setupGUI();
