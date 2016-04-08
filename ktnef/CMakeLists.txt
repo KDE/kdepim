@@ -9,13 +9,13 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_subdirectory(pics)
 
 set(ktnef_SRCS
-  attachpropertydialog.cpp
-  ktnefmain.cpp
-  ktnefview.cpp
-  main.cpp
-  messagepropertydialog.cpp
-  qwmf.cpp
-)
+    attachpropertydialog.cpp
+    ktnefmain.cpp
+    ktnefview.cpp
+    main.cpp
+    messagepropertydialog.cpp
+    qwmf.cpp
+    )
 qt5_add_resources(ktnef_SRCS ktnef.qrc)
 ecm_qt_declare_logging_category(ktnef_SRCS HEADER ktnef_debug.h IDENTIFIER KTNEFAPPS_LOG CATEGORY_NAME log_ktnefapps)
 

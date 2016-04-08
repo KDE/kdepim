@@ -1,7 +1,7 @@
 
 include_directories( 
-                    ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/ 
-)
+    ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/
+    )
 
 
 set( pimsettingexporter_kcfg_SRCS settings/pimsettingexporterglobalconfig.kcfgc )
@@ -10,26 +10,26 @@ kconfig_add_kcfg_files(pimsettingexporter_kcfg_SRCS ${pimsettingexporter_kcfg_SR
 
 
 set(pimsettingexporter_widget_SRCS
-  widgets/selectiontypetreewidget.cpp
-  widgets/logwidget.cpp
-  widgets/pimsettingexporterconfigurewidget.cpp
-)
+    widgets/selectiontypetreewidget.cpp
+    widgets/logwidget.cpp
+    widgets/pimsettingexporterconfigurewidget.cpp
+    )
 
 set(pimsettingexporter_dialog_SRCS
-  dialog/selectiontypedialog.cpp
-  dialog/backupfilestructureinfodialog.cpp
-  dialog/showarchivestructuredialog.cpp
-  dialog/synchronizeresourcedialog.cpp
-  dialog/pimsettingexporterconfiguredialog.cpp
-)
+    dialog/selectiontypedialog.cpp
+    dialog/backupfilestructureinfodialog.cpp
+    dialog/showarchivestructuredialog.cpp
+    dialog/synchronizeresourcedialog.cpp
+    dialog/pimsettingexporterconfiguredialog.cpp
+    )
 
 set(pimsettingexporter_job_SRCS
-   job/fullsynchronizeresourcesjob.cpp
-)
+    job/fullsynchronizeresourcesjob.cpp
+    )
 
 set(pimsettingexporter_trayicon_SRCS
-   trayicon/pimsettingstrayicon.cpp
-)
+    trayicon/pimsettingstrayicon.cpp
+    )
 
 set(pimsettingexporter_SRCS
     ${pimsettingexporter_kcfg_SRCS}
@@ -50,19 +50,19 @@ ecm_qt_declare_logging_category(pimsettingexporter_SRCS HEADER pimsettingexportg
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
- PRIVATE
-  KF5::XmlGui
-  KF5::DBusAddons
-  KF5::MailCommon
-  KF5::PimCommon
-  KF5::Libkdepim
-  pimsettingexporterprivate
-  KF5::Archive
-  KF5::ItemViews
-  KF5::KIOFileWidgets
-  KF5::Notifications
-  KF5::I18n
-)
+    PRIVATE
+    KF5::XmlGui
+    KF5::DBusAddons
+    KF5::MailCommon
+    KF5::PimCommon
+    KF5::Libkdepim
+    pimsettingexporterprivate
+    KF5::Archive
+    KF5::ItemViews
+    KF5::KIOFileWidgets
+    KF5::Notifications
+    KF5::I18n
+    )
 
 add_subdirectory(kconf_update)
 

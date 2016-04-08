@@ -8,7 +8,7 @@ macro( followupreminder_agent _source )
         TEST_NAME ${_name}
         NAME_PREFIX "followupreminder-"
         LINK_LIBRARIES Qt5::Test KF5::AkonadiCore KF5::FollowupReminder Qt5::Widgets KF5::I18n KF5::XmlGui KF5::Service
-    )
+        )
 endmacro()
 
 followupreminder_agent(followupreminderinfotest.cpp)

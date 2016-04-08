@@ -1,7 +1,7 @@
 
 include_directories(${AKONADI_INCLUDE_DIR} 
-                    ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/ 
-)
+    ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/
+    )
 
 
 set(pimsettingexporterconsole_SRCS
@@ -17,10 +17,10 @@ ecm_qt_declare_logging_category(pimsettingexporterconsole_SRCS HEADER pimsetting
 add_executable(pimsettingexporterconsole ${pimsettingexporterconsole_SRCS})
 
 target_link_libraries(pimsettingexporterconsole KF5::ConfigCore Qt5::Xml KF5::CoreAddons KF5::I18n KF5::Archive KF5::AkonadiCore   KF5::MailCommon
-  pimsettingexporterprivate
-)
+    pimsettingexporterprivate
+    )
 if (BUILD_TESTING)
-   add_subdirectory(autotests)
+    add_subdirectory(autotests)
 endif()
 install(TARGETS pimsettingexporterconsole ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

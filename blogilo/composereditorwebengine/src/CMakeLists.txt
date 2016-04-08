@@ -18,8 +18,8 @@ ecm_qt_declare_logging_category(libcomposereditor_webengine_SRCS HEADER composer
 
 
 kconfig_add_kcfg_files(libcomposereditor_webengine_SRCS
-   globalsetting_composereditorwebengine.kcfgc 
-)
+    globalsetting_composereditorwebengine.kcfgc
+    )
 
 
 add_library(composereditorwebengineprivate ${libcomposereditor_webengine_SRCS})
