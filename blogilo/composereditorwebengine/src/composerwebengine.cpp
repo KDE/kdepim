@@ -338,7 +338,7 @@ void ComposerWebEngine::setActionsEnabled(bool enabled)
     }
 }
 
-void ComposerWebEngine::mousePressEvent(QMouseEvent *event)
+void ComposerWebEngine::forwardMousePressEvent(QMouseEvent *event)
 {
 #if 0
     if (event->button() == Qt::LeftButton) {
@@ -354,16 +354,14 @@ void ComposerWebEngine::mousePressEvent(QMouseEvent *event)
 #endif
 }
 
-void ComposerWebEngine::keyPressEvent(QKeyEvent *event)
+void ComposerWebEngine::forwardKeyReleaseEvent(QKeyEvent *event)
 {
     d->hideImageResizeWidget();
-    //KWebView::keyPressEvent(event);
 }
 
-void ComposerWebEngine::wheelEvent(QWheelEvent *event)
+void ComposerWebEngine::forwardWheelEvent(QWheelEvent *event)
 {
     d->hideImageResizeWidget();
-    //KWebView::wheelEvent(event);
 }
 
 void ComposerWebEngine::mouseDoubleClickEvent(QMouseEvent *event)
