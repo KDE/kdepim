@@ -201,7 +201,6 @@ void ComposerEditorWebEnginePrivate::createAction(ComposerWebEngine::ComposerWeb
             action_direction_ltr->setIconText(i18nc("@label left-to-right", "Left-to-Right"));
             htmlEditorActionList.append(action_direction_ltr);
             q->connect(action_direction_ltr, SIGNAL(triggered(bool)), SLOT(_k_slotDirectionLtr()));
-            //FORWARD_ACTION(action_direction_ltr, QWebPage::SetTextDirectionLeftToRight);
         }
         break;
     }
