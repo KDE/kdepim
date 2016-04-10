@@ -1,20 +1,18 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
 "dtd/kdedbx45.dtd" [
   <!-- Define an entity for your application if it is not part of KDE
        CVS -->
-  <!ENTITY kapplication "<application>contactthemeeditor</application>">
-  <!ENTITY kappname "&kapplication;">
-  <!ENTITY package "kdepim">
+  <!ENTITY i18n-kapplication "<application>Contact Theme Editor</application>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>
 
-<book id="contactthemeeditor" lang="&language;">
+<article id="contactthemeeditor" lang="&language;">
 
-<bookinfo id="contactthemeeditorinfo">
+<articleinfo id="contactthemeeditorinfo">
 
-<title>The &kapplication; Handbook</title>
+<title>The &i18n-kapplication; Handbook</title>
 
 <authorgroup>
 <author>
@@ -22,7 +20,7 @@
 <firstname>Laurent</firstname>
 <surname>Montel</surname>
 </personname>
-<email>montel@kde.org</email>
+&Laurent.Montel.mail;
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
@@ -34,66 +32,57 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-12-20</date>
-<releaseinfo>1.0 (KDE 4.13)</releaseinfo>
+<date>2016-04-06</date>
+<releaseinfo>Applications 16.04</releaseinfo>
 
 <abstract>
 <para>
-&kapplication; is an editor for KAddressBook Contact Theme.
+&i18n-kapplication; is an editor for &kaddressbook; Contact Theme.
 </para>
 </abstract>
 
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>KMail</keyword>
+<keyword>Theme</keyword>
+<keyword>addressbook</keyword>
 </keywordset>
 
-</bookinfo>
-<chapter id="introduction">
+</articleinfo>
+<sect1 id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; is an editor for KAddressBook themes based on Grantlee.</para>
-</chapter>
+<para>&i18n-kapplication; is an editor for &kaddressbook; themes based on
+<ulink url="https://github.com/steveire/grantlee">Grantlee</ulink>.</para>
 
-<chapter id="using-kapp">
-<title>Using &kapplication;</title>
-<para>using</para>
+<sect2 id="using-kapp">
+<title>Using &i18n-kapplication;</title>
+<para>
+This editor is used to create themes for your contacts in &kaddressbook;.
+More Information you find in the <ulink url="http://www.grantlee.org/apidox/">Grantlee</ulink> documentation.</para>
+</sect2>
 
-</chapter>
-
-<chapter id="credits">
+<sect2 id="credits">
 
 <title>Credits and License</title>
 
-<para>&kapplication;</para>
+<para>&i18n-kapplication;</para>
 <para>
-Program copyright 2013 Laurent Montel montel@kde.org 
+Program copyright 2013 &Laurent.Montel; &Laurent.Montel.mail;
 </para>
 <para>
-Documentation Copyright &copy; 2013 Laurent Montel montel@kde.org
+Documentation Copyright &copy; 2013 &Laurent.Montel; &Laurent.Montel.mail;
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 &underFDL;               <!-- FDL: do not remove -->
 &underGPL;        	 <!-- GPL License -->
-</chapter>
-
-<appendix id="installation">
-<title>Installation</title>
-
-
-<sect1 id="compilation">
-<title>Compilation and Installation</title>
-
-&install.compile.documentation;
+</sect2>
 
 </sect1>
 
-</appendix>
-
-&documentation.index;
-</book>
+</article>
 
 <!--
 Local Variables:
