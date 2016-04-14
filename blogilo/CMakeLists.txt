@@ -9,3 +9,7 @@ endif()
 add_subdirectory( src )
 add_subdirectory( icons )
 add_subdirectory(kconf_update)
+
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()

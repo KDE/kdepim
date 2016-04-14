@@ -64,3 +64,6 @@ install(FILES settings/sieveeditorglobalconfig.kcfg DESTINATION ${KDE_INSTALL_KC
 if (BUILD_TESTING)
     add_subdirectory(autotests)
 endif()
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
