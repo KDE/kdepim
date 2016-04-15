@@ -1,9 +1,9 @@
 
 include_directories(${CMAKE_BINARY_DIR}/sieveeditor/)
 
-set( sieveedit_serversievesettings_source  serversievesettingstest.cpp ../serversievesettings.cpp ../sieveeditor_debug.cpp)
+set( sieveedit_serversievesettings_source  serversievesettingstest.cpp ../src/serversievesettings.cpp ../src/sieveeditor_debug.cpp)
 ki18n_wrap_ui(sieveedit_serversievesettings_source
-    ../ui/serversievesettings.ui
+    ../src/ui/serversievesettings.ui
     )
 
 add_executable( serversievesettingstest  ${sieveedit_serversievesettings_source})
@@ -11,7 +11,7 @@ add_test(serversievesettingstest serversievesettingstest)
 ecm_mark_as_test(serversievesettingstest)
 target_link_libraries( serversievesettingstest Qt5::Test Qt5::Widgets KF5::MailTransport KF5::I18n KF5::ConfigGui)
 
-set( sieveeditorutiltest_source sieveeditorutiltest.cpp ../sieveeditorutil.cpp ../sieveserversettings.cpp)
+set( sieveeditorutiltest_source sieveeditorutiltest.cpp ../src/sieveeditorutil.cpp ../src/sieveserversettings.cpp)
 add_executable( sieveeditorutiltest ${sieveeditorutiltest_source})
 add_test(sieveeditorutiltest sieveeditorutiltest)
 ecm_mark_as_test(sieveeditorutiltest)
@@ -36,6 +36,6 @@ macro(add_sieveserver_unittest _source _additionalSource)
         )
 endmacro ()
 
-add_sieveserver_unittest( sieveeditorconfigureserverpagetest.cpp "../sieveeditorconfigureserverpage.cpp")
+add_sieveserver_unittest( sieveeditorconfigureserverpagetest.cpp "../src/sieveeditorconfigureserverpage.cpp")
 
-#add_sieveserver_unittest( sieveeditorbookmarkstest.cpp "../sieveeditorbookmarks.cpp")
+#add_sieveserver_unittest( sieveeditorbookmarkstest.cpp "../src/sieveeditorbookmarks.cpp")

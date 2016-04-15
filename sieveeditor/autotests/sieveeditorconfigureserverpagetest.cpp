@@ -16,7 +16,7 @@
 */
 
 #include "sieveeditorconfigureserverpagetest.h"
-#include "../sieveeditorconfigureserverpage.h"
+#include "../src/sieveeditorconfigureserverpage.h"
 #include <QPushButton>
 #include <qtest.h>
 #include <QSignalSpy>
