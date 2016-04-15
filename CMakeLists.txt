@@ -1,6 +1,10 @@
 project(kdepim)
 
 cmake_minimum_required(VERSION 2.8.12)
+if (POLICY CMP0063)
+    cmake_policy(SET CMP0063 NEW)
+endif()
+
 
 set(LIBRARY_NAMELINK LIBRARY NAMELINK_SKIP)
 
