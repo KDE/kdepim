@@ -1,5 +1,42 @@
 project(accountwizard)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
+    cmake_minimum_required(VERSION 2.8.12)
+
+    set(LIBRARY_NAMELINK LIBRARY NAMELINK_SKIP)
+
+    # we need some parts of the ECM CMake helpers
+    find_package(ECM 5.20.0 REQUIRED NO_MODULE)
+    set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+    include(ECMOptionalAddSubdirectory)
+    include(ECMInstallIcons)
+    include(ECMSetupVersion)
+    include(ECMAddTests)
+    include(ECMMarkNonGuiExecutable)
+    include(GenerateExportHeader)
+    include(ECMGenerateHeaders)
+    include(CMakePackageConfigHelpers)
+    include(FeatureSummary)
+    include(CheckFunctionExists)
+    include(ECMGeneratePriFile)
+
+    include(KDEInstallDirs)
+    include(KDECMakeSettings)
+    include(KDECompilerSettings NO_POLICY_SCOPE)
+    include(ECMAddAppIcon)
+    include(ECMQtDeclareLoggingCategory)
+
+
+    set(KDEPIM_VERSION_NUMBER "5.2.42")
+
+    set(KMAILTRANSPORT_LIB_VERSION "5.2.40")
+    find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+
+
+    include_directories(${accountwizard_SOURCE_DIR} ${accountwizard_BINARY_DIR})
+
+endif()
+
 # Qt5 package
 find_package(Qt5UiTools ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 
@@ -21,67 +58,67 @@ option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branc
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
 if ( ACCOUNTWIZARD_NO_GHNS )
-  add_definitions( -DACCOUNTWIZARD_NO_GHNS )
+    add_definitions( -DACCOUNTWIZARD_NO_GHNS )
 endif ()
 
 
 set(accountwizard_srcs
-  dialog.cpp
-  typepage.cpp
-  loadpage.cpp
-  global.cpp
-  page.cpp
-  dynamicpage.cpp
-  setupmanager.cpp
-  setuppage.cpp
-  resource.cpp
-  setupobject.cpp
-  transport.cpp
-  configfile.cpp
-  ldap.cpp
-  identity.cpp
-  setupispdb.cpp
-  setupautoconfigkolabmail.cpp
-  setupautoconfigkolabldap.cpp
-  setupautoconfigkolabfreebusy.cpp
-  servertest.cpp
-  personaldatapage.cpp
-  ispdb/ispdb.cpp
-  ispdb/autoconfigkolabmail.cpp
-  ispdb/autoconfigkolabldap.cpp
-  ispdb/autoconfigkolabfreebusy.cpp
-)
+    dialog.cpp
+    typepage.cpp
+    loadpage.cpp
+    global.cpp
+    page.cpp
+    dynamicpage.cpp
+    setupmanager.cpp
+    setuppage.cpp
+    resource.cpp
+    setupobject.cpp
+    transport.cpp
+    configfile.cpp
+    ldap.cpp
+    identity.cpp
+    setupispdb.cpp
+    setupautoconfigkolabmail.cpp
+    setupautoconfigkolabldap.cpp
+    setupautoconfigkolabfreebusy.cpp
+    servertest.cpp
+    personaldatapage.cpp
+    ispdb/ispdb.cpp
+    ispdb/autoconfigkolabmail.cpp
+    ispdb/autoconfigkolabldap.cpp
+    ispdb/autoconfigkolabfreebusy.cpp
+    )
 
 ki18n_wrap_ui(accountwizard_srcs
-  ui/typepage.ui
-  ui/loadpage.ui
-  ui/setuppage.ui
-  ui/personaldatapage.ui
-)
+    ui/typepage.ui
+    ui/loadpage.ui
+    ui/setuppage.ui
+    ui/personaldatapage.ui
+    )
 ecm_qt_declare_logging_category(accountwizard_srcs HEADER accountwizard_debug.h IDENTIFIER ACCOUNTWIZARD_LOG CATEGORY_NAME log_accountwizard)
 
 set(accountwizard_libs
-  KF5::AkonadiCore
-  KF5::MailTransport
-  KF5::KCMUtils
-  KF5::KrossCore
-  KF5::KIOCore
-  KF5::Mime
-  KF5::IdentityManagement
-  KF5::WidgetsAddons
-  KF5::NewStuff
-  Qt5::UiTools
-  KF5::Libkdepim
-  KF5::ItemViews
-  KF5::I18n
-  KF5::Ldap
-  KF5::AkonadiWidgets
-)
+    KF5::AkonadiCore
+    KF5::MailTransport
+    KF5::KCMUtils
+    KF5::KrossCore
+    KF5::KIOCore
+    KF5::Mime
+    KF5::IdentityManagement
+    KF5::WidgetsAddons
+    KF5::NewStuff
+    Qt5::UiTools
+    KF5::Libkdepim
+    KF5::ItemViews
+    KF5::I18n
+    KF5::Ldap
+    KF5::AkonadiWidgets
+    )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )
-  set(accountwizard_srcs ${accountwizard_srcs} providerpage.cpp)
-  ki18n_wrap_ui(accountwizard_srcs ui/providerpage.ui)
-  set(accountwizard_libs ${accountwizard_libs} KF5::NewStuff)
+    set(accountwizard_srcs ${accountwizard_srcs} providerpage.cpp)
+    ki18n_wrap_ui(accountwizard_srcs ui/providerpage.ui)
+    set(accountwizard_libs ${accountwizard_libs} KF5::NewStuff)
 endif ()
 
 add_executable(accountwizard ${accountwizard_srcs} main.cpp)
@@ -91,7 +128,7 @@ add_library(accountwizard_plugin MODULE ${accountwizard_srcs} inprocess-main.cpp
 target_link_libraries(accountwizard_plugin ${accountwizard_libs})
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )
-  install(FILES accountwizard.knsrc DESTINATION ${KDE_INSTALL_CONFDIR})
+    install(FILES accountwizard.knsrc DESTINATION ${KDE_INSTALL_CONFDIR})
 endif ()
 install(TARGETS accountwizard ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(TARGETS accountwizard_plugin DESTINATION ${KDE_INSTALL_PLUGINDIR})
@@ -102,9 +139,9 @@ update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 add_subdirectory(wizards)
 add_subdirectory(ispdb)
 if (BUILD_TESTING)
-   add_subdirectory(autotests)
+    add_subdirectory(autotests)
 endif()
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+    feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()
