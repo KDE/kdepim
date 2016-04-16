@@ -18,7 +18,7 @@
 
 */
 
-#include "kdepim-version.h"
+#include "sieveeditor-version.h"
 #include "sieveeditormainwindow.h"
 #include <kaboutdata.h>
 #include <KLocalizedString>

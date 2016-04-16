@@ -1,3 +1,6 @@
+configure_file(sieveeditor-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieveeditor-version.h @ONLY)
+
+
 set( sieveeditor_kcfg_SRCS settings/sieveeditorglobalconfig.kcfgc )
 
 kconfig_add_kcfg_files(sieveeditor_kcfg_SRCS ${sieveeditor_kcfg_SRCS})
