@@ -1,7 +1,4 @@
-project( storageservicemanager )
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set( storageservicemanager_kcfg_SRCS settings/storageservicemanagerglobalconfig.kcfgc )
 
@@ -52,7 +49,4 @@ add_subdirectory(kconf_update)
 
 if (BUILD_TESTING)
     add_subdirectory(autotests)
-endif()
-if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 endif()

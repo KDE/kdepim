@@ -1,31 +1,4 @@
-project(ktnef)
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${ktnef_SOURCE_DIR})
-    cmake_minimum_required(VERSION 2.8.12)
-    find_package(ECM 5.20.0 REQUIRED NO_MODULE)
-    set(CMAKE_MODULE_PATH ${ktnef_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
-    include(ECMInstallIcons)
-    include(KDEInstallDirs)
-    include(ECMAddAppIcon)
-    include(ECMQtDeclareLoggingCategory)
-    include(GenerateExportHeader)
-    include(ECMGenerateHeaders)
-    include(CMakePackageConfigHelpers)
-    include(FeatureSummary)
-
-    set(KTNEF_LIB_VERSION "5.2.40")
-    set(KF5_VERSION "5.20.0")
-    find_package(KF5Tnef ${KTNEF_LIB_VERSION} CONFIG REQUIRED)
-    find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
-    include_directories(${ktnef_SOURCE_DIR} ${ktnef_BINARY_DIR})
-endif()
-
-include(TestBigEndian)
-test_big_endian(CMAKE_WORDS_BIGENDIAN)
-configure_file(config-ktnef.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktnef.h)
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(pics)
 
@@ -53,7 +26,3 @@ install(TARGETS ktnef ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(PROGRAMS org.kde.ktnef.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
-
-if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-endif()
