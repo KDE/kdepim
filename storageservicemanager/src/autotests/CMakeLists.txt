@@ -16,10 +16,10 @@ add_storageservice_unittest(navigationbuttontest
     storageservicenavigationbuttontest.cpp
     ../storageservicenavigationbuttons.cpp
     ../storageservicemanagerutil.cpp
-    ${CMAKE_BINARY_DIR}/storageservicemanager/storageservicemanager_debug.cpp
+    ${CMAKE_BINARY_DIR}/storageservicemanager/src/storageservicemanager_debug.cpp
     )
 add_storageservice_unittest(configurestoragewidgettest
     storageserviceconfigurestoragewidgettest.cpp
     ../storageserviceconfigurestoragewidget.cpp
-    ${CMAKE_BINARY_DIR}/storageservicemanager/storageservicemanager_debug.cpp
+    ${CMAKE_BINARY_DIR}/storageservicemanager/src/storageservicemanager_debug.cpp
     )
