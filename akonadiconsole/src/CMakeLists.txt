@@ -1,4 +1,3 @@
-project(akonadiconsole)
 
 include_directories(
   ${AKONADI_INCLUDE_DIR}
