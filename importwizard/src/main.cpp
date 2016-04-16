@@ -23,7 +23,7 @@
 #include <QIcon>
 #include "importwizard.h"
 
-#include "kdepim-version.h"
+#include "importwizard-version.h"
 
 #include <QCommandLineParser>
 #include <stdio.h>

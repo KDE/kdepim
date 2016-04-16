@@ -1,6 +1,6 @@
 
 
-
+configure_file(importwizard-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/importwizard-version.h @ONLY)
 add_subdirectory(icons)
 add_subdirectory(kconf_update)
 set(importwizard_SRCS
