@@ -24,7 +24,7 @@
 #include <QIcon>
 #include <qcommandlineparser.h>
 #include <qcommandlineoption.h>
-#include "kdepim-version.h"
+#include "mboximporter-version.h"
 
 int main(int argc, char *argv[])
 {

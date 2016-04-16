@@ -1,5 +1,5 @@
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+configure_file(mboximporter-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/mboximporter-version.h @ONLY)
+
 set(mboximporter_SRCS
     main.cpp
     mboxmainwindow.cpp
