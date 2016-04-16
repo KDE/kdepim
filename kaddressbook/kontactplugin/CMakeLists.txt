@@ -5,7 +5,7 @@ set(kontact_kaddressbookplugin_PART_SRCS
 )
 ecm_qt_declare_logging_category(kontact_kaddressbookplugin_PART_SRCS HEADER kaddressbookplugin_debug.h IDENTIFIER KADDRESSBOOKPLUGIN_LOG CATEGORY_NAME log_kaddressbook_plugin)
 
-qt5_add_dbus_interfaces(kontact_kaddressbookplugin_PART_SRCS ../org.kde.kaddressbook.xml)
+qt5_add_dbus_interfaces(kontact_kaddressbookplugin_PART_SRCS ../src/org.kde.kaddressbook.xml)
 
 
 add_library(kontact_kaddressbookplugin MODULE ${kontact_kaddressbookplugin_PART_SRCS})
