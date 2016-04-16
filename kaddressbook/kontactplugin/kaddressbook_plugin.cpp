@@ -19,7 +19,7 @@
 */
 
 #include "kaddressbook_plugin.h"
-#include "kaddressbook_options.h"
+#include "../src/kaddressbook_options.h"
 #include "kaddressbookinterface.h"
 
 #include <KontactInterface/Core>
