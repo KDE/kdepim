@@ -1,4 +1,3 @@
-project(pimsettingexporter)
 include_directories( 
     ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/
     ${CMAKE_BINARY_DIR}/pimsettingexporter/core/

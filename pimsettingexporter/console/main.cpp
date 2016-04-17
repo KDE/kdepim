@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kdepim-version.h"
+#include "pimsettingexporter-version.h"
 #include "pimsettingexporterconsole.h"
 #include "pimsettingexportconsole_debug.h"
 #include <kaboutdata.h>

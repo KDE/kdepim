@@ -1,7 +1,7 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories(
-    ${CMAKE_BINARY_DIR}/pimsettingexporter/console/
+    ${pimsettingexporter_BINARY_DIR}/console/
     )
 
 set( pimsettingexporterconsole_loginfiletest_SRCS loginfiletest.cpp ../loginfile.cpp )

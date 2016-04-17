@@ -18,7 +18,7 @@
 #include "pimsettingcommandlineoption.h"
 #include "pimsettingexporterwindow.h"
 #include "pimsettingexportgui_debug.h"
-#include "kdepim-version.h"
+#include "pimsettingexporter-version.h"
 #include <KLocalizedString>
 #include <KAboutData>
 #include <QCommandLineParser>

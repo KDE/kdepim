@@ -1,4 +1,79 @@
 project(pimsettingexporter)
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${pimsettingexporter_SOURCE_DIR})
+    cmake_minimum_required(VERSION 2.8.12)
+    find_package(ECM 5.20.0 REQUIRED NO_MODULE)
+    set(CMAKE_MODULE_PATH ${pimsettingexporter_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+    include(ECMInstallIcons)
+
+    include(ECMOptionalAddSubdirectory)
+    include(ECMSetupVersion)
+    include(ECMAddTests)
+    include(ECMMarkNonGuiExecutable)
+    include(GenerateExportHeader)
+    include(ECMGenerateHeaders)
+    include(CMakePackageConfigHelpers)
+    include(FeatureSummary)
+    include(CheckFunctionExists)
+    include(ECMGeneratePriFile)
+
+    include(KDEInstallDirs)
+    include(KDECMakeSettings)
+    include(KDECompilerSettings NO_POLICY_SCOPE)
+    include(ECMAddAppIcon)
+    include(ECMQtDeclareLoggingCategory)
+
+
+    set(KF5_VERSION "5.20.0")
+
+    set(KDEPIM_VERSION_NUMBER "5.2.42")
+    set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
+
+
+    set(KDEPIMLIBS_LIB_VERSION "5.2.40")
+    set(KMAILTRANSPORT_LIB_VERSION "5.2.40")
+    set(AKONADICALENDAR_LIB_VERSION "5.2.40")
+    set(CALENDARSUPPORT_LIB_VERSION_LIB "5.2.40")
+    set(KPIMTEXTEDIT_LIB_VERSION "5.2.40")
+    set(AKONADI_VERSION "5.2.40")
+
+    set(KDEPIM_LIB_VERSION "${KDEPIM_VERSION_NUMBER}")
+    set(KDEPIM_LIB_SOVERSION "5")
+
+
+    set(QT_REQUIRED_VERSION "5.6.0")
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql)
+    find_package(Qt5X11Extras NO_MODULE)
+    set(LIBMAILIMPORTER_VERSION_LIB "5.2.40")
+    set(MAILCOMMON_LIB_VERSION_LIB "5.2.40")
+    set(LIBKLEO_LIB_VERSION_LIB "5.2.40")
+    set(PIMCOMMON_LIB_VERSION_LIB "5.2.40")
+    set(LIBKDEPIM_LIB_VERSION_LIB "5.2.40")
+    set(AKONADIKALARM_LIB_VERSION "5.2.40")
+
+    # Find KF5 package
+    find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5DocTools REQUIRED)
+
+    # Find KdepimLibs Package
+    find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
+    find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5CalendarCore ${KCALENDARCORE_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5AlarmCalendar ${AKONADIKALARM_LIB_VERSION} CONFIG REQUIRED)
+
+    find_package(KF5MailCommon ${MAILCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5MailImporter ${LIBMAILIMPORTER_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+
+    include_directories(${pimsettingexporter_SOURCE_DIR} ${pimsettingexporter_BINARY_DIR})
+endif()
+
+
 add_definitions(-DTRANSLATION_DOMAIN=\"pimsettingexporter\")
 include_directories( 
     ${CMAKE_SOURCE_DIR}/pimsettingexporter/
@@ -8,6 +83,7 @@ include_directories(
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+configure_file(pimsettingexporter-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pimsettingexporter-version.h @ONLY)
 
 add_subdirectory(core)
 add_subdirectory(gui)

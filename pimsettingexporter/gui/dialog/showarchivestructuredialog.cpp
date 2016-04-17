@@ -16,7 +16,7 @@
 */
 
 #include "showarchivestructuredialog.h"
-#include "pimsettingexporter/core/utils.h"
+#include "core/utils.h"
 #include "PimCommon/PimUtil"
 #include <QDialog>
 #include <KLocalizedString>

@@ -3,7 +3,7 @@ project(akonadiconsole)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
     cmake_minimum_required(VERSION 2.8.12)
     find_package(ECM 5.20.0 REQUIRED NO_MODULE)
-    set(CMAKE_MODULE_PATH ${ktnef_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+    set(CMAKE_MODULE_PATH ${akonadiconsole_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
     include(ECMInstallIcons)
 
     include(ECMOptionalAddSubdirectory)
@@ -73,7 +73,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5Libkleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
 
-    include_directories(${iakonadiconsole_SOURCE_DIR} ${akonadiconsole_BINARY_DIR})
+    include_directories(${akonadiconsole_SOURCE_DIR} ${akonadiconsole_BINARY_DIR})
 
 endif()
 

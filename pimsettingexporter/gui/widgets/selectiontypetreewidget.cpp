@@ -16,8 +16,8 @@
 */
 
 #include "selectiontypetreewidget.h"
-#include "pimsettingexporter/core/utils.h"
-#include "pimsettingexporter/core/xml/templateselection.h"
+#include "core/utils.h"
+#include "core/xml/templateselection.h"
 
 #include "PimCommon/PimUtil"
 
