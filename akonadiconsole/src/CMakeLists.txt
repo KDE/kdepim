@@ -109,6 +109,7 @@ target_link_libraries(akonadiconsole_bin
   KF5::Libkdepim
   KF5::MessageViewer
   KF5::DBusAddons
+  KF5::PimTextEdit
   Qt5::Sql
 )
 
