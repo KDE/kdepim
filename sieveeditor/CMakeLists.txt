@@ -2,24 +2,78 @@ project( sieveeditor )
 if(${CMAKE_SOURCE_DIR} STREQUAL ${sieveeditor_SOURCE_DIR})
     cmake_minimum_required(VERSION 2.8.12)
     find_package(ECM 5.20.0 REQUIRED NO_MODULE)
-    set(CMAKE_MODULE_PATH ${ktnef_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+    set(CMAKE_MODULE_PATH ${sieveeditor_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
     include(ECMInstallIcons)
-    include(KDEInstallDirs)
-    include(ECMAddAppIcon)
-    include(ECMQtDeclareLoggingCategory)
+
+    include(ECMOptionalAddSubdirectory)
+    include(ECMSetupVersion)
+    include(ECMAddTests)
+    include(ECMMarkNonGuiExecutable)
     include(GenerateExportHeader)
     include(ECMGenerateHeaders)
     include(CMakePackageConfigHelpers)
     include(FeatureSummary)
+    include(CheckFunctionExists)
+    include(ECMGeneratePriFile)
 
-    set(KTNEF_LIB_VERSION "5.2.40")
+    include(KDEInstallDirs)
+    include(KDECMakeSettings)
+    include(KDECompilerSettings NO_POLICY_SCOPE)
+    include(ECMAddAppIcon)
+    include(ECMQtDeclareLoggingCategory)
+
+
     set(KF5_VERSION "5.20.0")
-    find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5Bookmarks ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
-    include_directories(${sieveeditor_SOURCE_DIR} ${sieveeditor_BINARY_DIR})
 
+    set(KDEPIM_VERSION_NUMBER "5.2.42")
+    set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
+
+
+    set(KDEPIMLIBS_LIB_VERSION "5.2.40")
+    set(KMAILTRANSPORT_LIB_VERSION "5.2.40")
+    set(AKONADICALENDAR_LIB_VERSION "5.2.40")
+    set(CALENDARSUPPORT_LIB_VERSION_LIB "5.2.40")
+    set(KPIMTEXTEDIT_LIB_VERSION "5.2.40")
+    set(AKONADI_VERSION "5.2.40")
+
+    set(KDEPIM_LIB_VERSION "${KDEPIM_VERSION_NUMBER}")
+    set(KDEPIM_LIB_SOVERSION "5")
+    set(AKONADINOTES_LIB_VERSION "5.2.40")
+
+
+    set(QT_REQUIRED_VERSION "5.6.0")
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql)
+    find_package(Qt5X11Extras NO_MODULE)
+    set(LIBMAILIMPORTER_VERSION_LIB "5.2.40")
+    set(MAILCOMMON_LIB_VERSION_LIB "5.2.40")
+    set(KDEPIM_APPS_LIB_VERSION_LIB "5.2.42")
+    set(MESSAGELIB_LIB_VERSION_LIB "5.2.56")
+    set(LIBKLEO_LIB_VERSION_LIB "5.2.40")
+    set(PIMCOMMON_LIB_VERSION_LIB "5.2.40")
+    set(LIBKDEPIM_LIB_VERSION_LIB "5.2.40")
+    set(LIBKSIEVE_LIB_VERSION_LIB "5.2.40")
+
+    # Find KF5 package
+    find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5DocTools REQUIRED)
+
+    # Find KdepimLibs Package
+    find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
+    find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5CalendarCore ${KCALENDARCORE_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+
+    find_package(KF5MailImporter ${LIBMAILIMPORTER_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5MessageViewer ${MESSAGELIB_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5Libkleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5LibKSieve ${LIBKSIEVE_LIB_VERSION_LIB} CONFIG REQUIRED)
+
+    include_directories(${sieveeditor_SOURCE_DIR} ${sieveeditor_BINARY_DIR})
 
 endif()
 

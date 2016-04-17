@@ -1,5 +1,5 @@
 
-include_directories(${CMAKE_BINARY_DIR}/sieveeditor/src)
+include_directories(${sieveeditor_BINARY_DIR}/src)
 
 set( sieveedit_serversievesettings_source  serversievesettingstest.cpp ../src/serversievesettings.cpp ../src/sieveeditor_debug.cpp)
 ki18n_wrap_ui(sieveedit_serversievesettings_source
