@@ -1,4 +1,4 @@
-
+configure_file(ktnef-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/ktnef-version.h @ONLY)
 
 add_subdirectory(pics)
 

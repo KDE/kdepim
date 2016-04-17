@@ -15,7 +15,7 @@
 */
 
 #include "ktnefmain.h"
-#include "kdepim-version.h"
+#include "ktnef-version.h"
 
 #include <Kdelibs4ConfigMigrator>
 #include <kaboutdata.h>
