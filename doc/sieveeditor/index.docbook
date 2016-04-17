@@ -89,7 +89,7 @@ you only need a mail server with support for Sieve scripts.</para>
         </mediaobject>
 </screenshot>
 <para>In this dialog you can add, modify and remove your mails servers.</para>
-<para>Later you can use <menuchoice><guimenu>File</guimenu><guimenuitem>Add Server Server</guimenuitem></menuchoice>
+<para>Later you can use <menuchoice><guimenu>File</guimenu><guimenuitem>Add Server</guimenuitem></menuchoice>
 or the configuration dialog for these tasks.</para>
 <para>On the next start &i18n-kapplication; automatically fetches all available scripts from the servers.</para>
 </sect2>
