@@ -237,7 +237,6 @@ add_subdirectory(grantleeeditor)
 
 
 add_subdirectory(korganizer)
-add_subdirectory(korgac)
 add_subdirectory(sieveeditor)
 add_subdirectory(storageservicemanager)
 add_subdirectory(akregator)

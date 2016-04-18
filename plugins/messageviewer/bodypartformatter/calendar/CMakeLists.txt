@@ -6,7 +6,7 @@ set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp de
 ecm_qt_declare_logging_category(messageviewer_bodypartformatter_text_calendar_PART_SRCS HEADER text_calendar_debug.h IDENTIFIER TEXT_CALENDAR_LOG CATEGORY_NAME log_text_calendar)
 
 qt5_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
-    ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.Korganizer.Calendar.xml
+    ${CMAKE_SOURCE_DIR}/korganizer/src/data/org.kde.Korganizer.Calendar.xml
     )
 
 ki18n_wrap_ui(messageviewer_bodypartformatter_text_calendar_PART_SRCS attendeeselector.ui)

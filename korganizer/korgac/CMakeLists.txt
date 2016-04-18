@@ -28,7 +28,7 @@ set(korgac_SRCS
     mailclient.cpp
     )
 
-set(korganizer_xml ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.korganizer.Korganizer.xml)
+set(korganizer_xml ../src/data/org.kde.korganizer.Korganizer.xml)
 
 qt5_add_dbus_interface(korgac_SRCS ${korganizer_xml}
     korganizer_interface
