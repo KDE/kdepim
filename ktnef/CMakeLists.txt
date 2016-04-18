@@ -23,6 +23,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${ktnef_SOURCE_DIR})
     include(ECMAddAppIcon)
     include(ECMQtDeclareLoggingCategory)
 
+    set(QT_REQUIRED_VERSION "5.6.0")
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Gui Widgets)
+
     set(KTNEF_LIB_VERSION "5.2.40")
     set(KF5_VERSION "5.20.0")
     find_package(KF5Tnef ${KTNEF_LIB_VERSION} CONFIG REQUIRED)
