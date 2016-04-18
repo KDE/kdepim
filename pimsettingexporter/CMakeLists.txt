@@ -42,9 +42,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${pimsettingexporter_SOURCE_DIR})
 
 
     set(QT_REQUIRED_VERSION "5.6.0")
-    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql)
-    find_package(Qt5X11Extras NO_MODULE)
-    set(LIBMAILIMPORTER_VERSION_LIB "5.2.40")
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Xml)
     set(MAILCOMMON_LIB_VERSION_LIB "5.2.40")
     set(LIBKLEO_LIB_VERSION_LIB "5.2.40")
     set(PIMCOMMON_LIB_VERSION_LIB "5.2.40")
@@ -66,7 +64,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${pimsettingexporter_SOURCE_DIR})
     find_package(KF5AlarmCalendar ${AKONADIKALARM_LIB_VERSION} CONFIG REQUIRED)
 
     find_package(KF5MailCommon ${MAILCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
-    find_package(KF5MailImporter ${LIBMAILIMPORTER_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
     find_package(Boost 1.34.0)
