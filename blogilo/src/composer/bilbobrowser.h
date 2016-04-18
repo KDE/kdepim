@@ -26,7 +26,7 @@
 #define BILBOBROWSER_H
 
 #include <QWidget>
-#include "config-kdepim.h"
+#include "config-blogilo.h"
 class QCheckBox;
 class QProgressBar;
 #ifdef QTWEBENGINE_SUPPORT_OPTION

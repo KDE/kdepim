@@ -1,4 +1,7 @@
 
+configure_file(blogilo-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/blogilo-version.h @ONLY)
+configure_file(config-blogilo.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-blogilo.h )
+
 if (KF5GAPI_FOUND)
     add_definitions(-DHAVE_GAPIBLOGGER_SUPPORT)
 endif()
