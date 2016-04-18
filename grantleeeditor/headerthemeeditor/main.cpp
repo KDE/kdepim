@@ -20,7 +20,7 @@
 
 #include "themeeditormainwindow.h"
 
-#include "kdepim-version.h"
+#include "grantleeeditor-version.h"
 
 #include <qapplication.h>
 #include <QCommandLineParser>

@@ -18,7 +18,7 @@ ecm_qt_declare_logging_category(headerthemeeditor_SRCS HEADER headerthemeeditor_
 qt5_add_resources(headerthemeeditor_SRCS headerthemeeditor.qrc)
 
 add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
-target_link_libraries(headerthemeeditor KF5::Mime  KF5::NewStuff KF5::PimCommon KF5::MessageViewer grantleethemeeditor KF5::DBusAddons KF5::GrantleeTheme KF5::PimTextEdit KF5::I18n)
+target_link_libraries(headerthemeeditor KF5::Mime  KF5::NewStuff KF5::PimCommon KF5::MessageViewer grantleethemeeditor KF5::DBusAddons KF5::GrantleeTheme KF5::PimTextEdit KF5::I18n KF5::XmlGui)
 
 install(TARGETS headerthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

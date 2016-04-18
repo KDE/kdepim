@@ -18,7 +18,7 @@
 
 */
 
-#include "kdepim-version.h"
+#include "grantleeeditor-version.h"
 #include "contacteditormainwindow.h"
 #include <qapplication.h>
 #include <kaboutdata.h>

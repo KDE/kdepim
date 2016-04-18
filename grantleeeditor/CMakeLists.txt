@@ -29,14 +29,15 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     set(KDEPIM_VERSION_NUMBER "5.2.42")
     set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
 
-
+    set(MESSAGELIB_LIB_VERSION_LIB "5.2.56")
     set(KDEPIMLIBS_LIB_VERSION "5.2.40")
     set(KPIMTEXTEDIT_LIB_VERSION "5.2.40")
     set(KBLOG_LIB_VERSION "5.2.40")
     set(KDEPIM_LIB_VERSION "${KDEPIM_VERSION_NUMBER}")
     set(KDEPIM_LIB_SOVERSION "5")
     set(KDEPIM_APPS_LIB_VERSION_LIB "5.2.42")
-
+    set(LIBGRANTLEETHEME_LIB_VERSION_LIB "5.2.40")
+    set(LIBKLEO_LIB_VERSION_LIB "5.2.40")
     set(QT_REQUIRED_VERSION "5.6.0")
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql)
     find_package(Qt5X11Extras NO_MODULE)
@@ -49,22 +50,27 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5TextEditor ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5PimCommon ${PIMCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
-
-
+    find_package(KF5MessageViewer ${MESSAGELIB_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5GrantleeTheme ${LIBGRANTLEETHEME_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+    find_package(KF5Libkleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
 
     # Find KdepimLibs Package
+    find_package(KF5KaddressbookGrantlee ${KDEPIM_APPS_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5Blog ${KBLOG_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
-
-    include_directories(${grantleeditor_SOURCE_DIR} ${grantleeditor_BINARY_DIR})
 endif()
 
+include_directories(${grantleeditor_SOURCE_DIR} ${grantleeditor_BINARY_DIR})
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+configure_file(grantleeeditor-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/grantleeeditor-version.h @ONLY)
+configure_file(config-grantleeeditor.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-grantleeeditor.h )
 add_subdirectory(headerthemeeditor)
 add_subdirectory(contactthemeeditor)
 add_subdirectory(grantleethemeeditor)

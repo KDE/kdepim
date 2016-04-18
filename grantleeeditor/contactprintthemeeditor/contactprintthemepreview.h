@@ -18,7 +18,7 @@
 #define CONTACTPRINTTHEMEPREVIEW_H
 
 #include <QWidget>
-#include "config-kdepim.h"
+#include "config-grantleeeditor.h"
 
 #include <KContacts/Addressee>
 #include "grantleethemeeditor/previewwidget.h"
