@@ -20,7 +20,7 @@
 
 #include "aboutdata.h"
 
-#include "kdepim-version.h"
+#include "kaddressbook-version.h"
 
 #include <KLocalizedString>
 

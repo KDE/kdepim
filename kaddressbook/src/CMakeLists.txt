@@ -1,3 +1,6 @@
+configure_file(kaddressbook-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook-version.h @ONLY)
+
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
     ${CMAKE_CURRENT_SOURCE_DIR}/printing/

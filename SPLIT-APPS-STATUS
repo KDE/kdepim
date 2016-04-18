@@ -1,21 +1,20 @@
 accountwizard (DONE)
-agents
 akonadiconsole (DONE)
 akregator (INPROGRESS)
 blogilo (DONE)
 grantleeeditor
 importwizard  (DONE)
-kaddressbook
+kaddressbook (DONE)
 kalarm
 kmail
 knotes (INPROGRESS)
 kontact (INPROGRESS)
-korgac
+korgac (move in korganizer)
 korganizer
 ktnef (DONE)
 mboximporter (DONE)
 pimsettingexporter (DONE)
-plugins
+plugins (move in korganizer ?)
 sieveeditor (DONE)
 storageservicemanager (DONE)
 
