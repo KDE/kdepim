@@ -1,4 +1,5 @@
 
+configure_file(storageservicemanager-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/storageservicemanager-version.h @ONLY)
 
 set( storageservicemanager_kcfg_SRCS settings/storageservicemanagerglobalconfig.kcfgc )
 

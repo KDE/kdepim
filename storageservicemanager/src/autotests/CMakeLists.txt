@@ -1,5 +1,5 @@
 include_directories( 
-    ${CMAKE_BINARY_DIR}/storageservicemanager/
+    ${storageservicemanager_BINARY_DIR}/src
     )
 
 
@@ -16,10 +16,10 @@ add_storageservice_unittest(navigationbuttontest
     storageservicenavigationbuttontest.cpp
     ../storageservicenavigationbuttons.cpp
     ../storageservicemanagerutil.cpp
-    ${CMAKE_BINARY_DIR}/storageservicemanager/src/storageservicemanager_debug.cpp
+    ${storageservicemanager_BINARY_DIR}/src/storageservicemanager_debug.cpp
     )
 add_storageservice_unittest(configurestoragewidgettest
     storageserviceconfigurestoragewidgettest.cpp
     ../storageserviceconfigurestoragewidget.cpp
-    ${CMAKE_BINARY_DIR}/storageservicemanager/src/storageservicemanager_debug.cpp
+    ${storageservicemanager_BINARY_DIR}/src/storageservicemanager_debug.cpp
     )

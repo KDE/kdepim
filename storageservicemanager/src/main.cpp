@@ -18,7 +18,7 @@
 
 */
 
-#include "kdepim-version.h"
+#include "storageservicemanager-version.h"
 #include "storageservicemanagermainwindow.h"
 #include <kaboutdata.h>
 #include <Kdelibs4ConfigMigrator>
