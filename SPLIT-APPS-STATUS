@@ -1,3 +1,5 @@
+DONE:
+-----
 accountwizard (DONE)
 akonadiconsole (DONE)
 akregator (DONE)
@@ -13,7 +15,13 @@ korganizer (DONE)
 ktnef (DONE)
 mboximporter (DONE)
 pimsettingexporter (DONE)
-plugins (move in korganizer ?)
 sieveeditor (DONE)
 storageservicemanager (DONE)
 console (DONE)
+
+TODO:
+-----
+
+move grantlee-extractor-pot-scripts too
+plugins (move in korganizer ?)
+
