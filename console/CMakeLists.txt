@@ -26,7 +26,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${console_SOURCE_DIR})
 
     set(KF5_VERSION "5.20.0")
 
-    set(KDEPIM_VERSION_NUMBER "5.2.42")
+    set(KDEPIM_VERSION_NUMBER "5.2.43")
     set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
 
 
@@ -46,20 +46,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${console_SOURCE_DIR})
 
 
     # Find KF5 package
-    find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5NotifyConfig ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5Auth ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DocTools REQUIRED)
-    find_package(KF5TextEditor ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5GlobalAccel ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
