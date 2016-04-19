@@ -3,7 +3,7 @@ project(importwizard)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${importwizard_SOURCE_DIR})
     cmake_minimum_required(VERSION 2.8.12)
     find_package(ECM 5.20.0 REQUIRED NO_MODULE)
-    set(CMAKE_MODULE_PATH ${ktnef_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+    set(CMAKE_MODULE_PATH ${importwizard_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
     include(ECMInstallIcons)
 
     include(ECMOptionalAddSubdirectory)
