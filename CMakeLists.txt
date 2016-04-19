@@ -193,8 +193,6 @@ if (NOT APPLE)
 endif()
 
 set(KDEPIM_HAVE_X11 ${X11_FOUND})
-configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdepim.h )
-
 
 # Extra package
 find_package(KF5GAPI "4.72.0" CONFIG)
