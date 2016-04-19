@@ -69,6 +69,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${pimsettingexporter_SOURCE_DIR})
     find_package(KF5MailImporter ${LIBMAILIMPORTER_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+    find_package(Boost 1.34.0)
+    set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
 
     include_directories(${pimsettingexporter_SOURCE_DIR} ${pimsettingexporter_BINARY_DIR})
 endif()

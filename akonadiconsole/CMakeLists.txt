@@ -73,6 +73,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5Libkleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
 
+    find_package(Boost 1.34.0)
+    set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
+
     include_directories(${akonadiconsole_SOURCE_DIR} ${akonadiconsole_BINARY_DIR})
 
 endif()

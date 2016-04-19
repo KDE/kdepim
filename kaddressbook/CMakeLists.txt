@@ -72,6 +72,12 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
     find_package(KF5AkonadiSearch "5.2.40" CONFIG REQUIRED)
     set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
+    set(Prison_MIN_VERSION "1.2.1")
+    find_package(KF5Prison ${Prison_MIN_VERSION} CONFIG)
+    set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
+    find_package(Boost 1.34.0)
+    set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
+
 
     include_directories(${kaddressbook_SOURCE_DIR} ${kaddressbook_BINARY_DIR})
 endif()
