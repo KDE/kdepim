@@ -71,11 +71,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${console_SOURCE_DIR})
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION_LIB} CONFIG REQUIRED)
 
-
-    include_directories(${console_SOURCE_DIR} ${console_BINARY_DIR})
-
 endif()
-
+include_directories(${console_SOURCE_DIR} ${console_BINARY_DIR})
 
 configure_file(console-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/console-version.h @ONLY)
 
