@@ -327,22 +327,32 @@ bool KMKernel::handleCommandLine( bool noArgsOpensReader )
             mailto = true;
     }
 
+    QRegExp mailtoBeg = QRegExp (QLatin1String("^mailto:"));
+    // Kdelibs 4.14 kmailservice parses mailto urls and then
+    // calls kmail with arguments instead of the mailto url.
+    // For each of the mail addresses it adds a mailto:
+    // we need to remove the mailto: again so that this
+    // is handled correctly.
+
     if (args->isSet("cc"))
     {
         mailto = true;
         cc = args->getOption("cc");
+        cc.replace(mailtoBeg, QString());
     }
 
     if (args->isSet("bcc"))
     {
         mailto = true;
         bcc = args->getOption("bcc");
+        bcc.replace(mailtoBeg, QString());
     }
 
     if (args->isSet("replyTo"))
     {
         mailto = true;
         replyTo = args->getOption("replyTo");
+        replyTo.replace(mailtoBeg, QString());
     }
 
 
