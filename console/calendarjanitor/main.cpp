@@ -24,7 +24,7 @@
 #include "options.h"
 #include "backuper.h"
 
-#include "kdepim-version.h"
+#include "console-version.h"
 
 #include <k4aboutdata.h>
 #include <KLocalizedString>
