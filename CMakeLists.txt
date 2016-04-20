@@ -11,7 +11,7 @@ if (KDEPIM_SUPERBUILD)
     # use mkdir build && cd build && cmake -DKDEPIM_SUPERBUILD=TRUE ../ && make -j8 sb_all
 
     include(SuperBuild.cmake)
-
+    option(QTWEBENGINE_SUPPORT_OPTION "Enable support for QtWebEngine. False by default." FALSE)
     sb_add_project(kmail)
     sb_add_project(grantleeeditor)
 
