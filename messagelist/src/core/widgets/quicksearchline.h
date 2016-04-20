@@ -76,6 +76,7 @@ private:
     KComboBox *mTagFilterCombo;
     bool mContainsOutboundMessages;
     QSignalMapper *mFilterStatusMapper;
+    QStringList listKeyword;
 };
 }
 }

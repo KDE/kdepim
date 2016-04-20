@@ -2536,10 +2536,11 @@ void KMMainWidget::slotExtendSelectionToPreviousMessage()
 
 void KMMainWidget::slotSearchButton()
 {
-    if(mHideShowSearchBarAction->isChecked())
+    if(mHideShowSearchBarAction->isChecked()){
         mMessagePane->show();
-    else
+    } else {
         mMessagePane->hide();
+    }
 }
 
 void KMMainWidget::slotSelectPreviousUnreadMessage()
