@@ -20,11 +20,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QHBoxLayout>
-#ifdef QTWEBENGINE_SUPPORT_OPTION
 #include <QWebEngineView>
-#else
-#include <QWebView>
-#endif
 #include <KContacts/VCardConverter>
 #include <kaddressbookgrantlee/grantleeprint.h>
 #include "contactprintthemeeditor_debug.h"
@@ -33,11 +29,7 @@ ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirecto
     : GrantleeThemeEditor::PreviewWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
-#ifdef QTWEBENGINE_SUPPORT_OPTION
     mViewer = new QWebEngineView;
-#else
-    mViewer = new QWebView;
-#endif
     hbox->addWidget(mViewer);
     setLayout(hbox);
     mGrantleePrint = new KAddressBookGrantlee::GrantleePrint(this);

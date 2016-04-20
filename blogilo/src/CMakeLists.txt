@@ -37,19 +37,11 @@ set(blogilo_SRCS
 
     )
 
-if (QTWEBENGINE_SUPPORT_OPTION)
-   set(blogilo_web_editor
-       composer/webengine/blogilocomposerwebengineeditor.cpp
-       composer/webengine/blogilocomposerwebengineview.cpp
-       composer/webengine/blogilocomposerwebenginewidget.cpp
-   )
-else()
-   set(blogilo_web_editor
-      composer/webkit/blogilocomposerview.cpp
-      composer/webkit/blogilocomposereditor.cpp
-      composer/webkit/blogilocomposerwidget.cpp
-   )
-endif()
+set(blogilo_web_editor
+    composer/webengine/blogilocomposerwebengineeditor.cpp
+    composer/webengine/blogilocomposerwebengineview.cpp
+    composer/webengine/blogilocomposerwebenginewidget.cpp
+    )
 
 if (KF5GAPI_FOUND)
     # Blogger API implementation imported from KBlog due to circular deps between
@@ -80,11 +72,7 @@ ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS} ${blogilo_web_editor})
 
 
-if (QTWEBENGINE_SUPPORT_OPTION)
-    set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets composereditorwebengineprivate KF5::WebEngineViewer)
-else()
-    set(blogilo_webengine_libs KF5::WebKit KF5::ComposerEditorNG)
-endif()
+set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets composereditorwebengineprivate KF5::WebEngineViewer)
 
 target_link_libraries(blogilo
     KF5::Blog

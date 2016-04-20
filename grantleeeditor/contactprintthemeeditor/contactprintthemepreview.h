@@ -27,11 +27,7 @@ namespace KAddressBookGrantlee
 {
 class GrantleePrint;
 }
-#ifdef QTWEBENGINE_SUPPORT_OPTION
 class QWebEngineView;
-#else
-class QWebView;
-#endif
 
 class ContactPrintThemePreview : public GrantleeThemeEditor::PreviewWidget
 {
@@ -51,11 +47,7 @@ Q_SIGNALS:
 private:
     KContacts::Addressee mContact;
     KAddressBookGrantlee::GrantleePrint *mGrantleePrint;
-#ifdef QTWEBENGINE_SUPPORT_OPTION
     QWebEngineView *mViewer;
-#else
-    QWebView *mViewer;
-#endif
 };
 
 #endif // CONTACTPRINTTHEMEPREVIEW_H

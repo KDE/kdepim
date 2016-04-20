@@ -32,15 +32,9 @@
 #include "bilboblog.h"
 #include "syncuploader.h"
 
-#ifdef QTWEBENGINE_SUPPORT_OPTION
 #include "composer/webengine/blogilocomposerwebengineeditor.h"
 #include "composer/webengine/blogilocomposerwebengineview.h"
 #include "composer/webengine/blogilocomposerwebenginewidget.h"
-#else
-#include "composer/webkit/blogilocomposereditor.h"
-#include "composer/webkit/blogilocomposerview.h"
-#include "composer/webkit/blogilocomposerwidget.h"
-#endif
 #include "composer/bilbobrowser.h"
 #include "composer/htmleditor.h"
 
@@ -85,11 +79,7 @@ public:
     QWidget *tabVisual;
     QWidget *tabHtml;
     QWidget *tabPreview;
-#ifdef QTWEBENGINE_SUPPORT_OPTION
     BlogiloComposerWebEngineWidget *wysiwygEditor;
-#else
-    BlogiloComposerWidget *wysiwygEditor;
-#endif
     KTextEditor::View *htmlEditor;
     BilboBrowser *previewer;
 
@@ -100,11 +90,7 @@ PostEntry::PostEntry(QWidget *parent)
     : QFrame(parent), d(new Private)
 {
     createUi();
-#ifdef QTWEBENGINE_SUPPORT_OPTION
     //FIXME connect(d->wysiwygEditor->editor(), &ComposerEditorNG::ComposerEditor::textChanged, this, &PostEntry::textChanged);
-#else
-    connect(d->wysiwygEditor->editor(), &ComposerEditorNG::ComposerEditor::textChanged, this, &PostEntry::textChanged);
-#endif
     connect(d->htmlEditor->document(), &KTextEditor::Document::textChanged,
             this, &PostEntry::textChanged);
     layout()->addWidget(d->tabWidget);
@@ -151,13 +137,8 @@ void PostEntry::createUi()
 
     /// WYSIWYG Editor:
 
-#ifdef QTWEBENGINE_SUPPORT_OPTION
     BlogiloComposerWebEngineView *view = new BlogiloComposerWebEngineView(this);
     d->wysiwygEditor = new BlogiloComposerWebEngineWidget(view/*,d->tabVisual*/);
-#else
-    BlogiloComposerView *view = new BlogiloComposerView(this);
-    d->wysiwygEditor = new BlogiloComposerWidget(view/*,d->tabVisual*/);
-#endif
     QVBoxLayout *vLayout = new QVBoxLayout(d->tabVisual);
     vLayout->addWidget(d->wysiwygEditor);
 
@@ -244,7 +225,6 @@ void PostEntry::slotSetPostPreview()
 
 QString PostEntry::htmlContent() const
 {
-#ifdef QTWEBENGINE_SUPPORT_OPTION
     if (d->tabWidget->currentIndex() == 1) {
         d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
     } else {
@@ -253,14 +233,6 @@ QString PostEntry::htmlContent() const
 #endif
     }
     return d->htmlEditor->document()->text();
-#else
-    if (d->tabWidget->currentIndex() == 1) {
-        d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
-    } else {
-        d->htmlEditor->document()->setText(d->wysiwygEditor->editor()->htmlContent());
-    }    
-    return d->htmlEditor->document()->text();
-#endif
 }
 
 

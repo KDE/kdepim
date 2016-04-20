@@ -14,11 +14,7 @@ set(contactprintthemeeditor_SRCS
     themetemplatewidget.cpp
     contactprintthemepreview.cpp
     )
-if (QTWEBENGINE_SUPPORT_OPTION)
     set(contactprintthemeeditor_web_LIB Qt5::WebEngineWidgets)
-else()
-    set(contactprintthemeeditor_web_LIB Qt5::WebKitWidgets Qt5::WebKit)
-endif()
 
 
 ecm_qt_declare_logging_category(contactprintthemeeditor_SRCS HEADER contactprintthemeeditor_debug.h IDENTIFIER CONTACTPRINTTHEMEEDITOR_LOG CATEGORY_NAME log_contactprintthemeeditor)
