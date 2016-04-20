@@ -37,7 +37,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${mboximporter_SOURCE_DIR})
     set(KDEPIM_LIB_SOVERSION "5")
 
     set(QT_REQUIRED_VERSION "5.6.0")
-    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql Concurrent UiTools OpenGL)
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql UiTools)
     find_package(Qt5X11Extras NO_MODULE)
     set(LIBMAILIMPORTER_VERSION_LIB "5.2.40")
     set(MAILCOMMON_LIB_VERSION_LIB "5.2.40")
