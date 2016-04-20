@@ -248,8 +248,6 @@ add_subdirectory(kontact)
 add_subdirectory(akonadiconsole)
 add_subdirectory(console)
 
-add_subdirectory(plugins) # Must be after KMail
-
 add_subdirectory(accountwizard)
 
 # doc must be a subdir of kdepim or packagers will kill us
