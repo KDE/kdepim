@@ -73,7 +73,7 @@ bool CsvXXPort::exportContacts(const ContactList &contacts, VCardExportSelection
 
         exportToFile(&tmpFile, contacts.addressList());
         tmpFile.flush();
-        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url);
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url, -1, KIO::Overwrite);
         KJobWidgets::setWindow(job, parentWidget());
         return job->exec();
     } else {

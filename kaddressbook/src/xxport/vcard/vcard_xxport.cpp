@@ -248,7 +248,7 @@ bool VCardXXPort::doExport(const QUrl &url, const QByteArray &data) const
 
     tmpFile.write(data);
     tmpFile.flush();
-    auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), newUrl);
+    auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), newUrl, -1, KIO::Overwrite);
     KJobWidgets::setWindow(job, parentWidget());
     return job->exec();
 }
