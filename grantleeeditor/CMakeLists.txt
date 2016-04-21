@@ -38,7 +38,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     set(LIBGRANTLEETHEME_LIB_VERSION_LIB "5.2.40")
     set(LIBKLEO_LIB_VERSION_LIB "5.2.40")
     set(QT_REQUIRED_VERSION "5.6.0")
-    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql)
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Sql WebEngine WebEngineWidgets)
+
     find_package(Qt5X11Extras NO_MODULE)
     set(MAILCOMMON_LIB_VERSION_LIB "5.2.40")
     set(PIMCOMMON_LIB_VERSION_LIB "5.2.40")
@@ -60,6 +61,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     find_package(KF5KaddressbookGrantlee ${KDEPIM_APPS_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
+    add_definitions(-DQT_USE_QSTRINGBUILDER)
+
 endif()
 
 include_directories(${grantleeditor_SOURCE_DIR} ${grantleeditor_BINARY_DIR})

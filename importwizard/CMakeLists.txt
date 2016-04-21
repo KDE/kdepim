@@ -87,6 +87,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${importwizard_SOURCE_DIR})
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5MessageComposer ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
     include_directories(${importwizard_SOURCE_DIR} ${importwizard_BINARY_DIR})
+    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 

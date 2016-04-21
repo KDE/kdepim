@@ -77,6 +77,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
 
 
     include_directories(${kaddressbook_SOURCE_DIR} ${kaddressbook_BINARY_DIR})
+    add_definitions(-DQT_USE_QSTRINGBUILDER)
+
 endif()
 
 set(Prison_MIN_VERSION "1.2.1")

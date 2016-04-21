@@ -54,6 +54,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${mboximporter_SOURCE_DIR})
     find_package(KF5MailCommon ${MAILCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5MailImporter ${LIBMAILIMPORTER_VERSION_LIB} CONFIG REQUIRED)
     include_directories(${mboximporter_SOURCE_DIR} ${mboximporter_BINARY_DIR})
+    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 

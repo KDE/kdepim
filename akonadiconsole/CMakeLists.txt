@@ -77,6 +77,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
     set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
 
     include_directories(${akonadiconsole_SOURCE_DIR} ${akonadiconsole_BINARY_DIR})
+    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 

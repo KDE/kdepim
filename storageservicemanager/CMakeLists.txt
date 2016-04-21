@@ -62,6 +62,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${storageservicemanager_SOURCE_DIR})
     find_package(KF5PimCommon ${PIMCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
 
     include_directories(${storageservicemanager_SOURCE_DIR} ${storageservicemanager_BINARY_DIR})
+    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 
