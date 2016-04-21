@@ -13,4 +13,4 @@ target_link_libraries(ldaptest
     Qt5::Test
     KF5::Libkdepim
     KF5::I18n
-  )
+    )

@@ -7,7 +7,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
 
     # we need some parts of the ECM CMake helpers
     find_package(ECM 5.20.0 REQUIRED NO_MODULE)
-    set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+    set(CMAKE_MODULE_PATH ${accountwizard_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
     include(ECMOptionalAddSubdirectory)
     include(ECMInstallIcons)
     include(ECMSetupVersion)
@@ -59,7 +59,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
 
     # Find KF5 package
     find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5NotifyConfig ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
