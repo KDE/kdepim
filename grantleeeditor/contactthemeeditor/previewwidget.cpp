@@ -24,6 +24,7 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::PreviewWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     mPreview = new ContactPreviewWidget(projectDirectory);
     lay->addWidget(mPreview);
     setLayout(lay);
