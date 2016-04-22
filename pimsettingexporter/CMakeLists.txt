@@ -41,7 +41,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${pimsettingexporter_SOURCE_DIR})
 
 
     set(QT_REQUIRED_VERSION "5.6.0")
-    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Xml)
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Xml Test)
     set(MAILCOMMON_LIB_VERSION_LIB "5.2.40")
     set(LIBKLEO_LIB_VERSION_LIB "5.2.40")
     set(PIMCOMMON_LIB_VERSION_LIB "5.2.40")

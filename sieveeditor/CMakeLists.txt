@@ -39,7 +39,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${sieveeditor_SOURCE_DIR})
     set(LIBKSIEVE_LIB_VERSION_LIB "5.2.40")
 
     set(QT_REQUIRED_VERSION "5.6.0")
-    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Network)
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Network Test)
 
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
