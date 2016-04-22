@@ -1,5 +1,3 @@
-include_directories( ${CMAKE_BINARY_DIR}/accountwizard/ispdb )
-
 set(ispdb_srcs
     main.cpp
     ispdb.cpp
