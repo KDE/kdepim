@@ -39,6 +39,7 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
       mWidgetSplitter(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
 
     mMainSplitter = new QSplitter;
     if (mType == MainPage) {
