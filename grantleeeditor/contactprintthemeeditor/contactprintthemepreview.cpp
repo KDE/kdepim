@@ -33,6 +33,7 @@ ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirecto
     : GrantleeThemeEditor::PreviewWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
 #ifdef QTWEBENGINE_EXPERIMENTAL_OPTION
     mViewer = new QWebEngineView;
 #else
