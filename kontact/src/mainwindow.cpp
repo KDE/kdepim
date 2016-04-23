@@ -137,7 +137,7 @@ int ServiceStarter::startServiceFor( const QString &serviceType,
 
 MainWindow::MainWindow()
     : KontactInterface::Core(), mSplitter( 0 ), mCurrentPlugin( 0 ), mAboutDialog( 0 ),
-      mReallyClose( false ), mSyncActionsEnabled( true )
+      mReallyClose( false ), mSyncActionsEnabled( true ), mSaveSideBarWidth( 10 )
 {
     // The ServiceStarter created here will be deleted by the KDbusServiceStarter
     // base class, which is a global static.
@@ -345,15 +345,12 @@ void MainWindow::initWidgets()
     setCentralWidget( mTopWidget );
 
     mSplitter = new QSplitter( mTopWidget );
+    connect( mSplitter, SIGNAL(splitterMoved(int,int)),
+             this, SLOT(slotSplitterMoved(int,int)) );
+
     layout->addWidget( mSplitter );
     mSidePane = new IconSidePane( this, mSplitter );
-    /*
-  // don't occupy screen estate on load
 
-  QList<int> sizes;
-  sizes << 0;
-  mSplitter->setSizes(sizes);
-*/
     connect( mSidePane, SIGNAL(pluginSelected(KontactInterface::Plugin*)),
              SLOT(selectPlugin(KontactInterface::Plugin*)) );
 
@@ -477,20 +474,26 @@ void MainWindow::setupActions()
     actionCollection()->addAction( QLatin1String("help_introduction"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotShowIntroduction()) );
 
-    action =
-            new KAction( KIcon( QLatin1String("ktip") ),
-                         i18nc( "@action:inmenu", "&Tip of the Day" ), this );
-    action->setHelpText(
-                i18nc( "@info:status", "Show the Tip-of-the-Day dialog" ) );
+    action = new KAction( KIcon( QLatin1String("ktip") ),
+                          i18nc( "@action:inmenu", "&Tip of the Day" ), this );
+    action->setHelpText( i18nc( "@info:status", "Show the Tip-of-the-Day dialog" ) );
     action->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be presented with a dialog showing small tips to help "
                        "you use this program more effectively." ) );
     actionCollection()->addAction( QLatin1String("help_tipofday"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotShowTip()) );
-    //TODO 4.12: add description
-    QShortcut *shortcut = new QShortcut( QKeySequence(Qt::Key_F9), this );
-    connect(shortcut, SIGNAL(activated()), this, SLOT(slotShowHideSideBar()));
+
+    mShowHideAction = new KAction( KIcon( QLatin1String( "zoom-fit-width" ) ),
+                                   i18nc( "@action:inmenu", "Hide/Show the component sidebar" ),
+                                   this );
+    mShowHideAction->setHelpText( i18nc( "@info:status", "Hide/Show the component sidebar" ) );
+    mShowHideAction->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "Allows you to show or hide the component sidebar as desired."));
+    mShowHideAction->setShortcut( QKeySequence(Qt::Key_F9) );
+    actionCollection()->addAction( QLatin1String("hide_show_sidebar"), mShowHideAction );
+    connect( mShowHideAction, SIGNAL(triggered(bool)), SLOT(slotShowHideSideBar()));
 }
 
 bool MainWindow::isPluginLoaded( const KPluginInfo &info )
@@ -966,12 +969,7 @@ void MainWindow::selectPlugin( const QString &pluginName )
 void MainWindow::loadSettings()
 {
     if ( mSplitter ) {
-        // if the preferences do not contain useful values, the side pane part of the splitter
-        // takes up the full width of the window, so leave the splitter sizing at the widget defaults
-        QList<int> sizes = Prefs::self()->sidePaneSplitter();
-        if ( sizes.count() == mSplitter->count() ) {
-            mSplitter->setSizes( sizes );
-        }
+        showHideSideBar(Prefs::self()->sideBarOpen());
     }
 
     // Preload Plugins. This _must_ happen before the default part is loaded
@@ -1276,16 +1274,53 @@ QString MainWindow::introductionString()
     return info;
 }
 
+void MainWindow::showHideSideBar(bool show)
+{
+    QList<int> sizes = mSplitter->sizes();
+    if (!sizes.isEmpty()) {
+        if (show) {
+            sizes[0] = mSaveSideBarWidth;
+        } else {
+            mSaveSideBarWidth = qMax(sizes[0], 10);
+            sizes[0] = 0;
+        }
+        mSplitter->setSizes(sizes);
+        Prefs::self()->setSideBarOpen(show);
+    }
+}
+
+QString MainWindow::showHideSideBarMessage(bool hidden) const
+{
+    if (hidden) {
+        return i18nc("@info:status",
+                     "Sidebar is hidden. Show the sidebar again using the %1 key.",
+                     mShowHideAction->shortcut().toString());
+    } else {
+        return QString();
+    }
+}
+
 void MainWindow::slotShowHideSideBar()
 {
     QList<int> sizes = mSplitter->sizes();
     if (!sizes.isEmpty()) {
-        if (sizes.at(0) != 0) {
-            sizes[0] = 0;
+        bool open = (sizes.at(0) != 0);
+        showHideSideBar(!open);
+        if (open) {
+            statusBar()->showMessage(showHideSideBarMessage(true));
         } else {
-            sizes[0] = 10;
+            statusBar()->showMessage(showHideSideBarMessage(false));
         }
-        mSplitter->setSizes(sizes);
     }
 }
 
+void MainWindow::slotSplitterMoved(int pos, int index)
+{
+    if (index == 1) {
+        if (pos == 0) {
+            statusBar()->showMessage(showHideSideBarMessage(true));
+        } else {
+            statusBar()->showMessage(showHideSideBarMessage(false));
+        }
+    }
+}
