@@ -21,17 +21,12 @@
 #include <KConfigDialog>
 #include "bilboblog.h"
 class KConfigSkeleton;
-namespace PimCommon
-{
-class StorageServiceManager;
-}
 
-class ConfigureStorageServiceWidget;
 class ConfigureDialog : public KConfigDialog
 {
     Q_OBJECT
 public:
-    explicit ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString &name, KConfigSkeleton *config);
+    explicit ConfigureDialog(QWidget *parent, const QString &name, KConfigSkeleton *config);
     ~ConfigureDialog();
 
 Q_SIGNALS:
@@ -46,10 +41,7 @@ protected:
 
 private Q_SLOTS:
     void slotApplySettingsClicked();
-    void slotDefaultClicked();
-    void slotStorageServiceChanged();
 private:
-    ConfigureStorageServiceWidget *mConfigStorageService;
     bool mHasChanged;
 };
 

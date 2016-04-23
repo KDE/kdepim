@@ -45,12 +45,6 @@ Main window of blogilo...
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>
 */
-
-namespace PimCommon
-{
-class StorageServiceManager;
-}
-
 class MainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
@@ -119,7 +113,6 @@ private:
     void setupActions();
     void setupSystemTray();
     void writeConfigs();
-    void initStorageService();
     void setupStatusBar();
     /**
         Create a new post entry,
@@ -142,6 +135,5 @@ private:
     int &mCurrentBlogId;
     QToolButton *mCloseTabButton;
     QToolButton *mNewTabButton;
-    PimCommon::StorageServiceManager *mStorageManager;
 };
 #endif

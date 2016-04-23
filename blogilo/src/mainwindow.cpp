@@ -36,16 +36,10 @@
 #include "poststabwidget.h"
 #include "uploadmediadialog.h"
 #include "configuredialog.h"
-#include "storageservice/storageservicemanagersettingsjob.h"
 
 #include "ui_advancedsettingsbase.h"
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
-
-#include "PimCommon/StorageServiceManager"
-#include "PimCommon/StorageServiceJobConfig"
-#include "PimCommon/StorageServiceAbstract"
-#include "PimCommon/StorageServiceProgressManager"
 
 #include "Libkdepim/ProgressDialog"
 #include "Libkdepim/StatusbarProgressWidget"
@@ -85,7 +79,6 @@ MainWindow::MainWindow()
       mCurrentBlogId(__currentBlogId)
 {
     setWindowTitle(i18n("Blogilo"));
-    initStorageService();
 
     tabPosts = new PostsTabWidget(this);
     setCentralWidget(tabPosts);
@@ -142,22 +135,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupStatusBar()
 {
-    KPIM::ProgressStatusBarWidget *progressStatusBarWidget = new KPIM::ProgressStatusBarWidget(statusBar(), this, PimCommon::StorageServiceProgressManager::progressTypeValue());
-    statusBar()->addPermanentWidget(progressStatusBarWidget->littleProgress(), 0);
-    statusBar()->show();
-}
-
-void MainWindow::initStorageService()
-{
-    StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob;
-    PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
-    configJob->registerConfigIf(settingsJob);
-
-    mStorageManager = new PimCommon::StorageServiceManager(this);
-    connect(mStorageManager, &PimCommon::StorageServiceManager::uploadFileDone, this, &MainWindow::slotUploadFileDone);
-    connect(mStorageManager, &PimCommon::StorageServiceManager::shareLinkDone, this, &MainWindow::slotUploadFileDone);
-    connect(mStorageManager, &PimCommon::StorageServiceManager::uploadFileFailed, this, &MainWindow::slotUploadFileFailed);
-    connect(mStorageManager, &PimCommon::StorageServiceManager::actionFailed, this, &MainWindow::slotActionFailed);
 }
 
 void MainWindow::slotUploadFileDone(const QString &serviceName, const QString &link)
@@ -246,9 +223,6 @@ void MainWindow::setupActions()
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
     connect(actOpenBlog, &QAction::triggered, this, &MainWindow::slotOpenCurrentBlogInBrowser);
 
-    actionCollection()->addAction(QStringLiteral("upload_file"), mStorageManager->menuUploadServices(this));
-    actionCollection()->addAction(QStringLiteral("download_file"), mStorageManager->menuDownloadServices(this));
-    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::loadTempPosts()
@@ -341,7 +315,7 @@ void MainWindow::optionsPreferences()
     if (KConfigDialog::showDialog(QStringLiteral("settings")))  {
         return;
     }
-    ConfigureDialog *dialog = new ConfigureDialog(mStorageManager, this, QStringLiteral("settings"), Settings::self());
+    ConfigureDialog *dialog = new ConfigureDialog(this, QStringLiteral("settings"), Settings::self());
     connect(dialog, &ConfigureDialog::blogAdded, this, &MainWindow::slotBlogAdded);
     connect(dialog, &ConfigureDialog::blogEdited, this, &MainWindow::slotBlogEdited);
     connect(dialog, &ConfigureDialog::blogRemoved, this, &MainWindow::slotBlogRemoved);
@@ -355,7 +329,6 @@ void MainWindow::optionsPreferences()
 void MainWindow::slotSettingsChanged()
 {
     setupSystemTray();
-    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::slotDialogDestroyed(QObject *win)

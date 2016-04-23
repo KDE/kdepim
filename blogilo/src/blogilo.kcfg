@@ -25,12 +25,6 @@
     </entry>
   </group>
 
-  <group name="Storage Service">
-    <entry name="DownloadDirectory" type="string">
-      <default></default>
-    </entry>
-  </group>
-
   <group name="Editor">
     <entry name="autosaveInterval" type="Int">
         <default>5</default>
