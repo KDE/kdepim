@@ -37,7 +37,7 @@ class KAction;
 namespace Kontact {
 
 class Model;
-class MainWindow;
+class Navigator;
 
 class Navigator : public QListView
 {
@@ -64,16 +64,6 @@ public:
         return mShowText;
     }
 
-    void setMainWindow( MainWindow *mainWindow )
-    {
-        mMainWindow = mainWindow;
-    }
-
-    MainWindow *mainWindow()
-    {
-        return mMainWindow;
-    }
-
     virtual QSize sizeHint() const;
 
 signals:
@@ -92,7 +82,6 @@ private slots:
 
 private:
     SidePaneBase *mSidePane;
-    MainWindow *mMainWindow;
     Model *mModel;
 
     int mIconSize;
@@ -105,7 +94,6 @@ private:
     KAction *mBigIconsAction;
     KAction *mNormalIconsAction;
     KAction *mSmallIconsAction;
-    KAction *mHideSideBarAction;
 };
 
 class IconSidePane : public SidePaneBase
