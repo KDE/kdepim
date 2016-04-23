@@ -21,6 +21,7 @@
 */
 
 #include "iconsidepane.h"
+#include "mainwindow.h"
 #include "prefs.h"
 using namespace Kontact;
 
@@ -232,7 +233,8 @@ private:
 }
 
 Navigator::Navigator( SidePaneBase *parent )
-    : QListView( parent ), mSidePane( parent )
+    : QListView( parent ), mSidePane( parent ), mMainWindow( 0 )
+
 {
     setViewport( new QWidget( this ) );
 
@@ -322,9 +324,23 @@ Navigator::Navigator( SidePaneBase *parent )
                        "Choose this option if you want the sidebar icons to be extra small." ) );
     connect( mSmallIconsAction, SIGNAL(triggered(bool)), this, SLOT(slotActionTriggered(bool)) );
 
+    QActionGroup *showHide = new QActionGroup( this );
+
+    mHideSideBarAction = new KAction( i18nc( "@action:inmenu", "Hide Sidebar" ), this );
+    mHideSideBarAction->setCheckable( true );
+    mHideSideBarAction->setActionGroup( showHide );
+    mHideSideBarAction->setChecked( false );
+    mHideSideBarAction->setHelpText(
+                i18nc( "@info:status", "Hide this sidebar" ) );
+    mHideSideBarAction->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "Choose this option if you to hide this sidebar. Press F9 to unhide."));
+    connect( mHideSideBarAction, SIGNAL(triggered(bool)), this, SLOT(slotActionTriggered(bool)) );
+
     QList<QAction*> actionList;
     actionList << mShowIconsAction << mShowTextAction << mShowBothAction << sep
-               << mBigIconsAction << mNormalIconsAction << mSmallIconsAction;
+               << mBigIconsAction << mNormalIconsAction << mSmallIconsAction << sep
+               << mHideSideBarAction;
 
     insertActions( 0, actionList );
 
@@ -496,6 +512,11 @@ void Navigator::slotActionTriggered( bool checked )
         mIconSize = KIconLoader::SizeMedium;
     } else if ( object == mSmallIconsAction ) {
         mIconSize = KIconLoader::SizeSmallMedium;
+    } else if ( object == mHideSideBarAction ) {
+        if (mainWindow()) {
+            mainWindow()->showHideSideBar( false );
+            mHideSideBarAction->setChecked( false );
+        }
     }
 
     Prefs::self()->setSidePaneIconSize( mIconSize );
@@ -518,6 +539,7 @@ IconSidePane::IconSidePane( KontactInterface::Core *core, QWidget *parent )
 {
     mNavigator = new Navigator( this );
     mNavigator->setFocusPolicy( Qt::NoFocus );
+    mNavigator->setMainWindow(dynamic_cast<MainWindow *>(core));
     connect( mNavigator, SIGNAL(pluginActivated(KontactInterface::Plugin*)),
              SIGNAL(pluginSelected(KontactInterface::Plugin*)) );
 }

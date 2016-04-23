@@ -51,7 +51,6 @@ KcmKontact::KcmKontact( const KComponentData &inst, QWidget *parent )
     QBoxLayout *topLayout = new QVBoxLayout( this );
     QBoxLayout *pluginStartupLayout = new QHBoxLayout();
     topLayout->addItem( pluginStartupLayout );
-    topLayout->addStretch();
 
     KPrefsWidBool *forceStartupPlugin =
             addWidBool( Prefs::self()->forceStartupPluginItem(), this );
@@ -68,6 +67,14 @@ KcmKontact::KcmKontact( const KComponentData &inst, QWidget *parent )
 
     connect( forceStartupPlugin->checkBox(), SIGNAL(toggled(bool)),
              selection->comboBox(), SLOT(setEnabled(bool)) );
+
+    QBoxLayout *moreOptions = new QVBoxLayout();
+    topLayout->addItem( moreOptions );
+    topLayout->addStretch();
+
+    KPrefsWidBool *showSideBar = addWidBool( Prefs::self()->sideBarOpenItem(), this );
+    moreOptions->addWidget( showSideBar->checkBox() );
+
     load();
 }
 
