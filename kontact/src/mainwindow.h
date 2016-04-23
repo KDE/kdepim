@@ -63,6 +63,7 @@ public:
     static bool pluginActionWeightLessThan( const QAction *left, const QAction *right );
     static bool pluginWeightLessThan( const KontactInterface::Plugin *left,
                                       const KontactInterface::Plugin *right );
+    void showHideSideBar(bool show);
 
 public slots:
     virtual void selectPlugin( KontactInterface::Plugin *plugin );
@@ -112,6 +113,7 @@ private:
     void paintAboutScreen( const QString &msg );
     static QString introductionString();
     KToolBar *findToolBar( const char *name );
+    QString showHideSideBarMessage(bool hidden) const;
 
 private slots:
     void pluginsChanged();
@@ -119,6 +121,7 @@ private slots:
     void configureShortcuts();
     void configureToolbars();
     void slotShowHideSideBar();
+    void slotSplitterMoved(int pos, int index);
 
 private:
     QFrame *mTopWidget;
@@ -147,6 +150,8 @@ private:
     AboutDialog *mAboutDialog;
     bool mReallyClose;
     bool mSyncActionsEnabled;
+    int mSaveSideBarWidth;
+    KAction *mShowHideAction;
 };
 
 }
