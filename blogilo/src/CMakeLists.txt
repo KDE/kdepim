@@ -70,8 +70,6 @@ ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS} ${blogilo_web_editor})
 
 
-set(blogilo_webengine_libs Qt5::WebEngine Qt5::WebEngineWidgets composereditorwebengineprivate KF5::WebEngineViewer)
-
 target_link_libraries(blogilo
     KF5::Blog
     KF5::PimCommon
@@ -82,7 +80,10 @@ target_link_libraries(blogilo
     KF5::DBusAddons
     KF5::XmlGui
     KF5::PimTextEdit
-    ${blogilo_webengine_libs}
+    Qt5::WebEngine
+    Qt5::WebEngineWidgets
+    composereditorwebengineprivate
+    KF5::WebEngineViewer
     )
 
 if (KF5GAPI_FOUND)
