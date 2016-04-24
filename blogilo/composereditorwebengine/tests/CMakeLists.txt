@@ -10,6 +10,7 @@ target_link_libraries(composerhtmleditor composereditorwebengineprivate
     KF5::I18n
     Qt5::WebEngine
     Qt5::WebEngineWidgets
+    KF5::WebEngineViewer
     )
 
 install(TARGETS composerhtmleditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
