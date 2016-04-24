@@ -69,9 +69,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
-#if QT_VERSION >= 0x050600
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
     KAboutData aboutData(QStringLiteral("ispdb"),
                          i18n("ISPDB Assistant"),
                          QStringLiteral("0.1"),

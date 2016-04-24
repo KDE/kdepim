@@ -34,9 +34,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
-#if QT_VERSION >= 0x050600
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
     Kdelibs4ConfigMigrator migrate(QStringLiteral("headerthemeeditor"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("headerthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("headerthemeeditorui.rc"));
