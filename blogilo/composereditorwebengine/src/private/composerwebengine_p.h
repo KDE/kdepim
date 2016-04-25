@@ -22,8 +22,6 @@
 
 #include <kpimtextedit/emoticontexteditaction.h>
 
-//#include <QWebHitTestResult>
-
 class KToggleAction;
 class QAction;
 class KSelectAction;

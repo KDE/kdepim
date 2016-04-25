@@ -22,7 +22,6 @@
 #define COMPOSERANCHORDIALOG_H
 
 #include <QDialog>
-//#include <QWebElement>
 
 namespace ComposerEditorWebEngine
 {
