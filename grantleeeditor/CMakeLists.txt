@@ -71,7 +71,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 configure_file(grantleeeditor-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/grantleeeditor-version.h @ONLY)
-configure_file(config-grantleeeditor.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-grantleeeditor.h )
+
 add_subdirectory(headerthemeeditor)
 add_subdirectory(contactthemeeditor)
 add_subdirectory(grantleethemeeditor)

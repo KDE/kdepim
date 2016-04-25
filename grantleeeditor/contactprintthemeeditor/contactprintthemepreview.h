@@ -18,7 +18,6 @@
 #define CONTACTPRINTTHEMEPREVIEW_H
 
 #include <QWidget>
-#include "config-grantleeeditor.h"
 
 #include <KContacts/Addressee>
 #include "grantleethemeeditor/previewwidget.h"
