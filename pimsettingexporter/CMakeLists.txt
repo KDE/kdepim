@@ -74,8 +74,8 @@ endif()
 
 add_definitions(-DTRANSLATION_DOMAIN=\"pimsettingexporter\")
 include_directories( 
-    ${CMAKE_SOURCE_DIR}/pimsettingexporter/
-    ${CMAKE_BINARY_DIR}/pimsettingexporter/
+    ${pimsettingexporter_SOURCE_DIR}/
+    ${pimsettingexporter_BINARY_DIR}/
     )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )

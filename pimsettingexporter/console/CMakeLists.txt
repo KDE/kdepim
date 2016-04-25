@@ -1,6 +1,6 @@
 
 include_directories(${AKONADI_INCLUDE_DIR} 
-    ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/
+    ${pimsettingexporter_SOURCE_DIR}/core/
     )
 
 

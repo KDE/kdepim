@@ -1,6 +1,6 @@
 
 include_directories( 
-    ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/
+    ${pimsettingexporter_SOURCE_DIR}/core/
     )
 
 

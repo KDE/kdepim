@@ -1,6 +1,6 @@
 include_directories( 
-    ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/
-    ${CMAKE_BINARY_DIR}/pimsettingexporter/core/
+    ${pimsettingexporter_SOURCE_DIR}/core/
+    ${pimsettingexporter_BINARY_DIR}/core/
     )
 
 set(selectiontreewidget_gui_SRCS selectiontreewidget_gui.cpp ../dialog/selectiontypedialog.cpp ../widgets/selectiontypetreewidget.cpp ../pimsettingexportgui_debug.cpp)
