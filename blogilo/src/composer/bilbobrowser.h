@@ -26,7 +26,6 @@
 #define BILBOBROWSER_H
 
 #include <QWidget>
-#include "config-blogilo.h"
 class QCheckBox;
 class QProgressBar;
 class QWebEngineView;
