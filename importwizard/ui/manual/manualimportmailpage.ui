@@ -11,6 +11,18 @@
    </rect>
   </property>
   <layout class="QHBoxLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QLabel" name="mIntroSidebar">
      <property name="sizePolicy">
@@ -96,7 +108,7 @@
   <customwidget>
    <class>MailImporter::ImportMailsWidget</class>
    <extends>QWidget</extends>
-   <header location="global">mailimporter/importmailswidget.h</header>
+   <header>importmailswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
