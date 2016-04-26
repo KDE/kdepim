@@ -40,7 +40,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${blogilo_SOURCE_DIR})
     find_package(Qt5X11Extras NO_MODULE)
     set(PIMCOMMON_LIB_VERSION_LIB "5.2.40")
     set(LIBKDEPIM_LIB_VERSION_LIB "5.2.40")
-    set(MESSAGELIB_LIB_VERSION_LIB "5.2.58")
+    set(MESSAGELIB_LIB_VERSION_LIB "5.2.59")
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DocTools REQUIRED)
