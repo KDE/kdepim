@@ -26,6 +26,7 @@ PimSettingExporterConfigureWidget::PimSettingExporterConfigureWidget(QWidget *pa
     : QWidget(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout;
+    layout->setMargin(0);
     setLayout(layout);
 
     QGroupBox *groupBox = new QGroupBox(i18n("Import"));

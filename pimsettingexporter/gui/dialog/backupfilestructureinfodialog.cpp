@@ -48,6 +48,7 @@ BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
 
     QLabel *lab = new QLabel(i18n("Backup Archive Structure:"));
