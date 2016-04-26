@@ -11,6 +11,18 @@
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="KPIM::CustomLogWidget" name="logSettings" native="true"/>
    </item>
@@ -40,8 +52,6 @@
    </item>
   </layout>
  </widget>
- <resources/>
- <connections/>
  <customwidgets>
   <customwidget>
    <class>KPIM::CustomLogWidget</class>
@@ -50,4 +60,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <resources/>
+ <connections/>
 </ui>
