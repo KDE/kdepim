@@ -43,6 +43,7 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     setModal(true);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(mainWidget);
+    mainLayout->setMargin(0);
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
 
