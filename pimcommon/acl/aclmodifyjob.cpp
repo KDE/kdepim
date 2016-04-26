@@ -53,12 +53,6 @@ void AclModifyJob::start()
     }
     mCurrentIndex = 0;
     if (mRecursive) {
-        if ( KMessageBox::No == KMessageBox::warningYesNo(0,
-                                                              i18n( "Do you really want to apply this folders permissions on the subdirectories:" ),
-                                                              i18n( "Apply Permissions" ) ) ) {
-            deleteLater();
-            return;
-        }
         PimCommon::FetchRecursiveCollectionsJob *fetchJob = new PimCommon::FetchRecursiveCollectionsJob(this);
         fetchJob->setTopCollection(mTopLevelCollection);
         connect(fetchJob, SIGNAL(fetchCollectionFailed()), this, SLOT(slotFetchCollectionFailed()));
@@ -102,7 +96,7 @@ bool AclModifyJob::canAdministrate(PimCommon::ImapAclAttribute *attribute, const
             serverName = reply;
         }
     } else {
-        qDebug()<<" collection has not imap as resources: "<<collection.resource();
+        kDebug()<<"AclModifyJob:  collection has not imap as resources: "<<collection.resource();
     }
     delete imapSettingsInterface;
 
@@ -125,6 +119,9 @@ void AclModifyJob::changeAcl(Akonadi::Collection collection)
             attribute->setRights( mNewRight );
             Akonadi::CollectionModifyJob *modifyJob = new Akonadi::CollectionModifyJob( collection );
             connect(modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotModifyDone(KJob*)));
+            kDebug() << "AclModifyJob: modifiying acl for: " << collection.name();
+        } else {
+            kDebug() << "AclModifyJob: Can't administratrate ACL for this folder.";
         }
     } else {
         checkNewCollection();
@@ -144,20 +141,60 @@ void AclModifyJob::checkNewCollection()
 void AclModifyJob::slotModifyDone(KJob *job)
 {
     if (job->error()) {
-        kDebug() << " Error during modify collection " << job->errorString();
+        kDebug() << "AclModifyJob: Error during modify collection " << job->errorString();
     }
     checkNewCollection();
 }
 
 void AclModifyJob::slotFetchCollectionFinished(const Akonadi::Collection::List &collectionList)
 {
+    QStringList folderNames;
+    Q_FOREACH (const Akonadi::Collection col, collectionList) {
+        if (col.hasAttribute<PimCommon::ImapAclAttribute>()) {
+            PimCommon::ImapAclAttribute *attribute = col.attribute<PimCommon::ImapAclAttribute>();
+            if (canAdministrate(attribute, col)) {
+                QString fullName;
+                bool parentFound;
+                Akonadi::Collection cur = col;
+                do {
+                    parentFound = false;
+                    // parentCollection() only returns the ID, but we have the
+                    // collection in our list already because we've recursively
+                    // fetched. So look it up in our list.
+                    Q_FOREACH (const Akonadi::Collection it, collectionList) {
+                        if (it.id() == cur.id()) {
+                            fullName = QLatin1String("/") + it.displayName() + fullName;
+                            parentFound = true;
+                            cur = cur.parentCollection();
+                            break;
+                        }
+                    }
+                } while (parentFound);
+                // Remove leading slash
+                folderNames << fullName.right(fullName.size() - 1);
+            } else {
+                kDebug() << "AclModifyJob: No rights to administer " << col.name();
+            }
+        } else {
+            kDebug() << "AclModifyJob: Collection " << col.name() << "has no ACL.";
+        }
+    }
+    folderNames.sort();
+    if ( KMessageBox::Continue != KMessageBox::warningContinueCancelList(0,
+                                                                         i18n( "Do you really want to apply this folders permissions on the subdirectories:" ),
+                                                                         folderNames,
+                                                                         i18n( "Apply Permissions" ) ) ) {
+        deleteLater();
+        kDebug() << "AclModifyJob: User canceled .";
+        return;
+    }
     mRecursiveCollection = collectionList;
     changeAcl(mTopLevelCollection);
 }
 
 void AclModifyJob::slotFetchCollectionFailed()
 {
-    kDebug() << "fetch collection failed";
+    kDebug() << "AclModifyJob: fetch collection failed";
     deleteLater();
 }
 

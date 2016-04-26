@@ -22,6 +22,7 @@
 #include "fetchrecursivecollectionsjob.h"
 #include <kdebug.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 
 using namespace PimCommon;
 
@@ -45,6 +46,7 @@ void FetchRecursiveCollectionsJob::start()
         return;
     }
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(mTopCollection, Akonadi::CollectionFetchJob::Recursive);
+    job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
     connect(job, SIGNAL(result(KJob*)), this, SLOT(slotInitialCollectionFetchingDone(KJob*)));
 }
 
