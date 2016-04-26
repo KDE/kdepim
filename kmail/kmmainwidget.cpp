@@ -989,7 +989,7 @@ void KMMainWidget::createWidgets()
                                       this);
     connect(KMKernel::self()->entityTreeModel(), &Akonadi::EntityTreeModel::collectionFetched, this, &KMMainWidget::slotCollectionFetched);
 
-    mMessagePane->hide();// hide the search bar
+    mMessagePane->show();
     mMessagePane->setXmlGuiClient(mGUIClient);
     connect(mMessagePane, &MessageList::Pane::messageSelected,
             this, &KMMainWidget::slotMessageSelected);
@@ -2536,11 +2536,7 @@ void KMMainWidget::slotExtendSelectionToPreviousMessage()
 
 void KMMainWidget::slotSearchButton()
 {
-    if(mHideShowSearchBarAction->isChecked()){
-        mMessagePane->show();
-    } else {
-        mMessagePane->hide();
-    }
+    mMessagePane->executeActionShowQuicksearch();
 }
 
 void KMMainWidget::slotSelectPreviousUnreadMessage()
@@ -3314,6 +3310,11 @@ void KMMainWidget::setupActions()
         mHideShowSearchBarAction->setCheckable(true);
         mHideShowSearchBarAction->setChecked(false);
         connect(mHideShowSearchBarAction, &QAction::triggered, this, &KMMainWidget::slotSearchButton);
+
+        /* execute action for hidding the search bar at launch  */
+        if(mMessagePane->showHideQuicksearchIsChecked())
+            mMessagePane->executeActionShowQuicksearch();
+
 
     }
 

@@ -25,7 +25,7 @@
 #include <QMenu>
 #include <KXMLGUIClient>
 #include <QAction>
-#include <KToggleAction>
+
 
 #include <QAbstractItemModel>
 #include <QAbstractProxyModel>
@@ -216,7 +216,7 @@ void Pane::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)
 {
     d->mXmlGuiClient = xmlGuiClient;
 
-    KToggleAction *const showHideQuicksearch = new KToggleAction(i18n("Show Quick Search Bar"), this);
+    showHideQuicksearch = new KToggleAction(i18n("Show Quick Search Bar"), this);
     d->mXmlGuiClient->actionCollection()->setDefaultShortcut(showHideQuicksearch, Qt::CTRL + Qt::Key_H);
     showHideQuicksearch->setChecked(MessageListSettings::showQuickSearch());
 
@@ -277,6 +277,14 @@ void Pane::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)
         d->mMoveTabRightAction->setEnabled(false);
         connect(d->mMoveTabRightAction, SIGNAL(triggered(bool)), SLOT(moveTabRight()));
     }
+}
+
+void Pane::executeActionShowQuicksearch(){
+    showHideQuicksearch->trigger();
+}
+
+bool Pane::showHideQuicksearchIsChecked() const{
+    return showHideQuicksearch->isChecked();
 }
 
 bool Pane::selectNextMessageItem(MessageList::Core::MessageTypeFilter messageTypeFilter,
@@ -625,6 +633,12 @@ void Pane::Private::changeQuicksearchVisibility(bool show)
         Widget *w = qobject_cast<Widget *>(q->widget(i));
         w->changeQuicksearchVisibility(show);
     }
+
+    /* Put the same state for the 2 QAction */
+    if(q->showHideQuicksearchIsChecked())
+        mXmlGuiClient->actionCollection()->action(QStringLiteral("search_button"))->setChecked(true);
+    else
+        mXmlGuiClient->actionCollection()->action(QStringLiteral("search_button"))->setChecked(false);
 }
 
 bool Pane::eventFilter(QObject *object, QEvent *event)

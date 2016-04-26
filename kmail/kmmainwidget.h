@@ -200,6 +200,7 @@ public:
     void updateQuickSearchLineText();
 
     void populateMessageListStatusFilterCombo();
+
 public Q_SLOTS:
     // Moving messages around
     /**

@@ -29,6 +29,7 @@
 #include <item.h>
 #include <messagelist_export.h>
 #include <AkonadiCore/Item>
+#include <KToggleAction>
 
 class KXMLGUIClient;
 class QAbstractItemModel;
@@ -382,6 +383,10 @@ public:
 
     void populateStatusFilterCombo();
 
+    void executeActionShowQuicksearch();
+
+    bool showHideQuicksearchIsChecked() const;
+
 public Q_SLOTS:
     /**
     * Selects all the items in the current folder.
@@ -463,6 +468,7 @@ private:
 
     class Private;
     Private *const d;
+    KToggleAction *showHideQuicksearch;
 };
 
 } // namespace MessageList
