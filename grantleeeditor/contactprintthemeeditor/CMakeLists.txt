@@ -14,15 +14,13 @@ set(contactprintthemeeditor_SRCS
     themetemplatewidget.cpp
     contactprintthemepreview.cpp
     )
-    set(contactprintthemeeditor_web_LIB Qt5::WebEngineWidgets)
-
 
 ecm_qt_declare_logging_category(contactprintthemeeditor_SRCS HEADER contactprintthemeeditor_debug.h IDENTIFIER CONTACTPRINTTHEMEEDITOR_LOG CATEGORY_NAME log_contactprintthemeeditor)
 qt5_add_resources(contactprintthemeeditor_SRCS contactprintthemeeditor.qrc)
 
 add_executable(contactprintthemeeditor ${contactprintthemeeditor_SRCS} )
 target_link_libraries(contactprintthemeeditor
-    ${contactprintthemeeditor_web_LIB}
+    Qt5::WebEngineWidgets
     KF5::DBusAddons
     KF5::NewStuff
     KF5::AkonadiContact
