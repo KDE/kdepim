@@ -52,7 +52,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${importwizard_SOURCE_DIR})
     find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Auth ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5DocTools REQUIRED)
+    find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)

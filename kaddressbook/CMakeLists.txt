@@ -47,7 +47,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
     set(LIBGRANTLEETHEME_LIB_VERSION_LIB "5.2.40")
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5DocTools REQUIRED)
+    find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
     find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
 
 

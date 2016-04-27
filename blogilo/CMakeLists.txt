@@ -43,7 +43,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${blogilo_SOURCE_DIR})
     set(MESSAGELIB_LIB_VERSION_LIB "5.2.60")
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5DocTools REQUIRED)
+    find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
     find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5TextEditor ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)

@@ -47,7 +47,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${console_SOURCE_DIR})
 
 
     # Find KF5 package
-    find_package(KF5DocTools REQUIRED)
+    find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)

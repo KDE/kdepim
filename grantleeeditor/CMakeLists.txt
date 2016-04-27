@@ -45,7 +45,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     set(LIBKDEPIM_LIB_VERSION_LIB "5.2.40")
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
-    find_package(KF5DocTools REQUIRED)
+    find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
     find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5TextEditor ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
