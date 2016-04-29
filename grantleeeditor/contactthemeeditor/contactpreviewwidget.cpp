@@ -68,6 +68,8 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
 
 ContactPreviewWidget::~ContactPreviewWidget()
 {
+    delete mFormatter;
+    delete mGroupFormatter;
 }
 
 void ContactPreviewWidget::updateViewer()
