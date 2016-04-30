@@ -26,6 +26,7 @@ class CustomLogWidget;
 
 class LogWidget : public QWidget
 {
+    Q_OBJECT
 public:
     explicit LogWidget(QWidget *parent);
     ~LogWidget();
