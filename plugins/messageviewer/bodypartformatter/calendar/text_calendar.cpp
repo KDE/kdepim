@@ -187,6 +187,10 @@ public:
             return Ok;
         }
 
+        if (!asyncResultObserver) {
+            return Ok;
+        }
+
         /** Formating is async now because we need to fetch incidences from akonadi.
             Basically this method (format()) will be called twice. The first time
             it creates the memento that fetches incidences and returns.
@@ -230,11 +234,8 @@ public:
         } else {
             MemoryCalendarMemento *memento = new MemoryCalendarMemento();
             bodyPart->setBodyPartMemento(memento);
-
-            if (asyncResultObserver) {
-                QObject::connect(memento, SIGNAL(update(MessageViewer::UpdateMode)),
-                                 asyncResultObserver, SLOT(update(MessageViewer::UpdateMode)));
-            }
+            QObject::connect(memento, SIGNAL(update(MessageViewer::UpdateMode)),
+                             asyncResultObserver, SLOT(update(MessageViewer::UpdateMode)));
         }
 
         return Ok;
