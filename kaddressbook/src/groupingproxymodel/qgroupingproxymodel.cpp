@@ -524,7 +524,7 @@ void QGroupingProxyModel::dataChangedHandler(const QModelIndex &topLeft, const Q
         QGroupingProxyModelGroup *mCurrentGroup = d->root->group(topLeft.row());
         QModelIndex mTopLeft = index(mCurrentGroup->parent()->indexOf(mCurrentGroup), 0);
         QModelIndex mBottomRight = index(mTopLeft.row(), d->sourceModel->columnCount());
-        emit dataChanged(mTopLeft, mBottomRight);
+        Q_EMIT dataChanged(mTopLeft, mBottomRight);
     } else {
         QGroupingProxyModelGroup *currentGroup = d->root->group(topLeft.row());
         QGroupingProxyModelGroup *newGroup = d->root->matches(d->sourceModel->index(topLeft.row(), d->modelColumn).data(d->groupItemDataRole));
@@ -616,7 +616,7 @@ void QGroupingProxyModel::setGroupSectionHeader(const QString &header)
 {
     if (header != m_groupSectionHeader) {
         m_groupSectionHeader = header;
-        emit headerDataChanged(Qt::Horizontal, 0, 0);
+        Q_EMIT headerDataChanged(Qt::Horizontal, 0, 0);
     }
 }
 /**
