@@ -419,6 +419,9 @@ MainWidget::~MainWidget()
 
     saveState();
     delete mGrantleeThemeManager;
+    delete mFormatter;
+    delete mGroupFormatter;
+
 
     Settings::self()->save();
 }
