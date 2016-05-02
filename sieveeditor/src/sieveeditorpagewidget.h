@@ -63,7 +63,7 @@ public:
     void selectAll();
     void saveAs();
     void checkSpelling();
-    void share();
+    void shareScript();
     void import();
     void autoGenerateScript();
     void checkSyntax();

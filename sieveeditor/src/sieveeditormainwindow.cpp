@@ -171,7 +171,7 @@ void SieveEditorMainWindow::setupActions()
     mImportAction->setText(i18n("Import..."));
     mImportAction->setEnabled(false);
 
-    mShareAction = ac->addAction(QStringLiteral("share_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotShare()));
+    mShareAction = ac->addAction(QStringLiteral("share_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotShareScript()));
     mShareAction->setText(i18n("Share..."));
     const QStringList overlays = QStringList() << QStringLiteral("list-add");
     mShareAction->setIcon(QIcon(new KIconEngine(QStringLiteral("get-hot-new-stuff"), KIconLoader::global(), overlays)));

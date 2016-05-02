@@ -68,7 +68,7 @@ public Q_SLOTS:
     void slotCut();
     void slotSaveAs();
     void slotCheckSpelling();
-    void slotShare();
+    void slotShareScript();
     void slotImport();
     void slotAutoGenerateScript();
     void slotCheckSyntax();

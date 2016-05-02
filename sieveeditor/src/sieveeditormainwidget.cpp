@@ -339,13 +339,13 @@ void SieveEditorMainWidget::slotReplace()
     }
 }
 
-void SieveEditorMainWidget::slotShare()
+void SieveEditorMainWidget::slotShareScript()
 {
     QWidget *w = mTabWidget->currentWidget();
     if (w) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
-            page->share();
+            page->shareScript();
         }
     }
 }

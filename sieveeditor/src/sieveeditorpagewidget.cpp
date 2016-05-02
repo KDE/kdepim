@@ -213,7 +213,7 @@ void SieveEditorPageWidget::replace()
     mSieveEditorWidget->replace();
 }
 
-void SieveEditorPageWidget::share()
+void SieveEditorPageWidget::shareScript()
 {
     mSieveEditorWidget->slotShareScript();
 }
