@@ -214,7 +214,7 @@ void SieveEditorPageWidget::replace()
 
 void SieveEditorPageWidget::share()
 {
-    mSieveEditorWidget->slotUploadScripts();
+    mSieveEditorWidget->slotShareScript();
 }
 
 void SieveEditorPageWidget::import()
