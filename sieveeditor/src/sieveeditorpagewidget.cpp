@@ -131,6 +131,7 @@ void SieveEditorPageWidget::slotPutResult(KManageSieve::SieveJob *job, bool succ
                                      i18n("Sieve Script Upload"));
         }
         mIsNewScript = false;
+        mSieveEditorWidget->updateOriginalScript();
         mSieveEditorWidget->setModified(false);
     } else {
         //TODO error
