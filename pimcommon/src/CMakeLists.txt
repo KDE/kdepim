@@ -136,6 +136,7 @@ set(libpimcommon_widgets_SRCS
   widgets/annotationdialog.cpp
   widgets/kactionmenuchangecase.cpp
   widgets/lineeditwithcompleter.cpp
+  widgets/lineeditwithkeywords.cpp
   widgets/spellchecklineedit.cpp
 )
 
@@ -512,6 +513,7 @@ ecm_generate_headers(PimCommon_Camelcasewidgets_HEADERS
   MinimumComboBox
   ConfigureImmutableWidgetUtils
   LineEditWithCompleter
+  LineEditWithKeywords
   RenameFileDialog
   SimpleStringlistEditor
   KActionMenuChangeCase

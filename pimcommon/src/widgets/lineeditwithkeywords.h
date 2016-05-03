@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2016 Rebois Guillaume <guillaume.rebois@orange.fr>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,26 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef LINEEDITWITHCOMPLETER_H
-#define LINEEDITWITHCOMPLETER_H
+#ifndef LINEEDITWITHKEYWORDS_H
+#define LINEEDITWITHKEYWORDS_H
 
-#include <KLineEdit>
-#include "pimcommon_export.h"
+#include "lineeditwithcompleter.h"
 
 namespace PimCommon
 {
-class PIMCOMMON_EXPORT LineEditWithCompleter : public KLineEdit
+class PIMCOMMON_EXPORT LineEditWithKeywords : public LineEditWithCompleter
 {
     Q_OBJECT
 public:
-    explicit LineEditWithCompleter(QWidget *parent = Q_NULLPTR);
-    ~LineEditWithCompleter();
-
-protected:
-    void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
-
-protected Q_SLOTS:
-    virtual void slotClearHistory();
+    explicit LineEditWithKeywords(QWidget *parent = Q_NULLPTR);
+    ~LineEditWithKeywords();
+private:
+    void slotClearHistory() Q_DECL_OVERRIDE;
+    class Private;
+    Private *const d;
 };
 }
-#endif // LINEEDITWITHCOMPLETER_H
+#endif // KEYWORDS_H

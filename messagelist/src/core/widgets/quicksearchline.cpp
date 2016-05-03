@@ -22,7 +22,7 @@
 #include "messagelistsettings.h"
 #include <Akonadi/KMime/MessageStatus>
 
-#include "PimCommon/LineEditWithCompleter"
+#include "PimCommon/LineEditWithKeywords"
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KComboBox>
@@ -56,35 +56,13 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     w->setLayout(hbox);
     vbox->addWidget(w);
 
-    listKeyword << i18n("in") << i18n("ago") << i18n("yesterday") << i18n("today") << i18n("first") << i18n("last") << i18n("next") << i18n("PM") << i18n("AM")
-                << i18n("pm") << i18n("am") << i18n("at") << i18n("containing") << i18n("contains") << i18n("greater than") << i18n("bigger than") << i18n("more than")
-                << i18n("at least") << i18n(">") << i18n("after") << i18n("since") << i18n("smaller than") << i18n("less than") << i18n("lesser than") << i18n("at most")
-                << i18n("<") << i18n("Before") << i18n("until") << i18n("equal to") << i18n("equal") << i18n("equals") << i18n("=") << i18n("rated as") << i18n("rated")
-                << i18n("score is") << i18n("score") << i18n("scored") << i18n("having") << i18n("stars") << i18n("star") << i18n("Comment") << i18n("described as")
-                << i18n("description is") << i18n("comment is") << i18n("description") << i18n("described") << i18n("comment") << i18n("sent by") << i18n("from")
-                << i18n("sender is") << i18n("sender") << i18n("title is") << i18n("subject is") << i18n("subject") << i18n("title") << i18n("titled") << i18n("sent to")
-                << i18n("recipient is") << i18n("recipient") << i18n("sent at") << i18n("sent on") << i18n("sent") << i18n("received at") << i18n("received on")
-                << i18n("received") << i18n("reception is") << i18n("written by") << i18n("created by") << i18n("composed by") << i18n("author is") << i18n("by")
-                << i18n("size is") << i18n("size") << i18n("being") << i18n("large") << i18n("name is") << i18n("name") << i18n("named") << i18n("name is")
-                << i18n("created at") << i18n("dated at") << i18n("created on") << i18n("dated on") << i18n("created in") << i18n("dated in") << i18n("created of")
-                << i18n("dated of") << i18n("created") << i18n("dated") << i18n("creation date is") << i18n("creation time is") << i18n("creation datetime is")
-                << i18n("modification date is") << i18n("modification time is") << i18n("modification datetime is") << i18n("edition date is") << i18n("edition time is")
-                << i18n("edition datetime is") << i18n("edited") << i18n("modified") << i18n("modified at") << i18n("modified on") << i18n("edited on") << i18n("edited at")
-                << i18n("tagged as") << i18n("has tag") << i18n("tag is") << i18n("#") << i18n("related to") << i18n("a") << i18n("year") << i18n("week") << i18n("month")
-                << i18n("day") << i18n("hour") << i18n("of") << i18n("by") << i18n("and") << i18n("on") << i18n("in") << i18n("or") << i18n("third") << i18n("second") << i18n("fourth")
-                << i18n("then");
-
-
-
-    mSearchEdit = new PimCommon::LineEditWithCompleter(this);
+    mSearchEdit = new PimCommon::LineEditWithKeywords(this);
     mSearchEdit->setPlaceholderText(i18nc("Search for messages.", "Search"));
     mSearchEdit->setObjectName(QStringLiteral("quicksearch"));
     mSearchEdit->setClearButtonShown(true);
     connect(mSearchEdit, &KLineEdit::textChanged, this, &QuickSearchLine::slotSearchEditTextEdited);
     connect(mSearchEdit, &KLineEdit::clearButtonClicked, this, &QuickSearchLine::slotClearButtonClicked);
-    Q_FOREACH(const QString &str, listKeyword) {
-        searchEdit()->completionObject()->addItem(str);
-    }
+
     hbox->addWidget(mSearchEdit);
 
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
