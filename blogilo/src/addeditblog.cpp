@@ -71,8 +71,8 @@ public:
     QPushButton *okButton;
 };
 
-AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
-    : QDialog(parent, flags), d(new Private)
+AddEditBlog::AddEditBlog(int blog_id, QWidget *parent)
+    : QDialog(parent), d(new Private)
 {
     qCDebug(BLOGILO_LOG);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
