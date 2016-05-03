@@ -80,7 +80,7 @@ PrintingWizard *PrintStyle::wizard() const
 
 void PrintStyle::addPage(QWidget *page, const QString &title)
 {
-    if (mPageList.indexOf(page) == -1) {     // not yet in the list
+    if (!mPageList.contains(page)) {     // not yet in the list
         mPageList.append(page);
         mPageTitles.append(title);
 
