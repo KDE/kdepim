@@ -3566,10 +3566,40 @@ void KMMainWidget::slotUpdateCopyDecryptedActionMenu()
     menu->setProperty("actionType", StandardActionManager::CopyItemToMenu);
     // Will populate our menu with folders
     connect(menu, SIGNAL(aboutToShow()),
-            mAkonadiStandardActionManager->standardActionManager(), SLOT(aboutToShowMenu()));
+            this, SLOT(slotCopyDecryptedMenuAboutToShow()));
     connect(menu, SIGNAL(triggered(QAction*)),
             this, SLOT(slotCopyDecryptedActionTriggered(QAction*)));
     mCopyDecryptActionMenu->setMenu(menu);
+}
+
+void KMMainWidget::slotCopyDecryptedMenuAboutToShow()
+{
+    QMenu *menu = qobject_cast<QMenu*>(sender());
+    Q_ASSERT(menu);
+    if (menu->isEmpty()) {
+        // HACK: StandardActionManager::aboutToShowMenu() relies on sender() being
+        // set to "menu". We fake it by connecting it to a menu signal and manually
+        // emitting the signal. We have to disconnect this slot first to prevent
+        // recursively invoking ourselves.
+        disconnect(menu, SIGNAL(aboutToShow()),
+                   this, SLOT(slotCopyDecryptedMenuAboutToShow()));
+        connect(menu, SIGNAL(aboutToShow()),
+                mAkonadiStandardActionManager->standardActionManager(), SLOT(aboutToShowMenu()));
+        QMetaObject::invokeMethod(menu, "aboutToShow");
+        disconnect(menu, SIGNAL(aboutToShow()),
+                   mAkonadiStandardActionManager->standardActionManager(), SLOT(aboutToShowMenu()));
+        connect(menu, SIGNAL(aboutToShow()),
+                this, SLOT(slotCopyDecryptedMenuAboutToShow()));
+
+        QAction *action = new QAction(i18n("Copy decrypted message here"), this);
+        action->setData(QVariant::fromValue(mFolderTreeWidget->currentIndex()));
+        QList<QAction*> actions = menu->actions();
+        if (!actions.isEmpty()) {
+            menu->insertAction(actions.first(), action);
+        } else {
+            menu->addAction(action);
+        }
+    }
 }
 
 void KMMainWidget::slotCopyDecryptedActionTriggered(QAction *action)

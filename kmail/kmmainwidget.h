@@ -526,6 +526,7 @@ private slots:
     void slotCollectionRemoved(const Akonadi::Collection &col);
 
     void slotUpdateCopyDecryptedActionMenu();
+    void slotCopyDecryptedMenuAboutToShow();
     void slotCopyDecryptedActionTriggered(QAction *action);
 private:
     // Message actions
