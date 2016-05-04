@@ -1,0 +1,4 @@
+log_pimsettingexportercore pimsettingexporter (pimsettingexporter lib core)
+log_pimsettingexportergui pimsettingexporter (pimsettingexporter gui)
+log_pimsettingexporterconsole pimsettingexporter (pimsettingexporter console)
+
