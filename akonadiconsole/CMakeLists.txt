@@ -75,6 +75,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
 
 endif()
 
+install( FILES akonadiconsole.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
 
 add_subdirectory(src)
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")

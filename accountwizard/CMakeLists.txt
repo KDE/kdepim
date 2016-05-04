@@ -107,6 +107,7 @@ endif ()
 
 
 add_subdirectory(src)
+install( FILES accountwizard.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

@@ -76,6 +76,7 @@ add_subdirectory(contactthemeeditor)
 add_subdirectory(grantleethemeeditor)
 add_subdirectory(contactprintthemeeditor)
 
+install( FILES grantleeditor.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
