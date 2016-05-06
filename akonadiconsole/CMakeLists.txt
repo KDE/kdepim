@@ -47,10 +47,20 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
     set(LIBKDEPIM_LIB_VERSION_LIB "5.2.40")
     set(KCALENDARCORE_LIB_VERSION "5.2.40")
     set(KCONTACTS_LIB_VERSION "5.2.40")
+    set(KMIME_LIB_VERSION "5.2.40")
 
     # Find KF5 package
+    find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5ConfigWidgets ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
+    find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5ItemModels ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5TextWidgets ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
@@ -64,11 +74,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
 
     find_package(KF5MailImporter ${LIBMAILIMPORTER_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5MessageViewer ${MESSAGELIB_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5Libkleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
-
-    find_package(Boost 1.34.0)
-    set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
 
     include_directories(${akonadiconsole_SOURCE_DIR} ${akonadiconsole_BINARY_DIR})
     add_definitions(-DQT_USE_QSTRINGBUILDER)
