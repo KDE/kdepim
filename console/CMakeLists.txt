@@ -42,8 +42,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${console_SOURCE_DIR})
     set(KDEPIM_LIB_SOVERSION "5")
 
     set(QT_REQUIRED_VERSION "5.6.0")
-    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test)
-    find_package(Qt5X11Extras NO_MODULE)
+    find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets)
 
 
     # Find KF5 package
