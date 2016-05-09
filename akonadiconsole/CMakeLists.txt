@@ -79,10 +79,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
     find_package(KF5Libkleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
 
     include_directories(${akonadiconsole_SOURCE_DIR} ${akonadiconsole_BINARY_DIR})
-    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 install( FILES akonadiconsole.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
 
 add_subdirectory(src)

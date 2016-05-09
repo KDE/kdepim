@@ -69,10 +69,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${pimsettingexporter_SOURCE_DIR})
     set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
 
     include_directories(${pimsettingexporter_SOURCE_DIR} ${pimsettingexporter_BINARY_DIR})
-    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 add_definitions(-DTRANSLATION_DOMAIN=\"pimsettingexporter\")
 include_directories( 

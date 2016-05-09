@@ -66,9 +66,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
     set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
     include_directories(${kaddressbook_SOURCE_DIR} ${kaddressbook_BINARY_DIR})
-    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 set(Prison_MIN_VERSION "1.2.1")
 find_package(KF5Prison ${Prison_MIN_VERSION} CONFIG)

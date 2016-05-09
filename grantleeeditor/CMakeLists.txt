@@ -59,10 +59,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     find_package(KF5KaddressbookGrantlee ${KDEPIM_APPS_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
-    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 include_directories(${grantleeditor_SOURCE_DIR} ${grantleeditor_BINARY_DIR})
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )

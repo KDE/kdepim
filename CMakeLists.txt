@@ -245,9 +245,6 @@ else()
 
     ############### Desktop vs. Mobile options ##############
 
-    add_definitions(-DQT_USE_QSTRINGBUILDER)
-
-
     find_package(Boost 1.34.0)
     set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
 

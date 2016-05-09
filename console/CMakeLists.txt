@@ -57,10 +57,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${console_SOURCE_DIR})
     find_package(KF5AkonadiCalendar ${AKONADICALENDAR_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION_LIB} CONFIG REQUIRED)
-    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 include_directories(${console_SOURCE_DIR} ${console_BINARY_DIR})
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 configure_file(console-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/console-version.h @ONLY)
 

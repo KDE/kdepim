@@ -32,10 +32,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${ktnef_SOURCE_DIR})
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
     include_directories(${ktnef_SOURCE_DIR} ${ktnef_BINARY_DIR} ${ktnef_BINARY_DIR}/src)
-    add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 endif()
 
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 include(TestBigEndian)
 test_big_endian(CMAKE_WORDS_BIGENDIAN)
 configure_file(src/config-ktnef.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config-ktnef.h)
