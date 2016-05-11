@@ -108,7 +108,7 @@ or the configuration dialog for these tasks.</para>
           </textobject>
         </mediaobject>
 </screenshot>
-<para>For detailed information about the editor please read the <ulink url="help:kartpart">KatePart documentation</ulink>.</para>
+<para>For detailed information about the editor please read the <ulink url="help:/katepart">KatePart documentation</ulink>.</para>
 
 </sect2>
 
