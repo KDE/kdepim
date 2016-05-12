@@ -101,6 +101,7 @@ void ContactSelectionWidget::setAddGroupContact(bool addGroupContact)
 void ContactSelectionWidget::initGui()
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setMargin(0);
 
     mMessageLabel = new QLabel;
     layout->addWidget(mMessageLabel);
