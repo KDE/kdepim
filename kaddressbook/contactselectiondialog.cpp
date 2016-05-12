@@ -53,8 +53,6 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
         mainLayout->addWidget(mSelectionWidget);
     }
     mainLayout->addWidget(buttonBox);
-
-    resize(QSize(450, 220));
 }
 
 void ContactSelectionDialog::setMessageText(const QString &message)
