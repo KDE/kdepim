@@ -29,6 +29,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->setMargin(0);
     QGroupBox *gbox = new QGroupBox(
         i18nc("@title:group", "Fields to be exported"), this);
     mainLayout->addWidget(gbox);
