@@ -44,16 +44,13 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactSelectionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactSelectionDialog::reject);
 
-    QVBoxLayout *layout = new QVBoxLayout;
-    mainWidget->setLayout(layout);
-
     mSelectionWidget = new ContactSelectionWidget(selectionModel, this);
     if (allowToSelectTypeToExport) {
-        layout->addWidget(mSelectionWidget);
+        mainLayout->addWidget(mSelectionWidget);
         mVCardExport = new VCardExportSelectionWidget;
-        layout->addWidget(mVCardExport);
+        mainLayout->addWidget(mVCardExport);
     } else {
-        layout->addWidget(mSelectionWidget);
+        mainLayout->addWidget(mSelectionWidget);
     }
     mainLayout->addWidget(buttonBox);
 
