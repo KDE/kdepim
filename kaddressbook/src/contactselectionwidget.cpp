@@ -59,7 +59,10 @@ ContactSelectionWidget::ContactSelectionWidget(QItemSelectionModel *selectionMod
 
 void ContactSelectionWidget::setMessageText(const QString &message)
 {
-    mMessageLabel->setText(message);
+    if (!message.isEmpty()) {
+        mMessageLabel->setText(message);
+        mMessageLabel->show();
+    }
 }
 
 void ContactSelectionWidget::setDefaultAddressBook(const Akonadi::Collection &addressBook)
@@ -105,6 +108,7 @@ void ContactSelectionWidget::initGui()
 
     mMessageLabel = new QLabel;
     layout->addWidget(mMessageLabel);
+    mMessageLabel->hide();
 
     QButtonGroup *group = new QButtonGroup(this);
 
