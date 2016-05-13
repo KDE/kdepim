@@ -47,7 +47,7 @@ public:
         delete mConfig;
     }
 
-    virtual KConfig *config() const
+    KConfig *config() const Q_DECL_OVERRIDE
     {
         mConfig->reparseConfiguration();
         return mConfig;

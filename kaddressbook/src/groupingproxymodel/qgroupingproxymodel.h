@@ -129,24 +129,24 @@ public:
       * Returns the number of columns for the children of the given @p parent.
       * @sa rowCount()
       */
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     /**
       * @reimp QAbstractItemModel::data()
       */
-    QVariant data(const QModelIndex &proxyIndex, int role) const;
+    QVariant data(const QModelIndex &proxyIndex, int role) const Q_DECL_OVERRIDE;
     /**
       * @reimp QAbstractItemModel::data()
       */
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     bool groupsSpanned() const;
     /**
       * @reimp QAbstractItemModel::data()
       */
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
     /**
       * @reimp QAbstractItemModel::data()
       */
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     int findText(const QString &text) const;
     /**
@@ -167,7 +167,7 @@ public:
     /**
       * Returns the parent of the model item with the given @p index. If the item has no parent, an invalid QModelIndex is returned.
       */
-    QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
     /**
       * Removes the group specified by the given @p index.
       */
@@ -187,7 +187,7 @@ public:
       * Returns the number of rows under the given @p parent. When the parent is valid it means that rowCount is returning the number of children of @p parent.
       * @sa columnCount()
       */
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     /**
       * Saves the proxy's group definitions.
       * Typically this is used in conjunction with QSettings to remember the groups for a future session. A version number is stored as part of the data. Here is an example:
@@ -201,7 +201,7 @@ public:
     /**
       * Sets the @p role data for the item at @p index to @p value.
       */
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
+    bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
 
     void setGroupSectionHeader(const QString &header);
     void setGroupsSpanned(bool on);
@@ -216,7 +216,7 @@ public:
     virtual void setSourceModel(QAbstractItemModel *sourceModel);
     void setUngroupedItemTitle(const QString &title);
     void setUngroupedItemTitle(const QString &title, const QIcon &icon);
-    virtual QSize span(const QModelIndex &index) const;
+    QSize span(const QModelIndex &index) const Q_DECL_OVERRIDE;
 private slots:
     void dataChangedHandler(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void sourceModelResetHandler();

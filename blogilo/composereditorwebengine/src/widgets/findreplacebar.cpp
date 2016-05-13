@@ -278,7 +278,7 @@ bool FindReplaceBar::event(QEvent *e)
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
-    // With a shortcut override we can catch this before it gets to kactions.
+    // With a shortcut Q_DECL_OVERRIDE we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
     if (shortCutOverride || e->type() == QEvent::KeyPress) {
         QKeyEvent *kev = static_cast<QKeyEvent * >(e);
