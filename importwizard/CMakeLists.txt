@@ -72,6 +72,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${importwizard_SOURCE_DIR})
 endif()
 
 add_definitions(-DQT_USE_QSTRINGBUILDER)
+add_definitions( -DQT_NO_URL_CAST_FROM_STRING )
 include_directories(
     ${importwizard_SOURCE_DIR}/src/autodetect/
     )
