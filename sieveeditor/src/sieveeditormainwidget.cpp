@@ -537,6 +537,28 @@ void SieveEditorMainWidget::slotWordWrap(bool state)
     }
 }
 
+void SieveEditorMainWidget::slotPrintPreview()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->printPreview();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotPrint()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->print();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotGeneralPaletteChanged()
 {
     const QPalette pal = palette();

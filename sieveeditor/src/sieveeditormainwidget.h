@@ -82,6 +82,9 @@ public Q_SLOTS:
     void slotZoomOut();
     void slotZoomReset();
     void slotWordWrap(bool);
+    void slotPrintPreview();
+    void slotPrint();
+
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);

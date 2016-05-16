@@ -323,6 +323,16 @@ bool SieveEditorPageWidget::isWordWrap() const
     return mSieveEditorWidget->isWordWrap();
 }
 
+void SieveEditorPageWidget::print()
+{
+    //TODO
+}
+
+void SieveEditorPageWidget::printPreview()
+{
+    //TODO
+}
+
 void SieveEditorPageWidget::zoomReset()
 {
     mSieveEditorWidget->zoomReset();

@@ -233,6 +233,10 @@ void SieveEditorMainWindow::setupActions()
     mWrapTextAction->setCheckable(true);
     ac->addAction(QStringLiteral("wordwrap"), mWrapTextAction);
     connect(mWrapTextAction, &QAction::triggered, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotWordWrap);
+
+    mPrintAction = KStandardAction::print(mMainWidget->sieveEditorMainWidget(), SLOT(slotPrint()), ac);
+
+    mPrintPreviewAction = KStandardAction::printPreview(mMainWidget->sieveEditorMainWidget(), SLOT(slotPrintPreview()), ac);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
