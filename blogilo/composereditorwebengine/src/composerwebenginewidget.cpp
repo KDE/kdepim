@@ -51,7 +51,6 @@ public:
     bool richTextEnabled;
 };
 
-
 void ComposerWebEngineWidgetPrivate::initialize()
 {
     QVBoxLayout *vbox = new QVBoxLayout(q);

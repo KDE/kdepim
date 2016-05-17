@@ -422,7 +422,6 @@ MainWidget::~MainWidget()
     delete mFormatter;
     delete mGroupFormatter;
 
-
     Settings::self()->save();
 }
 
@@ -750,7 +749,9 @@ void MainWidget::printPreview()
     QPrintPreviewDialog previewdlg(&printer, this);
     KABPrinting::PrintingWizard wizard(&printer, mItemView->selectionModel(), this);
     wizard.setDefaultAddressBook(currentAddressBook());
-    connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, [&wizard]() { wizard.print(); });
+    connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, [&wizard]() {
+        wizard.print();
+    });
 
     const int result = wizard.exec();
     if (result) {

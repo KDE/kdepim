@@ -18,7 +18,6 @@
 
 */
 
-
 #include "composereditorscript.h"
 using namespace ComposerEditorWebEngine;
 

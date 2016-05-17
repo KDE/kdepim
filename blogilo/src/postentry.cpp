@@ -235,7 +235,6 @@ QString PostEntry::htmlContent() const
     return d->htmlEditor->document()->text();
 }
 
-
 void PostEntry::setHtmlContent(const QString &content)
 {
     d->wysiwygEditor->editor()->setHtmlContent(content);

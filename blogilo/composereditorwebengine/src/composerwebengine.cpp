@@ -17,7 +17,6 @@
   02110-1301, USA.
 */
 
-
 #include "composerwebengine.h"
 #include "private/composerwebengine_p.h"
 #include "composereditorwebengine_debug.h"
@@ -350,7 +349,7 @@ void ComposerWebEngine::forwardMousePressEvent(QMouseEvent *event)
     } else {
         d->hideImageResizeWidget();
     }
-   // KWebView::mousePressEvent(event);
+    // KWebView::mousePressEvent(event);
 #endif
 }
 
@@ -621,6 +620,5 @@ QMap<QString, QString> ComposerWebEngine::localImages() const
 {
     return d->localImages();
 }
-
 
 #include "moc_composerwebengine.cpp"

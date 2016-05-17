@@ -85,7 +85,6 @@ public Q_SLOTS:
     void slotPrintPreview();
     void slotPrint();
 
-
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();

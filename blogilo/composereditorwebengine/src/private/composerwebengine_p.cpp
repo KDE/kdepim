@@ -620,7 +620,7 @@ void ComposerEditorWebEnginePrivate::_k_setTextBackgroundColor()
 
 QVariant ComposerEditorWebEnginePrivate::evaluateJavascript(const QString &command)
 {
-    qDebug()<<" QVariant ComposerEditorWebEnginePrivate::evaluateJavascript(const QString &command)"<<command;
+    qDebug() << " QVariant ComposerEditorWebEnginePrivate::evaluateJavascript(const QString &command)" << command;
     q->page()->runJavaScript(command);
     return QVariant();
     //TODO fix me return value.
@@ -687,7 +687,7 @@ void ComposerEditorWebEnginePrivate::_k_insertLink()
 
 void ComposerEditorWebEnginePrivate::_k_slotEditLink()
 {
-    #if 0
+#if 0
     ComposerWebEngine::ComposerLinkDialog dlg(contextMenuResult.linkElement(), q);
     dlg.exec();
 #endif
@@ -695,7 +695,7 @@ void ComposerEditorWebEnginePrivate::_k_slotEditLink()
 
 void ComposerEditorWebEnginePrivate::_k_slotOpenLink()
 {
-    #if 0
+#if 0
     const QString href = contextMenuResult.linkElement().attribute(QStringLiteral("href"));
     if (!href.isEmpty()) {
         new KRun(QUrl(href), 0);
@@ -919,7 +919,6 @@ void ComposerEditorWebEnginePrivate::saveHtml(QWebEnginePage *page, const QStrin
     }
 }
 
-
 void ComposerEditorWebEnginePrivate::_k_slotSaveAs()
 {
     QString fn = QFileDialog::getSaveFileName(q, i18nc("@title:window", "Save as"), QString(), i18n("HTML Files (*.htm *.html);;All Files (*)"));
@@ -936,7 +935,7 @@ void ComposerEditorWebEnginePrivate::_k_slotSaveAs()
 
 void ComposerEditorWebEnginePrivate::_k_slotPrint()
 {
-    qDebug()<<" void ComposerEditorWebEnginePrivate::_k_slotPrint() not implemented";
+    qDebug() << " void ComposerEditorWebEnginePrivate::_k_slotPrint() not implemented";
 }
 
 void ComposerEditorWebEnginePrivate::_k_slotPrintPreview()
@@ -1044,7 +1043,7 @@ void ComposerEditorWebEnginePrivate::execCommand(const QString &cmd, const QStri
 
 bool ComposerEditorWebEnginePrivate::queryCommandState(const QString &cmd)
 {
-    #if 0
+#if 0
     QWebFrame *frame = q->page()->mainFrame();
     QString js = QStringLiteral("document.queryCommandState(\"%1\", false, null)").arg(cmd);
     const QVariant result = frame->evaluateJavaScript(js);
@@ -1058,7 +1057,7 @@ void ComposerEditorWebEnginePrivate::_k_slotSpeakText()
 {
     QString text = q->selectedText();
     if (text.isEmpty()) {
-        q->page()->toHtml([](const QString &html) {
+        q->page()->toHtml([](const QString & html) {
             KPIMTextEdit::TextToSpeech::self()->say(html);
         });
     }
@@ -1099,7 +1098,7 @@ void ComposerEditorWebEnginePrivate::_k_slotInsertAnchor()
 QMap<QString, QString> ComposerEditorWebEnginePrivate::localImages() const
 {
     QMap<QString, QString> lst;
-    #if 0
+#if 0
     QWebElementCollection images = q->page()->mainFrame()->findAllElements(QStringLiteral("img"));
     Q_FOREACH (const QWebElement &elm, images) {
         if (elm.attribute(QStringLiteral("src")).startsWith(QStringLiteral("file://"))) {
@@ -1112,5 +1111,4 @@ QMap<QString, QString> ComposerEditorWebEnginePrivate::localImages() const
 }
 
 }
-
 
