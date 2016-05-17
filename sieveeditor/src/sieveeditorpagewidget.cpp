@@ -325,12 +325,12 @@ bool SieveEditorPageWidget::isWordWrap() const
 
 void SieveEditorPageWidget::print()
 {
-    //TODO
+    mSieveEditorWidget->print();
 }
 
 void SieveEditorPageWidget::printPreview()
 {
-    //TODO
+    mSieveEditorWidget->printPreview();
 }
 
 void SieveEditorPageWidget::zoomReset()
