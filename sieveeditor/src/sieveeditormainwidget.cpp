@@ -663,3 +663,15 @@ bool SieveEditorMainWidget::printSupportEnabled() const
     }
     return false;
 }
+
+bool SieveEditorMainWidget::isTextEditor() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->isTextEditor();
+        }
+    }
+    return false;
+}

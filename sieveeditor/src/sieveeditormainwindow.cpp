@@ -307,7 +307,7 @@ void SieveEditorMainWindow::slotUpdateActions()
 {
     const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     mUploadScript->setEnabled(hasPage);
-    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->isTextEditor());
     mGoToLine->setEnabled(editActionEnabled);
     mFindAction->setEnabled(editActionEnabled);
     mReplaceAction->setEnabled(editActionEnabled);

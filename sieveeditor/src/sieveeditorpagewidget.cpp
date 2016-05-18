@@ -334,9 +334,14 @@ void SieveEditorPageWidget::printPreview()
     mSieveEditorWidget->printPreview();
 }
 
-bool SieveEditorPageWidget::printSupportEnabled()
+bool SieveEditorPageWidget::printSupportEnabled() const
 {
     return mSieveEditorWidget->printSupportEnabled();
+}
+
+bool SieveEditorPageWidget::isTextEditor() const
+{
+    return mSieveEditorWidget->isTextEditor();
 }
 
 void SieveEditorPageWidget::zoomReset()

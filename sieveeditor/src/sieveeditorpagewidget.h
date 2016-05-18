@@ -84,7 +84,8 @@ public:
     bool isWordWrap() const;
     void print();
     void printPreview();
-    bool printSupportEnabled();
+    bool printSupportEnabled() const;
+    bool isTextEditor() const;
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);
