@@ -338,6 +338,9 @@ void SieveEditorMainWindow::slotUpdateActions()
     mDebugSieveScriptAction->setEnabled(editActionEnabled);
     mWrapTextAction->setEnabled(editActionEnabled);
     mWrapTextAction->setChecked(mMainWidget->sieveEditorMainWidget()->isWordWrap());
+
+    mPrintAction->setEnabled(editActionEnabled);
+    mPrintPreviewAction->setEnabled(editActionEnabled);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)
