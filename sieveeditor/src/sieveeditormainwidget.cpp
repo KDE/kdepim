@@ -650,3 +650,15 @@ QUrl SieveEditorMainWidget::currentHelpUrl() const
     }
     return QUrl();
 }
+
+bool SieveEditorMainWidget::printSupportEnabled() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return true;
+        }
+    }
+    return false;
+}

@@ -57,6 +57,7 @@ public:
     QString currentHelpTitle() const;
     QUrl currentHelpUrl() const;
     void openBookmarkUrl(const QUrl &url);
+    bool printSupportEnabled() const;
 public Q_SLOTS:
     void slotDebugSieveScript();
     void slotGoToLine();
