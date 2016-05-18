@@ -94,6 +94,7 @@ Q_SIGNALS:
     void undoAvailable(bool);
     void redoAvailable(bool);
     void copyAvailable(bool);
+    void sieveEditorTabCurrentChanged();
 
 private Q_SLOTS:
     void slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript);

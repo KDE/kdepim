@@ -91,6 +91,7 @@ Q_SIGNALS:
     void undoAvailable(bool);
     void redoAvailable(bool);
     void copyAvailable(bool);
+    void sieveEditorTabCurrentChanged();
 
 private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);

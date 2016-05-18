@@ -45,6 +45,7 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::undoAvailable, this, &SieveEditorPageWidget::undoAvailable);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::redoAvailable, this, &SieveEditorPageWidget::redoAvailable);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::copyAvailable, this, &SieveEditorPageWidget::copyAvailable);
+    connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::sieveEditorTabCurrentChanged, this, &SieveEditorPageWidget::sieveEditorTabCurrentChanged);
 }
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
