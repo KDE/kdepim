@@ -334,6 +334,11 @@ void SieveEditorPageWidget::printPreview()
     mSieveEditorWidget->printPreview();
 }
 
+bool SieveEditorPageWidget::printSupportEnabled()
+{
+    return mSieveEditorWidget->printSupportEnabled();
+}
+
 void SieveEditorPageWidget::zoomReset()
 {
     mSieveEditorWidget->zoomReset();

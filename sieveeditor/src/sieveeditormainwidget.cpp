@@ -658,7 +658,7 @@ bool SieveEditorMainWidget::printSupportEnabled() const
     if (w) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
-            return true;
+            return page->printSupportEnabled();
         }
     }
     return false;
