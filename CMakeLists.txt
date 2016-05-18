@@ -235,10 +235,6 @@ else()
     find_package(KF5AkonadiSearch "5.2.40" CONFIG REQUIRED)
     set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
-    if( KF5GAPI_FOUND )
-        add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
-    endif()
-
     if(KDEPIM_ENTERPRISE_BUILD)
         message(STATUS "Enterprise build is enabled.")
     endif()
