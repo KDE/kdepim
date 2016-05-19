@@ -319,7 +319,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     mPasteAction->setEnabled(editActionEnabled);
     mCutAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->hasSelection());
 
-    mSelectAllAction->setEnabled(editActionEnabled);
+    mSelectAllAction->setEnabled(hasActionInHtmlModeToo);
 
     mUploadScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);
