@@ -308,6 +308,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     mUploadScript->setEnabled(hasPage);
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->isTextEditor());
+    const bool hasActionInHtmlModeToo = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mGoToLine->setEnabled(editActionEnabled);
     mFindAction->setEnabled(editActionEnabled);
     mReplaceAction->setEnabled(editActionEnabled);
@@ -331,11 +332,11 @@ void SieveEditorMainWindow::slotUpdateActions()
     mCommentAction->setEnabled(editActionEnabled);
     mUncommentAction->setEnabled(editActionEnabled);
     mMenuChangeCaseAction->setEnabled(editActionEnabled);
-    mZoomInAction->setEnabled(editActionEnabled);
-    mZoomOutAction->setEnabled(editActionEnabled);
-    mZoomResetAction->setEnabled(editActionEnabled);
+    mZoomInAction->setEnabled(hasActionInHtmlModeToo);
+    mZoomOutAction->setEnabled(hasActionInHtmlModeToo);
+    mZoomResetAction->setEnabled(hasActionInHtmlModeToo);
 
-    mBookmarkMenu->setEnabled(editActionEnabled);
+    mBookmarkMenu->setEnabled(hasActionInHtmlModeToo);
     mDebugSieveScriptAction->setEnabled(editActionEnabled);
     mWrapTextAction->setEnabled(editActionEnabled);
     mWrapTextAction->setChecked(mMainWidget->sieveEditorMainWidget()->isWordWrap());
