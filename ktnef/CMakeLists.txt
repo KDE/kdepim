@@ -2,7 +2,7 @@ project(ktnef)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${ktnef_SOURCE_DIR})
     cmake_minimum_required(VERSION 2.8.12)
-    find_package(ECM 5.20.0 REQUIRED NO_MODULE)
+    find_package(ECM 5.22.0 REQUIRED NO_MODULE)
     set(CMAKE_MODULE_PATH ${akonadiconsole_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
     include(ECMInstallIcons)
 
@@ -27,7 +27,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${ktnef_SOURCE_DIR})
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Gui Widgets)
 
     set(KTNEF_LIB_VERSION "5.2.40")
-    set(KF5_VERSION "5.20.0")
+    set(KF5_VERSION "5.22.0")
     find_package(KF5Tnef ${KTNEF_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
