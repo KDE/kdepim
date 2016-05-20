@@ -92,6 +92,7 @@
 #include <QDBusConnection>
 #include <QDesktopServices>
 #include <ItemModifyJob>
+#include <KPimPrintPreviewDialog>
 
 #include "plugininterface/kaddressbookplugininterface.h"
 
@@ -746,7 +747,7 @@ void MainWidget::printPreview()
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setCollateCopies(true);
 
-    QPrintPreviewDialog previewdlg(&printer, this);
+    PimCommon::KPimPrintPreviewDialog previewdlg(&printer, this);
     KABPrinting::PrintingWizard wizard(&printer, mItemView->selectionModel(), this);
     wizard.setDefaultAddressBook(currentAddressBook());
     connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, [&wizard]() {
