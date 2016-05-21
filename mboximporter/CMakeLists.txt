@@ -39,7 +39,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${mboximporter_SOURCE_DIR})
     set(QT_REQUIRED_VERSION "5.6.0")
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Gui Widgets)
     set(LIBMAILIMPORTER_VERSION_LIB "5.2.40")
-    set(MAILCOMMON_LIB_VERSION_LIB "5.2.55")
+    set(MAILCOMMON_LIB_VERSION_LIB "5.2.56")
 
     # Find KF5 package
     find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
