@@ -6,8 +6,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${storageservicemanager_SOURCE_DIR})
     if (POLICY CMP0063)
         cmake_policy(SET CMP0063 NEW)
     endif()
+    set(KF5_VERSION "5.22.0")
 
-    find_package(ECM 5.22.0 REQUIRED NO_MODULE)
+    find_package(ECM ${KF5_VERSION} REQUIRED NO_MODULE)
     set(CMAKE_MODULE_PATH ${storageservicemanager_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
     include(ECMInstallIcons)
 
@@ -29,7 +30,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${storageservicemanager_SOURCE_DIR})
     include(ECMQtDeclareLoggingCategory)
 
 
-    set(KF5_VERSION "5.22.0")
 
     set(KDEPIM_VERSION_NUMBER "5.2.48")
     set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
