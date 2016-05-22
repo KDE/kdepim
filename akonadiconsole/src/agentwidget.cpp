@@ -179,7 +179,7 @@ void AgentWidget::slotDataChanged(const QModelIndex &topLeft, const QModelIndex 
     Q_FOREACH (const QModelIndex &index, selectedRows) {
         rows.append(index.row());
     }
-    qSort(rows);
+    std::sort(rows.begin(), rows.end());
     // Assume topLeft.row == bottomRight.row
     if (topLeft.row() >= rows.first() && topLeft.row() <= rows.last()) {
         selectionChanged(); // depends on status

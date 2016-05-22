@@ -114,7 +114,7 @@ void StylePage::initFieldCombo()
     mFields = ContactFields::allFields();
     mFields.remove(0);   // remove ContactFields::Undefined
 
-    qSort(mFields.begin(), mFields.end(), contactFieldsNameLesser);
+    std::sort(mFields.begin(), mFields.end(), contactFieldsNameLesser);
 
     ContactFields::Fields::ConstIterator it;
     ContactFields::Fields::ConstIterator end(mFields.constEnd());
