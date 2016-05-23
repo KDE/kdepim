@@ -39,6 +39,7 @@
 
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CachePolicy>
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/EntityHiddenAttribute>
 #include <akonadi/persistentsearchattribute.h>
@@ -893,7 +894,11 @@ QVector<qint64> SearchWindow::checkIncompleteIndex(const Akonadi::Collection::Li
         Q_FOREACH (const Akonadi::Collection &col, searchCols) {
             QAbstractItemModel *etm = KMKernel::self()->collectionModel();
             const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(etm, col);
-            cols.push_back(etm->data(idx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>());
+            const Akonadi::Collection modelCol = etm->data(idx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+            // Only index offline IMAP collections
+            if (modelCol.cachePolicy().localParts().contains(QLatin1String("RFC822"))) {
+              cols.push_back(modelCol);
+            }
         }
     }
 
@@ -930,10 +935,13 @@ Akonadi::Collection::List SearchWindow::searchCollectionsRecursive(const Akonadi
     Q_FOREACH (const Akonadi::Collection &col, cols) {
         const QModelIndex colIdx = Akonadi::EntityTreeModel::modelIndexForCollection(etm, col);
         if (col.statistics().count() > -1) {
-            result.push_back(col);
+            if (col.cachePolicy().localParts().contains(QLatin1String("RFC822"))) {
+              result.push_back(col);
+            }
         } else {
             const Akonadi::Collection collection = etm->data(colIdx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-            if (!collection.hasAttribute<Akonadi::EntityHiddenAttribute>()) {
+            if (!collection.hasAttribute<Akonadi::EntityHiddenAttribute>()
+              && collection.cachePolicy().localParts().contains(QLatin1String("RFC822"))) {
                 result.push_back(collection);
             }
         }
@@ -944,7 +952,10 @@ Akonadi::Collection::List SearchWindow::searchCollectionsRecursive(const Akonadi
             subCols.reserve(childrenCount);
             for (int i = 0; i < childrenCount; ++i) {
                 const QModelIndex idx = etm->index(i, 0, colIdx);
-                subCols.push_back(etm->data(idx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>());
+                const Akonadi::Collection child = etm->data(idx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+                if (child.cachePolicy().localParts().contains(QLatin1String("RFC822"))) {
+                  subCols.push_back(child);
+                }
             }
 
             result += searchCollectionsRecursive(subCols);

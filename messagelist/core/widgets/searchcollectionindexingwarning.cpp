@@ -24,6 +24,7 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/entityhiddenattribute.h>
+#include <akonadi/cachepolicy.h>
 
 #include <pimcommon/util/indexerutils.h>
 
@@ -136,7 +137,7 @@ void SearchCollectionIndexingWarning::indexerStatsFetchFinished(KJob* job)
     bool allFullyIndexed = true;
     QMap<qint64, qint64> stats = qobject_cast<PimCommon::CollectionIndexStatusJob*>(job)->resultStats();
     Q_FOREACH (const Akonadi::Collection &col, mCollections) {
-        if (col.hasAttribute<Akonadi::EntityHiddenAttribute>()) {
+        if (col.hasAttribute<Akonadi::EntityHiddenAttribute>() || !col.cachePolicy().localParts().contains(QLatin1String("RFC822"))) {
             continue;
         }
         kDebug() << "Collection:" << col.displayName() << "(" << col.id() << "), count:" << col.statistics().count() << ", index:" << stats.value(col.id());
