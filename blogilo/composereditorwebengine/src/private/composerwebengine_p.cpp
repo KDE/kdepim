@@ -894,28 +894,19 @@ void ComposerEditorWebEnginePrivate::_k_slotReplace()
     //TODO
 }
 
-struct SetPlainTextFunctor {
-    QString fn;
-    explicit SetPlainTextFunctor(const QString &filename)
-        : fn(filename)
-    {
-    }
-    void operator()(const QString &result)
-    {
-        QFile file(fn);
-        bool success = file.open(QIODevice::WriteOnly);
-        if (success) {
-            // FIXME: here we always use UTF-8 encoding
-            QByteArray data = result.toUtf8();
-            const qint64 c = file.write(data);
-        }
-    }
-};
-
 void ComposerEditorWebEnginePrivate::saveHtml(QWebEnginePage *page, const QString &fileName)
 {
     if (page) {
-        page->toHtml(SetPlainTextFunctor(fileName));
+        page->toHtml([fileName](const QString &result) {
+            QFile file(fileName);
+            bool success = file.open(QIODevice::WriteOnly);
+            if (success) {
+                // FIXME: here we always use UTF-8 encoding
+                QByteArray data = result.toUtf8();
+                const qint64 c = file.write(data);
+            }
+        }
+        );
     }
 }
 
