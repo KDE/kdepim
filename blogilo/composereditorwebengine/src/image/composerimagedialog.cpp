@@ -56,8 +56,6 @@ public:
     void updateImageHtml();
     void updateSettings();
 
-    //QWebElement webElement;
-
     KPIMTextEdit::InsertImageWidget *imageWidget;
     QLineEdit *title;
     QLineEdit *alternateTitle;
@@ -135,7 +133,7 @@ void ComposerImageDialogPrivate::updateImageHtml()
 
 void ComposerImageDialogPrivate::initialize()
 {
-    //q->setWindowTitle(webElement.isNull() ? i18n("Insert Image") : i18n("Edit Image"));
+    q->setWindowTitle(i18n("Insert Image"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(/*webElement.isNull() ? */QDialogButtonBox::Ok /*: QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply*/);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -244,15 +242,6 @@ ComposerImageDialog::ComposerImageDialog(QWidget *parent)
 {
     d->initialize();
 }
-
-#if 0
-ComposerImageDialog::ComposerImageDialog(const QWebElement &element, QWidget *parent)
-    : QDialog(parent), d(new ComposerImageDialogPrivate(this))
-{
-    d->webElement = element;
-    d->initialize();
-}
-#endif
 
 ComposerImageDialog::~ComposerImageDialog()
 {

@@ -42,7 +42,7 @@ public:
     {
     }
 
-    void initialize(/*const QWebElement &element = QWebElement()*/);
+    void initialize();
 
     void updateSettings();
     void updateLinkHtml();
@@ -52,7 +52,6 @@ public:
 
     QString html() const;
 
-    //QWebElement webElement;
     QLineEdit *anchorName;
     ComposerAnchorDialog *q;
 };
@@ -72,7 +71,7 @@ void ComposerAnchorDialogPrivate::initialize(/*const QWebElement &element*/)
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerAnchorDialog::reject);
     mainLayout->addWidget(buttonBox);
 
-    //q->setWindowTitle(webElement.isNull() ? i18n("Create Anchor") : i18n("Edit Anchor"));
+    q->setWindowTitle(i18n("Create Anchor"));
 
     QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
 
@@ -83,7 +82,6 @@ void ComposerAnchorDialogPrivate::initialize(/*const QWebElement &element*/)
     layout->addWidget(label, 0, 0);
 
     anchorName = new QLineEdit;
-    //anchorName->setReadOnly(!webElement.isNull());
     anchorName->setClearButtonEnabled(true);
     layout->addWidget(anchorName, 0, 1);
 #if 0
@@ -135,14 +133,6 @@ ComposerAnchorDialog::ComposerAnchorDialog(QWidget *parent)
 {
     d->initialize();
 }
-#if 0
-ComposerAnchorDialog::ComposerAnchorDialog(const QWebElement &element, QWidget *parent)
-    : QDialog(parent), d(new ComposerAnchorDialogPrivate(this))
-{
-    d->initialize(element);
-    d->updateSettings();
-}
-#endif
 
 ComposerAnchorDialog::~ComposerAnchorDialog()
 {

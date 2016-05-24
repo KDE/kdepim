@@ -169,7 +169,7 @@ void BlogiloComposerWebEngineEditor::execCommand(const QString &cmd, const QStri
 
 void BlogiloComposerWebEngineEditor::insertShortUrl(const QString &url)
 {
-    QString html = QStringLiteral("<a href=\'%1\'>%1</a>").arg(url);
+    const QString html = QStringLiteral("<a href=\'%1\'>%1</a>").arg(url);
     execCommand(QStringLiteral("insertHtml"), html);
 }
 

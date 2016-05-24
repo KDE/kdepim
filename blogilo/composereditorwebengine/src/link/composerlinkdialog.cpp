@@ -45,7 +45,7 @@ public:
     {
     }
 
-    void initialize(/*const QWebElement &element = QWebElement()*/);
+    void initialize();
 
     QString html() const;
 
@@ -56,14 +56,13 @@ public:
     void _k_slotOkClicked();
     void _k_slotWebElementChanged();
 
-    //QWebElement webElement;
     QLineEdit *linkText;
     QLineEdit *linkLocation;
     KComboBox *target;
     ComposerLinkDialog *q;
 };
 
-void ComposerLinkDialogPrivate::initialize(/*const QWebElement &element*/)
+void ComposerLinkDialogPrivate::initialize()
 {
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(q);
@@ -76,9 +75,8 @@ void ComposerLinkDialogPrivate::initialize(/*const QWebElement &element*/)
     q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(_k_slotOkClicked()));
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerLinkDialog::reject);
     mainLayout->addWidget(buttonBox);
-    //webElement = element;
 
-    //q->setWindowTitle(webElement.isNull() ? i18n("Create Link") : i18n("Edit Link"));
+    q->setWindowTitle(i18n("Create Link"));
 
     QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
 
@@ -196,14 +194,6 @@ ComposerLinkDialog::ComposerLinkDialog(const QString &selectedText, QWidget *par
     d->initialize();
     d->linkText->setText(selectedText);
 }
-#if 0
-ComposerLinkDialog::ComposerLinkDialog(const QWebElement &element, QWidget *parent)
-    : QDialog(parent), d(new ComposerLinkDialogPrivate(this))
-{
-    d->initialize(element);
-    d->updateSettings();
-}
-#endif
 
 ComposerLinkDialog::~ComposerLinkDialog()
 {

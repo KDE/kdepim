@@ -50,10 +50,6 @@ BilboBrowser::BilboBrowser(QWidget *parent)
     connect(mWebView, &QWebEngineView::loadProgress,
             browserProgress, &QProgressBar::setValue);
     connect(mWebView, &QWebEngineView::loadFinished, this, &BilboBrowser::slotCompleted);
-    //connect(mWebView, &QWebView::statusBarMessage, this,
-    //        &BilboBrowser::slotSetStatusBarText);
-
-    //TODO
 }
 
 BilboBrowser::~BilboBrowser()

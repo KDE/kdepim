@@ -23,8 +23,6 @@
 
 #include <QDialog>
 
-//class QWebElement;
-
 namespace ComposerEditorWebEngine
 {
 class ComposerImageDialogPrivate;
@@ -33,7 +31,6 @@ class ComposerImageDialog : public QDialog
     Q_OBJECT
 public:
     explicit ComposerImageDialog(QWidget *parent);
-    //explicit ComposerImageDialog(const QWebElement &element, QWidget *parent);
     ~ComposerImageDialog();
 
     /**
@@ -49,7 +46,6 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotApplyClicked())
     Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
     Q_PRIVATE_SLOT(d, void _k_slotEnableButtonOk(bool b))
-
 };
 }
 
