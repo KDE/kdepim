@@ -198,9 +198,6 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
         item->setData(0, action, type);
         break;
     }
-    default:
-        qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " Type not supported: " << type;
-        break;
     }
 }
 
