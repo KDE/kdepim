@@ -43,5 +43,5 @@ void SieveEditorUtilTest::shouldHaveDefaultValue()
     QVERIFY(config.enabled);
 }
 
-QTEST_MAIN(SieveEditorUtilTest)
+QTEST_APPLESS_MAIN(SieveEditorUtilTest)
 
