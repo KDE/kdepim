@@ -44,6 +44,7 @@ Name[zh_CN]=个人信息管理设置导出器
 Name[zh_TW]=PIM 設定匯出器
 Exec=pimsettingexporter
 Type=Application
+Icon=kontact
 Comment=PIM Setting Exporter allows to save all data from PIM apps and restore them in other system.
 Comment[bs]=PIM izvoznik postavki vam omogućava da spremite sve podatke iz PIM aplikacija i vratite ih u drugi sistem.
 Comment[ca]=L'exportador de la configuració PIM permet desar totes les dades de les aplicacions PIM i restaura-les en un altre sistema.
