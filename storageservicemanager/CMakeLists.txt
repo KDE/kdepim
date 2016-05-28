@@ -9,7 +9,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${storageservicemanager_SOURCE_DIR})
     set(KF5_VERSION "5.22.0")
 
     find_package(ECM ${KF5_VERSION} REQUIRED NO_MODULE)
-    set(CMAKE_MODULE_PATH ${storageservicemanager_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+    set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
     include(ECMInstallIcons)
 
     include(ECMOptionalAddSubdirectory)
