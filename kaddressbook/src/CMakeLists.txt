@@ -10,6 +10,8 @@ if(KF5Prison_FOUND)
     add_definitions(-DHAVE_PRISON)
 endif()
 
+add_subdirectory(domain)
+
 add_subdirectory(icons)
 add_subdirectory(printing)
 add_subdirectory(kconf_update)
