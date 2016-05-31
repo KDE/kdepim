@@ -38,4 +38,3 @@ endmacro ()
 
 add_sieveserver_unittest( sieveeditorconfigureserverpagetest.cpp "../src/sieveeditorconfigureserverpage.cpp")
 
-#add_sieveserver_unittest( sieveeditorbookmarkstest.cpp "../src/sieveeditorbookmarks.cpp")
