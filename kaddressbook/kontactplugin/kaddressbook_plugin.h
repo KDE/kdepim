@@ -61,7 +61,6 @@ protected:
 private Q_SLOTS:
     void slotNewContact();
     void slotNewContactGroup();
-    void slotSyncContacts();
 
 private:
     KontactInterface::UniqueAppWatcher *mUniqueAppWatcher;

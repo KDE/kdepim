@@ -69,18 +69,6 @@ KAddressBookPlugin::KAddressBookPlugin(KontactInterface::Core *core, const QVari
               "You will be presented with a dialog where you can create a new contact group."));
     insertNewAction(action);
 
-    QAction *syncAction =
-        new QAction(QIcon::fromTheme(QStringLiteral("view-refresh")),
-                    i18nc("@action:inmenu", "Sync Contacts"), this);
-    actionCollection()->addAction(QStringLiteral("kaddressbook_sync"), syncAction);
-    connect(syncAction, &QAction::triggered, this, &KAddressBookPlugin::slotSyncContacts);
-    //syncAction->setHelpText(
-    //  i18nc( "@info:status", "Synchronize groupware contacts" ) );
-    syncAction->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Choose this option to synchronize your groupware contacts."));
-    insertSyncAction(syncAction);
-
     mUniqueAppWatcher = new KontactInterface::UniqueAppWatcher(
         new KontactInterface::UniqueAppHandlerFactory<KAddressBookUniqueAppHandler>(), this);
 }
@@ -159,20 +147,6 @@ void KAddressBookPlugin::shortcutChanged()
         }
         QMetaObject::invokeMethod(localPart, "updateQuickSearchText");
     }
-}
-
-void KAddressBookPlugin::slotSyncContacts()
-{
-#if 0
-    QDBusMessage message =
-        QDBusMessage::createMethodCall("org.kde.kmail", "/Groupware",
-                                       "org.kde.kmail.groupware",
-                                       "triggerSync");
-    message << QString("Contact");
-    QDBusConnection::sessionBus().send(message);
-#else
-    qCWarning(KADDRESSBOOKPLUGIN_LOG) << QStringLiteral(" Need to port to AKONADI: KAddressBookPlugin::slotSyncNotes");
-#endif
 }
 
 void KAddressBookUniqueAppHandler::loadCommandLineOptions(QCommandLineParser *parser)
