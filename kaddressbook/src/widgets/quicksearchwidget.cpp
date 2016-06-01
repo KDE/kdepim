@@ -34,7 +34,7 @@ QuickSearchWidget::QuickSearchWidget(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
 
-    mEdit = new QLineEdit;
+    mEdit = new QLineEdit(this);
     //If change shortcut changes it in mainwidget
     mEdit->setClearButtonEnabled(true);
     mEdit->setToolTip(

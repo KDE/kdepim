@@ -47,9 +47,9 @@ SearchDialog::SearchDialog(QWidget *parent)
     QGridLayout *layout = new QGridLayout;
     mainLayout->addLayout(layout);
     mainLayout->addWidget(buttonBox);
-    mName = new QLineEdit;
+    mName = new QLineEdit(this);
     mName->setText(QStringLiteral("My Search"));
-    mEdit = new KTextEdit;
+    mEdit = new KTextEdit(this);
     mEdit->setAcceptRichText(false);
     mEdit->setWhatsThis(QStringLiteral("Enter a SparQL query here"));
 
