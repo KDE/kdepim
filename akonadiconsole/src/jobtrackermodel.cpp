@@ -139,7 +139,7 @@ static QString formatDurationWithMsec(qint64 msecs)
 {
     QTime time(0, 0, 0);
     time = time.addMSecs(msecs);
-    return formatTimeWithMsec(time);
+    return time.toString(QStringLiteral("hh:mm:ss.zzz"));
 }
 
 QVariant JobTrackerModel::data(const QModelIndex &idx, int role) const
