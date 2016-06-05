@@ -23,7 +23,8 @@
 
 #include <QObject>
 
-namespace Domain {
+namespace Domain
+{
 class ContactGroup : public QObject
 {
     Q_OBJECT
