@@ -207,8 +207,8 @@
       <li xml:lang="x-test">xxPreviewing your post with your blog stylexx</li>
       <li xml:lang="zh-TW">以您的部落格的樣式來預覽您的文章</li>
       <li>Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
-      <li xml:lang="ca">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots aquests!) i Google GData (usada al blog Blogspot.com)</li>
-      <li xml:lang="ca-valencia">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots estos!) i Google GData (usada al blog Blogspot.com)</li>
+      <li xml:lang="ca">Permet les API Blogger1.0, MetaWeblog, MovableType (el Wordpress admet tots aquests!) i Google GData (usada al blog Blogspot.com)</li>
+      <li xml:lang="ca-valencia">Permet les API Blogger1.0, MetaWeblog, MovableType (el Wordpress admet tots estos!) i Google GData (usada al blog Blogspot.com)</li>
       <li xml:lang="de">Unterstützung für die Programmier-Schnittstellen (APIs) von Blogger1.0, MetaWeblog, MovableType (alle von Wordpress verwendet) und Google GData (verwendet auf Blogspot.com blogs)</li>
       <li xml:lang="en-GB">Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="es">Reconoce las API Blogger1.0, MetaWeblog, MovableType (¡Wordpress reconoce todos esos!) y Google GData (usado en blogs de Blogspot.com b)</li>
@@ -238,8 +238,8 @@
       <li xml:lang="zh-TW">支援 Blogger1.0, MetaWeblog, MovableType (Wordpress 全部都支援！) 以及 Google GData (用於 Blogspot.com) APIs</li>
       <li>Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="ar">دعم إنشاء التّدوينات وتعديلها وحذفها.</li>
-      <li xml:lang="ca">Implementa la creació/modificació/eliminació dels articles.</li>
-      <li xml:lang="ca-valencia">Implementa la creació/modificació/eliminació dels articles.</li>
+      <li xml:lang="ca">Permet la creació/modificació/eliminació dels articles.</li>
+      <li xml:lang="ca-valencia">Permet la creació/modificació/eliminació dels articles.</li>
       <li xml:lang="de">Unterstützung für das Erstellen/Verändern/Löschen von Posts.</li>
       <li xml:lang="en-GB">Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="es">Implementa creación/modificación/borrado de envíos.</li>
@@ -269,8 +269,8 @@
       <li xml:lang="zh-TW">支援建立、變更與刪除文章。</li>
       <li>Support for creating drafts and scheduled posts</li>
       <li xml:lang="ar">دعم إنشاء المسودّات والتّدوينات المجدولة</li>
-      <li xml:lang="ca">Implementa la creació d'esborranys i articles programats</li>
-      <li xml:lang="ca-valencia">Implementa la creació d'esborranys i articles programats</li>
+      <li xml:lang="ca">Permet la creació d'esborranys i articles programats</li>
+      <li xml:lang="ca-valencia">Permet la creació d'esborranys i articles programats</li>
       <li xml:lang="de">Unterstützung für das Erstellen von Entwürfen und geplanten Posts</li>
       <li xml:lang="en-GB">Support for creating drafts and scheduled posts</li>
       <li xml:lang="es">Implementa la creación de borradores y envíos planificados</li>
@@ -299,8 +299,8 @@
       <li xml:lang="x-test">xxSupport for creating drafts and scheduled postsxx</li>
       <li xml:lang="zh-TW">支援建立草稿與排程發布。</li>
       <li>Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
-      <li xml:lang="ca">Implementa la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
-      <li xml:lang="ca-valencia">Implementa la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="ca">Permet la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="ca-valencia">Permet la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
       <li xml:lang="de">Unterstützung für das Hochladen von Medien zu Ihrem Blog, nur z. B. für MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa la subida de archivos multimedia a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
@@ -330,8 +330,8 @@
       <li xml:lang="zh-TW">支援上傳媒體檔到您的部落格中（但 API 必須有支援，如 MetaWeblog 與 MovableType）</li>
       <li>Support for Fetching your recent blog entries.</li>
       <li xml:lang="ar">دعم جلب أحدث مدخلات المدوّنة.</li>
-      <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog.</li>
-      <li xml:lang="ca-valencia">Implementa l'obtenció de les vostres entrades recents al blog.</li>
+      <li xml:lang="ca">Permet l'obtenció de les vostres entrades recents al blog.</li>
+      <li xml:lang="ca-valencia">Permet l'obtenció de les vostres entrades recents al blog.</li>
       <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen.</li>
       <li xml:lang="en-GB">Support for Fetching your recent blog entries.</li>
       <li xml:lang="es">Implementa la recuperación de sus entradas recientes de blog.</li>
@@ -360,8 +360,8 @@
       <li xml:lang="x-test">xxSupport for Fetching your recent blog entries.xx</li>
       <li xml:lang="zh-TW">支援抓取您最近的部落格文章。</li>
       <li>Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
-      <li xml:lang="ca">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
-      <li xml:lang="ca-valencia">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="ca">Permet afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="ca-valencia">Permet afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
       <li xml:lang="de">Unterstützung für das Hinzufügen von Bildern von Ihrem System zu Ihren Posts. Die Bilder werden beim Hochladen zusammen mit Ihrem Text zum Blog hochgeladen, das funktioniert nur bei unterstützten Programmier-Schnittstellen (APIs) wie MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa el añadido de imágenes al envió desde su sistema. Las cargará al aplicar los envíos a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
@@ -391,8 +391,8 @@
       <li xml:lang="zh-TW">支援從您的系統新增媒體檔到您的部落格文章中。它會在提交文章時順便上傳到部落格中（但 API 必須有支援，如 MetaWeblog 與 MovableType）</li>
       <li>Support for saving local entries before publishing.</li>
       <li xml:lang="ar">دعم حفظ مدخلات محليّة قبل النّشر.</li>
-      <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les.</li>
-      <li xml:lang="ca-valencia">Implementa el guardat de les entrades locals abans de publicar-les.</li>
+      <li xml:lang="ca">Permet el desat de les entrades locals abans de publicar-les.</li>
+      <li xml:lang="ca-valencia">Permet el guardat de les entrades locals abans de publicar-les.</li>
       <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung.</li>
       <li xml:lang="en-GB">Support for saving local entries before publishing.</li>
       <li xml:lang="es">Implementa el guardado de entradas locales antes de publicarlas.</li>
