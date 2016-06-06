@@ -42,8 +42,8 @@
 #include "ui_editorsettingsbase.h"
 
 #include "Libkdepim/ProgressDialog"
-#include "Libkdepim/StatusbarProgressWidget"
-#include "Libkdepim/ProgressStatusBarWidget"
+#include <Libkdepim/StatusbarProgressWidget>
+#include <Libkdepim/ProgressStatusBarWidget>
 
 #include <qtabwidget.h>
 #include <KStatusNotifierItem>

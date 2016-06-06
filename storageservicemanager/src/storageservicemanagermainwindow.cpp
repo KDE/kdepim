@@ -31,8 +31,8 @@
 
 #include "PimCommon/StorageServiceSettings"
 
-#include "Libkdepim/ProgressStatusBarWidget"
-#include "Libkdepim/StatusbarProgressWidget"
+#include <Libkdepim/ProgressStatusBarWidget>
+#include <Libkdepim/StatusbarProgressWidget>
 
 #include <KStandardAction>
 #include <KLocalizedString>
