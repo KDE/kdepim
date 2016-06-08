@@ -82,7 +82,7 @@ void ThemeEditorPage::slotCurrentWidgetChanged(int index)
     if (index < 0) {
         return;
     }
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
+    GrantleeThemeEditor::EditorPage *page = qobject_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
     Q_EMIT canInsertFile(page);
 }
 
@@ -145,7 +145,7 @@ void ThemeEditorPage::insertFile()
     if (!w) {
         return;
     }
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    GrantleeThemeEditor::EditorPage *page = qobject_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
         const QString fileName = QFileDialog::getOpenFileName(this);
         if (!fileName.isEmpty()) {

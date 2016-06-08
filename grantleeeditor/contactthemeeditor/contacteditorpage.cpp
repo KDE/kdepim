@@ -117,7 +117,7 @@ void ContactEditorPage::insertFile()
     if (!w) {
         return;
     }
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    GrantleeThemeEditor::EditorPage *page = qobject_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
         const QString fileName = QFileDialog::getOpenFileName(this);
         if (!fileName.isEmpty()) {
@@ -328,7 +328,7 @@ void ContactEditorPage::slotCurrentWidgetChanged(int index)
         return;
     }
 
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
+    GrantleeThemeEditor::EditorPage *page = qobject_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
     Q_EMIT canInsertFile(page);
 }
 

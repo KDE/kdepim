@@ -58,7 +58,7 @@ void ThemeEditorTabWidget::slotTabContextMenuRequest(const QPoint &pos)
     QTabBar *bar = tabBar();
     const int indexBar = bar->tabAt(bar->mapFrom(this, pos));
     QWidget *w = widget(indexBar);
-    EditorPage *page = dynamic_cast<EditorPage *>(w);
+    EditorPage *page = qobject_cast<EditorPage *>(w);
     if (!page) {
         return;
     }
