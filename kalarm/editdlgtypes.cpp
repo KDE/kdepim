@@ -1225,7 +1225,7 @@ void EditEmailAlarmDlg::setEmailFields(uint fromID, const QList<KCal::Person>& a
                                        const QString& subject, const QStringList& attachments)
 #endif
 {
-    if (fromID)
+    if (fromID && mEmailFromList)
         mEmailFromList->setCurrentIdentity(fromID);
     if (!addresses.isEmpty())
         mEmailToEdit->setText(KAEvent::joinEmailAddresses(addresses, QLatin1String(", ")));
