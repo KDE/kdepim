@@ -150,4 +150,3 @@ QList<QWidget *> PluginSelection::widgets() const
 
     return widgets;
 }
-
