@@ -1,7 +1,7 @@
 /*
  *  kamail.cpp  -  email functions
  *  Program:  kalarm
- *  Copyright © 2002-2011 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002-2016 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -112,9 +112,9 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
 {
     QString err;
     KPIMIdentities::Identity identity;
-    if (!jobdata.event.emailFromId())
-        jobdata.from = Preferences::emailAddress();
-    else
+    jobdata.from = Preferences::emailAddress();
+    if (jobdata.event.emailFromId()
+    &&  Preferences::emailFrom() == Preferences::MAIL_FROM_KMAIL)
     {
         identity = Identities::identityManager()->identityForUoid(jobdata.event.emailFromId());
         if (identity.isNull())
