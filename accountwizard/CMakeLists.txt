@@ -1,7 +1,7 @@
 project(accountwizard)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
-    cmake_minimum_required(VERSION 2.8.12)
+    cmake_minimum_required(VERSION 3.1)
 
     set(LIBRARY_NAMELINK LIBRARY NAMELINK_SKIP)
 

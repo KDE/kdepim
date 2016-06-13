@@ -1,6 +1,6 @@
 project(kdepim)
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.1)
 option(KDEPIM_SUPERBUILD "Build standalone apps (experimental not used for distro)" FALSE)
 
 if (KDEPIM_SUPERBUILD)
