@@ -232,12 +232,10 @@ bool BloggerPrivate::handleError(KGAPI2::Job *job)
 Blogger::Blogger(const QUrl &server, QObject *parent)
     : Blog(server, *new BloggerPrivate(this), parent)
 {
-    qCDebug(BLOGILO_LOG);
 }
 
 Blogger::~Blogger()
 {
-    qCDebug(BLOGILO_LOG);
 }
 
 QString Blogger::interfaceName() const

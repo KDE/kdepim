@@ -53,7 +53,6 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
       mParent(Q_NULLPTR),
       b(Q_NULLPTR)
 {
-    qCDebug(BLOGILO_LOG);
     BilboBlog *tempBlog = DBMan::self()->blog(blogid);
     if (tempBlog->isError()) {
         KMessageBox::detailedError(mParent, i18n("Cannot fetch the selected blog style."),
@@ -90,14 +89,12 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
 
 StyleGetter::~StyleGetter()
 {
-    qCDebug(BLOGILO_LOG);
 }
 
 QString StyleGetter::styledHtml(const int blogid,
                                 const QString &title,
                                 const QString &content)
 {
-    qCDebug(BLOGILO_LOG);
     QString url = QStringLiteral("blogilo/%1/").arg(blogid);
     url = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + url;
     QUrl dest(url);
@@ -132,7 +129,6 @@ QString StyleGetter::styledHtml(const int blogid,
 
 void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
 {
-    qCDebug(BLOGILO_LOG);
 
     QUrl postUrl;
 //     postUrl = post->permaLink();
@@ -158,7 +154,6 @@ void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
 
 void StyleGetter::slotHtmlCopied(KJob *job)
 {
-    qCDebug(BLOGILO_LOG);
     if (job->error()) {
         KMessageBox::detailedError(mParent, i18n("Cannot get html file."),
                                    job->errorString());
@@ -224,7 +219,6 @@ void StyleGetter::slotTempPostRemoved(int blog_id, const BilboPost &post)
 
 void StyleGetter::generateRandomPostStrings()
 {
-    qCDebug(BLOGILO_LOG);
     srand(time(Q_NULLPTR));
     int postRandomNumber = rand();
     mPostTitle = QStringLiteral("%1%2").arg(QLatin1String(POST_TITLE)).arg(postRandomNumber);
@@ -233,7 +227,6 @@ void StyleGetter::generateRandomPostStrings()
 
 void StyleGetter::slotError(const QString &errMsg)
 {
-    qCDebug(BLOGILO_LOG);
     KMessageBox::detailedError(mParent, i18n("An error occurred in the latest transaction."), errMsg);
     b->deleteLater();
 }

@@ -74,7 +74,6 @@ public:
 AddEditBlog::AddEditBlog(int blog_id, QWidget *parent)
     : QDialog(parent), d(new Private)
 {
-    qCDebug(BLOGILO_LOG);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     d->mainW = new QTabWidget(this);
     d->ui.setupUi(d->mainW);
@@ -146,7 +145,6 @@ void AddEditBlog::enableAutoConfBtn()
 
 void AddEditBlog::autoConfigure()
 {
-    qCDebug(BLOGILO_LOG);
     if (d->ui.txtUrl->text().isEmpty() || d->ui.txtUser->text().isEmpty() || d->ui.txtPass->text().isEmpty()) {
         qCDebug(BLOGILO_LOG) << "Username, Password or URL not set!";
         KMessageBox::sorry(this, i18n("You have to set the username, password and URL of your blog or website."),
@@ -260,7 +258,6 @@ void AddEditBlog::gotHtml(KJob *job)
 
 void AddEditBlog::gotXmlRpcTest(KJob *job)
 {
-    qCDebug(BLOGILO_LOG);
     d->mFetchAPITimer->deleteLater();
     if (!job) {
         return;
@@ -328,7 +325,6 @@ void AddEditBlog::fetchBlogId()
 
 void AddEditBlog::handleFetchIDTimeout()
 {
-    qCDebug(BLOGILO_LOG);
     if (d->mFetchBlogIdTimer) {
         d->mFetchBlogIdTimer->stop();
     }
@@ -345,7 +341,6 @@ void AddEditBlog::handleFetchIDTimeout()
 
 void AddEditBlog::handleFetchAPITimeout()
 {
-    qCDebug(BLOGILO_LOG);
     d->mFetchAPITimer->deleteLater();
     d->mFetchAPITimer = Q_NULLPTR;
     hideWaitWidget();
@@ -479,7 +474,6 @@ void AddEditBlog::slotReturnPressed()
 
 AddEditBlog::~AddEditBlog()
 {
-    qCDebug(BLOGILO_LOG);
     delete d;
 }
 

@@ -227,7 +227,6 @@ void MainWindow::setupActions()
 
 void MainWindow::loadTempPosts()
 {
-    qCDebug(BLOGILO_LOG);
     QMap<BilboPost *, int> tempList = DBMan::self()->listTempPosts();
     const int count = tempList.count();
     if (count > 0) {
@@ -291,8 +290,6 @@ void MainWindow::currentBlogChanged(QAction *act)
 
 void MainWindow::slotCreateNewPost()
 {
-    qCDebug(BLOGILO_LOG);
-
     tabPosts->setCurrentWidget(createPostEntry(mCurrentBlogId, BilboPost()));
     if (mCurrentBlogId == -1) {
         if (!blogs->items().isEmpty()) {
@@ -409,7 +406,6 @@ void MainWindow::setupSystemTray()
 
 void MainWindow::slotPostTitleChanged(const QString &title)
 {
-//     qCDebug(BLOGILO_LOG);
     tabPosts->setTabText(tabPosts->currentIndex(), title);
 }
 
@@ -452,7 +448,6 @@ void MainWindow::slotActivePostChanged(int index)
 
 void MainWindow::slotPublishPost()
 {
-    qCDebug(BLOGILO_LOG);
     if (mCurrentBlogId == -1) {
         KMessageBox::sorry(this, i18n("You have to select a blog to publish this post to."));
         return;
@@ -492,7 +487,7 @@ void MainWindow::slotRemoveAllExclude(int pos)
 
 void MainWindow::slotRemovePostEntry(int pos)
 {
-    qCDebug(BLOGILO_LOG);
+
 
     PostEntry *widget = qobject_cast<PostEntry *>(tabPosts->widget(pos));
 
@@ -516,14 +511,14 @@ void MainWindow::slotRemovePostEntry(int pos)
 
 void MainWindow::slotNewPostOpened(BilboPost &newPost, int blog_id)
 {
-    qCDebug(BLOGILO_LOG);
+
     QWidget *w = createPostEntry(blog_id, newPost);
     tabPosts->setCurrentWidget(w);
 }
 
 void MainWindow::slotSavePostLocally()
 {
-    qCDebug(BLOGILO_LOG);
+
     if (activePost && (tabPosts->count() > 0)) {
         toolbox->getFieldsValue(activePost->currentPost());
         activePost->saveLocally();
@@ -541,7 +536,7 @@ void MainWindow::slotError(const QString &errorMessage)
 
 void MainWindow::writeConfigs()
 {
-    qCDebug(BLOGILO_LOG);
+
     if (toolboxDock->isVisible()) {
         Settings::setShowToolboxOnStart(true);
     } else {
@@ -580,7 +575,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::postManipulationDone(bool isError, const QString &customMessage)
 {
-    qCDebug(BLOGILO_LOG);
+
     if (isError) {
         KMessageBox::detailedError(this, i18n("Submitting post failed"), customMessage);
     } else {
@@ -630,7 +625,7 @@ void MainWindow::slotBusy(bool isBusy)
 
 QWidget *MainWindow::createPostEntry(int blog_id, const BilboPost &post)
 {
-    qCDebug(BLOGILO_LOG);
+
     PostEntry *temp = new PostEntry(this);
     temp->setAttribute(Qt::WA_DeleteOnClose);
     temp->setCurrentPost(post);

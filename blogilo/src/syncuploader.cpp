@@ -79,7 +79,7 @@ bool SyncUploader::uploadMedia(Backend *backend, BilboMedia *media)
 void SyncUploader::slotMediaFileUploaded(BilboMedia *media)
 {
     if (media && media == d->mCurrentMedia) {
-        qCDebug(BLOGILO_LOG);
+
         d->success = true;
         d->loop->exit();
     }

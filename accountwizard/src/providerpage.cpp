@@ -51,8 +51,6 @@ ProviderPage::ProviderPage(KAssistantDialog *parent) :
     m_downloadManager->setSearchOrder(KNS3::DownloadManager::Alphabetical);
 
     connect(ui.listView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ProviderPage::selectionChanged);
-
-    qCDebug(ACCOUNTWIZARD_LOG);
 }
 
 void ProviderPage::startFetchingData()
@@ -62,7 +60,6 @@ void ProviderPage::startFetchingData()
 
 void ProviderPage::fillModel(const KNS3::Entry::List &list)
 {
-    qCDebug(ACCOUNTWIZARD_LOG);
     m_model->removeRows(m_model->indexFromItem(m_fetchItem).row(), 1);
 
     // KNS3::Entry::Entry() is private, so we need to save the whole list.

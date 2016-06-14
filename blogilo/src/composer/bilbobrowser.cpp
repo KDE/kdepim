@@ -54,7 +54,6 @@ BilboBrowser::BilboBrowser(QWidget *parent)
 
 BilboBrowser::~BilboBrowser()
 {
-    qCDebug(BLOGILO_LOG);
 }
 
 void BilboBrowser::createUi(QWidget *parent)

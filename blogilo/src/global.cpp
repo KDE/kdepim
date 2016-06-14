@@ -29,12 +29,10 @@ int __currentBlogId;
 
 void global_init()
 {
-    qCDebug(BLOGILO_LOG);
     __currentBlogId = -1;
 }
 
 void global_end()
 {
-    qCDebug(BLOGILO_LOG);
     delete DBMan::self();
 }

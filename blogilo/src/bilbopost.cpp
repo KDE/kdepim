@@ -151,7 +151,6 @@ void BilboPost::setCategoryList(const QVector<Category> &list)
 
 void BilboPost::setProperties(const BilboPost &postProp)
 {
-    qCDebug(BLOGILO_LOG);
     this->setCreationDateTime(postProp.creationDateTime());
     this->setModificationDateTime(postProp.modificationDateTime());
     this->setLink(postProp.link());

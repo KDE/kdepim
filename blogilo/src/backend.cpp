@@ -82,7 +82,6 @@ Backend::Backend(int blog_id, QObject *parent)
 
 Backend::~Backend()
 {
-    qCDebug(BLOGILO_LOG);
     delete d;
 }
 
@@ -347,7 +346,6 @@ void Backend::error(KBlog::Blog::ErrorType type, const QString &errorMessage)
 void Backend::slotMediaError(KBlog::Blog::ErrorType type, const QString &errorMessage,
                              KBlog::BlogMedia *media)
 {
-    qCDebug(BLOGILO_LOG);
     QString errType = errorTypeToString(type);
     errType += errorMessage;
     qCDebug(BLOGILO_LOG) << errType;

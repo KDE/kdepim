@@ -114,7 +114,7 @@ PostEntry::~PostEntry()
 
 void PostEntry::settingsChanged()
 {
-    qCDebug(BLOGILO_LOG);
+
     d->mTimer->setInterval(Settings::autosaveInterval() * MINUTE);
     if (Settings::autosaveInterval()) {
         d->mTimer->start();
@@ -294,7 +294,7 @@ void PostEntry::setCurrentPostBlogId(int blog_id)
 void PostEntry::setCurrentPostFromEditor()
 {
     if (d->isPostContentModified) {
-        qCDebug(BLOGILO_LOG);
+
         const QString &str = htmlContent();
         d->mCurrentPost.setContent(str);
         d->isPostContentModified = false;
@@ -323,7 +323,7 @@ Qt::LayoutDirection PostEntry::defaultLayoutDirection() const
 
 void PostEntry::setDefaultLayoutDirection(Qt::LayoutDirection direction)
 {
-    qCDebug(BLOGILO_LOG);
+
     d->tabWidget->setLayoutDirection(direction);
     d->txtTitle->setLayoutDirection(direction);
 }
@@ -512,7 +512,7 @@ void PostEntry::saveTemporary()
 
 void PostEntry::slotPostModified()
 {
-    qCDebug(BLOGILO_LOG);
+
     disconnect(this, &PostEntry::textChanged, this, &PostEntry::slotPostModified);
     //         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
     //     Q_EMIT postModified();

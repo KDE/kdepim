@@ -423,7 +423,7 @@ void Toolbox::setButtonsIcon()
 
 void Toolbox::reloadLocalPosts()
 {
-    qCDebug(BLOGILO_LOG);
+
 
     localEntries->clear();
 

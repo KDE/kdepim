@@ -108,7 +108,6 @@ void BlogiloComposerWebEngineEditor::setReadOnly(bool _readOnly)
 QList< BilboMedia * > BlogiloComposerWebEngineEditor::getLocalImages()
 {
 
-    qCDebug(BLOGILO_LOG);
     QList< BilboMedia * > list;
 #if 0
     QWebElementCollection images = view()->page()->mainFrame()->findAllElements(QStringLiteral("img"));

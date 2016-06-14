@@ -96,7 +96,6 @@ DBMan::DBMan()
 
 DBMan::~DBMan()
 {
-    qCDebug(BLOGILO_LOG);
     d->db.close();
     if (d->useWallet) {
         d->mWallet->deleteLater();
@@ -138,7 +137,6 @@ void DBMan::reloadBlogList()
 
 bool DBMan::connectDB()
 {
-    qCDebug(BLOGILO_LOG);
     if (d->db.isOpen()) {
         return true;
     }
@@ -166,7 +164,6 @@ Will create configuration database!
 */
 bool DBMan::createDB()
 {
-    qCDebug(BLOGILO_LOG);
     bool ret = true;
     if (!connectDB()) {
         exit(1);
@@ -537,7 +534,6 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
 
 bool DBMan::editPost(const BilboPost &post, int blog_id)
 {
-    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QStringLiteral("UPDATE post SET author=?, title=?, content=?, text_more=?, c_time=?, m_time=?,\
                is_private=?, is_comment_allowed=?, is_trackback_allowed=?, link=?, perma_link=?, summary=?,\
@@ -753,7 +749,6 @@ int DBMan::saveTempEntry(const BilboPost &post, int blog_id)
 
 int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPostState state)
 {
-    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     BilboPost post = basePost;
 //     qCDebug(BLOGILO_LOG)<<"postId: "<<post.postId();
@@ -902,7 +897,6 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
 
 bool DBMan::removeLocalEntry(const BilboPost &post)
 {
-    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QStringLiteral("DELETE FROM local_post WHERE local_id=?"));
     q.addBindValue(post.localId());
@@ -916,7 +910,6 @@ bool DBMan::removeLocalEntry(const BilboPost &post)
 
 bool DBMan::removeLocalEntry(int local_id)
 {
-    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QStringLiteral("DELETE FROM local_post WHERE local_id=?"));
     q.addBindValue(local_id);
@@ -930,7 +923,6 @@ bool DBMan::removeLocalEntry(int local_id)
 
 bool DBMan::removeTempEntry(const BilboPost &post)
 {
-    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QStringLiteral("DELETE FROM temp_post WHERE local_id=?"));
     q.addBindValue(post.localId());
@@ -945,7 +937,6 @@ bool DBMan::removeTempEntry(const BilboPost &post)
 
 bool DBMan::clearTempEntries()
 {
-    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     bool res = q.exec(QStringLiteral("DELETE FROM temp_post"));
     if (!res) {

@@ -28,31 +28,31 @@
 WaitWidget::WaitWidget(QWidget *parent)
     : QDialog(parent)
 {
-    qCDebug(BLOGILO_LOG);
+
     setupUi(this);
 }
 
 WaitWidget::~WaitWidget()
 {
-    qCDebug(BLOGILO_LOG);
+
 }
 
 void WaitWidget::setText(const QString &text)
 {
-    qCDebug(BLOGILO_LOG);
+
     operationNameLabel->setText(text);
     setWindowTitle(text);
 }
 
 void WaitWidget::setMaxJobs(int max)
 {
-    qCDebug(BLOGILO_LOG);
+
     progressBar->setMaximum(max);
 }
 
 void WaitWidget::jobDone()
 {
-    qCDebug(BLOGILO_LOG);
+
     progressBar->setValue(progressBar->value() + 1);
 }
 
