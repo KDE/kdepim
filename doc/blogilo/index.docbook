@@ -3,16 +3,14 @@
 "dtd/kdedbx45.dtd" [
   <!-- Define an entity for your application if it is not part of KDE
        CVS -->
-  <!ENTITY kapplication "<application>Blogilo</application>">
-  <!ENTITY kappname "&kapplication;">
-  <!ENTITY package "kdepim">
+  <!ENTITY blogilo "<application>Blogilo</application>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>
 <book id="blogilo" lang="&language;">
 
 <bookinfo id="blogiloinfo">
-<title>The &kapplication; Handbook</title>
+<title>The &blogilo; Handbook</title>
 
 <authorgroup>
 <author>
@@ -33,7 +31,7 @@
 
 <abstract>
 <para>
-&kapplication; is a blogging client for &kde;.
+&blogilo; is a blogging client by &kde;.
 </para>
 </abstract>
 
@@ -47,7 +45,7 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; is a blogging client.</para>
+<para>&blogilo; is a blogging client.</para>
 <para>A blog client (also called blog software or blogware) is software
 designed to simplify the creation and maintenance of weblogs. As other
 specialized content management systems do, weblog applications support the
@@ -57,20 +55,20 @@ comments.</para>
 </chapter>
 
 <chapter id="using-kapp">
-<title>Using &kapplication;</title>
+<title>Using &blogilo;</title>
 
 <sect1 id="getting-started">
 <title>Getting started</title>
-<para>In the &kapplication; main window, you can create new posts, modify previous
+<para>In the &blogilo; main window, you can create new posts, modify previous
 ones, remove them from the server as well as upload media files to the server.
 You can also save posts locally for later use.</para>
 <note><para>All of these will be available after you configure at least one blog
 in
-&kapplication;.</para></note>
+&blogilo;.</para></note>
 <para>Without any configured blog you can write and save posts locally for
 later use.</para>
 <screenshot>
-<screeninfo>Here's a screenshot of &kapplication;</screeninfo>
+<screeninfo>Here's a screenshot of &blogilo;</screeninfo>
   <mediaobject>
     <imageobject>
       <imagedata fileref="mainwindow.png" format="PNG"/>
@@ -85,9 +83,9 @@ later use.</para>
 <sect1 id="configuring-a-blog">
 <title>Configuring a blog</title>
 <para>Blog management is available in the <guilabel>Configure
-&kapplication;</guilabel> dialog, and is accessible via the
+&blogilo;</guilabel> dialog, and is accessible via the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
-&kapplication;...</guimenuitem></menuchoice> menu, or alternatively via the
+&blogilo;...</guimenuitem></menuchoice> menu, or alternatively via the
 <menuchoice><guimenu>Blog</guimenu><guimenuitem>Add Blog...</guimenuitem>
 </menuchoice> menu.</para>
 <screenshot>
@@ -124,7 +122,7 @@ drop-down list.</para>
   </mediaobject>
 </screenshot>
 <para>
-You can check what &kapplication; supports for your blog in
+You can check what &blogilo; supports for your blog in
 the <guilabel>Supported Features</guilabel> tab.</para>
 </sect1>
 
@@ -136,7 +134,7 @@ simply press <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo> (its
 shortcut).</para>
 <para>A new/empty post is created, and you can write, and configure it, and
 then submit it to your blog.</para>
-<para>The &kapplication; main window is divided into two sections, Composer and
+<para>The &blogilo; main window is divided into two sections, Composer and
 Toolbox.</para>
 
 <sect2><title>Composer</title>
@@ -276,7 +274,7 @@ the file on the server.</para>
 <guimenu>File</guimenu>
 <guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Quit</action> &kapplication;</para></listitem>
+<listitem><para><action>Quit</action> &blogilo;</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -348,7 +346,7 @@ not. And additionally, whether as an edit of the current post, or as a new post.
 </variablelist>
 
 <para>
-Additionally &kapplication; has the common &kde; <guimenu>Settings</guimenu> and <guimenu>Help</guimenu>
+Additionally &blogilo; has the common &kde; <guimenu>Settings</guimenu> and <guimenu>Help</guimenu>
 menu items, for more information read the sections about the <ulink url="help:/fundamentals/ui.html#menus-settings"
 >Settings Menu</ulink> and <ulink url="help:/fundamentals/ui.html#menus-help">Help Menu</ulink>
 of the &kde; Fundamentals.
@@ -362,7 +360,7 @@ of the &kde; Fundamentals.
 
 <title>Credits and License</title>
 
-<para>&kapplication;</para>
+<para>&blogilo;</para>
 <para>
 Program copyright 2008-2009 &Mehrdad.Momeny; &Mehrdad.Momeny.mail; and 
 &Golnaz.Nilieh; &Golnaz.Nilieh.mail;
@@ -376,25 +374,6 @@ Documentation Copyright &copy; 2009 &Mehrdad.Momeny; &Mehrdad.Momeny.mail;
 &underFDL;               <!-- FDL: do not remove -->
 &underGPL;        	 <!-- GPL License -->
 </chapter>
-
-<appendix id="installation">
-<title>Installation</title>
-
-<sect1 id="getting-blogilo">
-<title>How to obtain &kapplication;</title>
-
-&install.intro.documentation;
-
-</sect1>
-
-<sect1 id="compilation">
-<title>Compilation and Installation</title>
-
-&install.compile.documentation;
-
-</sect1>
-
-</appendix>
 
 &documentation.index;
 </book>
