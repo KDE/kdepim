@@ -40,7 +40,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     set(QT_REQUIRED_VERSION "5.6.0")
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets WebEngine WebEngineWidgets)
 
-    set(PIMCOMMON_LIB_VERSION_LIB "5.2.40")
+    set(PIMCOMMON_LIB_VERSION_LIB "5.2.43")
     set(LIBKDEPIM_LIB_VERSION_LIB "5.2.40")
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
