@@ -75,7 +75,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
 
 
     include_directories(${accountwizard_SOURCE_DIR} ${accountwizard_BINARY_DIR})
-
+    add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
 endif()
 add_definitions(-DQT_USE_QSTRINGBUILDER)

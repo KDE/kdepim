@@ -57,6 +57,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${console_SOURCE_DIR})
     find_package(KF5AkonadiCalendar ${AKONADICALENDAR_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5CalendarSupport ${CALENDARSUPPORT_LIB_VERSION_LIB} CONFIG REQUIRED)
+    add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
 endif()
 include_directories(${console_SOURCE_DIR} ${console_BINARY_DIR})
