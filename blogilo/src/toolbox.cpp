@@ -520,9 +520,9 @@ void Toolbox::openPostInBrowser()
     BilboPost post = DBMan::self()->getPostInfo(lstEntriesList->currentItem()->data(BlogEntryID).toInt());
     QUrl url;
     if (!post.permaLink().isEmpty()) {
-        url = post.permaLink().url();
+        url = post.permaLink();
     } else if (!post.link().isEmpty()) {
-        url = post.link().url();
+        url = post.link();
     } else {
         url = QUrl(DBMan::self()->blogList().value(d->mCurrentBlogId)->blogUrl());
     }

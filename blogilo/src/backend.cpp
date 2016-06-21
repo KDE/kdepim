@@ -284,7 +284,7 @@ void Backend::mediaUploaded(KBlog::BlogMedia *media)
         Q_EMIT sigMediaError(tmp, m);
         return;
     }
-    m->setRemoteUrl(QUrl(media->url().url()).toString());
+    m->setRemoteUrl(QUrl(media->url().url()));
     m->setUploaded(true);
     qCDebug(BLOGILO_LOG) << "Emitting sigMediaUploaded...";
     Q_EMIT sigMediaUploaded(m);

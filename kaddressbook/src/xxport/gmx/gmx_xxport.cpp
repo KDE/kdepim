@@ -266,7 +266,7 @@ ContactList GMXXXPort::importContacts() const
             addressee->insertEmail(itemList[10], preferred);
             if (!itemList[11].isEmpty()) {
                 KContacts::ResourceLocatorUrl url;
-                url.setUrl(itemList[11]);
+                url.setUrl(QUrl(itemList[11]));
                 addressee->setUrl(url);
             }
             if (!itemList[12].isEmpty()) {
