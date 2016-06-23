@@ -46,7 +46,7 @@
 using namespace ComposerEditorWebEngine;
 
 ComposerWebEngine::ComposerWebEngine(QWidget *parent)
-    : WebEngineViewer::WebEngineView(parent),
+    : WebEngineViewer::WebEngineView(false, parent),
       d(new ComposerEditorWebEngine::ComposerEditorWebEnginePrivate(this))
 {
     settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
