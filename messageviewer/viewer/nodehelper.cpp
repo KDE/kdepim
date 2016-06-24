@@ -672,20 +672,12 @@ QString NodeHelper::persistentIndex( const KMime::Content * node ) const
   QString indexStr = node->index().toString();
   const KMime::Content * const topLevel = node->topLevel();
   //if the node is an extra node, prepend the index of the extra node to the url
-  QMap<KMime::Content*, QList<KMime::Content*> >::ConstIterator it = mExtraContents.constBegin();
-  for (; it != mExtraContents.constEnd(); ++it) {
-    const QList<KMime::Content*> &extraNodes = it.value();
-    for ( int i = 0; i < extraNodes.size(); ++i ) {
-      if ( topLevel == extraNodes.at(i) ) {
-        indexStr.prepend(QString::fromLatin1("%1:").arg(i) );
-        if (topLevel != node) {
-          const QString parentIdx = persistentIndex(topLevel);
-          return indexStr.prepend(persistentIndex(topLevel));
-        }
-      }
-    }
+  Q_FOREACH( const QList<KMime::Content*> & extraNodes, mExtraContents ) {
+    const int extraNodesSize( extraNodes.size() );
+    for ( int i = 0; i < extraNodesSize; ++i )
+      if ( topLevel == extraNodes.at(i) )
+        return indexStr.prepend( QString::fromLatin1("%1:").arg(i) );
   }
-
   return indexStr;
 }
 
