@@ -47,8 +47,6 @@ TypePage::TypePage(KAssistantDialog *parent) :
     ui.searchLine->setProxy(proxy);
 
     QStringList list;
-    QStringList files;
-
     const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/accountwizard/"), QStandardPaths::LocateDirectory);
     Q_FOREACH (const QString &dir, dirs) {
         const QStringList directories = QDir(dir).entryList(QDir::AllDirs);
