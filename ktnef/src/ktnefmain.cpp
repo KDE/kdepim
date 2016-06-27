@@ -189,9 +189,6 @@ void KTNEFMain::setupTNEF()
 
     connect(mView, &QTreeWidget::itemDoubleClicked,
             this, &KTNEFMain::viewDoubleClicked);
-
-//PORTME:  connect( mView, SIGNAL(dragRequested(QList<KTNEFAttach*>)),
-//PORTME:           SLOT(viewDragRequested(QList<KTNEFAttach*>)) );
 }
 
 void KTNEFMain::loadFile(const QString &filename)

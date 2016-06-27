@@ -58,7 +58,6 @@ void KAddressBookPluginInterface::initializeInterfaceRequires(PimCommon::Generic
     }
     if (requires & PimCommon::GenericPluginInterface::Collections) {
         qCDebug(KADDRESSBOOK_LOG) << "PimCommon::GenericPluginInterface::Collections not implemented";
-        //TODO
     }
 }
 
