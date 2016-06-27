@@ -72,7 +72,7 @@ void ExportResourceArchiveJob::start()
         connect(mThread, &PimSettingBackupThread::error, this, &ExportResourceArchiveJob::error);
         connect(mThread, &PimSettingBackupThread::info, this, &ExportResourceArchiveJob::info);
         connect(mThread, &PimSettingBackupThread::terminated, this, &ExportResourceArchiveJob::slotTerminated);
-        connect(mThread, SIGNAL(finished()), mThread, SLOT(deleteLater()));
+        connect(mThread, &QThread::finished, mThread, &QObject::deleteLater);
         mThread->start();
     } else {
         qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "zip not defined !";

@@ -49,7 +49,7 @@ public:
 
 private Q_SLOTS:
     void setFile(const QString &);
-    void setFile(const QUrl &);
+    void setUrl(const QUrl &);
     void urlChanged(const QString &);
 
     void customDelimiterChanged();
