@@ -664,20 +664,46 @@ void NodeHelper::setNodeDisplayedHidden( KMime::Content* node, bool displayedHid
 
   Used internally for robust indexing.
 */
-QString NodeHelper::persistentIndex( const KMime::Content * node ) const
+QString NodeHelper::persistentIndex(const KMime::Content *node) const
 {
-  if ( !node )
+  if (!node) {
     return QString();
+  }
 
   QString indexStr = node->index().toString();
-  const KMime::Content * const topLevel = node->topLevel();
-  //if the node is an extra node, prepend the index of the extra node to the url
-  Q_FOREACH( const QList<KMime::Content*> & extraNodes, mExtraContents ) {
-    const int extraNodesSize( extraNodes.size() );
-    for ( int i = 0; i < extraNodesSize; ++i )
-      if ( topLevel == extraNodes.at(i) )
-        return indexStr.prepend( QString::fromLatin1("%1:").arg(i) );
+  if (indexStr.isEmpty()) {
+    Q_FOREACH (KMime::Content *realNode, mExtraContents.keys()) {
+      const auto &extraNodes = mExtraContents.value(realNode);
+      for (int i = 0; i < extraNodes.size(); i++) {
+        if (extraNodes[i] == node) {
+          indexStr = QString::fromLatin1("e%1").arg(i);
+          const QString parentIndex = persistentIndex(realNode);
+          if (!parentIndex.isEmpty()) {
+            indexStr = QString::fromLatin1("%1:%2").arg(parentIndex, indexStr);
+          }
+          return indexStr;
+        }
+      }
+    }
+  } else {
+    const KMime::Content *const topLevel = node->topLevel();
+    //if the node is an extra node, prepend the index of the extra node to the url
+    Q_FOREACH (KMime::Content *realNode, mExtraContents.keys()) {
+      const QList<KMime::Content *> &extraNodes = extraContents(realNode);
+      for (int i = 0; i < extraNodes.size(); ++i) {
+        KMime::Content *const extraNode = extraNodes[i];
+        if (topLevel == extraNode) {
+          indexStr.prepend(QString::fromLatin1("e%1:").arg(i));
+          const QString parentIndex = persistentIndex(realNode);
+          if (!parentIndex.isEmpty()) {
+            indexStr = QString::fromLatin1("%1:%2").arg(parentIndex, indexStr);
+          }
+          return indexStr;
+        }
+      }
+    }
   }
+
   return indexStr;
 }
 

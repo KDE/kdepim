@@ -303,21 +303,24 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
         return mMessage.get();
     }
     if ( !url.isLocalFile() ) {
-        QString path = url.path(KUrl::RemoveTrailingSlash);
-        if ( path.contains(QLatin1Char(':')) ) {
-            //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
-            //and use the remaining part as a ContentIndex to find the node inside the extra node
-            int i = path.left( path.indexOf(QLatin1Char(':')) ).toInt();
-            path = path.mid( path.indexOf(QLatin1Char(':')) + 1 );
-            KMime::ContentIndex idx(path);
-            QList<KMime::Content*> extras = mNodeHelper->extraContents( mMessage.get() );
-            if ( i >= 0 && i < extras.size() ) {
-                KMime::Content* c = extras[i];
-                node = c->content( idx );
+        QString urlPath = url.path(KUrl::RemoveTrailingSlash);
+        if (mMessage) {
+            KMime::Content *c = mMessage.get();
+            const QStringList pathParts = urlPath.split(QLatin1Char(':'), QString::SkipEmptyParts);
+            for (int i = 0; i < pathParts.size(); ++i) {
+                const QString &path = pathParts[i];
+                if (path.startsWith(QLatin1Char('e'))) {
+                    const QList<KMime::Content*> &extraParts = mNodeHelper->extraContents(c);
+                    const int idx = path.mid(1, -1).toInt();
+                    c = (idx < extraParts.size()) ? extraParts[idx] : 0;
+                } else {
+                    c = c->content(KMime::ContentIndex(path));
+                }
+                if (!c) {
+                    break;
+                }
             }
-        } else {
-            if( mMessage )
-                node= mMessage->content( KMime::ContentIndex( path ) );
+          node = c;
         }
     } else {
         const QString path = url.toLocalFile();
