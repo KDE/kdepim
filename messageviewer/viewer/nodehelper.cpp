@@ -673,7 +673,7 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
   QString indexStr = node->index().toString();
   if (indexStr.isEmpty()) {
     Q_FOREACH (KMime::Content *realNode, mExtraContents.keys()) {
-      const auto &extraNodes = mExtraContents.value(realNode);
+      const QList<KMime::Content*> &extraNodes = mExtraContents.value(realNode);
       for (int i = 0; i < extraNodes.size(); i++) {
         if (extraNodes[i] == node) {
           indexStr = QString::fromLatin1("e%1").arg(i);
