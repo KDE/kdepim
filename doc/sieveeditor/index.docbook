@@ -108,7 +108,6 @@ or the configuration dialog for these tasks.</para>
           </textobject>
         </mediaobject>
 </screenshot>
-<para>For detailed information about the editor please read the <ulink url="help:/katepart">KatePart documentation</ulink>.</para>
 
 </sect2>
 
@@ -131,18 +130,18 @@ or the configuration dialog for these tasks.</para>
 </sect2>
 
 <sect2 id="script-help">
-<title>Help Support</title>
+<title>Integrated Help</title>
 
 <para>You can use the integrated help support and click with the &RMB; on a keyword of the Sieve language.
 Then the corresponding section of the documentation is downloaded from the Internet and displayed in the <guilabel>Help</guilabel> tab.</para>
 <screenshot>
-<screeninfo>Help Support</screeninfo>
+<screeninfo>Integrated Help</screeninfo>
         <mediaobject>
           <imageobject>
             <imagedata fileref="script-help.png" format="PNG"/>
           </imageobject>
           <textobject>
-            <phrase>Help Support</phrase>
+            <phrase>Integrated Help</phrase>
           </textobject>
         </mediaobject>
 </screenshot>
