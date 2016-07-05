@@ -27,8 +27,18 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
     include(ECMAddAppIcon)
     include(ECMQtDeclareLoggingCategory)
 
+    # Do NOT add quote
+    set(KDEPIM_DEV_VERSION pre)
+
+    # add an extra space
+    if(DEFINED KDEPIM_DEV_VERSION)
+        set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
+    endif()
+
 
     set(KDEPIM_VERSION_NUMBER "5.2.80")
+    set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
+
     set(AKONADI_MIMELIB_VERSION "5.2.80")
     set(AKONADI_CONTACT_VERSION "5.2.80")
     set(KCONTACTS_LIB_VERSION "5.2.80")
