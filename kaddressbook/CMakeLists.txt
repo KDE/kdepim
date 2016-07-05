@@ -68,7 +68,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
     find_package(KF5KaddressbookGrantlee ${KDEPIM_APPS_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5GrantleeTheme ${LIBGRANTLEETHEME_LIB_VERSION_LIB} CONFIG REQUIRED)
 
-    find_package(KF5AkonadiSearch "5.2.41" CONFIG REQUIRED)
+    find_package(KF5AkonadiSearch "5.2.80" CONFIG REQUIRED)
     set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
     include_directories(${kaddressbook_SOURCE_DIR} ${kaddressbook_BINARY_DIR})

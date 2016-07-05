@@ -235,7 +235,7 @@ else()
 
     add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
-    find_package(KF5AkonadiSearch "5.2.41" CONFIG REQUIRED)
+    find_package(KF5AkonadiSearch "5.2.80" CONFIG REQUIRED)
     set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
     if(KDEPIM_ENTERPRISE_BUILD)
