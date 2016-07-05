@@ -28,7 +28,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
     include(ECMQtDeclareLoggingCategory)
 
 
-    set(KDEPIM_VERSION_NUMBER "5.2.54")
+    set(KDEPIM_VERSION_NUMBER "5.2.80")
     set(AKONADI_MIMELIB_VERSION "5.2.80")
     set(AKONADI_CONTACT_VERSION "5.2.80")
     set(KCONTACTS_LIB_VERSION "5.2.80")
