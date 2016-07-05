@@ -26,7 +26,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${akonadiconsole_SOURCE_DIR})
 
 
     # Do NOT add quote
-    set(KDEPIM_DEV_VERSION pre)
+    set(KDEPIM_DEV_VERSION beta1)
 
     # add an extra space
     if(DEFINED KDEPIM_DEV_VERSION)
