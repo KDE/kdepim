@@ -66,17 +66,17 @@ MainWidget *MainWindow::mainWidget() const
 
 void MainWindow::initActions()
 {
-    KStandardAction::quit(this, SLOT(close()), actionCollection());
+    KStandardAction::quit(this, &MainWindow::close, actionCollection());
     mHideMenuBarAction = KStandardAction::showMenubar(this, SLOT(slotToggleMenubar()), actionCollection());
 
     QAction *action =
-        KStandardAction::keyBindings(this, SLOT(configureKeyBindings()), actionCollection());
+        KStandardAction::keyBindings(this, &MainWindow::configureKeyBindings, actionCollection());
     action->setWhatsThis(
         i18nc("@info:whatsthis",
               "You will be presented with a dialog where you can configure "
               "the application-wide shortcuts."));
-    KStandardAction::configureToolbars(this, SLOT(configureToolbars()), actionCollection());
-    KStandardAction::preferences(this, SLOT(configure()), actionCollection());
+    KStandardAction::configureToolbars(this, &MainWindow::configureToolbars, actionCollection());
+    KStandardAction::preferences(this, &MainWindow::configure, actionCollection());
 }
 
 void MainWindow::configure()

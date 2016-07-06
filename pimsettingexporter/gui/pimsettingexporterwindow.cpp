@@ -218,13 +218,13 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     mShowArchiveInformationsAboutCurrentArchiveAction->setEnabled(false);
 
     KStandardAction::quit(this, SLOT(close()), ac);
-    mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(QUrl)), ac);
+    mRecentFilesAction = KStandardAction::openRecent(this, &PimSettingExporterWindow::slotRestoreFile, ac);
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group(QStringLiteral("Recent File"));
     mRecentFilesAction->loadEntries(groupConfig);
 
-    KStandardAction::preferences(this, SLOT(slotConfigure()), ac);
+    KStandardAction::preferences(this, &PimSettingExporterWindow::slotConfigure, ac);
 }
 
 void PimSettingExporterWindow::slotConfigure()

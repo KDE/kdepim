@@ -96,19 +96,19 @@ void ContactEditorMainWindow::setupActions()
 
     mUploadTheme = KNS3::standardAction(i18n("Upload theme..."), this, SLOT(slotUploadTheme()), actionCollection(), "upload_theme");
 
-    mNewThemeAction = KStandardAction::openNew(this, SLOT(slotNewTheme()), actionCollection());
+    mNewThemeAction = KStandardAction::openNew(this, &ContactEditorMainWindow::slotNewTheme, actionCollection());
     mNewThemeAction->setText(i18n("New theme..."));
 
-    mOpenAction = KStandardAction::open(this, SLOT(slotOpenTheme()), actionCollection());
+    mOpenAction = KStandardAction::open(this, &ContactEditorMainWindow::slotOpenTheme, actionCollection());
     mOpenAction->setText(i18n("Open theme..."));
-    mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
+    mSaveAction = KStandardAction::save(this, &ContactEditorMainWindow::slotSaveTheme, actionCollection());
     mSaveAction->setText(i18n("Save theme..."));
-    mSaveAsAction = KStandardAction::saveAs(this, SLOT(slotSaveAsTheme()), actionCollection());
+    mSaveAsAction = KStandardAction::saveAs(this, &ContactEditorMainWindow::slotSaveAsTheme, actionCollection());
     mSaveAsAction->setText(i18n("Save theme as..."));
 
-    mCloseAction = KStandardAction::close(this, SLOT(slotCloseTheme()), actionCollection());
-    KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection());
-    KStandardAction::preferences(this, SLOT(slotConfigure()), actionCollection());
+    mCloseAction = KStandardAction::close(this, &ContactEditorMainWindow::slotCloseTheme, actionCollection());
+    KStandardAction::quit(this, &ContactEditorMainWindow::slotQuitApp, actionCollection());
+    KStandardAction::preferences(this, &ContactEditorMainWindow::slotConfigure, actionCollection());
 
     mInstallTheme = new QAction(i18n("Install theme"), this);
     actionCollection()->addAction(QStringLiteral("install_theme"), mInstallTheme);

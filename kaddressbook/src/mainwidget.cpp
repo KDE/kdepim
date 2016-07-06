@@ -596,12 +596,12 @@ void MainWidget::setupActions(KActionCollection *collection)
     mGrantleeThemeManager->setThemeMenu(themeMenu);
     mGrantleeThemeManager->setActionGroup(group);
 
-    QAction *action = KStandardAction::print(this, SLOT(print()), collection);
+    QAction *action = KStandardAction::print(this, &MainWidget::print, collection);
     action->setWhatsThis(
         i18nc("@info:whatsthis",
               "Print the complete address book or a selected number of contacts."));
 
-    KStandardAction::printPreview(this, SLOT(printPreview()), collection);
+    KStandardAction::printPreview(this, &MainWidget::printPreview, collection);
 
     QWidgetAction *quicksearch = new QWidgetAction(this);
     quicksearch->setText(i18n("Quick search"));

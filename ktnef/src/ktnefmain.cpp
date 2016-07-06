@@ -92,21 +92,21 @@ KTNEFMain::~KTNEFMain()
 
 void KTNEFMain::setupActions()
 {
-    KStandardAction::quit(this, SLOT(close()), actionCollection());
+    KStandardAction::quit(this, &KTNEFMain::close, actionCollection());
 
     QAction *action =
-        KStandardAction::keyBindings(this, SLOT(slotConfigureKeys()), actionCollection());
+        KStandardAction::keyBindings(this, &KTNEFMain::slotConfigureKeys, actionCollection());
     action->setWhatsThis(
         i18nc("@info:whatsthis",
               "You will be presented with a dialog where you can configure "
               "the application-wide shortcuts."));
 
-    KStandardAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
+    KStandardAction::configureToolbars(this, &KTNEFMain::slotEditToolbars, actionCollection());
 
     // File menu
-    KStandardAction::open(this, SLOT(openFile()), actionCollection());
+    KStandardAction::open(this, &KTNEFMain::openFile, actionCollection());
 
-    mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(QUrl)), actionCollection());
+    mOpenRecentFileAction = KStandardAction::openRecent(this, &KTNEFMain::openRecentFile, actionCollection());
 
     // Action menu
     QAction *openAction = actionCollection()->addAction(QStringLiteral("view_file"));

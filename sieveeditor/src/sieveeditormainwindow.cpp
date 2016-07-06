@@ -118,10 +118,10 @@ void SieveEditorMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
 
-    KStandardAction::quit(this, SLOT(close()), ac);
-    KStandardAction::preferences(this, SLOT(slotConfigure()), ac);
+    KStandardAction::quit(this, &SieveEditorMainWindow::close, ac);
+    KStandardAction::preferences(this, &SieveEditorMainWindow::slotConfigure, ac);
 
-    mUploadScript = KStandardAction::save(this, SLOT(slotUploadScript()), ac);
+    mUploadScript = KStandardAction::save(this, &SieveEditorMainWindow::slotUploadScript, ac);
     mUploadScript->setText(i18n("Upload"));
     mUploadScript->setEnabled(false);
 
