@@ -217,7 +217,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     mShowArchiveInformationsAboutCurrentArchiveAction->setText(i18n("Show Information on current Archive..."));
     mShowArchiveInformationsAboutCurrentArchiveAction->setEnabled(false);
 
-    KStandardAction::quit(this, SLOT(close()), ac);
+    KStandardAction::quit(this, &PimSettingExporterWindow::close, ac);
     mRecentFilesAction = KStandardAction::openRecent(this, &PimSettingExporterWindow::slotRestoreFile, ac);
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig();

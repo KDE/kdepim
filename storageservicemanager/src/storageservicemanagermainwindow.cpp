@@ -158,7 +158,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
 void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
-    KStandardAction::quit(this, SLOT(close()), ac);
+    KStandardAction::quit(this, &StorageServiceManagerMainWindow::close, ac);
 
     mAuthenticate = ac->addAction(QStringLiteral("authenticate"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
@@ -204,8 +204,8 @@ void StorageServiceManagerMainWindow::setupActions()
     mRenameItem->setText(i18n("Rename..."));
     ac->setDefaultShortcut(mRenameItem, QKeySequence(Qt::Key_F2));
 
-    KStandardAction::preferences(this, SLOT(slotConfigure()), ac);
-    KStandardAction::configureNotifications(this, SLOT(slotShowNotificationOptions()), ac); // options_configure_notifications
+    KStandardAction::preferences(this, &StorageServiceManagerMainWindow::slotConfigure, ac);
+    KStandardAction::configureNotifications(this, &StorageServiceManagerMainWindow::slotShowNotificationOptions, ac); // options_configure_notifications
 }
 
 void StorageServiceManagerMainWindow::slotShowNotificationOptions()
