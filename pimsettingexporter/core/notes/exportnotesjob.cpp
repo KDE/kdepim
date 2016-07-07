@@ -47,9 +47,9 @@ void ExportNotesJob::start()
     Q_EMIT title(i18n("Start export KNotes settings..."));
     createProgressDialog(i18n("Export KNotes settings"));
     if (mTypeSelected & Utils::Data) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
+        QTimer::singleShot(0, this, &ExportNotesJob::slotCheckBackupResource);
     } else if (mTypeSelected & Utils::Config) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+        QTimer::singleShot(0, this, &ExportNotesJob::slotCheckBackupConfig);
     } else {
         Q_EMIT jobFinished();
     }
@@ -73,7 +73,7 @@ void ExportNotesJob::slotCheckBackupResource()
     increaseProgressDialog();
     backupTheme();
 
-    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+    QTimer::singleShot(0, this, &ExportNotesJob::slotWriteNextArchiveResource);
 }
 
 void ExportNotesJob::slotCheckBackupConfig()
@@ -96,7 +96,7 @@ void ExportNotesJob::slotNoteJobTerminated()
         return;
     }
     mIndexIdentifier++;
-    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+    QTimer::singleShot(0, this, &ExportNotesJob::slotWriteNextArchiveResource);
 }
 
 void ExportNotesJob::slotWriteNextArchiveResource()
@@ -125,17 +125,17 @@ void ExportNotesJob::slotWriteNextArchiveResource()
                     resourceJob->start();
                 } else {
                     qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "Url is empty for " << identifier;
-                    QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
+                    QTimer::singleShot(0, this, &ExportNotesJob::slotNoteJobTerminated);
                 }
             } else {
-                QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
+                QTimer::singleShot(0, this, &ExportNotesJob::slotNoteJobTerminated);
             }
         } else {
-            QTimer::singleShot(0, this, SLOT(slotNoteJobTerminated()));
+            QTimer::singleShot(0, this, &ExportNotesJob::slotNoteJobTerminated);
         }
     } else {
         Q_EMIT info(i18n("Resources backup done."));
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+        QTimer::singleShot(0, this, &ExportNotesJob::slotCheckBackupConfig);
     }
 }
 

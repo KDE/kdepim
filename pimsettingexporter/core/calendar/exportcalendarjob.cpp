@@ -50,9 +50,9 @@ void ExportCalendarJob::start()
     Q_EMIT title(i18n("Start export KOrganizer settings..."));
     createProgressDialog(i18n("Export KOrganizer settings"));
     if (mTypeSelected & Utils::Resources) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
+        QTimer::singleShot(0, this, &ExportCalendarJob::slotCheckBackupResource);
     } else if (mTypeSelected & Utils::Config) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+        QTimer::singleShot(0, this, &ExportCalendarJob::slotCheckBackupConfig);
     } else {
         Q_EMIT jobFinished();
     }
@@ -62,7 +62,7 @@ void ExportCalendarJob::slotCheckBackupResource()
 {
     setProgressDialogLabel(i18n("Backing up resources..."));
     increaseProgressDialog();
-    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+    QTimer::singleShot(0, this, &ExportCalendarJob::slotWriteNextArchiveResource);
 }
 
 void ExportCalendarJob::slotCheckBackupConfig()
@@ -85,7 +85,7 @@ void ExportCalendarJob::slotCalendarJobTerminated()
         return;
     }
     mIndexIdentifier++;
-    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+    QTimer::singleShot(0, this, &ExportCalendarJob::slotWriteNextArchiveResource);
 }
 
 void ExportCalendarJob::slotWriteNextArchiveResource()
@@ -114,20 +114,20 @@ void ExportCalendarJob::slotWriteNextArchiveResource()
                     resourceJob->start();
                 } else {
                     qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "Url is empty for " << identifier;
-                    QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
+                    QTimer::singleShot(0, this, &ExportCalendarJob::slotCalendarJobTerminated);
                 }
             } else {
-                QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
+                QTimer::singleShot(0, this, &ExportCalendarJob::slotCalendarJobTerminated);
             }
         } else if (identifier.contains(QStringLiteral("akonadi_ical_resource_"))) {
             backupResourceFile(agent, Utils::calendarPath());
-            QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
+            QTimer::singleShot(0, this, &ExportCalendarJob::slotCalendarJobTerminated);
         } else {
-            QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
+            QTimer::singleShot(0, this, &ExportCalendarJob::slotCalendarJobTerminated);
         }
     } else {
         Q_EMIT info(i18n("Resources backup done."));
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+        QTimer::singleShot(0, this, &ExportCalendarJob::slotCheckBackupConfig);
     }
 }
 

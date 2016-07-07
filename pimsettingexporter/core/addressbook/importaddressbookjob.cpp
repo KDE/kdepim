@@ -58,7 +58,7 @@ void ImportAddressbookJob::start()
     createProgressDialog(i18n("Import KAddressBook settings"));
     searchAllFiles(mArchiveDirectory, QString(), QStringLiteral("addressbook"));
     initializeListStep();
-    QTimer::singleShot(0, this, SLOT(slotNextStep()));
+    QTimer::singleShot(0, this, &ImportAddressbookJob::slotNextStep);
 }
 
 void ImportAddressbookJob::slotNextStep()

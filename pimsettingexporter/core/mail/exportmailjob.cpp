@@ -67,15 +67,15 @@ void ExportMailJob::start()
     Q_EMIT title(i18n("Start export KMail settings..."));
     createProgressDialog(i18n("Export KMail settings"));
     if (checkBackupType(Utils::Identity)) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupIdentity()));
+        QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupIdentity);
     } else if (checkBackupType(Utils::MailTransport)) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupMailTransport()));
+        QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupMailTransport);
     } else if (checkBackupType(Utils::Config)) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+        QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupConfig);
     } else if (checkBackupType(Utils::Mails)) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupMails()));
+        QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupMails);
     } else if (checkBackupType(Utils::Resources)) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+        QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupResources);
     } else {
         Q_EMIT jobFinished();
     }
@@ -91,7 +91,7 @@ void ExportMailJob::slotCheckBackupIdentity()
             return;
         }
     }
-    QTimer::singleShot(0, this, SLOT(slotCheckBackupMailTransport()));
+    QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupMailTransport);
 }
 
 void ExportMailJob::slotCheckBackupMailTransport()
@@ -104,7 +104,7 @@ void ExportMailJob::slotCheckBackupMailTransport()
             return;
         }
     }
-    QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupConfig);
 }
 
 void ExportMailJob::slotCheckBackupConfig()
@@ -117,7 +117,7 @@ void ExportMailJob::slotCheckBackupConfig()
             return;
         }
     }
-    QTimer::singleShot(0, this, SLOT(slotCheckBackupMails()));
+    QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupMails);
 }
 
 void ExportMailJob::slotCheckBackupMails()
@@ -125,10 +125,10 @@ void ExportMailJob::slotCheckBackupMails()
     if (checkBackupType(Utils::Mails)) {
         increaseProgressDialog();
         setProgressDialogLabel(i18n("Backing up Mails..."));
-        QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+        QTimer::singleShot(0, this, &ExportMailJob::slotWriteNextArchiveResource);
         return;
     }
-    QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+    QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupResources);
 }
 
 void ExportMailJob::slotMailsJobTerminated()
@@ -138,7 +138,7 @@ void ExportMailJob::slotMailsJobTerminated()
         return;
     }
     mIndexIdentifier++;
-    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+    QTimer::singleShot(0, this, &ExportMailJob::slotWriteNextArchiveResource);
 }
 
 void ExportMailJob::slotWriteNextArchiveResource()
@@ -175,26 +175,26 @@ void ExportMailJob::slotWriteNextArchiveResource()
                             resourceJob->start();
                         } else {
                             qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "Url is empty for " << identifier;
-                            QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                            QTimer::singleShot(0, this, &ExportMailJob::slotMailsJobTerminated);
                         }
                     } else {
-                        QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                        QTimer::singleShot(0, this, &ExportMailJob::slotMailsJobTerminated);
                     }
                 } else if (identifier.contains(QStringLiteral("akonadi_mbox_resource_"))) {
                     backupResourceFile(agent, Utils::addressbookPath());
-                    QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                    QTimer::singleShot(0, this, &ExportMailJob::slotMailsJobTerminated);
                 } else {
-                    QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                    QTimer::singleShot(0, this, &ExportMailJob::slotMailsJobTerminated);
                 }
             } else {
-                QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                QTimer::singleShot(0, this, &ExportMailJob::slotMailsJobTerminated);
             }
         } else {
-            QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+            QTimer::singleShot(0, this, &ExportMailJob::slotMailsJobTerminated);
         }
     } else {
         Q_EMIT info(i18n("Resources backup done."));
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+        QTimer::singleShot(0, this, &ExportMailJob::slotCheckBackupResources);
     }
 }
 

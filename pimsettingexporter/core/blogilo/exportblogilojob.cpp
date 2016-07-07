@@ -43,9 +43,9 @@ void ExportBlogiloJob::start()
     Q_EMIT title(i18n("Start export Blogilo settings..."));
     createProgressDialog(i18n("Export Blogilo settings"));
     if (mTypeSelected & Utils::Config) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+        QTimer::singleShot(0, this, &ExportBlogiloJob::slotCheckBackupConfig);
     } else if (mTypeSelected & Utils::Data) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+        QTimer::singleShot(0, this, &ExportBlogiloJob::slotCheckBackupData);
     } else {
         Q_EMIT jobFinished();
     }
@@ -60,7 +60,7 @@ void ExportBlogiloJob::slotCheckBackupConfig()
     backupUiRcFile(QStringLiteral("blogiloui.rc"), QStringLiteral("blogilo"));
 
     Q_EMIT info(i18n("Config backup done."));
-    QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+    QTimer::singleShot(0, this, &ExportBlogiloJob::slotCheckBackupData);
 }
 
 void ExportBlogiloJob::slotCheckBackupData()

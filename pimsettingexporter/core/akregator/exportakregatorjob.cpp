@@ -42,9 +42,9 @@ void ExportAkregatorJob::start()
     Q_EMIT title(i18n("Start export Akregator settings..."));
     createProgressDialog(i18n("Export Akregator settings"));
     if (mTypeSelected & Utils::Config) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+        QTimer::singleShot(0, this, &ExportAkregatorJob::slotCheckBackupConfig);
     } else if (mTypeSelected & Utils::Data) {
-        QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+        QTimer::singleShot(0, this, &ExportAkregatorJob::slotCheckBackupData);
     } else {
         Q_EMIT jobFinished();
     }
@@ -61,7 +61,7 @@ void ExportAkregatorJob::slotCheckBackupConfig()
     backupConfigFile(QStringLiteral("akregator.notifyrc"));
 
     Q_EMIT info(i18n("Config backup done."));
-    QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+    QTimer::singleShot(0, this, &ExportAkregatorJob::slotCheckBackupData);
 }
 
 void ExportAkregatorJob::slotCheckBackupData()
