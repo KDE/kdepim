@@ -84,7 +84,11 @@ QStringList DefaultCompletion::defaultCompetion()
         << QStringLiteral("header.replyToNameOnly")
         << QStringLiteral("header.ccNameOnly")
         << QStringLiteral("header.bccNameOnly")
-        << QStringLiteral("header.toNameOnly");
+        << QStringLiteral("header.toNameOnly")
+        << QStringLiteral("header.senderi18n")
+        << QStringLiteral("header.sender")
+        << QStringLiteral("header.listidi18n")
+        << QStringLiteral("header.listid");
 
     return lst;
 }

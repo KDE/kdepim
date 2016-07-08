@@ -85,6 +85,9 @@ public Q_SLOTS:
     void slotWordWrap(bool);
     void slotPrintPreview();
     void slotPrint();
+    void slotUndo();
+    void slotRedo();
+    void slotSelectAll();
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
@@ -103,9 +106,6 @@ private Q_SLOTS:
     void slotGeneralPaletteChanged();
     void slotTabCloseRequested(int index);
     void slotTabRemoveAllExclude(int index);
-    void slotUndo();
-    void slotRedo();
-    void slotSelectAll();
     void slotTabCloseAllRequested();
 private:
     void updateStackedWidget();

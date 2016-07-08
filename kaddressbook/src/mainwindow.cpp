@@ -67,7 +67,7 @@ MainWidget *MainWindow::mainWidget() const
 void MainWindow::initActions()
 {
     KStandardAction::quit(this, &MainWindow::close, actionCollection());
-    mHideMenuBarAction = KStandardAction::showMenubar(this, SLOT(slotToggleMenubar()), actionCollection());
+    mHideMenuBarAction = KStandardAction::showMenubar(this, &MainWindow::slotToggleMenubar, actionCollection());
 
     QAction *action =
         KStandardAction::keyBindings(this, &MainWindow::configureKeyBindings, actionCollection());

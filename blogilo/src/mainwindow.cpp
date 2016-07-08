@@ -126,7 +126,7 @@ MainWindow::MainWindow()
         blogs->addAction(act);
     }
     connect(blogs, static_cast<void (KSelectAction::*)(QAction *)>(&KSelectAction::triggered), this, &MainWindow::currentBlogChanged);
-    QTimer::singleShot(0, this, SLOT(loadTempPosts()));
+    QTimer::singleShot(0, this, &MainWindow::loadTempPosts);
 }
 
 MainWindow::~MainWindow()
@@ -184,7 +184,7 @@ void MainWindow::setupActions()
 {
     KStandardAction::quit(qApp, SLOT(quit()), actionCollection());
 
-    KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
+    KStandardAction::preferences(this, &MainWindow::optionsPreferences, actionCollection());
 
     // custom menu and menu item
     QAction *actNewPost = new QAction(QIcon::fromTheme(QStringLiteral("document-new")), i18n("New Post"), this);
