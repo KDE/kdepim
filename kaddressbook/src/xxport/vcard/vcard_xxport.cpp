@@ -311,6 +311,7 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         addr.setRelationShips((*it).relationShips());
         addr.setSourcesUrlList((*it).sourcesUrlList());
         addr.setImppList((*it).imppList());
+        addr.setFieldGroupList((*it).fieldGroupList());
 
         if (exportFieldType & VCardExportSelectionWidget::Private) {
             addr.setBirthday((*it).birthday());
