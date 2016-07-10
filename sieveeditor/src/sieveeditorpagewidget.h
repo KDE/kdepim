@@ -64,7 +64,7 @@ public:
     void checkSpelling();
     void shareScript();
     void import();
-    void autoGenerateScript();
+    void createRulesGraphically();
     void checkSyntax();
     void comment();
     void uncomment();

@@ -238,9 +238,9 @@ void SieveEditorPageWidget::checkSpelling()
     mSieveEditorWidget->checkSpelling();
 }
 
-void SieveEditorPageWidget::autoGenerateScript()
+void SieveEditorPageWidget::createRulesGraphically()
 {
-    mSieveEditorWidget->slotAutoGenerateScripts();
+    mSieveEditorWidget->slotCreateRulesGraphically();
 }
 
 void SieveEditorPageWidget::checkSyntax()

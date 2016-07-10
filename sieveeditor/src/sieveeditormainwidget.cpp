@@ -350,13 +350,13 @@ void SieveEditorMainWidget::slotShareScript()
     }
 }
 
-void SieveEditorMainWidget::slotAutoGenerateScript()
+void SieveEditorMainWidget::slotCreateRulesGraphically()
 {
     QWidget *w = mTabWidget->currentWidget();
     if (w) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
-            page->autoGenerateScript();
+            page->createRulesGraphically();
         }
     }
 }

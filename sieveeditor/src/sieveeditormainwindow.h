@@ -87,7 +87,7 @@ private:
     QAction *mShareAction;
     QAction *mSpellCheckAction;
     QAction *mCheckSyntaxAction;
-    QAction *mAutoGenerateScriptAction;
+    QAction *mCreateRulesGraphicallyAction;
     QAction *mCommentAction;
     QAction *mUncommentAction;
     QAction *mZoomInAction;

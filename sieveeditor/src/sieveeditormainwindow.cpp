@@ -186,9 +186,9 @@ void SieveEditorMainWindow::setupActions()
     mCheckSyntaxAction->setText(i18n("Check Syntax"));
     mCheckSyntaxAction->setEnabled(false);
 
-    mAutoGenerateScriptAction = ac->addAction(QStringLiteral("autogenerate_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotAutoGenerateScript()));
-    mAutoGenerateScriptAction->setText(i18n("Autogenerate Script..."));
-    mAutoGenerateScriptAction->setEnabled(false);
+    mCreateRulesGraphicallyAction = ac->addAction(QStringLiteral("autogenerate_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCreateRulesGraphically()));
+    mCreateRulesGraphicallyAction->setText(i18n("Create Rules Graphically..."));
+    mCreateRulesGraphicallyAction->setEnabled(false);
 
     mCommentAction = ac->addAction(QStringLiteral("comment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotComment()));
     ac->setDefaultShortcut(mCommentAction, Qt::CTRL + Qt::Key_D);
@@ -327,7 +327,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     mShareAction->setEnabled(hasPage && !mNetworkIsDown);
     mSpellCheckAction->setEnabled(editActionEnabled);
     mCheckSyntaxAction->setEnabled(editActionEnabled && !mNetworkIsDown);
-    mAutoGenerateScriptAction->setEnabled(editActionEnabled);
+    mCreateRulesGraphicallyAction->setEnabled(editActionEnabled);
     mCommentAction->setEnabled(editActionEnabled);
     mUncommentAction->setEnabled(editActionEnabled);
     mMenuChangeCaseAction->setEnabled(editActionEnabled);

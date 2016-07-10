@@ -71,7 +71,7 @@ public Q_SLOTS:
     void slotCheckSpelling();
     void slotShareScript();
     void slotImport();
-    void slotAutoGenerateScript();
+    void slotCreateRulesGraphically();
     void slotCheckSyntax();
     void slotComment();
     void slotUncomment();

@@ -48,7 +48,7 @@ void SieveEditorEmptyTabWidgetLabel::init()
                                     "<div></div>"
                                     "</div>"
                                     "</body></html>").arg(i18n("Debug a script:"), i18nc("These action in from menu tools submenu debug sieve script", "Tools > Debug Sieve Script"),
-                                            i18n("Autogenerate script:"), i18nc("Action is from menu tools, submenu autogenerate script", "Tools > Autogenerate script"),
+                                            i18n("Create Rules Graphically:"), i18nc("Action is from menu tools, submenu autogenerate script", "Tools > Autogenerate script"),
                                             i18n("Import script:"), i18nc("Action is from file menu, import submenu", "File > Import"));
     setText(placeholderText);
 }
