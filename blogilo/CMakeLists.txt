@@ -55,6 +55,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${blogilo_SOURCE_DIR})
     find_package(KF5TextEditor ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5PimCommon ${PIMCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5Crash ${KF5_VERSION} REQUIRED)
 
 
 

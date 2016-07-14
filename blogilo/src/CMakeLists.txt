@@ -83,6 +83,7 @@ target_link_libraries(blogilo
     Qt5::WebEngineWidgets
     composereditorwebengineprivate
     KF5::WebEngineViewer
+    KF5::Crash
     )
 
 if (KF5GAPI_FOUND)

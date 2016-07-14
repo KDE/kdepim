@@ -29,6 +29,7 @@
 #include <KDBusService>
 #include <KLocalizedString>
 #include <stdio.h>
+#include <KCrash/KCrash>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QIcon>
@@ -38,7 +39,7 @@ int main(int argc, char **argv)
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
     KLocalizedString::setApplicationDomain("accountwizard");
-
+    KCrash::initialize();
     KAboutData aboutData(QStringLiteral("accountwizard"),
                          i18n("Account Assistant"),
                          QStringLiteral("0.2"),

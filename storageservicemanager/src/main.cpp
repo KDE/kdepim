@@ -27,6 +27,7 @@
 #include <qcommandlineoption.h>
 #include <KDBusService>
 #include <KLocalizedString>
+#include <KCrash>
 #include <QApplication>
 
 int main(int argc, char **argv)
@@ -37,6 +38,7 @@ int main(int argc, char **argv)
 
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+    KCrash::initialize();
     Kdelibs4ConfigMigrator migrate(QStringLiteral("storageservice"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("storageservicerc") << QStringLiteral("storageservicemanager.notifyrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("storageserviceui.rc"));

@@ -25,7 +25,7 @@
 #include <kaboutdata.h>
 #include <KLocalizedString>
 #include <Kdelibs4ConfigMigrator>
-
+#include <KCrash>
 #include <KDBusService>
 
 int main(int argc, char **argv)
@@ -33,6 +33,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+    KCrash::initialize();
     Kdelibs4ConfigMigrator migrate(QStringLiteral("headerthemeeditor"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("headerthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("headerthemeeditorui.rc"));

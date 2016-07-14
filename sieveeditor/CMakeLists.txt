@@ -51,6 +51,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${sieveeditor_SOURCE_DIR})
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
+    find_package(KF5Crash ${KF5_VERSION} REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)

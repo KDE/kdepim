@@ -24,6 +24,7 @@
 #include "kaddressbook_options.h"
 #include "kaddressbookmigrateapplication.h"
 
+#include <KCrash>
 #include <QCommandLineParser>
 
 #include "kaddressbook_debug.h"
@@ -60,6 +61,7 @@ int main(int argc, char **argv)
     KAddressBookApplication app(argc, &argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+    KCrash::initialize();
     KLocalizedString::setApplicationDomain("kaddressbook");
 
     AboutData about;

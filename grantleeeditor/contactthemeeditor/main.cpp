@@ -24,12 +24,16 @@
 #include <KLocalizedString>
 #include <Kdelibs4ConfigMigrator>
 #include <QCommandLineParser>
+#include <KCrash>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    KCrash::initialize();
+
     Kdelibs4ConfigMigrator migrate(QStringLiteral("contactthemeeditor"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("contactthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("contactthemeeditorui.rc"));

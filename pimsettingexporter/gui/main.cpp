@@ -26,6 +26,7 @@
 #include <QCommandLineOption>
 #include <QApplication>
 #include <kdelibs4configmigrator.h>
+#include <KCrash>
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("pimsettingexporter");
 
+    KCrash::initialize();
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("pimsettingexporter"));

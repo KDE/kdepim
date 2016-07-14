@@ -22,6 +22,7 @@
 #include "mboxmainwindow.h"
 
 #include <KLocalizedString>
+#include <KCrash>
 #include <QFileDialog>
 #include <QIcon>
 #include <qcommandlineparser.h>
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+    KCrash::initialize();
     KLocalizedString::setApplicationDomain("mboximporter");
 
     KAboutData aboutData(QStringLiteral("mboximporter"),

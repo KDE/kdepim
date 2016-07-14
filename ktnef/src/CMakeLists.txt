@@ -19,7 +19,7 @@ ecm_add_app_icon(ktnef_SRCS ICONS ${ICONS_SRCS})
 ki18n_wrap_ui(ktnef_SRCS ui/attachpropertywidgetbase.ui)
 
 add_executable(ktnef ${ktnef_SRCS})
-target_link_libraries(ktnef KF5::Tnef KF5::DBusAddons)
+target_link_libraries(ktnef KF5::Tnef KF5::DBusAddons KF5::Crash)
 
 
 install(TARGETS ktnef ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

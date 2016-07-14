@@ -22,6 +22,7 @@ target_link_libraries(mboximporter
     KF5::MailCommon
     KF5::Completion
     KF5::I18n
+    KF5::Crash
     )
 
 install(TARGETS mboximporter  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

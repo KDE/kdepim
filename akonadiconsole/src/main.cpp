@@ -26,6 +26,7 @@
 
 #include <Kdelibs4ConfigMigrator>
 #include <KDBusService>
+#include <KCrash>
 #include <stdlib.h>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
@@ -54,6 +55,7 @@ int main(int argc, char **argv)
     aboutData.addAuthor(QStringLiteral("Volker Krause"),  QStringLiteral("Author"), QStringLiteral("vkrause@kde.org"));
     KAboutData::setApplicationData(aboutData);
 
+    KCrash::initialize();
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();

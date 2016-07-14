@@ -28,7 +28,9 @@ target_link_libraries(headerthemeeditor
     KF5::GrantleeTheme
     KF5::PimTextEdit
     KF5::I18n
-    KF5::XmlGui)
+    KF5::XmlGui
+    KF5::Crash
+    )
 
 install(TARGETS headerthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

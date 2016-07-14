@@ -23,6 +23,7 @@
 #include <QCommandLineParser>
 #include <QApplication>
 #include <KDBusService>
+#include <KCrash>
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +31,7 @@ int main(int argc, char *argv[])
     KLocalizedString::setApplicationDomain("ktnef");
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+    KCrash::initialize();
     Kdelibs4ConfigMigrator migrate(QStringLiteral("ktnef"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("ktnefrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("ktnefui.rc"));

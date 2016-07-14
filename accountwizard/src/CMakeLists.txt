@@ -50,6 +50,7 @@ set(accountwizard_libs
     KF5::I18n
     KF5::Ldap
     KF5::AkonadiWidgets
+    KF5::Crash
     )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )

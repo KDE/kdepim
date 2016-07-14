@@ -50,6 +50,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${grantleeditor_SOURCE_DIR})
     set(PIMCOMMON_LIB_VERSION_LIB "5.2.80")
     set(LIBKDEPIM_LIB_VERSION_LIB "5.2.80")
     # Find KF5 package
+    find_package(KF5Crash ${KF5_VERSION} REQUIRED)
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
     find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)

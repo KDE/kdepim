@@ -25,7 +25,7 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QIcon>
-
+#include <KCrash>
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
@@ -44,6 +44,7 @@ int main(int argc, char **argv)
     aboutData.setProductName(QByteArray("contactprintthemeeditor"));
 
     KAboutData::setApplicationData(aboutData);
+    KCrash::initialize();
 
     QCommandLineParser parser;
     parser.addVersionOption();

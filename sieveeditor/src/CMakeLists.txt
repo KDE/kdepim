@@ -49,6 +49,7 @@ target_link_libraries(sieveeditor
     KF5::PimCommon
     KF5::KSieveUi
     KF5::KManageSieve
+    KF5::Crash
     )
 
 install(TARGETS sieveeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

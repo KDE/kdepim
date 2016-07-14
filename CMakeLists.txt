@@ -169,6 +169,7 @@ else()
     find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5GlobalAccel ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+    find_package(KF5Crash ${KF5_VERSION} REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)

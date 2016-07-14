@@ -28,6 +28,7 @@ target_link_libraries(contactthemeeditor
     KF5::KaddressbookGrantlee
     KF5::PimTextEdit
     KF5::I18n
+    KF5::Crash
     )
 
 install(TARGETS contactthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

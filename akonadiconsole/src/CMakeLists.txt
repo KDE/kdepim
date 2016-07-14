@@ -111,6 +111,7 @@ target_link_libraries(akonadiconsole_bin
     KF5::DBusAddons
     KF5::PimTextEdit
     Qt5::Sql
+    KF5::Crash
     )
 
 install(TARGETS akonadiconsole_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

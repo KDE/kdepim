@@ -27,6 +27,7 @@
 #include "blogilomigrateapplication.h"
 
 #include <QApplication>
+#include <KCrash>
 #include <KLocalizedString>
 #include <kaboutdata.h>
 #include <QCommandLineParser>
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
 
     about.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                         i18nc("EMAIL OF TRANSLATORS", "Your emails"));
+    KCrash::initialize();
     QCommandLineParser parser;
     KAboutData::setApplicationData(about);
     parser.addVersionOption();

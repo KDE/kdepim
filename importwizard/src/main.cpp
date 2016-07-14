@@ -21,6 +21,7 @@
 #include <KDBusService>
 #include <KLocalizedString>
 #include <Kdelibs4ConfigMigrator>
+#include <KCrash>
 #include <QApplication>
 #include <QIcon>
 #include "importwizard.h"
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+    KCrash::initialize();
     Kdelibs4ConfigMigrator migrate(QStringLiteral("importwizard"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("importwizardrc"));
     migrate.migrate();
