@@ -56,17 +56,19 @@ void SieveEditorPageWidget::slotCheckSyntaxClicked()
     const QString script = mSieveEditorWidget->script();
     if (script.isEmpty()) {
         return;
+
     }
+    mSieveEditorWidget->addNormalMessage(i18n("Uploading script to server for checking it, please wait..."));
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, script, mWasActive, mWasActive);
-    job->setInteractive(false);
-    connect(job, &KManageSieve::SieveJob::errorMessage, this, &SieveEditorPageWidget::slotPutResultDebug);
+    connect(job, &KManageSieve::SieveJob::result, this, &SieveEditorPageWidget::slotPutResultDebug);
 }
 
-void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg)
+void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *job, bool success)
 {
     if (success) {
         mSieveEditorWidget->addOkMessage(i18n("No errors found."));
     } else {
+        const QString errorMsg = job->errorString();
         if (errorMsg.isEmpty()) {
             mSieveEditorWidget->addFailedMessage(i18n("An unknown error was encountered."));
         } else {
@@ -74,8 +76,7 @@ void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *, bool su
         }
     }
     //Put original script after check otherwise we will put a script even if we don't click on ok
-    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->originalScript(), mWasActive, mWasActive);
-    job->setInteractive(false);
+    KManageSieve::SieveJob *restoreJob = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->originalScript(), mWasActive, mWasActive);
     mSieveEditorWidget->resultDone();
 }
 
@@ -134,7 +135,13 @@ void SieveEditorPageWidget::slotPutResult(KManageSieve::SieveJob *job, bool succ
         mSieveEditorWidget->updateOriginalScript();
         mSieveEditorWidget->setModified(false);
     } else {
-        //TODO error
+        const QString msg = job->errorString();
+        if (msg.isEmpty())
+            KMessageBox::error(Q_NULLPTR, i18n("Uploading the Sieve script failed.\n"
+                                               "The server responded:\n%1", msg, i18n("Sieve Error")));
+        else {
+            KMessageBox::error(Q_NULLPTR, msg, i18n("Sieve Error"));
+        }
     }
 }
 

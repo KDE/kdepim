@@ -97,7 +97,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
     void slotCheckSyntaxClicked();
-    void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);
+    void slotPutResultDebug(KManageSieve::SieveJob *, bool success);
     void slotPutResult(KManageSieve::SieveJob *, bool success);
     void slotValueChanged(bool b);
 
