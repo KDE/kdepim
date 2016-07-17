@@ -75,6 +75,7 @@ Name[zh_TW]=動作失敗
 Comment=An error was returned
 Comment[ca]=S'ha retornat un error
 Comment[ca@valencia]=S'ha retornat un error
+Comment[cs]=Byla navrácena chyba
 Comment[da]=En fejl blev returneret
 Comment[de]=Ein Fehler wurde zurückgegeben
 Comment[el]=Επιστράφηκε σφάλμα
