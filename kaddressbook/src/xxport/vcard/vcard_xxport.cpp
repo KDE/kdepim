@@ -277,7 +277,7 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
                 addr.setPrefix(QString());
                 addr.setGivenName(splitNames.takeFirst());
                 addr.setFamilyName(splitNames.takeLast());
-                addr.setAdditionalName(splitNames.join(QStringLiteral(" ")));
+                addr.setAdditionalName(splitNames.join(QLatin1Char(' ')));
                 addr.setSuffix(QString());
                 addrDone = true;
             }
