@@ -139,7 +139,7 @@ QString ClawsMailSettings::writeColor(const QColor &col)
     if (col.alpha() != 255) {
         list.insert(3, QString::number(col.alpha()));
     }
-    return list.join(QStringLiteral(","));
+    return list.join(QLatin1Char(','));
 }
 
 void ClawsMailSettings::readTemplateFormat(const KConfigGroup &group)
