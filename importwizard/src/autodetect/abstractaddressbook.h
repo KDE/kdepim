@@ -52,13 +52,11 @@ protected:
     void cleanUp();
     void addImportContactNote(KContacts::Addressee &address, const QString &applicationName);
 
-private Q_SLOTS:
-    void slotStoreDone(KJob *job);
-
 protected:
     ImportWizard *mImportWizard;
 
 private:
+    void slotStoreDone(KJob *job);
     bool selectAddressBook();
     Akonadi::Collection mCollection;
 };

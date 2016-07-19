@@ -35,10 +35,8 @@ public:
     QString themeName() const;
     QString directory() const;
 
-private Q_SLOTS:
-    void slotUpdateOkButton();
-
 private:
+    void slotUpdateOkButton();
     void readConfig();
     NewThemeDialogPrivate *const d;
 };

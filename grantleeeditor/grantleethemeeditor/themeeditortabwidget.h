@@ -33,7 +33,7 @@ public:
 public Q_SLOTS:
     void slotMainFileNameChanged(const QString &fileName);
 
-private Q_SLOTS:
+private:
     void slotTabContextMenuRequest(const QPoint &pos);
 };
 }
