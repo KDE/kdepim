@@ -51,14 +51,11 @@
 #include <QIcon>
 #include <KStandardShortcut>
 
-#include <PimCommon/KPimPrintPreviewDialog>
 #include <QDBusConnectionInterface>
 #include <image/composerimagedialog.h>
 #include <link/composeranchordialog.h>
 #include <link/composerlinkdialog.h>
 #include <QPointer>
-#include <QPrinter>
-#include <QPrintDialog>
 #include <QClipboard>
 #include <QFileDialog>
 
@@ -105,7 +102,7 @@ ComposerEditorWebEnginePrivate::ComposerEditorWebEnginePrivate(ComposerEditorWeb
       action_insert_specialchar(Q_NULLPTR),
       action_insert_anchor(Q_NULLPTR),
       q(qq),
-      imageResizeWidget(Q_NULLPTR),
+      //imageResizeWidget(Q_NULLPTR),
       mPageEngine(Q_NULLPTR)
 {
 }
@@ -534,8 +531,8 @@ QAction *ComposerEditorWebEnginePrivate::getAction(QWebEnginePage::WebAction act
 
 void ComposerEditorWebEnginePrivate::hideImageResizeWidget()
 {
-    delete imageResizeWidget;
-    imageResizeWidget = 0;
+    //delete imageResizeWidget;
+    //imageResizeWidget = 0;
 }
 
 void ComposerEditorWebEnginePrivate::showImageResizeWidget()

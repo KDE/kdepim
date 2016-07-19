@@ -237,9 +237,6 @@ void ComposerWebEngine::slotWebHitFinished(const WebEngineViewer::WebHitTestResu
         QAction *openLinkAction = menu->addAction(i18n("Open Link"));
         connect(openLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotOpenLink()));
     }
-    addExtraAction(menu);
-    menu->exec(mapToGlobal(result.pos()));
-    delete menu;
 
 #if 0
     d->hideImageResizeWidget();
@@ -318,10 +315,10 @@ void ComposerWebEngine::slotWebHitFinished(const WebEngineViewer::WebHitTestResu
         speakAction->setEnabled(!emptyDocument);
         connect(speakAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpeakText()));
     }
-    addExtraAction(menu);
-    menu->exec(event->globalPos());
-    delete menu;
 #endif
+    addExtraAction(menu);
+    menu->exec(mapToGlobal(result.pos()));
+    delete menu;
 }
 
 void ComposerWebEngine::addExtraAction(QMenu *menu)
@@ -339,6 +336,7 @@ void ComposerWebEngine::setActionsEnabled(bool enabled)
 
 void ComposerWebEngine::forwardMousePressEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
 #if 0
     if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());
@@ -355,16 +353,19 @@ void ComposerWebEngine::forwardMousePressEvent(QMouseEvent *event)
 
 void ComposerWebEngine::forwardKeyReleaseEvent(QKeyEvent *event)
 {
+    Q_UNUSED(event);
     d->hideImageResizeWidget();
 }
 
 void ComposerWebEngine::forwardWheelEvent(QWheelEvent *event)
 {
+    Q_UNUSED(event);
     d->hideImageResizeWidget();
 }
 
 void ComposerWebEngine::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
 #if 0
     if (event->button() == Qt::LeftButton) {
         d->contextMenuResult = page()->mainFrame()->hitTestContent(event->pos());

@@ -170,7 +170,7 @@ public:
     QAction *action_insert_anchor;
 
     ComposerWebEngine *q;
-    ComposerImageResizeWidget *imageResizeWidget;
+    //ComposerImageResizeWidget *imageResizeWidget;
     WebEngineViewer::WebEnginePage *mPageEngine;
 };
 }

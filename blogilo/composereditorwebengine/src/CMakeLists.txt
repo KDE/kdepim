@@ -35,7 +35,6 @@ target_link_libraries(composereditorwebengineprivate
     KF5::Completion
     Qt5::WebEngine
     Qt5::WebEngineWidgets
-    Qt5::PrintSupport
     KF5::WebEngineViewer
     KF5::I18n
     KF5::SonnetUi
