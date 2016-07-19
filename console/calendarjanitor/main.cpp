@@ -115,7 +115,7 @@ int main(int argv, char *argc[])
 
     if (args->isSet("collections")) {
         QString option = args->getOption("collections");
-        QStringList collections = option.split(QStringLiteral(","));
+        QStringList collections = option.split(QLatin1Char(','));
         QList<Akonadi::Collection::Id> ids;
         foreach (const QString &collection, collections) {
             bool ok = false;

@@ -488,7 +488,7 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
     q.addBindValue(post.permaLink().url());
     q.addBindValue(post.summary());
     q.addBindValue(post.slug());
-    q.addBindValue(post.tags().join(QStringLiteral(",")));
+    q.addBindValue(post.tags().join(QLatin1Char(',')));
     q.addBindValue(post.status());
 
     int ret;
@@ -551,7 +551,7 @@ bool DBMan::editPost(const BilboPost &post, int blog_id)
     q.addBindValue(post.permaLink().url());
     q.addBindValue(post.summary());
     q.addBindValue(post.slug());
-    q.addBindValue(post.tags().join(QStringLiteral(",")));
+    q.addBindValue(post.tags().join(QLatin1Char(',')));
     q.addBindValue(post.status());
 
     q.addBindValue(post.postId());
@@ -786,7 +786,7 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
         q.addBindValue(post.permaLink().url());
         q.addBindValue(post.summary());
         q.addBindValue(post.slug());
-        q.addBindValue(post.tags().join(QStringLiteral(",")));
+        q.addBindValue(post.tags().join(QLatin1Char(',')));
         q.addBindValue(post.status());
 
         if (q.exec()) {
@@ -819,7 +819,7 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
         q.addBindValue(post.permaLink().url());
         q.addBindValue(post.summary());
         q.addBindValue(post.slug());
-        q.addBindValue(post.tags().join(QStringLiteral(",")));
+        q.addBindValue(post.tags().join(QLatin1Char(',')));
         q.addBindValue(post.status());
         q.addBindValue(post.localId());
 
