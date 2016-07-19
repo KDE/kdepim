@@ -43,6 +43,7 @@
 #include <QFile>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QDir>
 
 static const char POST_TITLE[] = "Temporary-Post-Used-For-Style-Detection-Title-";
 static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Content-";
@@ -59,8 +60,9 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
                                    DBMan::self()->lastErrorText());
         return;
     }
-    QString url = QStringLiteral("blogilo/%1/").arg(blogid);
-    mCachePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + url;
+    mCachePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("/blogilo/%1/").arg(blogid);
+    QDir dir;
+    dir.mkpath(mCachePath);
     generateRandomPostStrings();
     mParent = qobject_cast< QWidget * >(parent);
     Q_ASSERT(mParent);
