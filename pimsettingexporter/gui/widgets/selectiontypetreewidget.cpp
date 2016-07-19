@@ -297,7 +297,7 @@ void SelectionTypeTreeWidget::saveAsDefaultTemplate()
     TemplateSelection templateSelection;
     templateSelection.createTemplate(storedType());
     const QString templateStr = templateSelection.document().toString(2);
-    QString ret = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("pimsettingexporter/");
+    QString ret = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/pimsettingexporter/");
     QFileInfo fileInfo(ret);
     QDir().mkpath(fileInfo.absolutePath());
     qDebug() << " ret :" << ret;
