@@ -62,11 +62,9 @@ Q_SIGNALS:
     void extraDisplayHeaderChanged(const QStringList &headers);
     void changed();
 
-private Q_SLOTS:
+private:
     void slotFileNameChanged(const QString &);
     void slotExtraDisplayHeadersChanged();
-
-private:
     void saveAsFilename(const QString &filename);
     QString mDefaultDesktopName;
     QLineEdit *mName;

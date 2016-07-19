@@ -38,14 +38,12 @@ public:
     void setEnabledComponent(AbstractImporter::TypeSupportedOptions options);
     AbstractImporter::TypeSupportedOptions selectedComponents() const;
 
-private Q_SLOTS:
-    void slotEverythingClicked(bool clicked);
-    void slotComponentClicked();
-
 Q_SIGNALS:
     void atLeastOneComponentSelected(bool componentSelected);
 
 private:
+    void slotEverythingClicked(bool clicked);
+    void slotComponentClicked();
     AbstractImporter::TypeSupportedOptions mOptions;
     Ui::SelectComponentPage *ui;
 };

@@ -47,13 +47,11 @@ public:
     Akonadi::Collection selectedCollection() const;
     void setImportButtonEnabled(bool enabled);
 
-private Q_SLOTS:
-    void collectionChanged(const Akonadi::Collection &collection);
-
 Q_SIGNALS:
     void importMailsClicked();
 
 private:
+    void collectionChanged(const Akonadi::Collection &collection);
     Ui::ImportMailPage *ui;
 };
 

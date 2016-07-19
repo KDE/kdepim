@@ -46,11 +46,9 @@ public:
     void readConfig();
     void writeConfig();
 
-private Q_SLOTS:
+private:
     void slotOkClicked();
     void slotDefaultClicked();
-
-private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
     KPIMTextEdit::PlainTextEditorWidget *mDefaultTemplate;
     Akonadi::ContactEditor *mDefaultContact;

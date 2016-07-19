@@ -40,17 +40,16 @@ public:
     void setFoundProgram(const QStringList &list);
     void disableSelectProgram();
 
-private Q_SLOTS:
-    void slotItemSelectionChanged();
-    void slotItemDoubleClicked(QListWidgetItem *item);
-
-    void slotSelectManualSelectionChanged(bool b);
 Q_SIGNALS:
     void programSelected(const QString &);
     void doubleClicked();
     void selectManualSelectionChanged(bool);
 
 private:
+    void slotItemSelectionChanged();
+    void slotItemDoubleClicked(QListWidgetItem *item);
+
+    void slotSelectManualSelectionChanged(bool b);
     Ui::SelectProgramPage *ui;
 };
 
