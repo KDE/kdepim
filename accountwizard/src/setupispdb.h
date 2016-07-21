@@ -47,7 +47,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void fillSmtpServer(int i, QObject *) const;
     Q_SCRIPTABLE int countSmtpServers() const;
 
-    Q_SCRIPTABLE void fillIdentitiy(int i, QObject *) const;
+    Q_SCRIPTABLE void fillIdentity(int i, QObject *) const;
     Q_SCRIPTABLE int countIdentities() const;
     Q_SCRIPTABLE int defaultIdentity() const;
 

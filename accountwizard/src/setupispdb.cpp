@@ -59,7 +59,7 @@ int SetupIspdb::countIdentities() const
     return mIspdb->identities().count();
 }
 
-void SetupIspdb::fillIdentitiy(int i, QObject *o) const
+void SetupIspdb::fillIdentity(int i, QObject *o) const
 {
     identity isp = mIspdb->identities().at(i);
 
