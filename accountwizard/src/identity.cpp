@@ -27,7 +27,6 @@
 
 Identity::Identity(QObject *parent)
     : SetupObject(parent),
-      m_transport(0)
 {
     m_manager = new KIdentityManagement::IdentityManager(false, this, "mIdentityManager");
     m_identity = &m_manager->newFromScratch(QString());
@@ -44,25 +43,8 @@ void Identity::create()
     Q_EMIT info(i18n("Setting up identity..."));
 
     // store identity information
-    // TODO now that we have the identity object around anyway we can probably get rid of most of the other members
     m_identity->setIdentityName(identityName());
-    m_identity->setFullName(m_realName);
-    m_identity->setPrimaryEmailAddress(m_email);
-    m_identity->setOrganization(m_organization);
-    if (m_transport && m_transport->transportId() > 0) {
-        m_identity->setTransport(QString::number(m_transport->transportId()));
-    }
-    if (!m_signature.isEmpty()) {
-        const KIdentityManagement::Signature sig(m_signature);
-        m_identity->setSignature(sig);
-    }
-    if (!m_prefCryptoFormat.isEmpty()) {
-        m_identity->setPreferredCryptoMessageFormat(m_prefCryptoFormat);
-    }
-    if (!m_xface.isEmpty()) {
-        m_identity->setXFaceEnabled(true);
-        m_identity->setXFace(m_xface);
-    }
+
     m_manager->setAsDefault(m_identity->uoid());
     m_manager->commit();
 
@@ -76,7 +58,7 @@ QString Identity::identityName() const
     if (name.isEmpty()) {
         name = i18nc("Default name for new email accounts/identities.", "Unnamed");
 
-        QString idName = m_email;
+        QString idName = m_identity->primaryEmailAddress();
         int pos = idName.indexOf(QLatin1Char('@'));
         if (pos != -1) {
             name = idName.mid(0, pos);
@@ -112,17 +94,17 @@ void Identity::setIdentityName(const QString &name)
 
 void Identity::setRealName(const QString &name)
 {
-    m_realName = name;
+    m_identity->setFullName(name);
 }
 
 void Identity::setOrganization(const QString &org)
 {
-    m_organization = org;
+    m_identity->setOrganization(org);
 }
 
 void Identity::setEmail(const QString &email)
 {
-    m_email = email;
+    m_identity->setPrimaryEmailAddress(email);
 }
 
 uint Identity::uoid() const
@@ -132,22 +114,32 @@ uint Identity::uoid() const
 
 void Identity::setTransport(QObject *transport)
 {
-    m_transport = qobject_cast<Transport *>(transport);
+    if (transport) {
+        m_identity->setTransport(QString::number(qobject_cast<Transport*>(transport)->transportId()));
+    } else {
+        m_identity->setTransport(QString());
+    }
     setDependsOn(qobject_cast<SetupObject *>(transport));
 }
 
 void Identity::setSignature(const QString &sig)
 {
-    m_signature = sig;
+    if (!sig.isEmpty()) {
+        const KIdentityManagement::Signature signature(sig);
+        m_identity->setSignature(signature);
+    } else {
+        m_identity->setSignature(KIdentityManagement::Signature());
+    }
 }
 
 void Identity::setPreferredCryptoMessageFormat(const QString &format)
 {
-    m_prefCryptoFormat = format;
+    m_identity->setPreferredCryptoMessageFormat(format);
 }
 
 void Identity::setXFace(const QString &xface)
 {
-    m_xface = xface;
+    m_identity->setXFaceEnabled(!xface.isEmpty());
+    m_identity->setXFace(xface);
 }
 

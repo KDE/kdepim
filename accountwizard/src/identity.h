@@ -55,13 +55,6 @@ protected:
 
 private:
     QString m_identityName;
-    QString m_realName;
-    QString m_email;
-    QString m_organization;
-    QString m_signature;
-    QString m_prefCryptoFormat;
-    QString m_xface;
-    Transport *m_transport;
     KIdentityManagement::IdentityManager *m_manager;
     KIdentityManagement::Identity *m_identity;
 };
