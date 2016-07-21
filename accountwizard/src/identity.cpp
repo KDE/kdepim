@@ -26,7 +26,7 @@
 #include <KLocalizedString>
 
 Identity::Identity(QObject *parent)
-    : SetupObject(parent),
+    : SetupObject(parent)
 {
     m_manager = new KIdentityManagement::IdentityManager(false, this, "mIdentityManager");
     m_identity = &m_manager->newFromScratch(QString());
