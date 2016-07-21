@@ -143,3 +143,12 @@ void Identity::setXFace(const QString &xface)
     m_identity->setXFace(xface);
 }
 
+void Identity::setPgpAutoEncrypt(bool autoencrypt)
+{
+    m_identity->setPgpAutoEncrypt(autoencrypt);
+}
+
+void Identity::setPgpAutoSign(bool autosign)
+{
+    m_identity->setPgpAutoSign(autosign);
+}

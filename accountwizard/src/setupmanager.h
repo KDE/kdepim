@@ -42,6 +42,8 @@ public:
     void setEmail(const QString &);
     void setPassword(const QString &);
     void setPersonalDataAvailable(bool available);
+    void setPgpAutoSign(bool autosign);
+    void setPgpAutoEncrypt(bool autoencrypt);
 
 public Q_SLOTS:
     Q_SCRIPTABLE bool personalDataAvailable();
@@ -83,6 +85,8 @@ private:
     KWallet::Wallet *m_wallet;
     bool m_personalDataAvailable;
     bool m_rollbackRequested;
+    bool m_pgpAutoSign;
+    bool m_pgpAutoEncrypt;
 };
 
 #endif

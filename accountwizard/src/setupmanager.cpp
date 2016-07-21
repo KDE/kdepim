@@ -41,7 +41,9 @@ SetupManager::SetupManager(QWidget *parent) :
     m_page(Q_NULLPTR),
     m_wallet(Q_NULLPTR),
     m_personalDataAvailable(false),
-    m_rollbackRequested(false)
+    m_rollbackRequested(false),
+    m_pgpAutoSign(false),
+    m_pgpAutoEncrypt(false)
 {
     KEMailSettings e;
     m_name = e.getSetting(KEMailSettings::RealName);
@@ -80,7 +82,12 @@ QObject *SetupManager::createLdap()
 
 QObject *SetupManager::createIdentity()
 {
-    return connectObject(new Identity(this));
+    Identity *identity = new Identity(this);
+    identity->setEmail(m_email);
+    identity->setRealName(m_name);
+    identity->setPgpAutoSign(m_pgpAutoSign);
+    identity->setPgpAutoEncrypt(m_pgpAutoEncrypt);
+    return connectObject(identity);
 }
 
 static bool dependencyCompare(SetupObject *left, SetupObject *right)
@@ -215,6 +222,16 @@ QString SetupManager::password()
 QString SetupManager::country()
 {
     return QLocale::countryToString(QLocale().country());
+}
+
+void SetupManager::setPgpAutoEncrypt(bool autoencrypt)
+{
+    m_pgpAutoEncrypt = autoencrypt;
+}
+
+void SetupManager::setPgpAutoSign(bool autosign)
+{
+    m_pgpAutoSign = autosign;
 }
 
 void SetupManager::openWallet()

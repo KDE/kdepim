@@ -49,6 +49,8 @@ public Q_SLOTS:
     Q_SCRIPTABLE void setTransport(QObject *transport);
     Q_SCRIPTABLE void setPreferredCryptoMessageFormat(const QString &format);
     Q_SCRIPTABLE void setXFace(const QString &xface);
+    Q_SCRIPTABLE void setPgpAutoSign(bool autosign);
+    Q_SCRIPTABLE void setPgpAutoEncrypt(bool autoencrypt);
 
 protected:
     QString identityName() const;

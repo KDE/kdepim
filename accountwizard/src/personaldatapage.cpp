@@ -112,12 +112,22 @@ void PersonalDataPage::slotTextChanged()
 
 void PersonalDataPage::leavePageNext()
 {
+    enum CryptoState { // maps to indexes in ui.cryptoComboBox
+        SignAndEncrypt,
+        SignOnly,
+        EncryptOnly,
+        NoCrypto
+    };
+
     ui.stackedPage->setCurrentIndex(0);
     ui.imapAccount->setChecked(true);
     mSetupManager->setPersonalDataAvailable(true);
     mSetupManager->setName(ui.nameEdit->text());
     mSetupManager->setPassword(ui.passwordEdit->text());
     mSetupManager->setEmail(ui.emailEdit->text().trimmed());
+    const auto cryptoState = static_cast<CryptoState>(ui.cryptoComboBox->currentIndex());
+    mSetupManager->setPgpAutoEncrypt(cryptoState == SignAndEncrypt || cryptoState == EncryptOnly);
+    mSetupManager->setPgpAutoSign(cryptoState == SignAndEncrypt || cryptoState == SignOnly);
 
     if (ui.checkOnlineGroupBox->isChecked()) {
         // since the user can go back and forth, explicitly disable the man page
