@@ -132,3 +132,8 @@ void PimSettingExporterKernel::setLastSelectedFolder(Akonadi::Collection::Id col
     Q_UNUSED(col);
 }
 
+void PimSettingExporterKernel::expunge(Akonadi::Collection::Id col, bool sync)
+{
+    Q_UNUSED(col);
+    Q_UNUSED(sync);
+}
