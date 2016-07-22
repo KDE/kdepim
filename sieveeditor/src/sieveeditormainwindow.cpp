@@ -309,7 +309,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->isTextEditor());
     const bool hasActionInHtmlModeToo = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mGoToLine->setEnabled(editActionEnabled);
-    mFindAction->setEnabled(editActionEnabled);
+    mFindAction->setEnabled(hasActionInHtmlModeToo);
     mReplaceAction->setEnabled(editActionEnabled);
     mUndoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isUndoAvailable());
     mRedoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isRedoAvailable());
