@@ -64,7 +64,7 @@ uint KonsoleKalendarEpoch::QDateTime2epoch(const QDateTime &dt)
 
     // Compute #seconds to subtract for local timezone difference from UTC.
     int offset = QDateTime::currentDateTime().toUTC().toTime_t() -
-            QDateTime::currentDateTime().toTime_t();
+                 QDateTime::currentDateTime().toTime_t();
     return dt.toTime_t() - offset;
 }
 

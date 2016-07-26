@@ -424,7 +424,6 @@ void Toolbox::setButtonsIcon()
 void Toolbox::reloadLocalPosts()
 {
 
-
     localEntries->clear();
 
     QList<QVariantMap> localList = DBMan::self()->listLocalPosts();

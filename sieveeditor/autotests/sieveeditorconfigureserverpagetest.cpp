@@ -17,7 +17,6 @@
    Boston, MA 02110-1301, USA.
 */
 
-
 #include "sieveeditorconfigureserverpagetest.h"
 #include "../src/sieveeditorconfigureserverpage.h"
 #include <QPushButton>

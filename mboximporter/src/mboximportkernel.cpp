@@ -120,7 +120,6 @@ void MBoxImporterKernel::setLastSelectedFolder(Akonadi::Collection::Id col)
     Q_UNUSED(col);
 }
 
-
 void MBoxImporterKernel::expunge(Akonadi::Collection::Id col, bool sync)
 {
     Q_UNUSED(col);

@@ -115,7 +115,7 @@ uint Identity::uoid() const
 void Identity::setTransport(QObject *transport)
 {
     if (transport) {
-        m_identity->setTransport(QString::number(qobject_cast<Transport*>(transport)->transportId()));
+        m_identity->setTransport(QString::number(qobject_cast<Transport *>(transport)->transportId()));
     } else {
         m_identity->setTransport(QString());
     }
