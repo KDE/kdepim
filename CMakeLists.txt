@@ -228,7 +228,7 @@ else()
     set(KDEPIM_HAVE_X11 ${X11_FOUND})
 
     # Extra package
-    find_package(KF5GAPI "5.2.90" CONFIG)
+    find_package(KF5GAPI "5.2.80" CONFIG)
 
     include_directories(${kdepim_SOURCE_DIR} ${kdepim_BINARY_DIR})
 
