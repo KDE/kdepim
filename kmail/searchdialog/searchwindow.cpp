@@ -35,6 +35,7 @@
 #include "searchpatternwarning.h"
 #include "pimcommon/folderdialog/selectmulticollectiondialog.h"
 #include "pimcommon/util/indexerutils.h"
+#include "pimcommon/util/pimutil.h"
 #include "incompleteindexdialog.h"
 
 #include <Akonadi/CollectionModifyJob>
@@ -916,7 +917,9 @@ QVector<qint64> SearchWindow::checkIncompleteIndex(const Akonadi::Collection::Li
             const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(etm, col);
             const Akonadi::Collection modelCol = etm->data(idx, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
             // Only index offline IMAP collections
-            if (modelCol.cachePolicy().localParts().contains(QLatin1String("RFC822"))) {
+            if (PimCommon::Util::isImapResource(modelCol.resource()) && !modelCol.cachePolicy().localParts().contains(QLatin1String("RFC822"))) {
+                continue;
+            } else {
               cols.push_back(modelCol);
             }
         }
