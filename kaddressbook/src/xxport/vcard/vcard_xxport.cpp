@@ -331,7 +331,7 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         }
 
         if (exportFieldType & VCardExportSelectionWidget::Business) {
-            addr.setTitle((*it).title());
+            addr.setExtraTitleList((*it).extraTitleList());
             addr.setRole((*it).role());
             addr.setOrganization((*it).organization());
             addr.setDepartment((*it).department());
