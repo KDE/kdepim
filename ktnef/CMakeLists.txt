@@ -27,7 +27,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${ktnef_SOURCE_DIR})
     set(QT_REQUIRED_VERSION "5.6.0")
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Gui Widgets)
 
-    set(KTNEF_LIB_VERSION "5.2.80")
+    set(KTNEF_LIB_VERSION "5.2.90")
     find_package(KF5Tnef ${KTNEF_LIB_VERSION} CONFIG REQUIRED)
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)

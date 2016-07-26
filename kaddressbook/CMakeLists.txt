@@ -37,9 +37,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
     set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
 
 
-    set(KPIMTEXTEDIT_LIB_VERSION "5.2.80")
-    set(AKONADI_VERSION "5.2.80")
-    set(KONTACTINTERFACE_LIB_VERSION "5.2.80")
+    set(KPIMTEXTEDIT_LIB_VERSION "5.2.90")
+    set(AKONADI_VERSION "5.2.90")
+    set(KONTACTINTERFACE_LIB_VERSION "5.2.90")
 
     set(KDEPIM_LIB_VERSION "${KDEPIM_VERSION_NUMBER}")
     set(KDEPIM_LIB_SOVERSION "5")
@@ -47,10 +47,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
 
     set(QT_REQUIRED_VERSION "5.6.0")
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test DBus PrintSupport)
-    set(MAILCOMMON_LIB_VERSION_LIB "5.2.81")
-    set(LIBKDEPIM_LIB_VERSION_LIB "5.2.80")
-    set(KDEPIM_APPS_LIB_VERSION_LIB "5.2.80")
-    set(LIBGRANTLEETHEME_LIB_VERSION_LIB "5.2.80")
+    set(MAILCOMMON_LIB_VERSION_LIB "5.2.90")
+    set(LIBKDEPIM_LIB_VERSION_LIB "5.2.90")
+    set(KDEPIM_APPS_LIB_VERSION_LIB "5.2.90")
+    set(LIBGRANTLEETHEME_LIB_VERSION_LIB "5.2.90")
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
@@ -69,7 +69,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
     find_package(KF5KaddressbookGrantlee ${KDEPIM_APPS_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5GrantleeTheme ${LIBGRANTLEETHEME_LIB_VERSION_LIB} CONFIG REQUIRED)
 
-    find_package(KF5AkonadiSearch "5.2.80" CONFIG REQUIRED)
+    find_package(KF5AkonadiSearch "5.2.90" CONFIG REQUIRED)
     set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
     include_directories(${kaddressbook_SOURCE_DIR} ${kaddressbook_BINARY_DIR})
