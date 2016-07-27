@@ -52,6 +52,10 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
 {
+}
+
+void ThemeEditorMainWindow::writeConfig()
+{
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group(QStringLiteral("ThemeEditorMainWindow"));
@@ -316,6 +320,7 @@ void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
     if (!saveCurrentProject(SaveAndCloseTheme)) {
         e->ignore();
     } else {
+        writeConfig();
         e->accept();
     }
 }
@@ -323,6 +328,7 @@ void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 void ThemeEditorMainWindow::slotQuitApp()
 {
     if (saveCurrentProject(SaveAndCloseTheme)) {
+        writeConfig();
         qApp->quit();
     }
 }
