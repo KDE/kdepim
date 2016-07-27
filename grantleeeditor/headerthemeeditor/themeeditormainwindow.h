@@ -65,6 +65,7 @@ private:
 
     bool loadTheme(const QString &directory);
     void readConfig();
+    void writeConfig();
     void updateActions();
     bool saveCurrentProject(ActionSaveTheme act);
     void setupActions();

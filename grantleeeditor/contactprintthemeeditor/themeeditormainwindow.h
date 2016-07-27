@@ -62,6 +62,7 @@ private:
     };
 
     bool loadTheme(const QString &directory);
+    void writeConfig();
     void readConfig();
     void updateActions();
     bool saveCurrentProject(ActionSaveTheme act);
