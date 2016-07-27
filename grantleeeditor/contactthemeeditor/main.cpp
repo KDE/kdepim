@@ -66,6 +66,5 @@ int main(int argc, char **argv)
     ContactEditorMainWindow *mw = new ContactEditorMainWindow();
     mw->show();
     const int ret = app.exec();
-    delete mw;
     return ret;
 }
