@@ -51,6 +51,10 @@ ContactEditorMainWindow::ContactEditorMainWindow()
 
 ContactEditorMainWindow::~ContactEditorMainWindow()
 {
+}
+
+void ContactEditorMainWindow::writeConfig()
+{
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group(QStringLiteral("ContactEditorMainWindow"));
@@ -287,6 +291,7 @@ void ContactEditorMainWindow::closeEvent(QCloseEvent *e)
     if (!saveCurrentProject(SaveAndCloseTheme)) {
         e->ignore();
     } else {
+        writeConfig();
         e->accept();
     }
 }
@@ -294,6 +299,7 @@ void ContactEditorMainWindow::closeEvent(QCloseEvent *e)
 void ContactEditorMainWindow::slotQuitApp()
 {
     if (saveCurrentProject(SaveAndCloseTheme)) {
+        writeConfig();
         qApp->quit();
     }
 }

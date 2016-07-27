@@ -60,6 +60,7 @@ private:
         SaveAndCreateNewTheme
     };
 
+    void writeConfig();
     bool loadTheme(const QString &directory);
     void readConfig();
     void updateActions();
