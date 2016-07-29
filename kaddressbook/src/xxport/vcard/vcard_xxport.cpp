@@ -332,26 +332,29 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
 
         if (exportFieldType & VCardExportSelectionWidget::Business) {
             addr.setExtraTitleList((*it).extraTitleList());
-            addr.setRole((*it).role());
+            addr.setExtraRoleList((*it).extraRoleList());
             addr.setOrganization((*it).organization());
             addr.setDepartment((*it).department());
 
             KContacts::PhoneNumber::List phones = (*it).phoneNumbers(KContacts::PhoneNumber::Work);
             KContacts::PhoneNumber::List::Iterator phoneIt;
-            for (phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt) {
+            KContacts::PhoneNumber::List::Iterator phoneEnd(phones.end());
+            for (phoneIt = phones.begin(); phoneIt != phoneEnd; ++phoneIt) {
                 addr.insertPhoneNumber(*phoneIt);
             }
 
             KContacts::Address::List addresses = (*it).addresses(KContacts::Address::Work);
             KContacts::Address::List::Iterator addrIt;
-            for (addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt) {
+            KContacts::Address::List::Iterator addrEnd(addresses.end());
+            for (addrIt = addresses.begin(); addrIt != addrEnd; ++addrIt) {
                 addr.insertAddress(*addrIt);
             }
         }
 
         KContacts::PhoneNumber::List phones = (*it).phoneNumbers();
         KContacts::PhoneNumber::List::Iterator phoneIt;
-        for (phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt) {
+        KContacts::PhoneNumber::List::Iterator phoneEnd(phones.end());
+        for (phoneIt = phones.begin(); phoneIt != phoneEnd; ++phoneIt) {
             int phoneType = (*phoneIt).type();
 
             if ((phoneType & KContacts::PhoneNumber::Home) && (exportFieldType & VCardExportSelectionWidget::Private)) {
@@ -365,7 +368,8 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
 
         KContacts::Address::List addresses = (*it).addresses();
         KContacts::Address::List::Iterator addrIt;
-        for (addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt) {
+        KContacts::Address::List::Iterator addrEnd(addresses.end());
+        for (addrIt = addresses.begin(); addrIt != addrEnd; ++addrIt) {
             int addressType = (*addrIt).type();
 
             if ((addressType & KContacts::Address::Home) && exportFieldType & VCardExportSelectionWidget::Private) {
