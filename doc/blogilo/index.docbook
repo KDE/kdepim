@@ -1,9 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
 "dtd/kdedbx45.dtd" [
-  <!-- Define an entity for your application if it is not part of KDE
-       CVS -->
-  <!ENTITY blogilo "<application>Blogilo</application>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>
@@ -26,8 +23,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-05-25</date>
-<releaseinfo>1.1 (4.11)</releaseinfo>
+<date>2016-07-28</date>
+<releaseinfo>1.2 (Applications 16.08)</releaseinfo>
 
 <abstract>
 <para>
