@@ -39,7 +39,7 @@ DbConsole::DbConsole(QWidget *parent) :
 {
     ui.setupUi(this);
 
-    QAction *copyAction = KStandardAction::copy(this, SLOT(copyCell()), this);
+    QAction *copyAction = KStandardAction::copy(this, &DbConsole::copyCell, this);
     ui.resultView->addAction(copyAction);
 
     ui.execButton->setIcon(QIcon::fromTheme(QStringLiteral("application-x-executable")));

@@ -87,7 +87,7 @@ JobTrackerWidget::~JobTrackerWidget()
 void JobTrackerWidget::contextMenu(const QPoint &/*pos*/)
 {
     QMenu menu;
-    menu.addAction(QStringLiteral("Clear View"), d->model, SLOT(resetTracker()));
+    menu.addAction(QStringLiteral("Clear View"), d->model, &JobTrackerModel::resetTracker);
     menu.exec(QCursor::pos());
 }
 

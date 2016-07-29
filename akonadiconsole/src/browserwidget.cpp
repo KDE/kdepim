@@ -190,7 +190,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     itemUi.modelBox->addItem(QStringLiteral("Calendar"));
     itemUi.modelBox->addItem(QStringLiteral("Calendar/Tasks"));
     connect(itemUi.modelBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &BrowserWidget::modelChanged);
-    QTimer::singleShot(0, this, SLOT(modelChanged()));
+    QTimer::singleShot(0, this, &BrowserWidget::modelChanged);
 
     itemUi.itemView->setXmlGuiClient(xmlGuiWindow);
     itemUi.itemView->setModel(sortModel);
@@ -514,11 +514,11 @@ void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
     const QModelIndex index = mTagView->indexAt(pos);
     QMenu *menu = new QMenu(this);
     connect(menu, &QMenu::aboutToHide, menu, &QMenu::deleteLater);
-    menu->addAction(QIcon::fromTheme(QStringLiteral("list-add")), QStringLiteral("&Add tag..."), this, SLOT(addTagRequested()));
+    menu->addAction(QIcon::fromTheme(QStringLiteral("list-add")), QStringLiteral("&Add tag..."), this, &BrowserWidget::addTagRequested);
     if (index.isValid()) {
         menu->addAction(QStringLiteral("Add &subtag..."), this, SLOT(addSubTagRequested()));
-        menu->addAction(QIcon::fromTheme(QStringLiteral("document-edit")), QStringLiteral("&Edit tag..."), this, SLOT(editTagRequested()), QKeySequence(Qt::Key_Return));
-        menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), QStringLiteral("&Delete tag..."), this, SLOT(removeTagRequested()), QKeySequence::Delete);
+        menu->addAction(QIcon::fromTheme(QStringLiteral("document-edit")), QStringLiteral("&Edit tag..."), this, &BrowserWidget::editTagRequested, QKeySequence(Qt::Key_Return));
+        menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), QStringLiteral("&Delete tag..."), this, &BrowserWidget::removeTagRequested, QKeySequence::Delete);
         menu->setProperty("Tag", index.data(TagModel::TagRole));
     }
 
