@@ -1,14 +1,12 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-  <!ENTITY kappname "&ktnef;">
-  <!ENTITY package "kdepim">
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
 
-<book id="ktnef" lang="&language;">
+<article id="ktnef" lang="&language;">
 
-<bookinfo id="ktnefinfo">
+<articleinfo id="ktnefinfo">
 <title>The TNEF File Viewer Handbook</title>
 
 <authorgroup>
@@ -35,20 +33,20 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-05-31</date>
-<releaseinfo>4.11 pre (4.11)</releaseinfo>
+<date>2016-07-27</date>
+<releaseinfo>5.3.40 (Applications 16.08)</releaseinfo>
 
 <abstract><para>The TNEF File Viewer is an application for <ulink url="http://en.wikipedia.org/wiki/TNEF">TNEF</ulink> mail attachments.</para></abstract>
 
 <keywordset>
-<keyword>KDE</keyword>
+<keyword>mail</keyword>
 <keyword>TNEF</keyword>
 
 </keywordset>
 
-</bookinfo>
+</articleinfo>
 
-<chapter id="introduction">
+<sect1 id="introduction">
 	<title>Introduction</title>
 
 	<para>The TNEF File Viewer allows to handle easily mail attachments using the TNEF format. Those attachments
@@ -90,9 +88,9 @@ You can open or save the attachments using the actions in the context menu.</par
 </mediaobject>
 </screenshot>
 
-</chapter>
+</sect1>
 
-<chapter id="credits">
+<sect1 id="credits">
 	<title>Credits and License</title>
 
 	<para>TNEF File Viewer (KTnef)</para>
@@ -105,6 +103,6 @@ You can open or save the attachments using the actions in the context menu.</par
 	&underFDL;
 	&underGPL;
 
-</chapter>
+</sect1>
 
-</book>
+</article>
