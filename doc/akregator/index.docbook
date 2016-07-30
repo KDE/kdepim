@@ -1,8 +1,5 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-  <!ENTITY akregator        "<application>Akregator</application>">
-  <!ENTITY kappname "&akregator;">
-  <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
@@ -40,8 +37,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-05-25</date>
-<releaseinfo>4.11 (&kde; 4.11)</releaseinfo>
+<date>2016-07-28</date>
+<releaseinfo>5.3.40 (Applications 16.08)</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
@@ -130,13 +127,6 @@ select. A news feed is a collection of articles: for example, the recent news of
 a news site or the new entries of a blog. The default list contains feeds related to
 the &kde; project, but of course you can add your own feeds and remove the ones
 you are not interested in.
-<screenshot>
-<screeninfo>All articles are fetched</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="main-window2.png" format="PNG" /></imageobject>
-<textobject><phrase>All articles are fetched</phrase></textobject>
-</mediaobject>
-</screenshot>
 </para>
 <para>
 In the upper right is the article list. It contains all the articles of the
@@ -145,7 +135,7 @@ they were published. By default, the newest articles are at the top.
 <screenshot>
 <screeninfo>The article list</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="main-window3.png" format="PNG" /></imageobject>
+<imageobject><imagedata fileref="main-window2.png" format="PNG" /></imageobject>
 <textobject><phrase>The article list for one feed</phrase></textobject>
 </mediaobject>
 </screenshot>
@@ -187,8 +177,8 @@ URL:</guilabel>.
 
 <listitem><para>
 Enter
-<userinput>www.slashdot.org</userinput>
-or <userinput>http://www.slashdot.org </userinput> in the line edit next
+<userinput>planet.ubuntu.com</userinput>
+or <userinput>http://planet.ubuntu.com</userinput> in the line edit next
 to <guilabel>Feed URL</guilabel> and click <guibutton>OK</guibutton>.
 </para></listitem>
 <listitem><para>
@@ -203,12 +193,12 @@ you are happy with the feed settings, click <guibutton>OK</guibutton> again.
 </screenshot>
 </para></listitem>
 <listitem><para>
-Now Slashdot has been added to your feed list.
+Now Planet Ubuntu has been added to your feed list.
 </para> </listitem>
 </itemizedlist>
 <para>
 There are multiple other ways to find and add interesting feeds. Within &kde;,
-websites browsed with &konqueror; will display the recognizable &quot;RSS&quot; 
+websites browsed with &konqueror; will display the recognizable <quote>RSS</quote>
 icon <inlinemediaobject>
   <imageobject>
     <imagedata fileref="feed.png" format="PNG"/>
@@ -223,7 +213,7 @@ detected at the website. Just left-click on the icon and choose
 <textobject><phrase>Automatically finding feeds through &konqueror;</phrase></textobject>
 </mediaobject>
 </screenshot>
-On pages with this &quot;RSS&quot; or this icon<inlinemediaobject>
+On pages with this <quote>RSS</quote> or this icon<inlinemediaobject>
   <imageobject>
     <imagedata fileref="rss.png" format="PNG"/>
   </imageobject>
@@ -252,7 +242,7 @@ in the feed list, and from there you can use your mouse to drag it to a differen
 <title>Creating a Folder</title>
 <para>After adding your own feeds, you may want to group them in some way,
 rather than just leave them unsorted. So let us create a folder for the
-Slashdot feed we just added:</para>
+Planet Ubuntu feed we just added:</para>
 <itemizedlist>
 <listitem><para>Select the parent folder of the new folder. In this example, we
 select <guilabel>All Feeds</guilabel>.
@@ -268,7 +258,7 @@ Enter <userinput>News</userinput> (or a more appropriate name for the feed categ
 </mediaobject>
 </screenshot>
 </para> </listitem>
-<listitem><para>Now you can drag the Slashdot feed to the new folder.
+<listitem><para>Now you can drag the Planet Ubuntu feed to the new folder.
 <screenshot>
 <screeninfo>The News folder in the feed list</screeninfo>
 <mediaobject>
@@ -389,25 +379,22 @@ aggregators not using caching increases the costs for providers and may decrease
 
 </sect1>
 
-<sect1 id="share-services-tab">
-<title>Share Services</title>
-<para>This feature uses &plasma;'s microblog service to help you to share news 
-with your friends using the microblog services (identi.ca and twitter). 
-The post will have the title of the article and a link to it</para>
+<sect1 id="adblock-tab">
+<title>URL Interceptor</title>
+<para>&akregator; can be configured to replace or remove images or frames from web pages that match a series of filters.</para>
+
 <screenshot>
-<screeninfo>The Share Services tab</screeninfo>
+<screeninfo>The URL Interceptor tab</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="share-services-tab.png" format="PNG" /></imageobject>
-<textobject><phrase>The Share Services tab</phrase></textobject>
+<imageobject><imagedata fileref="interceptor-tab.png" format="PNG" /></imageobject>
+<textobject><phrase>The URL Interceptor tab</phrase></textobject>
 </mediaobject>
 </screenshot>
 
-<para>Select a <guilabel>Service URL</guilabel> and enter your <guilabel>Username</guilabel>
-for this service.
+<para>For a detailed description of this feature see <ulink url="help:/kcontrol/khtml-adblock">AdBlock Filters</ulink>.
 </para>
-
 </sect1>
- 
+
 <sect1 id="archive-tab">
 <title>Archive</title>
 <para>Archiving articles means storing the links of articles. Here you can limit the
@@ -679,7 +666,7 @@ article as read after a specified number of seconds.</para>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Import feeds...</guimenuitem>
+<guimenuitem>Import Feeds</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Open</action> the import feeds dialog to load <quote>OPML Outlines</quote> 
 with feed subscriptions.
@@ -689,7 +676,7 @@ with feed subscriptions.
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Export feeds...</guimenuitem>
+<guimenuitem>Export Feeds</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Open</action> the save as dialog and export your feeds and folder structure
 as <filename class="extension">.opml</filename> file.</para></listitem>
@@ -1016,6 +1003,7 @@ in the mail.</para></listitem>
 in the mail.
 </para></listitem>
 </varlistentry>
+<!--FIXME not in kf5?
 <varlistentry>
 <term><menuchoice>
 <shortcut><keycombo
@@ -1027,12 +1015,12 @@ action="simul">&Ctrl;<keycap>S</keycap></keycombo></shortcut>
  with your friends using the microblog services identi.ca and twitter.
 </para></listitem>
 </varlistentry>
+-->
 </variablelist>
-
 </sect2>
 
 <sect2>
-<title>The Settings Menu</title>
+<title>The Settings and Help Menu</title>
 
 <variablelist>
 <varlistentry>
@@ -1095,24 +1083,6 @@ Documentation copyright 2006
 &underGPL;           <!-- GPL License -->
 
 </chapter>
-
-<appendix id="installation">
-<title>Installation</title>
-
-<sect1 id="getting-akregator">
-<title>How to obtain &akregator;</title>
-
-&install.intro.documentation;
-
-</sect1>
-
-<sect1 id="compilation">
-<title>Compilation and installation</title>
-
-&install.compile.documentation;
-
-</sect1>
-</appendix>
 
 &documentation.index;
 </book>
