@@ -55,7 +55,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
     option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Xml DBus Test)
     set(MAILCOMMON_LIB_VERSION_LIB "5.3.41")
-    set(MESSAGELIB_LIB_VERSION_LIB "5.3.43")
+    set(MESSAGELIB_LIB_VERSION_LIB "5.3.44")
     set(PIMCOMMON_LIB_VERSION_LIB "5.3.41")
     set(LIBKDEPIM_LIB_VERSION_LIB "5.3.40")
 
