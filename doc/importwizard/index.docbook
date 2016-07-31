@@ -59,7 +59,7 @@ If no mail data are detected automatically then click on <guibutton>Manual Selec
 in the start window and use the <link linkend="manual-import">Manual Import</link> features.
 </para>
 
-<para>You can start &i18n-importwizard; can either from the application launcher or from &kmail;
+<para>You can start &i18n-importwizard; directly from the application launcher or from &kmail;
 with <menuchoice><guimenu>Tools</guimenu><guimenuitem>Import Wizard</guimenuitem></menuchoice>
 for automatic detection or from &kmail; with <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Import Messages</guimenuitem></menuchoice> for manual import.
@@ -107,7 +107,7 @@ Once the progress bar reaches 100%, click the <guibutton>Next</guibutton> button
 or the <guibutton>Finish</guibutton> button, if this was your last material 
 selection.</para></listitem>
 
-<listitem><para>To mport mail filters, click the <guibutton>Import
+<listitem><para>To import mail filters, click the <guibutton>Import
 Filters</guibutton> button and it will import any filters it found, once finished click 
 the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, 
 if this was your last material selection.</para></listitem>
@@ -119,7 +119,7 @@ Once complete, click the <guibutton>Next</guibutton> button, or the <guibutton>F
 button, if this was your last material selection.</para></listitem>
 
 <listitem><para>To import address books or calendars, click the <guibutton>Import
-address book</guibutton> or <guibutton>Import Calendar</guibutton>button, and it
+address book</guibutton> or <guibutton>Import Calendar</guibutton> button, and it
 will import all address books or calendars it finds.
 Once complete, click the <guibutton>Next</guibutton> button.</para></listitem>
 </itemizedlist>
