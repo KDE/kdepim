@@ -361,7 +361,7 @@ void ExportMailJob::backupConfig()
         tmp.open();
 
         KConfig *archiveConfig = archivemailrc->copyTo(tmp.fileName());
-        const QStringList archiveList = archiveConfig->groupList().filter(QRegularExpression(QLatin1String("ArchiveMailCollection \\d+")));
+        const QStringList archiveList = archiveConfig->groupList().filter(QRegularExpression(QStringLiteral("ArchiveMailCollection \\d+")));
         const QString archiveGroupPattern = QStringLiteral("ArchiveMailCollection ");
 
         Q_FOREACH (const QString &str, archiveList) {
@@ -493,7 +493,7 @@ void ExportMailJob::backupConfig()
         if (kmailConfig->hasGroup(storageModelSelectedMessageStr)) {
             KConfigGroup storageGroup = kmailConfig->group(storageModelSelectedMessageStr);
             const QString storageModelSelectedPattern(QStringLiteral("MessageUniqueIdForStorageModel"));
-            const QStringList storageList = storageGroup.keyList().filter(QRegularExpression(QLatin1String("MessageUniqueIdForStorageModel\\d+")));
+            const QStringList storageList = storageGroup.keyList().filter(QRegularExpression(QStringLiteral("MessageUniqueIdForStorageModel\\d+")));
             Q_FOREACH (const QString &str, storageList) {
                 bool found = false;
                 const int collectionId = str.rightRef(str.length() - storageModelSelectedPattern.length()).toInt(&found);
