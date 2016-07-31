@@ -183,7 +183,7 @@ void ImportMailJob::restoreTransports()
                 defaultTransport = group.readEntry(QStringLiteral("default-transport"), -1);
             }
 
-            const QStringList transportList = transportConfig->groupList().filter(QRegularExpression(QLatin1String("Transport \\d+")));
+            const QStringList transportList = transportConfig->groupList().filter(QRegularExpression(QStringLiteral("Transport \\d+")));
             Q_FOREACH (const QString &transport, transportList) {
                 KConfigGroup group = transportConfig->group(transport);
                 const int transportId = group.readEntry(QStringLiteral("id"), -1);
@@ -1045,7 +1045,7 @@ void ImportMailJob::importFolderArchiveConfig(const KArchiveFile *archiveconfigu
     copyToFile(archiveconfiguration, archiveconfigurationrc, filename, prefix);
     KSharedConfig::Ptr archiveConfig = KSharedConfig::openConfig(archiveconfigurationrc);
 
-    const QStringList archiveList = archiveConfig->groupList().filter(QRegularExpression(QLatin1String("FolderArchiveAccount ")));
+    const QStringList archiveList = archiveConfig->groupList().filter(QRegularExpression(QStringLiteral("FolderArchiveAccount ")));
 
     Q_FOREACH (const QString &str, archiveList) {
         KConfigGroup oldGroup = archiveConfig->group(str);
