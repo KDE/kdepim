@@ -59,7 +59,7 @@ If no mail data are detected automatically then click on <guibutton>Manual Selec
 in the start window and use the <link linkend="manual-import">Manual Import</link> features.
 </para>
 
-<para>You can start &i18n-importwizard; can either from the application launcher or from &kmail;
+<para>You can start &i18n-importwizard; directly from the application launcher or from &kmail;
 with <menuchoice><guimenu>Tools</guimenu><guimenuitem>Import Wizard</guimenuitem></menuchoice>
 for automatic detection or from &kmail; with <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Import Messages</guimenuitem></menuchoice> for manual import.
