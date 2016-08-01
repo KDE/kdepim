@@ -39,7 +39,7 @@ class StylePage : public QWidget
     Q_OBJECT
 
 public:
-    explicit StylePage(QWidget *parent = Q_NULLPTR, const char *name = Q_NULLPTR);
+    explicit StylePage(QWidget *parent = Q_NULLPTR, const QString &name = QString());
     ~StylePage();
 
     /**
