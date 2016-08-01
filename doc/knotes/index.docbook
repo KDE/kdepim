@@ -95,7 +95,7 @@ in <filename class="directory">$(qtpaths --paths GenericDataLocation)</filename>
 icon and select <guimenuitem>New Note</guimenuitem>.</para>
 <para>You can create a new note containing the contents of the 
 clipboard by selecting <guimenuitem>New Note From
-Clipboard</guimenuitem> or use <guimenuitem>New Note From Textfile</guimenuitem>.</para>
+Clipboard</guimenuitem> or use <guimenuitem>New Note From Text File</guimenuitem>.</para>
 
 <para>Now a dialog will appear which allows you to select a folder to save your note:</para>
 
@@ -147,7 +147,7 @@ following menu options:</para>
 </shortcut><guimenuitem>Replace</guimenuitem></menuchoice></para></listitem>
 <listitem><para><guimenuitem>Speak Text</guimenuitem></para></listitem>
 <listitem><para><guimenuitem>Insert Date</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>insert Checkmark</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Insert Checkmark</guimenuitem></para></listitem>
 </itemizedlist>
 <para>Text may be selected by holding down the &LMB; and moving the
 mouse, or by holding down the &Shift; key and using the
