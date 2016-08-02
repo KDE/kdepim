@@ -36,7 +36,7 @@ PimSettingExporterKernel::PimSettingExporterKernel(QObject *parent)
     : QObject(parent)
 {
     mMessageSender = new MessageComposer::AkonadiSender(this);
-    mIdentityManager = new KIdentityManagement::IdentityManager(false, this);
+    mIdentityManager = KIdentityManagement::IdentityManager::self();
     Akonadi::Session *session = new Akonadi::Session("Backup Mail Kernel ETM", this);
 
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);

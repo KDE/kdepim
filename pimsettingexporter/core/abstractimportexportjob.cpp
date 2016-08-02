@@ -46,7 +46,7 @@ AbstractImportExportJob::AbstractImportExportJob(QObject *parent, ArchiveStorage
     : QObject(parent),
       mTypeSelected(typeSelected),
       mArchiveStorage(archiveStorage),
-      mIdentityManager(new KIdentityManagement::IdentityManager(false, this, "mIdentityManager")),
+      mIdentityManager(KIdentityManagement::IdentityManager::self()),
       mTempDir(Q_NULLPTR),
       mArchiveDirectory(Q_NULLPTR),
       mNumberOfStep(numberOfStep),
@@ -61,7 +61,6 @@ AbstractImportExportJob::AbstractImportExportJob(QObject *parent, ArchiveStorage
 AbstractImportExportJob::~AbstractImportExportJob()
 {
     delete mCreateResource;
-    delete mIdentityManager;
     delete mTempDir;
 }
 
