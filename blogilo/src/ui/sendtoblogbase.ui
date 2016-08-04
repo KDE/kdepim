@@ -1,48 +1,61 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>SendToBlogBase</class>
- <widget class="QWidget" name="SendToBlogBase" >
-  <property name="geometry" >
+ <widget class="QWidget" name="SendToBlogBase">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>342</width>
-    <height>100</height>
+    <height>104</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
-    <widget class="QRadioButton" name="pubAsModify" >
-     <property name="text" >
-      <string>Publish as an edit of the original entry</string>
+    <widget class="QRadioButton" name="pubAsModify">
+     <property name="text">
+      <string>Pu&amp;blish as an edit of the original entry</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QRadioButton" name="pubAsNewPost" >
-     <property name="text" >
+    <widget class="QRadioButton" name="pubAsNewPost">
+     <property name="text">
       <string>Publish as a new post</string>
      </property>
-     <property name="checked" >
+     <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="KSeparator" name="kseparator" />
+    <widget class="KSeparator" name="kseparator"/>
    </item>
    <item>
-    <widget class="QCheckBox" name="saveDraft" >
-     <property name="text" >
+    <widget class="QCheckBox" name="saveDraft">
+     <property name="text">
       <string>Save entry in drafts</string>
      </property>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer" >
-     <property name="orientation" >
+    <spacer name="verticalSpacer">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>40</height>
