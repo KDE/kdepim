@@ -516,7 +516,7 @@ void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
     connect(menu, &QMenu::aboutToHide, menu, &QMenu::deleteLater);
     menu->addAction(QIcon::fromTheme(QStringLiteral("list-add")), QStringLiteral("&Add tag..."), this, &BrowserWidget::addTagRequested);
     if (index.isValid()) {
-        menu->addAction(QStringLiteral("Add &subtag..."), this, SLOT(addSubTagRequested()));
+        menu->addAction(QStringLiteral("Add &subtag..."), this, &BrowserWidget::addSubTagRequested);
         menu->addAction(QIcon::fromTheme(QStringLiteral("document-edit")), QStringLiteral("&Edit tag..."), this, &BrowserWidget::editTagRequested, QKeySequence(Qt::Key_Return));
         menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), QStringLiteral("&Delete tag..."), this, &BrowserWidget::removeTagRequested, QKeySequence::Delete);
         menu->setProperty("Tag", index.data(TagModel::TagRole));

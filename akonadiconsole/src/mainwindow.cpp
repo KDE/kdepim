@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     mMain = new MainWidget(this);
     setCentralWidget(mMain);
 
-    KStandardAction::quit(qApp, SLOT(quit()), actionCollection());
+    KStandardAction::quit(qApp, &QApplication::quit, actionCollection());
 
     setupGUI(Keys /*| ToolBar | StatusBar*/ | Save | Create, QStringLiteral("akonadiconsoleui.rc"));
 
