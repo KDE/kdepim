@@ -210,32 +210,27 @@ TemplateSelectionDialog::TemplateSelectionDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18nc("@title:window", "Template Selection"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+    QLabel *lab = new QLabel(i18nc("@info", "Please select a template, that matches the CSV file:"), this);
+    mainLayout->addWidget(lab);
+
+    mView = new QListView(this);
+    mainLayout->addWidget(mView);
+
+    mView->setModel(new TemplatesModel(this));
+    mView->setItemDelegate(new TemplateSelectionDelegate(this));
+
+    connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &TemplateSelectionDialog::updateButtons);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateSelectionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateSelectionDialog::reject);
-
-    QWidget *wdg = new QWidget(this);
-    QVBoxLayout *wdgVBoxLayout = new QVBoxLayout(wdg);
-    wdgVBoxLayout->setMargin(0);
-
-    new QLabel(i18nc("@info", "Please select a template, that matches the CSV file:"), wdg);
-
-    mView = new QListView(wdg);
-    wdgVBoxLayout->addWidget(mView);
-
-    mView->setModel(new TemplatesModel(this));
-    mView->setItemDelegate(new TemplateSelectionDelegate(this));
-
     mOkButton->setEnabled(false);
-    mainLayout->addWidget(wdg);
     mainLayout->addWidget(buttonBox);
-    connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged,
-            this, &TemplateSelectionDialog::updateButtons);
 }
 
 bool TemplateSelectionDialog::templatesAvailable() const
