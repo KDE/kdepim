@@ -33,39 +33,42 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Select Type"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    QVBoxLayout *topLayout = new QVBoxLayout;
-    setLayout(topLayout);
+    setModal(true);
+
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectionTypeDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectionTypeDialog::reject);
     okButton->setDefault(true);
-    setModal(true);
+
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(mainWidget);
     mainLayout->setMargin(0);
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
 
-    mUseTemplateByDefault = new QCheckBox(i18n("Use this template by default"));
+    mUseTemplateByDefault = new QCheckBox(i18n("Use this template by default"), this);
     mainLayout->addWidget(mUseTemplateByDefault);
 
     QHBoxLayout *hbox = new QHBoxLayout;
-    QPushButton *selectAll = new QPushButton(i18n("Select All"));
+    QPushButton *selectAll = new QPushButton(i18n("Select All"), this);
     connect(selectAll, &QPushButton::clicked, this, &SelectionTypeDialog::slotSelectAll);
     hbox->addWidget(selectAll);
 
-    QPushButton *unselectAll = new QPushButton(i18n("Unselect All"));
+    QPushButton *unselectAll = new QPushButton(i18n("Unselect All"), this);
     connect(unselectAll, &QPushButton::clicked, this, &SelectionTypeDialog::slotUnselectAll);
     hbox->addWidget(unselectAll);
 
-    QPushButton *saveTemplate = new QPushButton(i18n("Save as Template..."));
+    QPushButton *saveTemplate = new QPushButton(i18n("Save as Template..."), this);
     connect(saveTemplate, &QPushButton::clicked, this, &SelectionTypeDialog::slotSaveAsTemplate);
     hbox->addWidget(saveTemplate);
 
-    QPushButton *loadTemplate = new QPushButton(i18n("Load Template..."));
+    QPushButton *loadTemplate = new QPushButton(i18n("Load Template..."), this);
     connect(loadTemplate, &QPushButton::clicked, this, &SelectionTypeDialog::slotLoadTemplate);
     hbox->addWidget(loadTemplate);
 
