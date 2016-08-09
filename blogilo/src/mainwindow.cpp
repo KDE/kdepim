@@ -488,7 +488,6 @@ void MainWindow::slotRemoveAllExclude(int pos)
 void MainWindow::slotRemovePostEntry(int pos)
 {
 
-
     PostEntry *widget = qobject_cast<PostEntry *>(tabPosts->widget(pos));
 
     if (!widget) {

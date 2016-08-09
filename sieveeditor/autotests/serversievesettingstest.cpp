@@ -17,7 +17,6 @@
    Boston, MA 02110-1301, USA.
 */
 
-
 #include "serversievesettingstest.h"
 #include "../src/serversievesettings.h"
 #include <qtest.h>

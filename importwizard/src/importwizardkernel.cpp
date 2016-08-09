@@ -121,8 +121,6 @@ void ImportWizardKernel::setLastSelectedFolder(Akonadi::Collection::Id col)
     Q_UNUSED(col);
 }
 
-
-
 void ImportWizardKernel::expunge(Akonadi::Collection::Id col, bool sync)
 {
     Q_UNUSED(col);
