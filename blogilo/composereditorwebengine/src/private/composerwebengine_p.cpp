@@ -894,7 +894,7 @@ void ComposerEditorWebEnginePrivate::_k_slotReplace()
 void ComposerEditorWebEnginePrivate::saveHtml(QWebEnginePage *page, const QString &fileName)
 {
     if (page) {
-        page->toHtml([fileName](const QString &result) {
+        page->toHtml([fileName](const QString & result) {
             QFile file(fileName);
             bool success = file.open(QIODevice::WriteOnly);
             if (success) {
@@ -903,7 +903,7 @@ void ComposerEditorWebEnginePrivate::saveHtml(QWebEnginePage *page, const QStrin
                 const qint64 c = file.write(data);
             }
         }
-        );
+                    );
     }
 }
 
