@@ -32,26 +32,24 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
       mVCardExport(Q_NULLPTR)
 {
     setWindowTitle(i18n("Select Contacts"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    QWidget *mainWidget = new QWidget(this);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
+
+    mSelectionWidget = new ContactSelectionWidget(selectionModel, this);
+    if (allowToSelectTypeToExport) {
+        mainLayout->addWidget(mSelectionWidget);
+        mVCardExport = new VCardExportSelectionWidget(this);
+        mainLayout->addWidget(mVCardExport);
+    } else {
+        mainLayout->addWidget(mSelectionWidget);
+    }
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactSelectionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactSelectionDialog::reject);
-
-    mSelectionWidget = new ContactSelectionWidget(selectionModel, this);
-    if (allowToSelectTypeToExport) {
-        mainLayout->addWidget(mSelectionWidget);
-        mVCardExport = new VCardExportSelectionWidget;
-        mainLayout->addWidget(mVCardExport);
-    } else {
-        mainLayout->addWidget(mSelectionWidget);
-    }
     mainLayout->addWidget(buttonBox);
 }
 

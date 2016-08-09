@@ -42,22 +42,25 @@ AttachPropertyDialog::AttachPropertyDialog(QWidget *parent)
     : QDialog(parent),
       mAttach(0)
 {
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
+    setModal(true);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+    QWidget *mainWidget = new QWidget(this);
+    mUI.setupUi(mainWidget);
+    mUI.mProperties->setHeaderHidden(true);
+    connect(user1Button, &QPushButton::clicked, this, &AttachPropertyDialog::slotSave);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AttachPropertyDialog::reject);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
     user1Button->setText(i18n("Save..."));
-    setModal(true);
-    QWidget *mainWidget = new QWidget(this);
-    mUI.setupUi(mainWidget);
-    mUI.mProperties->setHeaderHidden(true);
-    connect(user1Button, &QPushButton::clicked, this, &AttachPropertyDialog::slotSave);
-    readConfig();
+
     mainLayout->addWidget(mainWidget);
     mainLayout->addWidget(buttonBox);
+    readConfig();
 }
 
 AttachPropertyDialog::~AttachPropertyDialog()
