@@ -291,7 +291,7 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
             addr.setSuffix((*it).suffix());
         }
 
-        addr.setNickName((*it).nickName());
+        addr.setExtraNickNameList((*it).extraNickNameList());
         addr.setMailer((*it).mailer());
         addr.setTimeZone((*it).timeZone());
         addr.setGeo((*it).geo());
@@ -333,7 +333,7 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         if (exportFieldType & VCardExportSelectionWidget::Business) {
             addr.setExtraTitleList((*it).extraTitleList());
             addr.setExtraRoleList((*it).extraRoleList());
-            addr.setOrganization((*it).organization());
+            addr.setExtraOrganizationList((*it).extraOrganizationList());
             addr.setDepartment((*it).department());
 
             KContacts::PhoneNumber::List phones = (*it).phoneNumbers(KContacts::PhoneNumber::Work);
