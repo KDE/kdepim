@@ -49,7 +49,6 @@ AttachPropertyDialog::AttachPropertyDialog(QWidget *parent)
     QWidget *mainWidget = new QWidget(this);
     mUI.setupUi(mainWidget);
     mUI.mProperties->setHeaderHidden(true);
-    connect(user1Button, &QPushButton::clicked, this, &AttachPropertyDialog::slotSave);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
     QPushButton *user1Button = new QPushButton;
@@ -57,6 +56,7 @@ AttachPropertyDialog::AttachPropertyDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AttachPropertyDialog::reject);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
     user1Button->setText(i18n("Save..."));
+    connect(user1Button, &QPushButton::clicked, this, &AttachPropertyDialog::slotSave);
 
     mainLayout->addWidget(mainWidget);
     mainLayout->addWidget(buttonBox);
