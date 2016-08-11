@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 
     KAboutData aboutData(QStringLiteral("sieveeditor"),
                          i18n("KSieve Editor"),
-                         QStringLiteral(KDEPIM_VERSION),
+                         QStringLiteral(SIEVEEDITOR_VERSION),
                          i18n("Sieve Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2016 sieveeditor authors"));
