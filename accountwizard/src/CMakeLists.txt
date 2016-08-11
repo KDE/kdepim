@@ -1,5 +1,6 @@
 
 set(accountwizard_srcs
+    cryptopage.cpp
     dialog.cpp
     typepage.cpp
     loadpage.cpp
@@ -31,6 +32,7 @@ ki18n_wrap_ui(accountwizard_srcs
     ui/loadpage.ui
     ui/setuppage.ui
     ui/personaldatapage.ui
+    ui/cryptopage.ui
     )
 ecm_qt_declare_logging_category(accountwizard_srcs HEADER accountwizard_debug.h IDENTIFIER ACCOUNTWIZARD_LOG CATEGORY_NAME log_accountwizard)
 
@@ -51,6 +53,7 @@ set(accountwizard_libs
     KF5::Ldap
     KF5::AkonadiWidgets
     KF5::Crash
+    KF5::Libkleo
     )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )

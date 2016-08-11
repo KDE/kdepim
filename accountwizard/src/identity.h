@@ -24,6 +24,10 @@
 
 class Transport;
 
+namespace GpgME {
+class Key;
+}
+
 namespace KIdentityManagement
 {
 class Identity;
@@ -51,6 +55,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void setXFace(const QString &xface);
     Q_SCRIPTABLE void setPgpAutoSign(bool autosign);
     Q_SCRIPTABLE void setPgpAutoEncrypt(bool autoencrypt);
+    Q_SCRIPTABLE void setKey(const GpgME::Key &key);
 
 protected:
     QString identityName() const;

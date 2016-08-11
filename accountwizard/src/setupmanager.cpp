@@ -87,6 +87,7 @@ QObject *SetupManager::createIdentity()
     identity->setRealName(m_name);
     identity->setPgpAutoSign(m_pgpAutoSign);
     identity->setPgpAutoEncrypt(m_pgpAutoEncrypt);
+    identity->setKey(m_key);
     return connectObject(identity);
 }
 
@@ -232,6 +233,11 @@ void SetupManager::setPgpAutoEncrypt(bool autoencrypt)
 void SetupManager::setPgpAutoSign(bool autosign)
 {
     m_pgpAutoSign = autosign;
+}
+
+void SetupManager::setKey(const GpgME::Key &key)
+{
+    m_key = key;
 }
 
 void SetupManager::openWallet()

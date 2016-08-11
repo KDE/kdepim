@@ -22,6 +22,8 @@
 
 #include <QObject>
 
+#include <gpgme++/key.h>
+
 namespace KWallet
 {
 class Wallet;
@@ -44,6 +46,7 @@ public:
     void setPersonalDataAvailable(bool available);
     void setPgpAutoSign(bool autosign);
     void setPgpAutoEncrypt(bool autoencrypt);
+    void setKey(const GpgME::Key &key);
 
 public Q_SLOTS:
     Q_SCRIPTABLE bool personalDataAvailable();
@@ -78,6 +81,7 @@ private Q_SLOTS:
 
 private:
     QString m_name, m_email, m_password;
+    GpgME::Key m_key;
     QList<SetupObject *> m_objectToSetup;
     QList<SetupObject *> m_setupObjects;
     SetupObject *m_currentSetupObject;

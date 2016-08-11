@@ -58,6 +58,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
     set(MESSAGELIB_LIB_VERSION_LIB "5.3.44")
     set(PIMCOMMON_LIB_VERSION_LIB "5.3.41")
     set(LIBKDEPIM_LIB_VERSION_LIB "5.3.40")
+    set(LIBKLEO_LIB_VERSION_LIB "5.3.44")
 
     # Find KF5 package
     find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
@@ -82,6 +83,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${accountwizard_SOURCE_DIR})
     find_package(KF5MessageViewer ${MESSAGELIB_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5PimCommon ${PIMCOMMON_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(KF5Libkdepim ${LIBKDEPIM_LIB_VERSION_LIB} CONFIG REQUIRED)
+    find_package(KF5LibKleo ${LIBKLEO_LIB_VERSION_LIB} CONFIG REQUIRED)
     find_package(MailTransportDBusService CONFIG REQUIRED)
 
 

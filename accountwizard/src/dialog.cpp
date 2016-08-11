@@ -30,6 +30,7 @@
 #include "setupmanager.h"
 #include "servertest.h"
 #include "setuppage.h"
+#include "cryptopage.h"
 
 #include <KMime/Message>
 
@@ -41,6 +42,8 @@
 #include <KAboutData>
 
 #include <KHelpMenu>
+
+#include <gpgme++/engineinfo.h>
 
 Dialog::Dialog(QWidget *parent)
     : KAssistantDialog(parent)
@@ -55,6 +58,11 @@ Dialog::Dialog(QWidget *parent)
         connect(pdpage, &PersonalDataPage::manualWanted, this, &Dialog::slotManualConfigWanted);
         if (!Global::assistant().isEmpty()) {
             pdpage->setHideOptionInternetSearch(true);
+        }
+
+        if (!GpgME::checkEngine(GpgME::OpenPGP)) {
+            CryptoPage *cryptoPage = new CryptoPage(this);
+            addPage(cryptoPage, i18n("Secure your Communication"));
         }
     }
 
@@ -100,7 +108,6 @@ Dialog::Dialog(QWidget *parent)
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
     button(QDialogButtonBox::Help)->setMenu(menu);
-
 }
 
 KPageWidgetItem *Dialog::addPage(Page *page, const QString &title)
