@@ -26,7 +26,6 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QCommandLineOption>
-#include <QDebug>
 
 #include <QtCore/qtimer.h>
 
