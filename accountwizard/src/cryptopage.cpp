@@ -54,7 +54,7 @@ public:
     {
     }
 
-    void slotCancel()
+    void slotCancel() Q_DECL_OVERRIDE
     {
         if (mJob) {
             mJob->slotCancel();
