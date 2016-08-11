@@ -9,9 +9,6 @@ set(calendarjanitor_SRCS
     main.cpp
     options.cpp)
 
-#file(GLOB ICONS_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-calendar.png")
-#ecm_add_app_icon(calendarjanitor_SRCS ICONS ${ICONS_SRCS})
-
 add_executable(calendarjanitor ${calendarjanitor_SRCS})
 
 target_link_libraries(calendarjanitor
