@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     KAboutData aboutData(QStringLiteral("ktnef"),
                          i18n("KTnef"),
-                         QStringLiteral(KDEPIM_VERSION),
+                         QStringLiteral(KTNEF_VERSION),
                          i18n("Viewer for mail attachments using TNEF format"),
                          KAboutLicense::GPL,
                          i18n("Copyright 2000 Michael Goffioul\nCopyright 2012  Allen Winter"));

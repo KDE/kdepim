@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     KAboutData aboutData(QStringLiteral("mboximporter"),
                          i18n("MBox importer tool"),
-                         QStringLiteral(KDEPIM_VERSION),
+                         QStringLiteral(MBOXIMPORTER_VERSION),
                          i18n("MBox Import Tool"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2016 MBoxImporter authors"));
