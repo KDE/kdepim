@@ -321,7 +321,7 @@ void AgentWidget::restartAgent()
     }
 }
 
-void AgentWidget::cloneAgent()
+void AgentWidget::slotCloneAgent()
 {
     mCloneSource = ui.instanceWidget->currentAgentInstance();
     if (!mCloneSource.isValid()) {
@@ -330,7 +330,7 @@ void AgentWidget::cloneAgent()
     const AgentType agentType = mCloneSource.type();
     if (agentType.isValid()) {
         AgentInstanceCreateJob *job = new AgentInstanceCreateJob(agentType, this);
-        connect(job, SIGNAL(result(KJob*)), SLOT(cloneAgent(KJob*)));
+        connect(job, &KJob::result, this, &AgentWidget::cloneAgent);
         job->start();
     } else {
         qCWarning(AKONADICONSOLE_LOG) << "WTF?";
@@ -440,7 +440,7 @@ void AgentWidget::showContextMenu(const QPoint &pos)
 {
     QMenu menu(this);
     menu.addAction(QIcon::fromTheme(QStringLiteral("list-add")), QStringLiteral("Add Agent..."), this, &AgentWidget::addAgent);
-    menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), QStringLiteral("Clone Agent"), this, SLOT(cloneAgent()));
+    menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), QStringLiteral("Clone Agent"), this, &AgentWidget::slotCloneAgent);
     menu.addSeparator();
     menu.addMenu(mSyncMenu);
     menu.addAction(QIcon::fromTheme(QStringLiteral("dialog-cancel")), QStringLiteral("Abort Activity"), this, &AgentWidget::abortAgent);

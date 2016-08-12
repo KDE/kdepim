@@ -59,7 +59,7 @@ private Q_SLOTS:
     void showTaskList();
     void abortAgent();
     void restartAgent();
-    void cloneAgent();
+    void slotCloneAgent();
     void cloneAgent(KJob *job);
 
     void currentChanged();

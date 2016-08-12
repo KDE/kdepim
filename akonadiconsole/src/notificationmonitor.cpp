@@ -69,7 +69,7 @@ NotificationMonitor::NotificationMonitor(QWidget *parent) :
 void NotificationMonitor::contextMenu(const QPoint & /*pos*/)
 {
     QMenu menu;
-    menu.addAction(QStringLiteral("Clear View"), m_model, SLOT(clear()));
+    menu.addAction(QStringLiteral("Clear View"), m_model, &NotificationModel::clear);
     menu.exec(QCursor::pos());
 }
 
