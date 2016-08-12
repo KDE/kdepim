@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     KLocalizedString::setApplicationDomain("contactthemeeditor");
     KAboutData aboutData(QStringLiteral("contactthemeeditor"),
                          i18n("Contact Theme Editor"),
-                         QStringLiteral(KDEPIM_VERSION),
+                         QStringLiteral(GRANTLEEEDITOR_VERSION),
                          i18n("Contact Theme Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2016 contactthemeeditor authors"));
