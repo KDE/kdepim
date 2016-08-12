@@ -22,6 +22,7 @@
 */
 
 #include "bilboblog.h"
+#include "blogilo-version.h"
 #include "dbman.h"
 #include <kblog/wordpressbuggy.h>
 #ifdef HAVE_GAPIBLOGGER_SUPPORT
@@ -107,7 +108,7 @@ KBlog::Blog *BilboBlog::blogBackend()
 #endif
             break;
         }
-        d->kblog->setUserAgent(QLatin1String(APPNAME), VERSION);
+        d->kblog->setUserAgent(QLatin1String(APPNAME), QStringLiteral(BLOGILO_VERSION));
         d->kblog->setUsername(username());
         d->kblog->setPassword(password());
         d->kblog->setBlogId(blogid());

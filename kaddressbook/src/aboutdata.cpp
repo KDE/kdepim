@@ -27,7 +27,7 @@
 AboutData::AboutData()
     : KAboutData(QStringLiteral("kaddressbook"),
                  i18n("KAddressBook"),
-                 QStringLiteral(KDEPIM_VERSION),
+                 QStringLiteral(KADDRESSBOOK_VERSION),
                  i18n("The KDE Address Book Application"),
                  KAboutLicense::GPL_V2,
                  i18n("Copyright © 2007–2016 KAddressBook authors"))

@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     KLocalizedString::setApplicationDomain("headerthemeeditor");
     KAboutData aboutData(QStringLiteral("headerthemeeditor"),
                          i18n("Header Theme Editor"),
-                         QStringLiteral(KDEPIM_VERSION),
+                         QStringLiteral(GRANTLEEEDITOR_VERSION),
                          i18n("Messageviewer Header Theme Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2016 headerthemeeditor authors"));

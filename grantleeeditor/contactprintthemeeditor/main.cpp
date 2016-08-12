@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     KLocalizedString::setApplicationDomain("contactprintthemeeditor");
     KAboutData aboutData(QStringLiteral("contactprintthemeeditor"),
                          i18n("Contact Print Theme Editor"),
-                         QStringLiteral(KDEPIM_VERSION),
+                         QStringLiteral(GRANTLEEEDITOR_VERSION),
                          i18n("Contact Print Theme Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2015-2016 contactprintthemeeditor authors"));
