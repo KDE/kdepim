@@ -51,7 +51,7 @@ void PimSettingCommandLineOption::slotActivateRequested(const QStringList &argum
 void PimSettingCommandLineOption::createParser(const QApplication &app)
 {
     KAboutData aboutData(QStringLiteral("pimsettingexporter"), i18n("PIM Setting Exporter"),
-                         QStringLiteral(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
+                         QStringLiteral(PIMSETTINGEXPORTER_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
                          i18n("Copyright © 2012-2016 pimsettingexporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     mParser.addVersionOption();
