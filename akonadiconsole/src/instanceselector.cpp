@@ -27,15 +27,18 @@
 #include <KLocalizedString>
 #include <akonadi/private/instance_p.h>
 #include <akonadi/private/dbus_p.h>
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QApplication>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QDBusInterface>
 #include <QStandardItemModel>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+
 
 InstanceSelector::InstanceSelector(const QString &remoteHost, QWidget *parent, Qt::WindowFlags flags)
     : QDialog(parent, flags),
@@ -97,7 +100,17 @@ void InstanceSelector::slotAccept()
     }
     QDialog::accept();
 
+    if (!m_instance.isEmpty()) {
+        QDBusInterface serverIface(QStringLiteral("org.freedesktop.Akonadi.%1").arg(m_instance),
+                                   QStringLiteral("/Server"),
+                                   QStringLiteral("org.freedesktop.Akonadi.Server"),
+                                   QDBusConnection::sessionBus());
+        const QDBusReply<QString> serverPath = serverIface.call(QStringLiteral("serverPath"));
+        Akonadi::XdgBaseDirs::overrideConfigPath(serverPath);
+    }
+
     qputenv("AKONADI_INSTANCE", m_instance.toUtf8());
+    Akonadi::Instance::setIdentifier(m_instance);
     MainWindow *mWindow = new MainWindow;
     if (!m_remoteHost.isEmpty()) {
         mWindow->setWindowTitle(QStringLiteral("Remote Akonadi Console (%1)").arg(m_remoteHost));

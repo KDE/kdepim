@@ -29,6 +29,8 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
+#include <QDebug>
+
 using namespace Akonadi;
 
 class DbAccessPrivate
