@@ -19,7 +19,6 @@
 
 #include "monitoritem.h"
 #include "monitorsmodel.h"
-#include "notificationsourceinterface.h"
 #include "akonadiconsole_debug.h"
 #include <AkonadiCore/servermanager.h>
 
@@ -27,37 +26,11 @@
 #include <QTimer>
 #include <QVector>
 
-MonitorItem::MonitorItem(const QDBusObjectPath &identifier_, MonitorsModel *model):
+MonitorItem::MonitorItem(const QString &identifier_, MonitorsModel *model):
     QObject(model),
     identifier(identifier_),
     allMonitored(false)
 {
-
-    QString service = QStringLiteral("org.freedesktop.Akonadi");
-    if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
-    }
-
-    mInterface = new org::freedesktop::Akonadi::NotificationSource(
-        service, identifier.path(),
-        QDBusConnection::sessionBus(), this);
-    if (!mInterface) {
-        qCWarning(AKONADICONSOLE_LOG) << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_.path();
-        return;
-    }
-
-    if (mInterface->lastError().isValid()) {
-        qCWarning(AKONADICONSOLE_LOG) << mInterface->lastError().message();
-        return;
-    }
-
-    connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredCollectionsChanged, this, &MonitorItem::monitoredCollectionsChanged);
-    connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredItemsChanged, this, &MonitorItem::monitoredItemsChanged);
-    connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredResourcesChanged, this, &MonitorItem::monitoredResourcesChanged);
-    connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredMimeTypesChanged, this, &MonitorItem::monitoredMimeTypesChanged);
-    connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::isAllMonitoredChanged, this, &MonitorItem::isAllMonitoredChanged);
-    connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::ignoredSessionsChanged, this, &MonitorItem::ignoredSessionsChanged);
-
     QTimer::singleShot(0, this, &MonitorItem::init);
 }
 
@@ -77,12 +50,13 @@ void MonitorItem::init()
 
 void MonitorItem::isAllMonitoredChanged()
 {
-    allMonitored = mInterface->isAllMonitored();
+    //allMonitored = mInterface->isAllMonitored();
     Q_EMIT changed(MonitorsModel::IsAllMonitoredColumn);
 }
 
 void MonitorItem::monitoredCollectionsChanged()
 {
+#if 0
     const QVector<qint64> list = mInterface->monitoredCollections();
     monitoredCollections.clear();
     for (int i = 0; i < list.size(); i++) {
@@ -93,10 +67,12 @@ void MonitorItem::monitoredCollectionsChanged()
     }
 
     Q_EMIT changed(MonitorsModel::MonitoredCollectionsColumn);
+#endif
 }
 
 void MonitorItem::monitoredItemsChanged()
 {
+#if 0
     const QVector<qint64> list = mInterface->monitoredItems();
     monitoredItems.clear();
     for (int i = 0; i < list.size(); i++) {
@@ -107,17 +83,21 @@ void MonitorItem::monitoredItemsChanged()
     }
 
     Q_EMIT changed(MonitorsModel::MonitoredItemsColumn);
+#endif
 }
 
 void MonitorItem::monitoredMimeTypesChanged()
 {
+#if 0
     const QStringList mimeTypes = mInterface->monitoredMimeTypes();
     monitoredMimeTypes = mimeTypes.join(QStringLiteral(", "));
     Q_EMIT changed(MonitorsModel::MonitoredMimeTypesColumn);
+#endif
 }
 
 void MonitorItem::monitoredResourcesChanged()
 {
+#if 0
     const QVector<QByteArray> list = mInterface->monitoredResources();
     monitoredResources.clear();
     for (int i = 0; i < list.size(); i++) {
@@ -128,10 +108,12 @@ void MonitorItem::monitoredResourcesChanged()
     }
 
     Q_EMIT changed(MonitorsModel::MonitoredResourcesColumn);
+#endif
 }
 
 void MonitorItem::ignoredSessionsChanged()
 {
+#if 0
     const QVector<QByteArray> list = mInterface->ignoredSessions();
     ignoredSessions.clear();
     for (int i = 0; i < list.size(); i++) {
@@ -142,5 +124,6 @@ void MonitorItem::ignoredSessionsChanged()
     }
 
     Q_EMIT changed(MonitorsModel::IgnoredSessionsColumn);
+#endif
 }
 

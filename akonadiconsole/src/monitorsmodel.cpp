@@ -22,10 +22,11 @@
 #include "akonadiconsole_debug.h"
 #include <AkonadiCore/servermanager.h>
 
-#include <QtDBus/QDBusConnection>
+#include <QTimer>
 
 MonitorsModel::MonitorsModel(QObject *parent):
-    QAbstractItemModel(parent), mManager(Q_NULLPTR)
+    QAbstractItemModel(parent),
+    mMonitor(Q_NULLPTR)
 {
     QTimer::singleShot(0, this, &MonitorsModel::init);
 }
@@ -33,35 +34,15 @@ MonitorsModel::MonitorsModel(QObject *parent):
 MonitorsModel::~MonitorsModel()
 {
     qDeleteAll(mData);
-    mData.clear();
 }
 
 void MonitorsModel::init()
 {
     qDeleteAll(mData);
-    mData.clear();
-
-    QString service = QStringLiteral("org.freedesktop.Akonadi");
-    if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        service += QStringLiteral(".") + Akonadi::ServerManager::instanceIdentifier();
-    }
-
-    mManager = new org::freedesktop::Akonadi::NotificationManager(service,
-            QStringLiteral("/notifications"), QDBusConnection::sessionBus(), this);
-    if (!mManager) {
-        qCWarning(AKONADICONSOLE_LOG) << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
-        return;
-    }
-
-    const QList<QDBusObjectPath> subscribers = mManager->subscribers();
-    Q_FOREACH (const QDBusObjectPath &subscriber, subscribers) {
-        slotSubscriberSubscribed(subscriber);
-    }
-
-    connect(mManager, &org::freedesktop::Akonadi::NotificationManager::subscribed, this, &MonitorsModel::slotSubscriberSubscribed);
-    connect(mManager, &org::freedesktop::Akonadi::NotificationManager::unsubscribed, this, &MonitorsModel::slotSubscriberUnsubscribed);
+    mMonitor = new Akonadi::Monitor(this);
 }
 
+#if 0
 void MonitorsModel::slotSubscriberSubscribed(const QDBusObjectPath &identifier)
 {
     // Avoid akonadiconsole's Monitors being duplicated on startup
@@ -87,6 +68,7 @@ void MonitorsModel::slotSubscriberUnsubscribed(const QDBusObjectPath &identifier
     mData.take(identifier)->deleteLater();
     endRemoveRows();
 }
+#endif
 
 void MonitorsModel::slotItemChanged(MonitorsModel::Column column)
 {
@@ -122,7 +104,7 @@ QVariant MonitorsModel::data(const QModelIndex &index, int role) const
 
     MonitorItem *item = static_cast<MonitorItem *>(index.internalPointer());
     switch (index.column()) {
-    case IdentifierColumn: return item->identifier.path();
+    case IdentifierColumn: return item->identifier;
     case IsAllMonitoredColumn: return item->allMonitored;
     case MonitoredCollectionsColumn: return item->monitoredCollections;
     case MonitoredItemsColumn: return item->monitoredItems;

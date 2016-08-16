@@ -23,17 +23,16 @@
 #include <QObject>
 
 #include "monitorsmodel.h"
-#include "notificationsourceinterface.h"
 
 class MonitorItem : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit MonitorItem(const QDBusObjectPath &identifier_, MonitorsModel *model);
+    explicit MonitorItem(const QString &identifier_, MonitorsModel *model);
     virtual ~MonitorItem();
 
-    QDBusObjectPath identifier;
+    QString identifier;
     bool allMonitored;
     QString monitoredCollections;
     QString monitoredItems;
@@ -53,9 +52,6 @@ private Q_SLOTS:
     void monitoredMimeTypesChanged();
     void isAllMonitoredChanged();
     void ignoredSessionsChanged();
-
-private:
-    org::freedesktop::Akonadi::NotificationSource *mInterface;
 };
 
 #endif // MONITORITEM_H

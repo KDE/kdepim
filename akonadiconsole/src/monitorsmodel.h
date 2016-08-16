@@ -21,9 +21,7 @@
 #define MONITORSMODEL_H
 
 #include <QAbstractItemModel>
-#include <QtDBus/QDBusObjectPath>
-
-#include "notificationmanagerinterface.h"
+#include <AkonadiCore/Monitor>
 
 class MonitorItem;
 
@@ -60,12 +58,10 @@ private Q_SLOTS:
     void init();
 
     void slotItemChanged(MonitorsModel::Column row);
-    void slotSubscriberSubscribed(const QDBusObjectPath &identifier);
-    void slotSubscriberUnsubscribed(const QDBusObjectPath &identifier);
 
 private:
-    QMap<QDBusObjectPath, MonitorItem * > mData;
-    org::freedesktop::Akonadi::NotificationManager *mManager;
+    QMap<QString, MonitorItem *> mData;
+    Akonadi::Monitor *mMonitor;
 };
 
 #endif // MONITORSMODEL_H

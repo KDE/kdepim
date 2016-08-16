@@ -24,6 +24,8 @@
 #include <QDateTime>
 #include <QDBusInterface>
 
+#include <AkonadiCore/Monitor>
+
 class QDBusInterface;
 
 class NotificationModel : public QAbstractItemModel
@@ -42,15 +44,7 @@ public:
 
     bool isEnabled() const
     {
-        if (!m_manager) {
-            return false;
-        }
-        QDBusMessage reply = m_manager->call(QStringLiteral("debugEnabled"));
-        if (reply.arguments().size() == 1) {
-            return reply.arguments().at(0).toBool();
-        } else {
-            return false;
-        }
+        return m_monitor;
     }
 
 public Q_SLOTS:
@@ -63,12 +57,15 @@ private Q_SLOTS:
 private:
     class Item;
     class NotificationBlock;
-    class NotificationNode;
     class NotificationEntity;
+    class ItemNotificationNode;
+    class CollectionNotificationNode;
+    class TagNotificationNode;
+    class RelationNotificationNode;
 
-    QList<NotificationBlock *> m_data;
+    QList<Item *> m_data;
 
-    QDBusInterface *m_manager;
+    Akonadi::Monitor *m_monitor;
 };
 
 #endif
