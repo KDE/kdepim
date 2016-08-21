@@ -67,7 +67,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${blogilo_SOURCE_DIR})
     set(WEBENGINE_TYPE "QtWebEngine")
 
     # Extra package
-    find_package(KF5GAPI "5.2.80" CONFIG)
+    find_package(KF5GAPI "5.3.40" CONFIG)
 
     include_directories(${blogilo_SOURCE_DIR} ${blogilo_BINARY_DIR})
     add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
