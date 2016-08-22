@@ -77,8 +77,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbook_SOURCE_DIR})
 endif()
 add_definitions(-DQT_USE_QSTRINGBUILDER)
 
-set(Prison_MIN_VERSION "1.2.2")
-find_package(KF5Prison ${Prison_MIN_VERSION} CONFIG)
+find_package(KF5Prison ${KF5_VERSION} CONFIG)
 set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
 add_definitions(-DTRANSLATION_DOMAIN=\"kaddressbook\")
