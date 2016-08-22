@@ -88,7 +88,7 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
-        if (orientation == Qt::Vertical || section < 0 || section >= NUM_COLUMNS || role != Qt::DisplayRole) {
+        if (orientation == Qt::Vertical || section < 0 || section >= NUM_COLUMNS || (role != Qt::DisplayRole && role != Qt::ToolTipRole)) {
             return QVariant();
         }
 
