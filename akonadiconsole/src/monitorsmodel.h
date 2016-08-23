@@ -21,9 +21,13 @@
 #define MONITORSMODEL_H
 
 #include <QAbstractItemModel>
-#include <AkonadiCore/Monitor>
+#include <AkonadiCore/NotificationSubscriber>
 
 class MonitorItem;
+
+namespace Akonadi {
+class Monitor;
+}
 
 class MonitorsModel : public QAbstractItemModel
 {
@@ -32,12 +36,16 @@ class MonitorsModel : public QAbstractItemModel
 public:
     enum Column {
         IdentifierColumn = 0,
+        SessionColumn,
         IsAllMonitoredColumn,
         MonitoredCollectionsColumn,
         MonitoredItemsColumn,
+        MonitoredTagsColumn,
         MonitoredResourcesColumn,
         MonitoredMimeTypesColumn,
+        MonitoredTypesColumn,
         IgnoredSessionsColumn,
+        IsExclusiveColumn,
 
         ColumnsCount
     };
@@ -57,10 +65,12 @@ public:
 private Q_SLOTS:
     void init();
 
-    void slotItemChanged(MonitorsModel::Column row);
+    void slotSubscriberAdded(const Akonadi::NotificationSubscriber &subscriber);
+    void slotSubscriberChanged(const Akonadi::NotificationSubscriber &subscriber);
+    void slotSubscriberRemoved(const Akonadi::NotificationSubscriber &subscriber);
 
 private:
-    QMap<QString, MonitorItem *> mData;
+    QVector<Akonadi::NotificationSubscriber> mData;
     Akonadi::Monitor *mMonitor;
 };
 

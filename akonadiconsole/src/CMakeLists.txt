@@ -31,7 +31,6 @@ set(akonadiconsole_bin_SRCS
     mainwindow.cpp
     monitorswidget.cpp
     monitorsmodel.cpp
-    monitoritem.cpp
     notificationmodel.cpp
     notificationmonitor.cpp
     searchdialog.cpp

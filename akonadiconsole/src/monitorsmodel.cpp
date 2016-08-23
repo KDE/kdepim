@@ -18,9 +18,10 @@
  */
 
 #include "monitorsmodel.h"
-#include "monitoritem.h"
 #include "akonadiconsole_debug.h"
-#include <AkonadiCore/servermanager.h>
+#include <AkonadiCore/Monitor>
+#include <AkonadiCore/NotificationSubscriber>
+#include <AkonadiCore/Session>
 
 #include <QTimer>
 
@@ -33,62 +34,71 @@ MonitorsModel::MonitorsModel(QObject *parent):
 
 MonitorsModel::~MonitorsModel()
 {
-    qDeleteAll(mData);
 }
 
 void MonitorsModel::init()
 {
-    qDeleteAll(mData);
     mMonitor = new Akonadi::Monitor(this);
+    mMonitor->setTypeMonitored(Akonadi::Monitor::Subscribers, true);
+    connect(mMonitor, &Akonadi::Monitor::notificationSubscriberAdded,
+            this, &MonitorsModel::slotSubscriberAdded);
+    connect(mMonitor, &Akonadi::Monitor::notificationSubscriberChanged,
+            this, &MonitorsModel::slotSubscriberChanged);
+    connect(mMonitor, &Akonadi::Monitor::notificationSubscriberRemoved,
+            this, &MonitorsModel::slotSubscriberRemoved);
 }
 
-#if 0
-void MonitorsModel::slotSubscriberSubscribed(const QDBusObjectPath &identifier)
+void MonitorsModel::slotSubscriberAdded(const Akonadi::NotificationSubscriber &subscriber)
 {
-    // Avoid akonadiconsole's Monitors being duplicated on startup
-    if (mData.contains(identifier)) {
-        return;
-    }
-
-    MonitorItem *item = new MonitorItem(identifier, this);
-    connect(item, &MonitorItem::changed, this, &MonitorsModel::slotItemChanged);
     beginInsertRows(QModelIndex(), mData.count(), mData.count());
-    mData.insert(identifier, item);
+    mData.push_back(subscriber);
     endInsertRows();
 }
 
-void MonitorsModel::slotSubscriberUnsubscribed(const QDBusObjectPath &identifier)
+void MonitorsModel::slotSubscriberRemoved(const Akonadi::NotificationSubscriber &subscriber)
 {
-    if (!mData.contains(identifier)) {
-        return;
+    int idx = -1;
+    for (auto it = mData.begin(), end = mData.end(); it != end; ++it) {
+        ++idx;
+        if (it->subscriber() == subscriber.subscriber()) {
+            beginRemoveRows(QModelIndex(), idx, idx);
+            mData.erase(it);
+            endRemoveRows();
+            return;
+        }
     }
-
-    const int row = mData.uniqueKeys().indexOf(identifier);
-    beginRemoveRows(QModelIndex(), row, row);
-    mData.take(identifier)->deleteLater();
-    endRemoveRows();
 }
-#endif
 
-void MonitorsModel::slotItemChanged(MonitorsModel::Column column)
+void MonitorsModel::slotSubscriberChanged(const Akonadi::NotificationSubscriber &subscriber)
 {
-    MonitorItem *item = qobject_cast<MonitorItem *>(sender());
-    const QModelIndex idx = index(mData.uniqueKeys().indexOf(item->identifier), static_cast<int>(column));
-    Q_EMIT dataChanged(idx, idx);
+    int idx = -1;
+    for (auto it = mData.begin(), end = mData.end(); it != end; ++it) {
+        ++idx;
+        if (it->subscriber() == subscriber.subscriber()) {
+            *it = subscriber;
+            Q_EMIT dataChanged(index(idx, 0), index(idx, ColumnsCount));
+            return;
+        }
+    }
 }
 
 QVariant MonitorsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole) {
         if (orientation == Qt::Horizontal) {
-            switch (section) {
-            case 0: return QStringLiteral("Subscriber");
-            case 1: return QStringLiteral("All Monitored");
-            case 2: return QStringLiteral("Monitored Collections");
-            case 3: return QStringLiteral("Monitored Items");
-            case 4: return QStringLiteral("Monitored Resources");
-            case 5: return QStringLiteral("Monitored Mime Types");
-            case 6: return QStringLiteral("Ignored Sessions");
+            switch (static_cast<Column>(section)) {
+            case IdentifierColumn: return QStringLiteral("Subscriber");
+            case SessionColumn: return QStringLiteral("Session");
+            case IsAllMonitoredColumn: return QStringLiteral("All");
+            case MonitoredCollectionsColumn: return QStringLiteral("Collections");
+            case MonitoredItemsColumn: return QStringLiteral("Items");
+            case MonitoredTagsColumn: return QStringLiteral("Tags");
+            case MonitoredResourcesColumn: return QStringLiteral("Resources");
+            case MonitoredMimeTypesColumn: return QStringLiteral("Mime Types");
+            case MonitoredTypesColumn: return QStringLiteral("Types");
+            case IgnoredSessionsColumn: return QStringLiteral("Ignored Sessions");
+            case IsExclusiveColumn: return QStringLiteral("Exclusive");
+            case ColumnsCount: Q_ASSERT(false); return QString();
             }
         }
     }
@@ -96,21 +106,71 @@ QVariant MonitorsModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+namespace {
+
+template<typename T>
+QString toString(const QSet<T> &set)
+{
+    QStringList rv;
+    for (const auto &v : set) {
+        rv << QVariant(v).toString();
+    }
+    return rv.join(QStringLiteral(", "));
+}
+
+template<>
+QString toString(const QSet<Akonadi::Monitor::Type> &set)
+{
+    QStringList rv;
+    for (auto v : set) {
+        switch (v) {
+        case Akonadi::Monitor::Items:
+            rv << QStringLiteral("Items");
+            break;
+        case Akonadi::Monitor::Collections:
+            rv << QStringLiteral("Collections");
+            break;
+        case Akonadi::Monitor::Tags:
+            rv << QStringLiteral("Tags");
+            break;
+        case Akonadi::Monitor::Relations:
+            rv << QStringLiteral("Relations");
+            break;
+        case Akonadi::Monitor::Subscribers:
+            rv << QStringLiteral("Subscribers");
+            break;
+        }
+    }
+    return rv.join(QStringLiteral(", "));
+}
+
+}
+
 QVariant MonitorsModel::data(const QModelIndex &index, int role) const
 {
-    if (role != Qt::DisplayRole) {
+    if (!index.isValid()) {
+        return QVariant();
+    }
+    if (index.row() >= mData.count()) {
         return QVariant();
     }
 
-    MonitorItem *item = static_cast<MonitorItem *>(index.internalPointer());
-    switch (index.column()) {
-    case IdentifierColumn: return item->identifier;
-    case IsAllMonitoredColumn: return item->allMonitored;
-    case MonitoredCollectionsColumn: return item->monitoredCollections;
-    case MonitoredItemsColumn: return item->monitoredItems;
-    case MonitoredResourcesColumn: return item->monitoredResources;
-    case MonitoredMimeTypesColumn: return item->monitoredMimeTypes;
-    case IgnoredSessionsColumn: return item->ignoredSessions;
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
+        const auto subscriber = mData[index.row()];
+        switch (static_cast<Column>(index.column())) {
+        case IdentifierColumn: return subscriber.subscriber();
+        case SessionColumn: return subscriber.sessionId();
+        case IsAllMonitoredColumn: return subscriber.isAllMonitored();
+        case MonitoredCollectionsColumn: return toString(subscriber.monitoredCollections());
+        case MonitoredItemsColumn: return toString(subscriber.monitoredItems());
+        case MonitoredTagsColumn: return toString(subscriber.monitoredTags());
+        case MonitoredResourcesColumn: return toString(subscriber.monitoredResources());
+        case MonitoredMimeTypesColumn: return toString(subscriber.monitoredMimeTypes());
+        case MonitoredTypesColumn: return toString(subscriber.monitoredTypes());
+        case IgnoredSessionsColumn: return toString(subscriber.ignoredSessions());
+        case IsExclusiveColumn: return subscriber.isExclusive();
+        case ColumnsCount: Q_ASSERT(false); return QString();
+        }
     }
 
     return QVariant();
@@ -141,14 +201,10 @@ QModelIndex MonitorsModel::parent(const QModelIndex &child) const
 QModelIndex MonitorsModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    if (row >= mData.uniqueKeys().count()) {
+    if (row >= mData.count()) {
         return QModelIndex();
     }
 
-    auto iter = mData.cbegin() + row;
-    if (iter == mData.cend()) {
-        return QModelIndex();
-    }
-    return createIndex(row, column, iter.value());
+    return createIndex(row, column);
 }
 
