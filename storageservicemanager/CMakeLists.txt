@@ -51,7 +51,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${storageservicemanager_SOURCE_DIR})
     set(QT_REQUIRED_VERSION "5.6.0")
     find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Gui Network Test)
     set(PIMCOMMON_LIB_VERSION_LIB "5.3.41")
-    set(LIBKDEPIM_LIB_VERSION_LIB "5.3.40")
+    set(LIBKDEPIM_LIB_VERSION_LIB "5.3.42")
 
     # Find KF5 package
     find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
