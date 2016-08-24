@@ -70,9 +70,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${blogilo_SOURCE_DIR})
     find_package(KF5GAPI "5.3.40" CONFIG)
 
     include_directories(${blogilo_SOURCE_DIR} ${blogilo_BINARY_DIR})
-    add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 endif()
 add_definitions(-DQT_USE_QSTRINGBUILDER)
+add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )

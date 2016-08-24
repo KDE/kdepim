@@ -62,9 +62,9 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${sieveeditor_SOURCE_DIR})
     find_package(KF5LibKSieve ${LIBKSIEVE_LIB_VERSION_LIB} CONFIG REQUIRED)
 
     include_directories(${sieveeditor_SOURCE_DIR} ${sieveeditor_BINARY_DIR})
-    add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
 endif()
+add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DQT_USE_QSTRINGBUILDER)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
