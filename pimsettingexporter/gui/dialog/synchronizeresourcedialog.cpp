@@ -63,7 +63,6 @@ SynchronizeResourceDialog::SynchronizeResourceDialog(QWidget *parent)
 
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SynchronizeResourceDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SynchronizeResourceDialog::reject);
-    okButton->setDefault(true);
     setModal(true);
 
     topLayout->addWidget(lab);

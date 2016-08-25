@@ -79,7 +79,6 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    d->mOkButton->setDefault(true);
     d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &NewThemeDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NewThemeDialog::reject);
