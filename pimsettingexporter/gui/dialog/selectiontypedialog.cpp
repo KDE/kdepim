@@ -40,7 +40,6 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectionTypeDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectionTypeDialog::reject);

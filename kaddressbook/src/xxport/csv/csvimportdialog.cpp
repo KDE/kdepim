@@ -269,8 +269,7 @@ void CSVImportDialog::initGUI()
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *page = new QWidget(this);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(page);
 
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -284,7 +283,6 @@ void CSVImportDialog::initGUI()
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &CSVImportDialog::slotOk);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    mOkButton->setDefault(true);
 
     QGridLayout *layout = new QGridLayout;
     mainLayout->addLayout(layout);
