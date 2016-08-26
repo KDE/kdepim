@@ -288,7 +288,6 @@ public:
     Protocol::RelationChangeNotification msg;
 };
 
-
 class NotificationModel::NotificationBlock: public NotificationModel::Item
 {
 public:
@@ -325,7 +324,7 @@ public:
         switch (column) {
         case 0:
             return QStringLiteral("%1.%2").arg(QLocale().toString(timestamp.time()))
-                                          .arg(timestamp.time().msec(), 3, 10, QLatin1Char('0'));
+                   .arg(timestamp.time().msec(), 3, 10, QLatin1Char('0'));
         case 1:
             return nodes.count();
         default:
@@ -335,8 +334,6 @@ public:
 
     QDateTime timestamp;
 };
-
-
 
 NotificationModel::NotificationModel(QObject *parent) :
     QAbstractItemModel(parent),

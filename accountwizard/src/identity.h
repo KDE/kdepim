@@ -24,7 +24,8 @@
 
 class Transport;
 
-namespace GpgME {
+namespace GpgME
+{
 class Key;
 }
 

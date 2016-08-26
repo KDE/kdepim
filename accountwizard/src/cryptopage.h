@@ -26,7 +26,8 @@
 class Dialog;
 class SetupManager;
 
-namespace Kleo {
+namespace Kleo
+{
 class Job;
 }
 

@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "cryptopage.h"
 #include "dialog.h"
 
@@ -54,9 +53,9 @@ public:
     {
     }
 
-    void slotCancel() Q_DECL_OVERRIDE
-    {
-        if (mJob) {
+    void slotCancel() Q_DECL_OVERRIDE {
+        if (mJob)
+        {
             mJob->slotCancel();
         }
     }
@@ -74,14 +73,14 @@ public:
     {
         mJob = Q_NULLPTR;
         if (result.error()) {
-            KMessageBox::error(qobject_cast<QWidget*>(parent()),
-                            i18n("Error while generating new key pair: %1", QString::fromUtf8(result.error().asString())),
-                            i18n("Key Generation Error"));
+            KMessageBox::error(qobject_cast<QWidget *>(parent()),
+                               i18n("Error while generating new key pair: %1", QString::fromUtf8(result.error().asString())),
+                               i18n("Key Generation Error"));
             Q_EMIT done();
             return;
         }
 
-        auto combo = qobject_cast<Kleo::KeySelectionCombo*>(parent());
+        auto combo = qobject_cast<Kleo::KeySelectionCombo *>(parent());
         combo->setDefaultKey(QLatin1String(result.fingerprint()));
         connect(combo, &Kleo::KeySelectionCombo::keyListingFinished,
                 this, &KeyGenerationJob::done);
@@ -109,13 +108,12 @@ public:
     {
     }
 
-    void slotCancel() Q_DECL_OVERRIDE
-    {
-        if (mJob) {
+    void slotCancel() Q_DECL_OVERRIDE {
+        if (mJob)
+        {
             mJob->slotCancel();
         }
     }
-
 
     void start()
     {
@@ -133,7 +131,7 @@ public:
         }
 
         if (!job) {
-            KMessageBox::error(qobject_cast<QWidget*>(parent()),
+            KMessageBox::error(qobject_cast<QWidget *>(parent()),
                                i18n("Could not detect valid key type"),
                                i18n("Import error"));
             Q_EMIT done();
@@ -142,7 +140,7 @@ public:
 
         QFile keyFile(mFile);
         if (!keyFile.open(QIODevice::ReadOnly)) {
-            KMessageBox::error(qobject_cast<QWidget*>(parent()),
+            KMessageBox::error(qobject_cast<QWidget *>(parent()),
                                i18n("Cannot read data from the certificate file: %1", keyFile.errorString()),
                                i18n("Import error"));
             Q_EMIT done();
@@ -159,7 +157,7 @@ public:
     {
         mJob = Q_NULLPTR;
         if (result.error()) {
-            KMessageBox::error(qobject_cast<QWidget*>(parent()),
+            KMessageBox::error(qobject_cast<QWidget *>(parent()),
                                i18n("Failed to import key: %1", QString::fromUtf8(result.error().asString())),
                                i18n("Import error"));
             Q_EMIT done();
@@ -168,14 +166,14 @@ public:
 
         const auto imports = result.imports();
         if (imports.size() == 0) {
-            KMessageBox::error(qobject_cast<QWidget*>(parent()),
+            KMessageBox::error(qobject_cast<QWidget *>(parent()),
                                i18n("Failed to import key."),
                                i18n("Import error"));
             Q_EMIT done();
             return;
         }
 
-        auto combo = qobject_cast<Kleo::KeySelectionCombo*>(parent());
+        auto combo = qobject_cast<Kleo::KeySelectionCombo *>(parent());
         combo->setDefaultKey(QLatin1String(result.import(0).fingerprint()));
         connect(combo, &Kleo::KeySelectionCombo::keyListingFinished,
                 this, &KeyGenerationJob::done);
@@ -186,7 +184,6 @@ private:
     QString mFile;
     Kleo::Job *mJob;
 };
-
 
 CryptoPage::CryptoPage(Dialog *parent)
     : Page(parent)
@@ -211,9 +208,9 @@ CryptoPage::CryptoPage(Dialog *parent)
     connect(ui.keyCombo, &Kleo::KeySelectionCombo::customItemSelected,
             this, &CryptoPage::customItemSelected);
     connect(ui.keyCombo, &Kleo::KeySelectionCombo::currentKeyChanged,
-            this, [this](const GpgME::Key &key) {
-                setValid(!key.isNull());
-            });
+    this, [this](const GpgME::Key & key) {
+        setValid(!key.isNull());
+    });
 }
 
 void CryptoPage::enterPageNext()
@@ -243,16 +240,19 @@ void CryptoPage::customItemSelected(const QVariant &data)
     }
 }
 
-namespace {
+namespace
+{
 
 template<typename T, typename ... Args>
-void runJob(Kleo::KeySelectionCombo *combo, const QString &title, const Args  & ... args)
+void runJob(Kleo::KeySelectionCombo *combo, const QString &title, const Args   &... args)
 {
     auto job = new T(args ..., combo);
     new Kleo::ProgressDialog(job, title, combo->parentWidget());
     combo->setEnabled(false);
     QObject::connect(job, &KeyGenerationJob::done,
-                     combo, [combo]() { combo->setEnabled(true); });
+    combo, [combo]() {
+        combo->setEnabled(true);
+    });
     job->start();
 }
 
@@ -270,8 +270,8 @@ void CryptoPage::importKey()
     const QString anyFilesFilter = i18n("Any files") + QLatin1String(" (*)");
 
     const QString file = QFileDialog::getOpenFileName(this, i18n("Select Certificate File"),
-                                                      QString(),
-                                                      certificateFilter + QLatin1String(";;") + anyFilesFilter);
+                         QString(),
+                         certificateFilter + QLatin1String(";;") + anyFilesFilter);
     if (file.isEmpty()) {
         return;
     }

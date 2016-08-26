@@ -34,7 +34,6 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
     setWindowTitle(i18n("Select Contacts"));
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
-
     mSelectionWidget = new ContactSelectionWidget(selectionModel, this);
     if (allowToSelectTypeToExport) {
         mainLayout->addWidget(mSelectionWidget);

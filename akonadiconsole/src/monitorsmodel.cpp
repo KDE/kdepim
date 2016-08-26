@@ -106,7 +106,8 @@ QVariant MonitorsModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
-namespace {
+namespace
+{
 
 template<typename T>
 QString toString(const QSet<T> &set)

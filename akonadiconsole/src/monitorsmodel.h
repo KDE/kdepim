@@ -25,7 +25,8 @@
 
 class MonitorItem;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Monitor;
 }
 

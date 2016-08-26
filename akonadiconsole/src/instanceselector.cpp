@@ -39,7 +39,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-
 InstanceSelector::InstanceSelector(const QString &remoteHost, QWidget *parent, Qt::WindowFlags flags)
     : QDialog(parent, flags),
       ui(new Ui::InstanceSelector),
