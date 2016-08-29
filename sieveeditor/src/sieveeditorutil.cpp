@@ -27,6 +27,7 @@
 #include <KConfigGroup>
 
 #include <QRegularExpression>
+#include <QUrlQuery>
 #include <KSharedConfig>
 
 QUrl SieveEditorUtil::SieveServerConfig::url() const
@@ -62,8 +63,9 @@ QUrl SieveEditorUtil::SieveServerConfig::url() const
         authStr = QStringLiteral("PLAIN");
         break;
     }
-    u.addQueryItem(QStringLiteral("x-mech"), authStr);
-
+    QUrlQuery query;
+    query.addQueryItem(QStringLiteral("x-mech"), authStr);
+    u.setQuery(query);
     return u;
 }
 

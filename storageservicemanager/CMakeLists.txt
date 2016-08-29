@@ -60,6 +60,8 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${storageservicemanager_SOURCE_DIR})
     find_package(KF5NotifyConfig ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5DocTools ${KF5_VERSION} REQUIRED)
     find_package(KF5Crash ${KF5_VERSION} REQUIRED)
+    find_package(KF5KIO ${KF5_VERSION} REQUIRED)
+    find_package(KF5Notifications ${KF5_VERSION} REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)

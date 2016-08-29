@@ -52,6 +52,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${mboximporter_SOURCE_DIR})
     find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
     find_package(KF5Crash ${KF5_VERSION} REQUIRED)
+    find_package(KF5KIO ${KF5_VERSION} REQUIRED)
 
     # Find KdepimLibs Package
     find_package(KF5Akonadi ${AKONADI_VERSION} CONFIG REQUIRED)
