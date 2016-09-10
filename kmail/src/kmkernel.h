@@ -571,7 +571,6 @@ private:
     QSharedPointer<MailCommon::FolderCollection> currentFolderCollection();
 
     UndoStack *the_undoStack;
-    mutable KIdentityManagement::IdentityManager *mIdentityManager;
     MessageComposer::AkonadiSender *the_msgSender;
     /** previous KMail version. If different from current,
       the user has just updated. read from config */
