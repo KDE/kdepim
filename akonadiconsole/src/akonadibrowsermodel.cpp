@@ -94,11 +94,23 @@ public:
 
         switch (column) {
         case 0:
-            return mail->subject()->asUnicodeString();
+            if (mail->subject()) {
+                return mail->subject()->asUnicodeString();
+            } else {
+                return QStringLiteral("(No subject)");
+            }
         case 1:
-            return mail->from()->asUnicodeString();
+            if (mail->from()) {
+                return mail->from()->asUnicodeString();
+            } else {
+                return QString();
+            }
         case 2:
-            return mail->date()->asUnicodeString();
+            if (mail->date()) {
+                return mail->date()->asUnicodeString();
+            } else {
+                return QString();
+            }
         }
 
         return QVariant();
