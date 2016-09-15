@@ -60,7 +60,10 @@ void ProviderPage::startFetchingData()
 
 void ProviderPage::fillModel(const KNS3::Entry::List &list)
 {
-    m_model->removeRows(m_model->indexFromItem(m_fetchItem).row(), 1);
+    if (m_fetchItem) {
+        m_model->removeRows(m_model->indexFromItem(m_fetchItem).row(), 1);
+        m_fetchItem = Q_NULLPTR;
+    }
 
     // KNS3::Entry::Entry() is private, so we need to save the whole list.
     // we can not use a QHash or whatever, as that needs that constructor...
