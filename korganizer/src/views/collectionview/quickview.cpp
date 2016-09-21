@@ -117,7 +117,10 @@ Quickview::Quickview(const KPIM::Person &person, const Akonadi::Collection &col)
     mainLayout->addWidget(buttonBox);
 
     mAgendaView = new EventViews::AgendaView(QDate(), QDate(), false,  false);
-
+    mUi->mAgendaBtn->hide();
+    mUi->mMothBtn->hide();
+    mUi->mWeekBtn->hide();
+    mUi->mDayBtn->hide();
     //show fbcalendar for person in quickview
     if (!person.mail.isEmpty()) {
         KPIM::FreeBusyItemModel *model = new KPIM::FreeBusyItemModel(this);
