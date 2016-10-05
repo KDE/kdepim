@@ -1033,6 +1033,8 @@ void KMMainWidget::createWidgets()
                 this, &KMMainWidget::slotMoveMessageToTrash);
         connect(mMsgView->viewer(), &MessageViewer::Viewer::executeMailAction,
                 this, &KMMainWidget::slotExecuteMailAction);
+        connect(mMsgView->viewer(), &MessageViewer::Viewer::pageIsScrolledToBottom,
+                this, &KMMainWidget::slotPageIsScrolledToBottom);
         if (mShowIntroductionAction) {
             mShowIntroductionAction->setEnabled(true);
         }
@@ -3586,7 +3588,12 @@ void KMMainWidget::slotReadOn()
     if (!mMsgView) {
         return;
     }
-    if (mMsgView->viewer()->atBottom()) {
+    mMsgView->viewer()->atBottom();
+}
+
+void KMMainWidget::slotPageIsScrolledToBottom(bool isAtBottom)
+{
+    if (isAtBottom) {
         slotSelectNextUnreadMessage();
     } else {
         mMsgView->viewer()->slotJumpDown();
