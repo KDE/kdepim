@@ -22,6 +22,7 @@
 #include <QDBusPendingReply>
 #include "kmkernel.h"
 #include <akonadi/dbusconnectionpool.h>
+#include <akonadi/servermanager.h>
 #include <KDebug>
 #include <KMessageBox>
 
@@ -46,8 +47,11 @@ void ManageServerSideSubscriptionJob::start()
     }
     bool isImapOnline = false;
     if ( kmkernel->isImapFolder( mCurrentFolder->collection(), isImapOnline ) ) {
+        const QString instance = Akonadi::ServerManager::hasInstanceIdentifier()
+                      ? QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier()
+                      : QString();
         QDBusInterface iface(
-                    QLatin1String( "org.freedesktop.Akonadi.Resource.")+mCurrentFolder->collection().resource(),
+                    QLatin1String( "org.freedesktop.Akonadi.Resource.")+mCurrentFolder->collection().resource() + instance,
                     QLatin1String( "/" ), QLatin1String( "org.kde.Akonadi.ImapResourceBase" ),
                     Akonadi::DBusConnectionPool::threadConnection(), this );
         if ( !iface.isValid() ) {
