@@ -40,6 +40,8 @@
 
 #include "imapresourcesettings.h"
 
+#include <Akonadi/ServerManager>
+
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -52,9 +54,13 @@
 
 OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface( const QString &ident )
 {
+    const QString instance = Akonadi::ServerManager::hasInstanceIdentifier()
+                    ? QLatin1Char('.') + Akonadi::ServerManager::instanceIdentifier()
+                    : QString();
+
     return
             new OrgKdeAkonadiImapSettingsInterface(
-                QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
+                QLatin1String("org.freedesktop.Akonadi.Resource.") + ident + instance, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
 }
 
 void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url, const QString &caption )

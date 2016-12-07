@@ -31,6 +31,7 @@
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
+#include <Akonadi/ServerManager>
 
 #include <KPIMUtils/Email>
 
@@ -294,7 +295,10 @@ public:
 
         QString resource = collection.resource();
         if (resource.contains(QLatin1String("akonadi_kolabproxy_resource"))) {
-            QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_kolabproxy_resource"), QLatin1String("/KolabProxy") );
+            const QString instance = Akonadi::ServerManager::hasInstanceIdentifier()
+                        ? QLatin1Char('.') + Akonadi::ServerManager::instanceIdentifier()
+                        : QString();
+            QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_kolabproxy_resource") + instance, QLatin1String("/KolabProxy") );
             if (interface.isValid()) {
                 QDBusReply<QString> reply = interface.call(QLatin1String("imapResourceForCollection"), collection.remoteId().toLongLong());
                 if (reply.isValid()) {
