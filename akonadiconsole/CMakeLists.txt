@@ -72,6 +72,9 @@ qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   notificationsourceinterface
 )
 
+set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.StorageDebugger.xml
+    PROPERTIES INCLUDE querydebugger.h
+)
 qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.StorageDebugger.xml
   storagedebuggerinterface
@@ -89,6 +92,7 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   rawsocketconsole.ui
   browserwidget_contentview.ui
   collectioninternalspage.ui
+  querydebugger.ui
 )
 
 kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-akonadiconsole.png")

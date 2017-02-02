@@ -23,12 +23,31 @@
 #include <QtGui/QWidget>
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
+#include <QScopedPointer>
 
-#include "storagedebuggerinterface.h"
+class QDBusArgument;
 
-class KTextEdit;
-class QCheckBox;
+namespace Ui
+{
+class QueryDebugger;
+}
+
 class QueryDebuggerModel;
+class QueryTreeModel;
+class OrgFreedesktopAkonadiStorageDebuggerInterface;
+
+struct DbConnection {
+    qint64 id;
+    QString name;
+    qint64 start;
+    qint64 transactionStart;
+};
+
+Q_DECLARE_METATYPE(DbConnection)
+Q_DECLARE_METATYPE(QVector<DbConnection>)
+
+QDBusArgument &operator<<(QDBusArgument &arg, const DbConnection &con);
+const QDBusArgument &operator>>(const QDBusArgument &arg, DbConnection &con);
 
 class QueryDebugger : public QWidget
 {
@@ -38,20 +57,22 @@ class QueryDebugger : public QWidget
     explicit QueryDebugger( QWidget* parent = 0 );
     virtual ~QueryDebugger();
 
-  private Q_SLOTS:
-    void addQuery( double sequence, uint duration, const QString &query,
-                   const QMap<QString,QVariant> & values, int resultsCount,
-                   const QList<QList<QVariant> > & result, const QString &error );
+private Q_SLOTS:
+    void debuggerToggled( bool on );
+    void addQuery( double sequence, qlonglong connectionId, qlonglong timestamp,
+                   uint duration, const QString &query, const QMap<QString, QVariant> &values,
+                   int resultsCount, const QList<QList<QVariant> > &result, const QString &error );
     void clear();
+    void saveTreeToFile();
 
   private:
     QString variantToString( const QVariant &val );
 
-    org::freedesktop::Akonadi::StorageDebugger *mDebugger;
+    QScopedPointer<Ui::QueryDebugger> mUi;
+    OrgFreedesktopAkonadiStorageDebuggerInterface *mDebugger;
 
-    KTextEdit *mView;
-    QueryDebuggerModel *mModel;
-    QCheckBox* mOnlyAggregate;
+    QueryDebuggerModel *mQueryList;
+    QueryTreeModel *mQueryTree;
 };
 
 #endif // QUERYDEBUGGER_H
