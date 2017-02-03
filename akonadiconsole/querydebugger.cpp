@@ -159,7 +159,7 @@ public Q_SLOTS:
 
     void addConnection(qlonglong id, const QString &name, qlonglong timestamp)
     {
-        auto con = new Connection;
+        Connection *con = new Connection;
         con->parent = nullptr;
         con->type = Node::Connection;
         con->name = name.isEmpty() ? QLatin1String("<unnamed connection>") : name;
@@ -172,7 +172,7 @@ public Q_SLOTS:
 
     void updateConnection(qlonglong id, const QString &name)
     {
-        auto con = mConnectionById.value(id);
+        Connection * con = mConnectionById.value(id);
         if (!con) {
             return;
         }
@@ -184,12 +184,12 @@ public Q_SLOTS:
 
     void addTransaction(qlonglong connectionId, qlonglong timestamp, uint duration, const QString &error)
     {
-        auto con = mConnectionById.value(connectionId);
+        Connection *con = mConnectionById.value(connectionId);
         if (!con) {
             return;
         }
 
-        auto trx = new Transaction;
+        Transaction *trx = new Transaction;
         trx->parent = con;
         trx->type = Node::Transaction;
         trx->start = timestamp;
@@ -205,7 +205,7 @@ public Q_SLOTS:
     void closeTransaction(qlonglong connectionId, bool commit, qlonglong timestamp, uint,
                           const QString &error)
     {
-        auto con = mConnectionById.value(connectionId);
+        Connection *con = mConnectionById.value(connectionId);
         if (!con) {
             return;
         }
@@ -233,12 +233,12 @@ public Q_SLOTS:
     void addQuery(qlonglong connectionId, const QString &queryStr, qlonglong timestamp,
                   uint duration, const QString &error)
     {
-        auto con = mConnectionById.value(connectionId);
+        Connection *con = mConnectionById.value(connectionId);
         if (!con) {
             return;
         }
 
-        auto query = new Query;
+        Query *query = new Query;
         query->type = Node::Query;
         query->query = queryStr;
         query->start = timestamp;
@@ -252,7 +252,7 @@ public Q_SLOTS:
             con->queries << query;
             endInsertRows();
         } else {
-            auto trx = static_cast<Transaction*>(con->queries.last());
+            Transaction *trx = static_cast<Transaction*>(con->queries.last());
             query->parent = trx;
             beginInsertRows(createIndex(con->queries.indexOf(trx), 0, trx),
                             trx->queries.count(), trx->queries.count());
