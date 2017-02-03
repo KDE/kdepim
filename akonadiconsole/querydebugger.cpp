@@ -160,7 +160,7 @@ public Q_SLOTS:
     void addConnection(qlonglong id, const QString &name, qlonglong timestamp)
     {
         Connection *con = new Connection;
-        con->parent = nullptr;
+        con->parent = NULL;
         con->type = Node::Connection;
         con->name = name.isEmpty() ? QLatin1String("<unnamed connection>") : name;
         con->start = timestamp;
@@ -641,7 +641,7 @@ QueryDebugger::QueryDebugger( QWidget *parent ):
 {
   qDBusRegisterMetaType< QList< QList<QVariant> > >();
   qDBusRegisterMetaType<DbConnection>();
-  qDBusRegisterMetaType<QVector<DbConnection>>();
+  qDBusRegisterMetaType<QVector<DbConnection> >();
 
   QString service = QLatin1String("org.freedesktop.Akonadi");
   if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
