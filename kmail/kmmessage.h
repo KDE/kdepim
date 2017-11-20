@@ -214,7 +214,8 @@ public:
   KMMessage* createDecryptedCopy();
 
   /** Remove all headers but the content description ones, and those in the white list. */
-  void sanitizeHeaders( const QStringList& whiteList = QStringList() );
+  void sanitizeHeaders( const QStringList& whiteList = QStringList(),
+			bool removeDuplicateContentType=false );
 
   /** Parse the string and create this message from it. */
   void fromDwString(const DwString& str, bool setStatus=false);

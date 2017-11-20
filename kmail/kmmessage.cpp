@@ -1225,19 +1225,36 @@ QCString KMMessage::createForwardBody()
   return str;
 }
 
-void KMMessage::sanitizeHeaders( const QStringList& whiteList )
+void KMMessage::sanitizeHeaders( const QStringList& whiteList,
+				 bool removeDuplicateContentType )
 {
    // Strip out all headers apart from the content description and other
    // whitelisted ones, because we don't want to inherit them.
    DwHeaders& header = mMsg->Headers();
    DwField* field = header.FirstField();
    DwField* nextField;
+   bool contentTypeSeen = false;
    while (field)
    {
      nextField = field->Next();
      if ( field->FieldNameStr().find( "ontent" ) == DwString::npos
              && !whiteList.contains( QString::fromLatin1( field->FieldNameStr().c_str() ) ) )
+     {
        header.RemoveField(field);
+     }
+     else if (DwStrcasecmp(field->FieldNameStr(), "Content-Type") == 0) {
+       if (contentTypeSeen && removeDuplicateContentType) {
+	 // Remove the current field because it is at least the second
+	 // occurrence of the Content-Type header field and the caller
+	 // wants to remove those. Duplicated content type header fields
+	 // can cause problems in some cases, e.g. when forwarding mails
+	 // it could happen that the MIME boundary was incorrect in the
+	 // forwarded mail if the Content-Type header field was
+	 // duplicated.
+	 header.RemoveField(field);
+       }
+       contentTypeSeen = true;
+     }
      field = nextField;
    }
    mMsg->Assemble();
@@ -1259,7 +1276,7 @@ KMMessage* KMMessage::createForward( const QString &tmpl /* = QString::null */ )
     // text/plain, via initHeader, for unclear reasons
     DwMediaType oldContentType = msg->mMsg->Headers().ContentType();
 
-    msg->sanitizeHeaders();
+    msg->sanitizeHeaders(QStringList(), true);
 
     // strip blacklisted parts
     QStringList blacklist = GlobalSettings::self()->mimetypesToStripWhenInlineForwarding();
