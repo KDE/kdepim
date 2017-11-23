@@ -174,8 +174,7 @@ namespace KMail {
         }
       } else {
         // read password if wallet is already open, otherwise defer to on-demand loading
-        if ( Wallet::isOpen( Wallet::NetworkWallet() ) )
-          readPassword();
+        readPassword();
       }
 
     } else {
@@ -299,11 +298,6 @@ namespace KMail {
     {
        Wallet *wallet = kmkernel->wallet();
        if (!wallet || !wallet->hasEntry( "account-" + QString::number(mId) ) )
-         return;
-    }
-    else
-    {
-       if (Wallet::keyDoesNotExist( Wallet::NetworkWallet(), "kmail", "account-" + QString::number(mId) ) )
          return;
     }
 
