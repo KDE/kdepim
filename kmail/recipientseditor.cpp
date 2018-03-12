@@ -323,7 +323,7 @@ void RecipientLine::setRemoveLineButtonEnabled( bool b )
 RecipientsView::RecipientsView( QWidget *parent )
   : QScrollView( parent ), mCurDelLine( 0 ),
     mLineHeight( 0 ), mFirstColumnWidth( 0 ),
-    mModified( false )
+    mModified( false ), mLastMovedLine( NULL )
 {
   mCompletionMode = KGlobalSettings::completionMode();
   setHScrollBarMode( AlwaysOff );
@@ -684,18 +684,42 @@ int RecipientsView::setFirstColumnWidth( int w )
   return mFirstColumnWidth;
 }
 
+void RecipientsView::moveCompletionBottom()
+{
+  if ( !mLastMovedLine ) {
+    return;
+  }
+  mLastMovedLine->lineEdit()->completionBox()->show();
+}
+
 void RecipientsView::moveCompletionPopup()
 {
+  mLastMovedLine = NULL;
   for( RecipientLine* line = mLines.first(); line; line = mLines.next() ) {
     if ( line->lineEdit()->completionBox( false ) ) {
       if ( line->lineEdit()->completionBox()->isVisible() ) {
         // ### trigger moving, is there a nicer way to do that?
+        //
+        // ^ Original comment from back when.
+        // Aheinecke 2018-03-12:
+        // We had a hide and the show immediately afterwards here.
+        //
+        // This somehow caused problems with KWin or some other component
+        // in Debian Stretch.
+        // It caused the completionBox to be hidden behind the
+        // MessageComposer.
+        //
+        // Hiding and then delaying the show by 500ms in moveCompletionBottom
+        // seems to work nicely though. An immediate single Shot did not work.
+        //
+        // A don't ask me why but it works fix.
         line->lineEdit()->completionBox()->hide();
-        line->lineEdit()->completionBox()->show();
+        mLastMovedLine = line;
       }
     }
   }
-
+  QTimer::singleShot( 500, this, SLOT( moveCompletionBottom( ) ) );
+  return;
 }
 
 RecipientsToolTip::RecipientsToolTip( RecipientsView *view, QWidget *parent )

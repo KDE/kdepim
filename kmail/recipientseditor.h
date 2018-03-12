@@ -236,6 +236,7 @@ class RecipientsView : public QScrollView
     void calculateTotal();
     void slotTypeModified( RecipientLine * );
     void moveCompletionPopup();
+    void moveCompletionBottom();
 
   private:
     QPtrList<RecipientLine> mLines;
@@ -243,6 +244,7 @@ class RecipientsView : public QScrollView
     int mLineHeight;
     int mFirstColumnWidth;
     bool mModified;
+    RecipientLine *mLastMovedLine;
     KGlobalSettings::Completion mCompletionMode;
 };
 
