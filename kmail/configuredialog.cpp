@@ -3930,6 +3930,9 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
   mAutomaticallyImportAttachedKeysCheck = new QCheckBox( i18n("Automatically import keys and certificates"), group );
   connect( mAutomaticallyImportAttachedKeysCheck, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
 
+  mAutomaticallySearchForEncryptionKeys = new QCheckBox( i18n("Automatically search for encryption keys"), group );
+  connect( mAutomaticallySearchForEncryptionKeys, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
+
   vlay->addWidget( group );
 
 
@@ -3947,6 +3950,7 @@ void SecurityPage::GeneralTab::doLoadOther() {
   mHtmlMailRB->setChecked( reader.readBoolEntry( "htmlMail", false ) );
   mExternalReferences->setChecked( reader.readBoolEntry( "htmlLoadExternal", false ) );
   mAutomaticallyImportAttachedKeysCheck->setChecked( reader.readBoolEntry( "AutoImportKeys", false ) );
+  mAutomaticallySearchForEncryptionKeys->setChecked( reader.readBoolEntry( "LocateKeys", true ) );
 
   mAlwaysDecrypt->setChecked( GlobalSettings::self()->alwaysDecrypt() );
 
@@ -3973,6 +3977,8 @@ void SecurityPage::GeneralTab::installProfile( KConfig * profile ) {
     mExternalReferences->setChecked( reader.readBoolEntry( "htmlLoadExternal" ) );
   if ( reader.hasKey( "AutoImportKeys" ) )
     mAutomaticallyImportAttachedKeysCheck->setChecked( reader.readBoolEntry( "AutoImportKeys" ) );
+  if ( reader.hasKey( "LocateKeys" ) )
+    mAutomaticallySearchForEncryptionKeys->setChecked( reader.readBoolEntry( "LocateKeys" ) );
 
   if ( mdn.hasKey( "default-policy" ) ) {
       int num = mdn.readNumEntry( "default-policy" );
@@ -4021,6 +4027,7 @@ void SecurityPage::GeneralTab::save() {
   }
   reader.writeEntry( "htmlLoadExternal", mExternalReferences->isChecked() );
   reader.writeEntry( "AutoImportKeys", mAutomaticallyImportAttachedKeysCheck->isChecked() );
+  reader.writeEntry( "LocateKeys", mAutomaticallySearchForEncryptionKeys->isChecked() );
   mdn.writeEntry( "default-policy", mMDNGroup->id( mMDNGroup->selected() ) );
   mdn.writeEntry( "quote-message", mOrigQuoteGroup->id( mOrigQuoteGroup->selected() ) );
   mdn.writeEntry( "not-send-when-encrypted", mNoMDNsWhenEncryptedCheck->isChecked() );
