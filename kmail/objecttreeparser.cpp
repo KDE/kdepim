@@ -117,6 +117,8 @@
 #include <cassert>
 #include "chiasmuskeyselector.h"
 
+#include <gpgme.h>
+
 /* RFC822 messages can be embedded as often as one likes and at some
  * point display of multiple embedded levels leads to a denial of service
  * as the message parsing is not really that efficient and parses
@@ -931,7 +933,7 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
       const GpgME::VerificationResult & verifyResult = m->verifyResult();
       std::stringstream ss;
       ss << decryptResult << '\n' << verifyResult;
-      //kdDebug(5006) << ss.str().c_str() << endl;
+      kdDebug(5006) << ss.str().c_str() << endl;
       signatureFound = verifyResult.signatures().size() > 0;
       signatures = verifyResult.signatures();
       bDecryptionOk = !decryptResult.error();
@@ -2895,11 +2897,6 @@ void ObjectTreeParser::writeBodyStr( const QCString& aStr, const QTextCodec *aCo
                                 KMMsgEncryptionState& inlineEncryptionState,
                                 bool decorate )
 {
-  bool goodSignature = false;
-  Kpgp::Module* pgp = Kpgp::Module::getKpgp();
-  assert(pgp != 0);
-  bool isPgpMessage = false; // true if the message contains at least one
-                             // PGP MESSAGE or one PGP SIGNED MESSAGE block
   QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
   QString headerStr = QString("<div dir=\"%1\">").arg(dir);
 
@@ -2922,13 +2919,12 @@ void ObjectTreeParser::writeBodyStr( const QCString& aStr, const QTextCodec *aCo
 
       QStrListIterator npbit( nonPgpBlocks );
 
-      QString htmlStr;
       for( ; *pbit != 0; ++pbit, ++npbit )
       {
           // insert the next Non-OpenPGP block
           QCString str( *npbit );
           if( !str.isEmpty() ) {
-            htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+            htmlWriter()->queue( quotedHTML( aCodec->toUnicode( str ), decorate ) );
             //kdDebug( 5006 ) << "Non-empty Non-OpenPGP block found: '" << str
             //                << "'" << endl;
             // treat messages with empty lines before the first clearsigned
@@ -2951,85 +2947,156 @@ void ObjectTreeParser::writeBodyStr( const QCString& aStr, const QTextCodec *aCo
           //htmlStr += "<br>";
 
           Kpgp::Block* block = *pbit;
-          if( ( block->type() == Kpgp::PgpMessageBlock &&
-                // ### Workaround for bug 56693
-                !kmkernel->contextMenuShown() ) ||
-              ( block->type() == Kpgp::ClearsignedBlock ) )
+
+          // Identify the block
+          gpgme_data_t dh;
+          gpgme_data_new_from_mem (&dh, block->text(), strlen(block->text()), 1);
+
+          gpgme_data_type_t me_type = gpgme_data_identify (dh, 0);
+          gpgme_data_release (dh);
+
+
+          if ( me_type == GPGME_DATA_TYPE_PGP_ENCRYPTED )
           {
-              isPgpMessage = true;
-              if( block->type() == Kpgp::PgpMessageBlock )
-              {
-                if ( mReader )
-                  emit mReader->noDrag();
-                // try to decrypt this OpenPGP block
-                couldDecrypt = block->decrypt();
-                isEncrypted = block->isEncrypted();
-                if (!couldDecrypt) {
-                  decryptionError = pgp->lastErrorMsg();
-                }
-              }
-              else
-              {
-                  // try to verify this OpenPGP block
-                  block->verify();
+              setCryptoProtocol( Kleo::CryptoBackendFactory::instance()->openpgp() );
+              if ( mReader && !mReader->decryptMessage() ) {
+                  writeDeferredDecryptionBlock();
+                  continue;
               }
 
-              isSigned = block->isSigned();
-              if( isSigned )
-              {
-                  keyId = block->signatureKeyId();
-                  signer = block->signatureUserId();
-                  if( !signer.isEmpty() )
-                  {
-                      goodSignature = block->goodSignature();
+              // Do the decrypt.
+              PartMetaData messagePart;
+              QCString decryptedData;
+              bool signatureFound;
+              std::vector<GpgME::Signature> signatures;
+              bool passphraseError;
+              bool actuallyEncrypted = true;
+              bool decryptionStarted;
 
-                      if( !keyId.isEmpty() ) {
-                        keyTrust = pgp->keyTrust( keyId );
-                        Kpgp::Key* key = pgp->publicKey( keyId );
-                        if ( key ) {
-                          // Use the user ID from the key because this one
-                          // is charset safe.
-                          signer = key->primaryUserID();
-                        }
-                      }
-                      else
-                        // This is needed for the PGP 6 support because PGP 6 doesn't
-                        // print the key id of the signing key if the key is known.
-                        keyTrust = pgp->keyTrust( signer );
+              DwBodyPart *newBody = new DwBodyPart( DwString ( block->text() ) );
+              newBody->Parse();
+              partNode* newNode = new partNode(true, newBody );
+
+              // We are lazy and don't allow async for simplicity.
+              mAllowAsync = false;
+
+              bool bOkDecrypt = okDecryptMIME( *newNode,
+                      decryptedData,
+                      signatureFound,
+                      signatures,
+                      true,
+                      passphraseError,
+                      actuallyEncrypted,
+                      decryptionStarted,
+                      messagePart.errorText,
+                      messagePart.auditLogError,
+                      messagePart.auditLog );
+
+              mAllowAsync = true;
+
+              isEncrypted = actuallyEncrypted;
+
+              if ( decryptionStarted ) {
+                  // Should not happen as we don't allow async.
+                  writeDecryptionInProgressBlock();
+                  kdDebug() << "Decryption in progress" << endl;
+                  continue;
+              }
+
+              // paint the frame
+              if ( mReader ) {
+                  messagePart.isDecryptable = bOkDecrypt;
+                  messagePart.isEncrypted = true;
+                  messagePart.isSigned = false;
+                  htmlWriter()->queue( writeSigstatHeader( messagePart,
+                              cryptoProtocol(),
+                              fromAddress ) );
+                  kdDebug() << "Paint the frame with from" << fromAddress << endl;
+              }
+              if ( bOkDecrypt ) {
+                  // Note: Multipart/Encrypted might also be signed
+                  //       without encapsulating a nicely formatted
+                  //       ~~~~~~~                 Multipart/Signed part.
+                  //                               (see RFC 3156 --> 6.2)
+                  // In this case we paint a _2nd_ frame inside the
+                  // encryption frame, but we do _not_ show a respective
+                  // encapsulated MIME part in the Mime Tree Viewer
+                  // since we do want to show the _true_ structure of the
+                  // message there - not the structure that the sender's
+                  // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
+                  //
+                  if ( signatureFound ) {
+                      kdDebug () << "Write opaque or multipart signed data." << decryptedData;
+                      writeOpaqueOrMultipartSignedData( 0,
+                              *newNode,
+                              fromAddress,
+                              false,
+                              &decryptedData,
+                              signatures,
+                              false );
+                      newNode->setSignatureState( KMMsgFullySigned );
+                      isSigned = true;
+                  } else {
+                      insertAndParseNewChildNode( *newNode,
+                              &*decryptedData,
+                              "encrypted data" );
+                  }
+              } else {
+                  kdDebug () << "Not ok decrypt" << endl;
+                  kdDebug () << "msgpart erroro" << messagePart.errorText << endl;
+                  mRawReplyString += decryptedData;
+                  if ( mReader ) {
+                      // print the error message that was returned in decryptedData
+                      // (utf8-encoded)
+                      htmlWriter()->queue( decryptedData.isEmpty() ? messagePart.errorText :
+                              QString::fromUtf8( decryptedData.data() ) );
                   }
               }
+              if ( mReader )
+                  htmlWriter()->queue( writeSigstatFooter( messagePart ) );
 
-              if( isSigned )
-                inlineSignatureState = KMMsgPartiallySigned;
-              if( isEncrypted )
-                inlineEncryptionState = KMMsgPartiallyEncrypted;
+          } else if( me_type == GPGME_DATA_TYPE_PGP_SIGNED )
+          {
+              setCryptoProtocol( Kleo::CryptoBackendFactory::instance()->openpgp() );
 
+              // Do the decrypt.
               PartMetaData messagePart;
+              std::vector<GpgME::Signature> signatures;
 
-              messagePart.isSigned = isSigned;
-              messagePart.technicalProblem = false;
-              messagePart.isGoodSignature = goodSignature;
-              messagePart.isEncrypted = isEncrypted;
-              messagePart.isDecryptable = couldDecrypt;
-              messagePart.decryptionError = decryptionError;
-              messagePart.signer = signer;
-              messagePart.keyId = keyId;
-              messagePart.keyTrust = keyTrust;
+              DwBodyPart *newBody = new DwBodyPart( DwString ( block->text() ) );
+              newBody->Parse();
+              partNode* newNode = new partNode(true, newBody );
 
-              htmlStr += writeSigstatHeader( messagePart, 0, fromAddress );
+              messagePart.isSigned = true;
+              messagePart.isEncrypted = false;
 
-              htmlStr += quotedHTML( aCodec->toUnicode( block->text() ), decorate );
-              htmlStr += writeSigstatFooter( messagePart );
+              // Write the header
+              mAllowAsync = false;
+              writeOpaqueOrMultipartSignedData( 0,
+                      *newNode,
+                      fromAddress,
+                      true,
+                      NULL,
+                      signatures,
+                      false );
           }
           else // block is neither message block nor clearsigned block
-            htmlStr += quotedHTML( aCodec->toUnicode( block->text() ),
-                                   decorate );
+          {
+            htmlWriter()->queue( quotedHTML( aCodec->toUnicode( block->text() ),
+                                   decorate ) );
+          }
       }
+
+      if( isSigned )
+          inlineSignatureState = KMMsgPartiallySigned;
+      if( isEncrypted )
+          inlineEncryptionState = KMMsgPartiallyEncrypted;
 
       // add the last Non-OpenPGP block
       QCString str( nonPgpBlocks.last() );
       if( !str.isEmpty() ) {
-        htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+        htmlWriter()->queue( quotedHTML( aCodec->toUnicode( str ), decorate ) );
+        fullySignedOrEncrypted = false;
         // Even if the trailing Non-OpenPGP block isn't empty we still
         // consider the message part fully signed/encrypted because else
         // all inline signed mailing list messages would only be partially
@@ -3042,7 +3109,6 @@ void ObjectTreeParser::writeBodyStr( const QCString& aStr, const QTextCodec *aCo
         if( inlineEncryptionState == KMMsgPartiallyEncrypted )
           inlineEncryptionState = KMMsgFullyEncrypted;
       }
-      htmlWriter()->queue( htmlStr );
   }
   else
     htmlWriter()->queue( quotedHTML( aCodec->toUnicode( aStr ), decorate ) );
