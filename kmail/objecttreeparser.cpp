@@ -449,12 +449,13 @@ namespace KMail {
   }
 
   bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( partNode* data,
-                                                      partNode& sign,
-                                                      const QString& fromAddress,
-                                                      bool doCheck,
-                                                      QCString* cleartextData,
-                                                      const std::vector<GpgME::Signature> & paramSignatures,
-                                                      bool hideErrors )
+                                                           partNode& sign,
+                                                           const QString& fromAddress,
+                                                           bool doCheck,
+                                                           QCString* cleartextData,
+                                                           const std::vector<GpgME::Signature> & paramSignatures,
+                                                           bool hideErrors,
+                                                           bool isPGPInline )
   {
     bool bIsOpaqueSigned = false;
     enum { NO_PLUGIN, NOT_INITIALIZED, CANT_VERIFY_SIGNATURES }
@@ -721,9 +722,16 @@ namespace KMail {
                                                    fromAddress ) );
         bIsOpaqueSigned = true;
 
-        CryptoProtocolSaver cpws( this, cryptProto );
-        insertAndParseNewChildNode( sign, doCheck ? cleartext.data() : cleartextData->data(),
-                                    "opaqued signed data" );
+        if ( !isPGPInline ) {
+            CryptoProtocolSaver cpws( this, cryptProto );
+            insertAndParseNewChildNode( sign, doCheck ? cleartext.data() : cleartextData->data(),
+                    "opaqued signed data" );
+        } else if ( cleartextData ) {
+            mRawReplyString += *cleartextData;
+            if ( mReader ) {
+                htmlWriter()->queue( quotedHTML( cleartextData->data(), true ) );
+            }
+        }
 
         if ( mReader )
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
@@ -2999,7 +3007,6 @@ void ObjectTreeParser::writeBodyStr( const QCString& aStr, const QTextCodec *aCo
               if ( decryptionStarted ) {
                   // Should not happen as we don't allow async.
                   writeDecryptionInProgressBlock();
-                  kdDebug() << "Decryption in progress" << endl;
                   continue;
               }
 
@@ -3011,39 +3018,29 @@ void ObjectTreeParser::writeBodyStr( const QCString& aStr, const QTextCodec *aCo
                   htmlWriter()->queue( writeSigstatHeader( messagePart,
                               cryptoProtocol(),
                               fromAddress ) );
-                  kdDebug() << "Paint the frame with from" << fromAddress << endl;
               }
               if ( bOkDecrypt ) {
-                  // Note: Multipart/Encrypted might also be signed
-                  //       without encapsulating a nicely formatted
-                  //       ~~~~~~~                 Multipart/Signed part.
-                  //                               (see RFC 3156 --> 6.2)
-                  // In this case we paint a _2nd_ frame inside the
-                  // encryption frame, but we do _not_ show a respective
-                  // encapsulated MIME part in the Mime Tree Viewer
-                  // since we do want to show the _true_ structure of the
-                  // message there - not the structure that the sender's
-                  // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
-                  //
                   if ( signatureFound ) {
-                      kdDebug () << "Write opaque or multipart signed data." << decryptedData;
+                      QCString cleartext = aCodec->toUnicode( decryptedData ).utf8();
                       writeOpaqueOrMultipartSignedData( 0,
                               *newNode,
                               fromAddress,
                               false,
-                              &decryptedData,
+                              &cleartext,
                               signatures,
-                              false );
+                              false,
+                              true );
                       newNode->setSignatureState( KMMsgFullySigned );
                       isSigned = true;
                   } else {
-                      insertAndParseNewChildNode( *newNode,
-                              &*decryptedData,
-                              "encrypted data" );
+                      mRawReplyString += decryptedData;
+                      if ( mReader ) {
+                          htmlWriter()->queue( quotedHTML( aCodec->toUnicode(  decryptedData.data() ),
+                                               decorate ) );
+                      }
                   }
               } else {
-                  kdDebug () << "Not ok decrypt" << endl;
-                  kdDebug () << "msgpart erroro" << messagePart.errorText << endl;
+                  kdDebug () << "Error decrypting msgpart: " << messagePart.errorText << endl;
                   mRawReplyString += decryptedData;
                   if ( mReader ) {
                       // print the error message that was returned in decryptedData
