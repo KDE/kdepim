@@ -29,7 +29,6 @@
 #include <qguardedptr.h>
 #include <qlineedit.h>
 #include <qtooltip.h>
-#include <qthread.h>
 
 #include "kmlineeditspell.h"
 #include <qcombobox.h>
@@ -166,7 +165,6 @@ class RecipientLine : public QWidget
     QPushButton *mRemoveButton;
     int mRecipientsCount;
     bool mModified;
-    bool mDoKeyLocate;
 };
 
 class RecipientsView : public QScrollView
@@ -365,23 +363,6 @@ class RecipientsEditor : public QWidget
     RecipientsView *mRecipientsView;
     SideWidget* mSideWidget;
     bool mModified;
-};
-
-class RecipientsLocateThread : public QObject, public QThread
-{
-  Q_OBJECT
-
-  public:
-    virtual void run();
-    virtual ~RecipientsLocateThread();
-
-    void setAddr(const QString &addr);
-
-  signals:
-    void finished();
-
-  private:
-    QString mAddr;
 };
 
 #endif

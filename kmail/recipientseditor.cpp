@@ -38,7 +38,6 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
-#include <kmkernel.h>
 
 #include <qlayout.h>
 #include <qlabel.h>
@@ -46,91 +45,8 @@
 #include <qcombobox.h>
 #include <qhbox.h>
 #include <qtimer.h>
-#include <qmutex.h>
 #include <qpushbutton.h>
 #include <qstylesheet.h>
-
-#include <gpgme.h>
-
-static QMutex s_locateListMutex;
-static QStringList s_locatedKeys;
-
-void RecipientsLocateThread::run()
-{
-  gpgme_ctx_t ctx;
-
-  // Make sure gpgme is initialized
-  gpgme_check_version( NULL );
-  gpgme_error_t err = gpgme_new( &ctx );
-
-  if (err)
-  {
-    kdDebug( 5006 ) << "Failed to create context" << endl;
-    emit finished();
-    return;
-  }
-
-  // Setup the keylist
-  gpgme_set_protocol( ctx, GPGME_PROTOCOL_OpenPGP );
-  gpgme_set_keylist_mode( ctx, GPGME_KEYLIST_MODE_EXTERN |
-                               GPGME_KEYLIST_MODE_LOCAL );
-
-  err = gpgme_op_keylist_start( ctx, mAddr.utf8(), false );
-  if ( err )
-  {
-    kdDebug( 5006 ) << "Failed to start keylist" << endl;
-    gpgme_release( ctx );
-    emit finished();
-    return;
-  }
-
-  gpgme_key_t key;
-  while (!( err = gpgme_op_keylist_next ( ctx, &key ) ) ) {
-    if ( !key ) {
-      continue;
-    }
-    kdDebug( 5006 ) << "Located key " << ( key->fpr ? key->fpr : "null" ) << endl;
-    gpgme_key_unref (key);
-  }
-
-  gpgme_release( ctx );
-
-  emit finished();
-}
-
-void RecipientsLocateThread::setAddr(const QString &addr)
-{
-  mAddr = addr;
-}
-
-RecipientsLocateThread::~RecipientsLocateThread()
-{
-  kdDebug( 5006 ) << "Keylocate of " << mAddr << " finished" << endl;
-}
-
-static void locatePGPKey( const QString &email )
-{
-  QMutexLocker lock ( &s_locateListMutex );
-
-  // Normalize mail
-  char *normalized = gpgme_addrspec_from_uid( email.utf8() );
-  if ( !normalized ) {
-    kdDebug( 5006 ) << "Failed to normalize: " << email << endl;
-    return;
-  }
-  QString normStr( normalized );
-  gpgme_free( normalized );
-  if ( s_locatedKeys.findIndex( normStr ) != -1 ) {
-    return;
-  }
-
-  RecipientsLocateThread *thread = new RecipientsLocateThread;
-  thread->setAddr( normStr );
-  thread->start();
-
-  QObject::connect (thread, SIGNAL( finished() ), thread, SLOT( deleteLater() ));
-  s_locatedKeys.append( normStr );
-}
 
 Recipient::Recipient( const QString &email, Recipient::Type type )
   : mEmail( email ), mType( type )
@@ -265,9 +181,6 @@ RecipientLine::RecipientLine( QWidget *parent )
   topLayout->addWidget( mRemoveButton );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( slotPropagateDeletion() ) );
   QToolTip::add( mRemoveButton, i18n("Remove recipient line") );
-
-  const KConfigGroup reader( KMKernel::config(), "Reader" );
-  mDoKeyLocate = reader.readBoolEntry( "LocateKeys", true );
 }
 
 void RecipientLine::slotFocusUp()
@@ -293,14 +206,6 @@ void RecipientLine::analyzeLine( const QString &text )
   if ( int( r.count() ) != mRecipientsCount ) {
     mRecipientsCount = r.count();
     emit countChanged();
-  }
-
-  if ( mDoKeyLocate )
-  {
-    for ( QStringList::ConstIterator it = r.constBegin(); it != r.constEnd(); ++it )
-    {
-      locatePGPKey( *it );
-    }
   }
 }
 
