@@ -455,7 +455,8 @@ namespace KMail {
                                                            QCString* cleartextData,
                                                            const std::vector<GpgME::Signature> & paramSignatures,
                                                            bool hideErrors,
-                                                           bool isPGPInline )
+                                                           bool isPGPInline,
+                                                           const QTextCodec *aCodec)
   {
     bool bIsOpaqueSigned = false;
     enum { NO_PLUGIN, NOT_INITIALIZED, CANT_VERIFY_SIGNATURES }
@@ -729,7 +730,11 @@ namespace KMail {
         } else if ( cleartextData ) {
             mRawReplyString += *cleartextData;
             if ( mReader ) {
-                htmlWriter()->queue( quotedHTML( cleartextData->data(), true ) );
+                if (!aCodec) {
+                  htmlWriter()->queue( quotedHTML( cleartextData->data(), true ) );
+                } else {
+                  htmlWriter()->queue( quotedHTML( aCodec->toUnicode( cleartextData->data() ), true ) );
+                }
             }
         }
 
@@ -3021,15 +3026,15 @@ void ObjectTreeParser::writeBodyStr( const QCString& aStr, const QTextCodec *aCo
               }
               if ( bOkDecrypt ) {
                   if ( signatureFound ) {
-                      QCString cleartext = aCodec->toUnicode( decryptedData ).utf8();
                       writeOpaqueOrMultipartSignedData( 0,
                               *newNode,
                               fromAddress,
                               false,
-                              &cleartext,
+                              &decryptedData,
                               signatures,
                               false,
-                              true );
+                              true,
+                              aCodec);
                       newNode->setSignatureState( KMMsgFullySigned );
                       isSigned = true;
                   } else {

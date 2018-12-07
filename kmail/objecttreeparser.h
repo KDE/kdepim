@@ -224,7 +224,8 @@ namespace KMail {
                                            QCString * cleartextData=0,
                                            const std::vector<GpgME::Signature> & paramSignatures = std::vector<GpgME::Signature>(),
                                            bool hideErrors=false,
-                                           bool isPGPInline=false );
+                                           bool isPGPInline=false,
+                                           const QTextCodec *aCodec=NULL);
 
     /** Writes out the block that we use when the node is encrypted,
         but we're deferring decryption for later. */
