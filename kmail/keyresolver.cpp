@@ -1464,7 +1464,8 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
 
   if ( dlg.preferencesChanged() ) {
     for ( uint i = 0; i < items.size(); ++i ) {
-      ContactPreferences pref = lookupContactPreferences( items[i].address );
+      QString addr = canonicalAddress( items[i].address ).lower();
+      ContactPreferences pref = lookupContactPreferences( addr );
       pref.encryptionPreference = items[i].pref;
       pref.pgpKeyFingerprints.clear();
       pref.smimeCertFingerprints.clear();
@@ -1478,7 +1479,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
             pref.smimeCertFingerprints.push_back( fpr );
         }
       }
-      saveContactPreference( items[i].address, pref );
+      saveContactPreference( addr, pref );
     }
   }
 
@@ -1829,7 +1830,7 @@ QStringList Kleo::KeyResolver::keysForAddress( const QString & address ) const {
   if( address.isEmpty() ) {
     return QStringList();
   }
-  QString addr = canonicalAddress( address ).lower();
+  const QString addr = canonicalAddress( address ).lower();
   const ContactPreferences pref = lookupContactPreferences( addr );
   return pref.pgpKeyFingerprints + pref.smimeCertFingerprints;
 }
